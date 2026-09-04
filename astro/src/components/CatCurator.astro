@@ -1,0 +1,92 @@
+---
+/**
+ * 猫馆长出场组件。
+ *
+ * - variant="figure"：一个姿态 + 一句话的气泡，用在栏目页、404、搜索空状态。
+ *   有鼠标时会活过来：眼珠跟着鼠标转；露出爪子的姿态会伸爪去够鼠标。
+ * - variant="stamp"：文章末尾的「Bubble 已读」印章。
+ *
+ * 无 JavaScript 时只是静态图片；图片全部复用 static/images 现有素材。
+ */
+import { CAT_CURATOR_AVATAR, CAT_POSES, type CatPose } from '../data/catCurator';
+import '../styles/cat-curator.css';
+
+interface Props {
+	variant?: 'figure' | 'stamp';
+	pose?: CatPose;
+	line?: string;
+	locale?: 'zh-CN' | 'en';
+	size?: 'md' | 'lg';
+	/** 气泡在猫的哪一侧 */
+	side?: 'right' | 'left' | 'below';
+	/** stamp 用：日期 ISO 字符串 */
+	date?: string;
+	class?: string;
+}
+
+const {
+	variant = 'figure',
+	pose = 'sit',
+	line = '',
+	locale = 'zh-CN',
+	size = 'md',
+	side = 'right',
+	date,
+	class: className = '',
+} = Astro.props;
+const isEnglish = locale === 'en';
+const asset = CAT_POSES[pose];
+const role = isEnglish ? 'Curator' : '馆长说';
+const geometry = JSON.stringify({
+	crop: asset.crop,
+	eyes: asset.eyes,
+	reach: asset.reach ?? null,
+});
+---
+
+{
+	variant === 'stamp' ? (
+		<p class={`cat-stamp ${className}`.trim()}>
+			<img
+				class="cat-stamp-avatar"
+				src={CAT_CURATOR_AVATAR}
+				alt=""
+				width="40"
+				height="40"
+				loading="lazy"
+				decoding="async"
+			/>
+			<span class="cat-stamp-text">
+				<span class="cat-stamp-title">{isEnglish ? 'Read by Bubble' : 'Bubble 已读'}</span>
+				{date && (
+					<time class="cat-stamp-date" datetime={date}>
+						{date.slice(0, 10)}
+					</time>
+				)}
+			</span>
+		</p>
+	) : (
+		<figure
+			class={`cat-curator cat-curator--${size} cat-curator--${side} ${className}`.trim()}
+			data-pose={pose}
+		>
+			<span
+				class="cat-curator-portrait"
+				aria-hidden="true"
+				data-cat-portrait={geometry}
+				style={`--cx:${asset.crop.x};--cy:${asset.crop.y};--cs:${asset.crop.size}`}
+			>
+				<img src={asset.src} alt="" width="1100" height="765" loading="eager" decoding="async" />
+				<canvas class="cat-curator-canvas" hidden />
+			</span>
+			{line && (
+				<figcaption class="cat-curator-bubble">
+					<span class="cat-curator-role">{role}</span>
+					<span class="cat-curator-line">{line}</span>
+				</figcaption>
+			)}
+		</figure>
+	)
+}
+
+<script is:inline type="module" src="/js/cat-curator.js"></script>

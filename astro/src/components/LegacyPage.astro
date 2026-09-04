@@ -14,6 +14,7 @@ import {
 } from '../lib/legacyContent';
 import ImageCompressTool from './tools/ImageCompressTool.astro';
 import AIInfographicTool from './tools/AIInfographicTool.astro';
+import CatCurator from './CatCurator.astro';
 import Discussion from './Discussion.astro';
 import DirectoryItemRow from './DirectoryItemRow.astro';
 import HighlightArchive from './HighlightArchive.astro';
@@ -26,6 +27,7 @@ import {
 import ArticleOutline from './ArticleOutline.astro';
 import ArticleImageLightbox from './ArticleImageLightbox.astro';
 import { commentThreadId } from '../lib/comments/threadId';
+import { CAT_SECTION_LINES } from '../data/catCurator';
 import '../styles/legacy-pages.css';
 import '../styles/newbie-lab.css';
 import '../styles/ai-infographic.css';
@@ -259,6 +261,7 @@ const tutorialKinds = [
 ];
 const isTutorialIndex = record.isIndex && tutorialKinds.includes(record.section);
 const isHighlightsIndex = record.isIndex && record.section === 'highlights';
+const curatorLine = record.isIndex && !yearMatch ? CAT_SECTION_LINES[record.section] : undefined;
 const chapters = isTutorialIndex
 	? [...children]
 			.sort((a, b) => {
@@ -382,6 +385,15 @@ const libraryApi =
 						</h1>
 						{record.section !== 'about' && <p>{description}</p>}
 					</div>
+					{curatorLine && (
+						<CatCurator
+							class="directory-hero-cat"
+							pose={curatorLine.pose}
+							line={isEnglish ? curatorLine.en : curatorLine.zh}
+							locale={record.locale}
+							side="left"
+						/>
+					)}
 					{isTutorialIndex ? null : isHighlightsIndex ? (
 						<p class="directory-count directory-count--series">
 							<strong data-directory-count>{directoryItems.length}</strong>
@@ -630,6 +642,13 @@ const libraryApi =
 									? 'This archive entry has no body content yet.'
 									: '这条归档目前还没有正文。'}
 							</p>
+						)}
+						{!isStandaloneHtml && MarkdownContent && (
+							<CatCurator
+								variant="stamp"
+								locale={record.locale}
+								date={record.date?.toISOString()}
+							/>
 						)}
 						{threadId && <Discussion threadId={threadId} locale={record.locale} />}
 						<nav

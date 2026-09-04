@@ -27,6 +27,22 @@
 	color: var(--ink-soft);
 }
 
+/* 右列：上面是馆长，下面是计数 */
+.directory-hero > div:first-child {
+	grid-row: 1 / span 2;
+}
+
+.directory-hero-cat {
+	grid-column: 2;
+	align-self: end;
+	justify-self: end;
+}
+
+.directory-hero .directory-count {
+	grid-column: 2;
+	justify-self: end;
+}
+
 .directory-count {
 	display: flex;
 	align-items: baseline;
@@ -966,6 +982,28 @@
 
 	.directory-hero {
 		grid-template-columns: 1fr;
+	}
+
+	.directory-hero > div:first-child {
+		grid-row: auto;
+	}
+
+	.directory-hero-cat,
+	.directory-hero .directory-count {
+		grid-column: auto;
+		justify-self: start;
+	}
+
+	.directory-hero-cat {
+		flex-direction: row;
+	}
+
+	.directory-hero-cat .cat-curator-bubble::before {
+		left: -8px;
+		right: auto;
+		border: 0;
+		border-left: 1.5px solid var(--ink);
+		border-bottom: 1.5px solid var(--ink);
 	}
 
 	.directory-count {

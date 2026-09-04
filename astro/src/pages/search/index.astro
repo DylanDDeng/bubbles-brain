@@ -1,5 +1,7 @@
 ---
+import CatCurator from '../../components/CatCurator.astro';
 import KnowledgeResults from '../../components/KnowledgeResults.astro';
+import { CAT_STATE_LINES } from '../../data/catCurator';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { buildKnowledgeSearchIndex } from '../../lib/searchIndex';
 import '../../styles/knowledge.css';
@@ -82,6 +84,11 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 
 		<KnowledgeResults items={index.items} filterable />
 		<div class="knowledge-empty" data-search-empty hidden={index.item_count !== 0}>
+			<CatCurator
+				class="knowledge-empty-cat"
+				pose={CAT_STATE_LINES.searchEmpty.pose}
+				line={CAT_STATE_LINES.searchEmpty.zh}
+			/>
 			<p>{index.item_count === 0 ? '知识库还没有可检索的内容。' : '没有找到符合条件的内容。'}</p>
 			{
 				index.item_count > 0 && (

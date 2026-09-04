@@ -61,8 +61,10 @@ const mountCatLife = () => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let lastMouse = 0;
   let frame = 0;
+  let gaze = { horizontal: 0, vertical: 0 };
 
   const drawEyes = (horizontal, vertical) => {
+    gaze = { horizontal, vertical };
     if (!image.complete || !image.naturalWidth) return;
     const rect = image.getBoundingClientRect();
     if (rect.width === 0) return;
@@ -100,6 +102,56 @@ const mountCatLife = () => {
     }
   };
 
+  // 眨眼：用眼睛上方的毛盖住眼睛，再画一道细细的眼缝
+  const drawLids = () => {
+    if (!image.complete || !image.naturalWidth) return;
+    const rect = image.getBoundingClientRect();
+    if (rect.width === 0) return;
+    const eyes = CAT_POSES[image.getAttribute("src")];
+    if (!eyes) return;
+    const scale = rect.width / CAT_IMAGE_WIDTH;
+    for (const eye of eyes) {
+      const eyeX = eye.x * scale;
+      const eyeY = eye.y * scale;
+      const eyeRadius = eye.r * scale;
+      context.save();
+      context.beginPath();
+      context.arc(eyeX, eyeY, eyeRadius * 0.92, 0, Math.PI * 2);
+      context.clip();
+      context.drawImage(image, 0, eyeRadius * 1.6, rect.width, rect.height);
+      context.beginPath();
+      context.arc(
+        eyeX,
+        eyeY - eyeRadius * 0.15,
+        eyeRadius * 0.78,
+        Math.PI * 0.12,
+        Math.PI * 0.88,
+      );
+      context.lineWidth = Math.max(1, eyeRadius * 0.11);
+      context.lineCap = "round";
+      context.strokeStyle = "rgba(70, 58, 48, 0.6)";
+      context.stroke();
+      context.restore();
+    }
+  };
+
+  const blink = () => {
+    if (reduceMotion.matches || document.hidden) return;
+    drawLids();
+    window.setTimeout(() => drawEyes(gaze.horizontal, gaze.vertical), 120);
+  };
+
+  const scheduleBlink = () => {
+    window.setTimeout(
+      () => {
+        blink();
+        if (Math.random() < 0.25) window.setTimeout(blink, 280);
+        scheduleBlink();
+      },
+      2600 + Math.random() * 3800,
+    );
+  };
+
   const lookAt = (clientX, clientY) => {
     const rect = figure.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -132,6 +184,7 @@ const mountCatLife = () => {
   });
   image.addEventListener("load", () => drawEyes(0, 0));
   if (image.complete) drawEyes(0, 0);
+  scheduleBlink();
 
   window.setInterval(() => {
     if (reduceMotion.matches || Date.now() - lastMouse < 5000) return;

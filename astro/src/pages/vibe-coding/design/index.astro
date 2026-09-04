@@ -1,6 +1,8 @@
 ---
 import '../../../styles/design-gallery.css';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CatCurator from '../../../components/CatCurator.astro';
+import { CAT_SECTION_LINES } from '../../../data/catCurator';
 import { type DesignBrand, designBrandById, designBrandGroups } from '../../../data/designBrands';
 
 const groups = designBrandGroups
@@ -27,6 +29,12 @@ const groups = designBrandGroups
 			<h1>Design</h1>
 			<p class="design-lede">大公司写给 AI 编码工具看的设计系统文件，逐个品牌拆解。</p>
 		</header>
+		<CatCurator
+			class="vibe-terms-cat"
+			pose={CAT_SECTION_LINES['vibe-coding-design'].pose}
+			line={CAT_SECTION_LINES['vibe-coding-design'].zh}
+			side="left"
+		/>
 
 		<nav class="design-group-nav" aria-label="按类别浏览品牌">
 			{

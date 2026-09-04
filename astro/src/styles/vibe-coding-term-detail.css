@@ -102,15 +102,12 @@
 }
 
 .concept-qa-question .concept-qa-glyph {
-	border: 2px solid var(--ink);
 	color: var(--ink);
+	font-size: 2rem;
 	transform: rotate(-7deg);
 }
 
 .concept-qa-answer .concept-qa-glyph {
-	background: var(--blue-strong);
-	color: #fff;
-	box-shadow: 0 4px 12px color-mix(in srgb, var(--blue) 32%, transparent);
 	transform: rotate(6deg);
 }
 

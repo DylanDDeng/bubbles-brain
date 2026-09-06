@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionCover from '../../components/CollectionCover.astro';
 import HighlightArchive from '../../components/HighlightArchive.astro';
 import {
 	highlightArchiveFor,
@@ -41,16 +42,13 @@ const knownRoutes = new Set(allRecords.filter(legacyEntryIsRoutable).map((entry)
 	canonicalPath={`/highlights/${year}/`}
 >
 	<section class="legacy-shell directory-page" data-directory-page="highlights">
-		<header class="directory-hero">
+		<header class="directory-hero collection-masthead">
 			<div>
-				<p class="page-kicker">EDITOR’S SELECTION</p>
+				<a class="collection-back" href="/#bc-highlights">收藏</a>
 				<h1>{year} · 精选阅读</h1>
-				<p>这一年收进档案的文章、报告与访谈。</p>
 			</div>
-			<p class="directory-count directory-count--series">
-				<strong data-directory-count>{items.length}</strong>
-				<span>篇 · {year} 年归档</span>
-			</p>
+			<div class="masthead-cover"><CollectionCover section="highlights" /></div>
+			<span data-directory-count hidden>{items.length}</span>
 		</header>
 
 		<HighlightArchive

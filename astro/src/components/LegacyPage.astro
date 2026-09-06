@@ -14,7 +14,7 @@ import {
 } from '../lib/legacyContent';
 import ImageCompressTool from './tools/ImageCompressTool.astro';
 import AIInfographicTool from './tools/AIInfographicTool.astro';
-import CatCurator from './CatCurator.astro';
+import CollectionCover from './CollectionCover.astro';
 import Discussion from './Discussion.astro';
 import DirectoryItemRow from './DirectoryItemRow.astro';
 import HighlightArchive from './HighlightArchive.astro';
@@ -27,7 +27,6 @@ import {
 import ArticleOutline from './ArticleOutline.astro';
 import ArticleImageLightbox from './ArticleImageLightbox.astro';
 import { commentThreadId } from '../lib/comments/threadId';
-import { CAT_SECTION_LINES } from '../data/catCurator';
 import '../styles/legacy-pages.css';
 import '../styles/newbie-lab.css';
 import '../styles/ai-infographic.css';
@@ -130,9 +129,6 @@ const outlineHeadings =
 	rendered?.headings.filter((heading) => heading.depth === 2 || heading.depth === 3) ?? [];
 const sourceUrl =
 	typeof record.frontmatter.sourceUrl === 'string' ? record.frontmatter.sourceUrl : null;
-const articleTags = Array.isArray(record.frontmatter.tags)
-	? record.frontmatter.tags.filter((tag): tag is string => typeof tag === 'string')
-	: [];
 const readingMinutesFor = (body: string) => {
 	const units =
 		(body.match(/[\u3400-\u9fff]/g)?.length ?? 0) +
@@ -150,7 +146,6 @@ const sourceLabel = sourceUrl
 			}
 		})()
 	: null;
-const articleFactCount = 2 + Number(Boolean(record.date)) + Number(Boolean(sourceUrl));
 const staticRoot = resolve(process.cwd(), '../static');
 const pageLabels: Record<string, { zh: string; en: string; kicker: string }> = {
 	about: { zh: '关于', en: 'About', kicker: 'ABOUT THE ARCHIVE' },
@@ -261,7 +256,7 @@ const tutorialKinds = [
 ];
 const isTutorialIndex = record.isIndex && tutorialKinds.includes(record.section);
 const isHighlightsIndex = record.isIndex && record.section === 'highlights';
-const curatorLine = record.isIndex && !yearMatch ? CAT_SECTION_LINES[record.section] : undefined;
+
 const chapters = isTutorialIndex
 	? [...children]
 			.sort((a, b) => {
@@ -373,9 +368,12 @@ const libraryApi =
 				data-directory-page={directoryKind ?? undefined}
 				data-library-api={libraryApi}
 			>
-				<header class="directory-hero">
+				<header class="directory-hero collection-masthead">
 					<div>
-						<p class="page-kicker">{label.kicker}</p>
+						<a class="collection-back" href={isEnglish ? '/en/' : '/#bc-' + record.section}>
+							<i class="ph ph-arrow-left" aria-hidden="true" />
+							{isEnglish ? 'Collections' : '收藏'}
+						</a>
 						<h1>
 							{yearMatch
 								? `${yearMatch[1]} · ${isEnglish ? label.en : label.zh}`
@@ -383,30 +381,15 @@ const libraryApi =
 									? label.en
 									: label.zh}
 						</h1>
-						{record.section !== 'about' && <p>{description}</p>}
 					</div>
-					{curatorLine && (
-						<CatCurator
-							class="directory-hero-cat"
-							pose={curatorLine.pose}
-							line={isEnglish ? curatorLine.en : curatorLine.zh}
-							locale={record.locale}
-							side="left"
-						/>
+					{(isTutorialIndex || isHighlightsIndex) && (
+						<div class="masthead-cover">
+							<CollectionCover section={record.section} />
+						</div>
 					)}
-					{isTutorialIndex ? null : isHighlightsIndex ? (
-						<p class="directory-count directory-count--series">
-							<strong data-directory-count>{directoryItems.length}</strong>
-							<span>{isEnglish ? 'picks · updated continually' : '篇 · 持续收录中'}</span>
-						</p>
-					) : record.section === 'about' ? null : (
-						<p class="directory-count">
-							<>
-								<strong data-directory-count>{directoryItems.length || children.length}</strong>
-								<span>{isEnglish ? 'records' : '条记录'}</span>
-							</>
-						</p>
-					)}
+					<span data-directory-count hidden>
+						{directoryItems.length || children.length}
+					</span>
 				</header>
 
 				{MarkdownContent &&
@@ -425,11 +408,9 @@ const libraryApi =
 
 				{isTutorialIndex ? (
 					<div class="series-layout">
-						<aside class="series-rail">
-							<span class="series-rail-index" aria-hidden="true">
-								{String(chapters.length).padStart(2, '0')}
-							</span>
-							<h2>{isEnglish ? 'Learning path' : '学习路径'}</h2>
+						<details class="series-rail">
+							<summary>{isEnglish ? 'About this collection' : '阅读说明'}</summary>
+
 							{MarkdownContent ? (
 								<div class="series-rail-intro">
 									<MarkdownContent />
@@ -437,12 +418,7 @@ const libraryApi =
 							) : (
 								<p class="series-rail-intro">{description}</p>
 							)}
-							{chapters[0] && (
-								<a class="series-rail-start" href={chapters[0].route}>
-									{isEnglish ? 'Start here' : '从这里开始'}
-									<i class="ph ph-arrow-right" aria-hidden="true" />
-								</a>
-							)}
+
 							{otherSeries.length > 0 && (
 								<div class="series-rail-others">
 									<p>{isEnglish ? 'MORE SERIES' : '其他教程系列'}</p>
@@ -456,7 +432,7 @@ const libraryApi =
 									))}
 								</div>
 							)}
-						</aside>
+						</details>
 						<div class={`series-main content-directory--${record.section}`}>
 							<div class="directory-toolbar series-toolbar">
 								<label for={`${record.section}-search`}>
@@ -485,14 +461,7 @@ const libraryApi =
 												{index + 1}
 											</span>
 											<div class="chapter-body">
-												<span class="chapter-meta">
-													{chapter.date && <time datetime={chapter.date}>{chapter.date}</time>}
-													<span>
-														{chapter.minutes} {isEnglish ? 'min read' : '分钟'}
-													</span>
-												</span>
 												<h3>{chapter.title}</h3>
-												{chapter.description && <small>{chapter.description}</small>}
 											</div>
 										</a>
 									</li>
@@ -569,54 +538,32 @@ const libraryApi =
 		) : isAIInfographic ? (
 			<AIInfographicTool locale={record.locale} title={title} description={description} />
 		) : (
-			<article class="article-shell legacy-article">
+			<article class="article-shell legacy-article" data-collection-section={record.section}>
 				<header class="article-header">
-					<p class="page-kicker">{label.kicker}</p>
+					<a class="collection-back" href={sectionHref}>
+						<i class="ph ph-arrow-left" aria-hidden="true" />
+						{isEnglish ? label.en : label.zh}
+					</a>
 					<h1>{title}</h1>
 					{description && <p class="article-lede">{description}</p>}
-					<dl class="article-facts" style={`--article-fact-columns: ${articleFactCount}`}>
+					<div class="reading-meta">
 						{record.date && (
-							<div>
-								<dt>{isEnglish ? 'Published' : '发布于'}</dt>
-								<dd>
-									<time datetime={record.date.toISOString()}>
-										{record.date.toISOString().slice(0, 10)}
-									</time>
-								</dd>
-							</div>
+							<time datetime={record.date.toISOString()}>
+								{record.date.toISOString().slice(0, 10)}
+							</time>
 						)}
-						<div>
-							<dt>{isEnglish ? 'Collection' : '所属栏目'}</dt>
-							<dd>
-								<a href={sectionHref}>{isEnglish ? label.en : label.zh}</a>
-							</dd>
-						</div>
-						<div>
-							<dt>{isEnglish ? 'Reading time' : '阅读时间'}</dt>
-							<dd>
-								{readingMinutes} {isEnglish ? 'min' : '分钟'}
-							</dd>
-						</div>
+						<span>
+							{readingMinutes} {isEnglish ? 'min read' : '分钟阅读'}
+						</span>
 						{sourceUrl && (
-							<div>
-								<dt>{isEnglish ? 'Source' : '资料来源'}</dt>
-								<dd>
-									<a href={sourceUrl} target="_blank" rel="noreferrer">
-										{sourceLabel}
-										<i class="ph ph-arrow-up-right" aria-hidden="true" />
-									</a>
-								</dd>
-							</div>
+							<a href={sourceUrl} target="_blank" rel="noopener noreferrer">
+								{sourceLabel}
+								<i class="ph ph-arrow-up-right" aria-hidden="true" />
+							</a>
 						)}
-					</dl>
-					{articleTags.length > 0 && (
-						<ul class="article-tags" aria-label={isEnglish ? 'Topics' : '主题标签'}>
-							{articleTags.map((tag) => (
-								<li>{tag}</li>
-							))}
-						</ul>
-					)}
+					</div>
 				</header>
+
 				<div
 					class:list={[
 						'article-layout',
@@ -643,13 +590,7 @@ const libraryApi =
 									: '这条归档目前还没有正文。'}
 							</p>
 						)}
-						{!isStandaloneHtml && MarkdownContent && (
-							<CatCurator
-								variant="stamp"
-								locale={record.locale}
-								date={record.date?.toISOString()}
-							/>
-						)}
+
 						{threadId && <Discussion threadId={threadId} locale={record.locale} />}
 						<nav
 							class="article-pagination"
@@ -672,7 +613,7 @@ const libraryApi =
 								)}
 							</div>
 							<a class="article-back" href={sectionHref}>
-								{isEnglish ? 'Back to archive' : '返回归档'}
+								{isEnglish ? 'Back to collection' : '返回收藏'}
 							</a>
 							<div>
 								{older && (

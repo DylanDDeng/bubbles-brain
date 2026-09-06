@@ -14,12 +14,12 @@ const { headings, locale } = Astro.props;
 const isEnglish = locale === 'en';
 ---
 
-<details class="article-outline" data-article-outline open>
+<details class="article-outline" data-article-outline>
 	<summary>
-		<span>{isEnglish ? 'On this page' : '本文目录'}</span>
+		<span>{isEnglish ? 'Contents' : '目录'}</span>
 		<i class="ph ph-caret-down" aria-hidden="true"></i>
 	</summary>
-	<nav aria-label={isEnglish ? 'On this page' : '本文目录'}>
+	<nav aria-label={isEnglish ? 'Contents' : '目录'}>
 		<ol>
 			{
 				headings.map((heading) => (

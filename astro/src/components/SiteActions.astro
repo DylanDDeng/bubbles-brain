@@ -1,0 +1,28 @@
+---
+import AuthControls from './AuthControls.astro';
+
+interface Props {
+	locale: 'zh-CN' | 'en';
+	languageHref: string;
+}
+
+const { locale, languageHref } = Astro.props;
+const isEnglish = locale === 'en';
+---
+
+<nav class="site-actions" aria-label={isEnglish ? 'Site navigation' : '网站导航'}>
+	<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
+	<a href={languageHref} aria-label={isEnglish ? '切换到中文' : 'Switch to English'}>
+		{isEnglish ? '中文' : 'EN'}
+	</a>
+	<AuthControls locale={locale} inline />
+	<a
+		class="site-search"
+		href="/search/"
+		data-command-search-trigger
+		aria-label={isEnglish ? 'Search' : '搜索知识库'}
+		title={isEnglish ? 'Search (⌘K)' : '搜索（⌘K）'}
+	>
+		<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+	</a>
+</nav>

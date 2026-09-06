@@ -1,5 +1,6 @@
 ---
 import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingPatternProfile } from '../data/vibeCodingPatternDetails';
 import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import '../styles/vibe-coding-term-detail.css';
@@ -52,7 +53,7 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 ---
 
 <article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
-	<a class="concept-detail-back" href={`/vibe-coding/terms/#${concept.categoryId}`}>
+	<a class="concept-detail-back" href={brainPodTermReturn(concept.id)}>
 		<i class="ph ph-arrow-left" aria-hidden="true"></i>
 		返回术语
 	</a>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import CollectionCover from '../../../components/CollectionCover.astro';
 import HighlightArchive from '../../../components/HighlightArchive.astro';
 import {
 	highlightArchiveFor,
@@ -42,16 +43,13 @@ const knownRoutes = new Set(allRecords.filter(legacyEntryIsRoutable).map((entry)
 	canonicalPath={`/en/highlights/${year}/`}
 >
 	<section class="legacy-shell directory-page" data-directory-page="highlights">
-		<header class="directory-hero">
+		<header class="directory-hero collection-masthead">
 			<div>
-				<p class="page-kicker">EDITOR’S SELECTION</p>
+				<a class="collection-back" href="/en/highlights/">Collections</a>
 				<h1>{year} · Highlights</h1>
-				<p>Articles, reports, and interviews archived this year.</p>
 			</div>
-			<p class="directory-count directory-count--series">
-				<strong data-directory-count>{items.length}</strong>
-				<span>picks · {year} archive</span>
-			</p>
+			<div class="masthead-cover"><CollectionCover section="highlights" /></div>
+			<span data-directory-count hidden>{items.length}</span>
 		</header>
 
 		<HighlightArchive

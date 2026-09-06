@@ -1,5 +1,6 @@
 ---
 import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingDetailProfile } from '../data/vibeCodingTermDetails';
 import VibeCodingConceptVisual from './VibeCodingConceptVisual.astro';
 import VibeCodingFlowLab from './VibeCodingFlowLab.astro';
@@ -18,7 +19,7 @@ const { concept, profile, previousConcept, nextConcept } = Astro.props;
 ---
 
 <article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
-	<a class="concept-detail-back" href={`/vibe-coding/terms/#${concept.categoryId}`}>
+	<a class="concept-detail-back" href={brainPodTermReturn(concept.id)}>
 		<i class="ph ph-arrow-left" aria-hidden="true"></i>
 		返回术语
 	</a>

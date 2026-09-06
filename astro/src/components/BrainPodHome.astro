@@ -1,0 +1,419 @@
+---
+import { buildKnowledgeSearchIndex } from '../lib/searchIndex';
+import { buildBrainPodLibrary } from '../lib/brainpod';
+import { createBrainPodRandom } from '../lib/brainpodSeed';
+import curiosityFlowerUrl from '../data/brainpod-art/curiosity-flower.png?url';
+import '../styles/brainpod.css';
+import AuthControls from './AuthControls.astro';
+import BrainPodDeviceToolbar from './BrainPodDeviceToolbar.astro';
+
+interface Props {
+	composition?: 'poster' | 'device';
+	collectionWorld?: boolean;
+}
+const deviceOnly = Astro.props.composition === 'device';
+
+const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
+const first = library.collections[0];
+const featured = library.featured;
+const hasWorld = Astro.slots.has('world');
+const initial = featured?.item ?? first;
+const seed = 483101;
+const random = createBrainPodRandom(seed);
+const angles = {
+	paper: -4 - random() * 2,
+	sticker: 7 + random() * 5,
+	flower: 10 + random() * 6,
+};
+---
+
+<div
+	class:list={[
+		'brainpod',
+		{ 'brainpod--device': deviceOnly, 'brainpod--collection': Astro.props.collectionWorld },
+	]}
+	data-brainpod
+	data-brainpod-portal={hasWorld || undefined}
+	data-direction="creative-tool"
+	data-seed={seed}
+	style={`--paper-tilt:${angles.paper}deg;--sticker-tilt:${angles.sticker}deg;--flower-tilt:${angles.flower}deg`}
+>
+	<script
+		is:inline
+		type="application/json"
+		data-brainpod-library
+		set:html={JSON.stringify(library).replaceAll('<', '\\u003c')}
+	/>
+	<div class="brainpod-entrance-track">
+		<div class="brainpod-entrance-pin">
+			<section class="curiosity-poster" aria-label="好奇心不设限，知识随身听">
+				<header class="poster-navigation">
+					<a class="poster-brand" href="/" aria-label="Bubble's Brain 首页">
+						<img src="/favicon-512x512.png" alt="" width="36" height="36" />
+						<span
+							>{
+								deviceOnly ? (
+									'Bubble’s Brain'
+								) : (
+									<>
+										Bubble’s
+										<br />
+										Brain<span class="brand-period">.</span>
+									</>
+								)
+							}</span
+						>
+					</a>
+					<nav class="poster-nav-actions" aria-label="主导航">
+						<a
+							class="poster-search"
+							aria-label="搜索知识库"
+							href="/search/"
+							data-command-search-trigger
+						>
+							<i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>搜索</span>
+						</a>
+						<details class="poster-menu" id="poster-menu">
+							<summary><span>探索</span><i class="ph ph-plus" aria-hidden="true"></i></summary>
+							<div class="poster-menu-sheet">
+								<p class="menu-eyebrow">FOLLOW YOUR CURIOSITY</p>
+								<nav class="poster-menu-collections" aria-label="知识栏目">
+									{
+										library.collections.map((collection, index) => (
+											<a href={collection.href}>
+												<>
+													<small>{String(index + 1).padStart(2, '0')}</small>
+													<span>{collection.title}</span>
+													<i class="ph ph-arrow-up-right" aria-hidden="true" />
+												</>
+											</a>
+										))
+									}
+								</nav>
+								<nav class="poster-menu-links" aria-label="更多资源">
+									<a href="/about/">关于</a><a href="/changelog/">更新日志</a><a href="/rss.xml"
+										>RSS</a
+									><a href="/en/">EN</a><a
+										href="https://github.com/DylanDDeng/bubbles-brain"
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="GitHub"><i class="ph ph-github-logo" aria-hidden="true"></i></a
+									>
+								</nav>
+								<AuthControls locale="zh-CN" />
+							</div>
+						</details>
+					</nav>
+				</header>
+				<div class="poster-edition">
+					<span>个人 AI 知识库 / KNOWLEDGE MIXTAPE</span><span>NO. {seed}</span>
+				</div>
+				<h1 class="poster-title" aria-label="保持好奇，探索 AI 知识库">
+					<span class="word-stay" aria-hidden="true">STAY</span><span
+						class="word-curious"
+						aria-hidden="true">CURIOUS.</span
+					>
+				</h1>
+				<div class="poster-manifesto">
+					<p>好奇心，<br />不设限。</p><span>收集灵感。建立连接。<br />把想法做出来。</span>
+				</div>
+				{
+					!deviceOnly && (
+						<figure class="curiosity-flower" aria-label="橙色花朵从镀铬耳机线般的茎上绽放">
+							<img
+								src={curiosityFlowerUrl}
+								alt=""
+								width="1024"
+								height="1536"
+								loading="eager"
+								decoding="async"
+							/>
+						</figure>
+					)
+				}
+				<svg
+					class="poster-pencil"
+					viewBox="0 0 1200 840"
+					preserveAspectRatio="none"
+					aria-hidden="true"
+				>
+					<path class="pencil-loop" d="M 212,180 C 105,93 53,182 120,211 C 236,260 228,89 85,151"
+					></path>
+					<path
+						class="pencil-route"
+						d="M 296,379 C 364,333 350,462 453,432 C 484,424 497,395 478,394 C 459,393 470,440 518,462"
+					></path>
+					<path d="M 505,439 L 520,464 L 491,461"></path>
+				</svg>
+				<a class="topic-sticker" href={library.playlists.start.items[0].href} data-playlist="start"
+					><span class="sticker-spark" aria-hidden="true">✳</span><span>从一个好问题开始</span><i
+						class="ph ph-arrow-up-right"
+						aria-hidden="true"></i></a
+				>
+				<div class="device-column">
+					<div
+						class="product-render"
+						id="brainpod-stage"
+						aria-label="iPod 知识随身听：方向键选择，回车进入，Escape 返回"
+						tabindex="0"
+					>
+						<div class="floor-shadow"></div>
+						<div class="loading-label" id="loading" role="status">
+							<span class="loading-spinner" aria-hidden="true"></span>
+							<span class="sr-only">正在装入知识库…</span>
+						</div>
+					</div>
+					{!deviceOnly && <BrainPodDeviceToolbar />}
+				</div>
+				<a
+					class="surprise-stamp"
+					id="surprise-pick"
+					href={library.playlists.start.items[0].href}
+					aria-label="给我一点意外，随机发现一篇知识"
+				>
+					<svg viewBox="0 0 144 144" aria-hidden="true"
+						><defs
+							><path
+								id="curiosity-stamp-ring"
+								d="M 72,72 m -54,0 a 54,54 0 1,1 108,0 a 54,54 0 1,1 -108,0"></path></defs
+						><text
+							><textPath href="#curiosity-stamp-ring" textLength="333"
+								>FOLLOW YOUR CURIOSITY · PRESS TO EXPLORE ·
+							</textPath></text
+						></svg
+					>
+					<span>给我一点<br /><strong>意外</strong></span><i
+						class="ph ph-arrow-up-right"
+						aria-hidden="true"></i>
+				</a>
+				<aside
+					class="preview-column"
+					id="preview"
+					data-featured={String(!!featured)}
+					aria-label="当前选中内容"
+					aria-live="polite"
+					aria-atomic="true"
+				>
+					<div class="paper-tape" aria-hidden="true"></div>
+					<div class="preview-kicker">
+						<span>{featured ? '先读这一篇' : '正在浏览'}</span><span
+							id="preview-number"
+							hidden={!!featured}>01 / 08</span
+						>
+					</div>
+					<h2><a id="preview-title" data-preview-open href={initial.href}>{initial.title}</a></h2>
+					<p class="preview-description" id="preview-description">
+						{featured?.reason ?? first.description}
+					</p>
+					<div class="preview-bottom">
+						<a class="preview-action" id="preview-action" data-preview-open href={initial.href}
+							>{featured ? '从这里开始读' : '挑一篇来读'}<i
+								class="ph ph-arrow-up-right"
+								aria-hidden="true"></i></a
+						><p class="preview-meta" id="preview-meta">
+							{featured?.detail ?? `${first.items.length} 篇内容`}
+						</p>
+					</div>
+					<div class="paper-postscript">
+						<button id="return-featured" class="return-featured" type="button" hidden
+							>回到推荐<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button
+						>
+						<span class="paper-signature" aria-hidden="true">a little food for thought.</span>
+					</div>
+				</aside>
+				{deviceOnly && <BrainPodDeviceToolbar />}
+				<div class="poster-footnote">
+					{
+						library.recent.length > 0 && (
+							<a href="#recent-notes" class="recent-scroll">
+								最近收录
+								<i class="ph ph-arrow-down" aria-hidden="true" />
+							</a>
+						)
+					}
+					<p>写给想要学 AI<br />但却无从下手的你。</p><span>COLLECT. CONNECT. CREATE.</span>
+				</div>
+				<button
+					class="poster-motion-control"
+					id="poster-motion-toggle"
+					type="button"
+					aria-pressed="true"
+					aria-label="暂停画面动效"
+					hidden><i class="ph ph-pause" aria-hidden="true"></i><span>让时间慢一点</span></button
+				>
+				{
+					hasWorld && (
+						<a class="portal-enter" href="#knowledge-world">
+							<>
+								<span>SCROLL TO ENTER</span>
+								<strong>滚动，进入知识库</strong>
+								<i class="ph ph-arrow-down" aria-hidden="true" />
+							</>
+						</a>
+					)
+				}
+			</section>
+		</div>
+	</div>
+	{
+		hasWorld && (
+			<section
+				class="brainpod-world-anchor"
+				id="knowledge-world"
+				tabindex="-1"
+				aria-label="知识库首页"
+			>
+				<div class="brainpod-world">
+					<div class="brainpod-world-content">
+						<slot name="world" />
+					</div>
+				</div>
+			</section>
+		)
+	}
+	<details class="brainpod-directory" id="brainpod-directory">
+		<summary
+			><span>浏览全部栏目</span><span class="directory-count">{library.collections.length}</span><i
+				class="ph ph-caret-down"
+				aria-hidden="true"></i></summary
+		>
+		<div class="directory-content">
+			<div class="directory-heading">
+				<h2>知识目录</h2><span>{library.items.length} 条知识，持续更新</span>
+			</div>
+			<nav class="collection-grid" aria-label="全部知识栏目">
+				{
+					library.collections.map((c) => (
+						<a class="collection-link" href={c.href}>
+							<>
+								<span>{c.title}</span>
+								<small>{c.items.length}</small>
+								<i class="ph ph-arrow-up-right" aria-hidden="true" />
+							</>
+						</a>
+					))
+				}
+			</nav>
+			<div class="playlist-section">
+				<h3>也可以从一份播放列表开始</h3>
+				<div class="playlist-grid">
+					{
+						Object.entries(library.playlists)
+							.filter(([, list]) => list.items.length > 0)
+							.map(([key, list]) => (
+								<a class="playlist" href={list.items[0].href} data-playlist={key}>
+									<>
+										<i class="ph ph-play" aria-hidden="true" />
+										<span>{list.title}</span>
+									</>
+								</a>
+							))
+					}
+				</div>
+			</div>
+		</div>
+	</details>
+	{
+		library.recent.length > 0 && (
+			<section class="recent-notes" id="recent-notes" aria-labelledby="recent-notes-title">
+				<header class="recent-notes-heading">
+					<div>
+						<>
+							<p class="recent-eyebrow">THE READING DESK</p>
+							<h2 id="recent-notes-title">
+								最近收录<span aria-hidden="true">.</span>
+							</h2>
+						</>
+					</div>
+					<p class="recent-margin-note">留给下一次好奇。</p>
+				</header>
+				<div class="recent-notes-list">
+					{library.recent.map(({ item, recordedAt }) => (
+						<article class="recent-note">
+							<a
+								href={item.href}
+								target={item.external ? '_blank' : undefined}
+								rel={item.external ? 'noopener noreferrer' : undefined}
+								class="recent-note-link"
+							>
+								<time datetime={recordedAt} aria-label={`本站更新记录：${recordedAt}`}>
+									<span>{recordedAt.slice(5).replace('-', '.')}</span>
+									<small>{recordedAt.slice(0, 4)}</small>
+								</time>
+								<div class="recent-note-copy">
+									<span class="recent-note-section">{item.section_label}</span>
+									<h3>{item.title}</h3>
+									<p>{item.summary}</p>
+								</div>
+								<i
+									class={item.external ? 'ph ph-arrow-up-right' : 'ph ph-arrow-right'}
+									aria-hidden="true"
+								/>
+							</a>
+						</article>
+					))}
+				</div>
+				<footer class="recent-notes-footer">
+					<>
+						<span>按本站更新记录整理</span>
+						<a href="/changelog/">
+							看看全部更新
+							<i class="ph ph-arrow-up-right" aria-hidden="true" />
+						</a>
+					</>
+				</footer>
+			</section>
+		)
+	}
+	<noscript
+		><style>
+			.brainpod .device-column,
+			.brainpod .curiosity-flower,
+			.brainpod .poster-pencil,
+			.brainpod .topic-sticker,
+			.brainpod .surprise-stamp {
+				display: none;
+			}
+			.brainpod .curiosity-poster {
+				min-height: 0;
+				padding: 120px 20px 96px;
+			}
+			.brainpod .poster-edition,
+			.brainpod .poster-manifesto {
+				position: static;
+				margin-bottom: 32px;
+			}
+			.brainpod .poster-title {
+				position: absolute;
+				inset: auto;
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+				clip-path: inset(50%);
+			}
+			.brainpod .preview-column {
+				top: auto;
+				left: 12px;
+				width: min(calc(100% - 24px), 372px);
+			}
+			.brainpod .poster-footnote {
+				display: none;
+			}
+		</style><p>展开全部栏目，即可直接阅读知识库内容。</p></noscript
+	>
+</div>
+<script>
+	import { mountBrainPod } from '../scripts/brainpod';
+	let dispose: (() => void) | undefined;
+	function init() {
+		dispose?.();
+		const root = document.querySelector<HTMLElement>('[data-brainpod]');
+		dispose = root ? mountBrainPod(root) : undefined;
+	}
+	document.addEventListener('astro:page-load', init);
+	document.addEventListener('astro:before-swap', () => {
+		dispose?.();
+		dispose = undefined;
+	});
+	init();
+</script>

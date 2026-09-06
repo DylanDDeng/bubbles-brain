@@ -470,7 +470,7 @@
 	0%,
 	26% {
 		border-color: color-mix(in srgb, var(--blue) 55%, #ececea);
-		box-shadow: 0 4px 14px rgb(255 77 46 / 0.12);
+		box-shadow: 0 4px 14px rgb(40 103 213 / 0.12);
 		transform: translateX(3px);
 	}
 

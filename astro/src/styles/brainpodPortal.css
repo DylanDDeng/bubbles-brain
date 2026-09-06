@@ -1,0 +1,128 @@
+/* One native scroll surface: a camera move through the LCD, then ordinary reading. */
+.brainpod-world-anchor {
+	position: relative;
+	z-index: 5;
+	outline: none;
+	scroll-margin-top: 0;
+}
+.brainpod-world {
+	background: #fff;
+	color: var(--ink);
+}
+.brainpod-world-content {
+	transform-origin: 0 0;
+	background: #fff;
+}
+.brainpod .portal-enter {
+	position: absolute;
+	left: 50%;
+	bottom: 24px;
+	translate: -50% 0;
+	z-index: 8;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 12px;
+	color: var(--bp-ink);
+	white-space: nowrap;
+}
+.portal-enter > span {
+	font: 8px var(--mono);
+	letter-spacing: 0.12em;
+	color: var(--bp-muted);
+}
+.portal-enter > strong {
+	font-size: 11px;
+	font-weight: 500;
+}
+.portal-enter > i {
+	font-size: 14px;
+	transition: translate 180ms ease;
+}
+.portal-enter:hover > i {
+	translate: 0 4px;
+}
+.portal-unlock-hint {
+	position: absolute;
+	bottom: 30px;
+	left: 50%;
+	translate: -50% 0;
+	z-index: 8;
+	width: max-content;
+	max-width: calc(100% - 40px);
+	padding: 12px 18px;
+	border-radius: 14px;
+	background: #fff;
+	box-shadow: 0 4px 24px #18222d14, 0 0 0 1px #18222d0a;
+	color: var(--bp-ink);
+	font-size: 13px;
+	line-height: 1.6;
+	text-align: center;
+	pointer-events: none;
+}
+.portal-unlock-hint:empty {
+	padding: 0;
+	box-shadow: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.portal-unlock-hint:not(:empty) {
+		animation: portal-unlock-appear 180ms ease-out;
+	}
+}
+@keyframes portal-unlock-appear {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+.brainpod.portal-ready .brainpod-entrance-track {
+	position: relative;
+	height: var(--portal-track-height);
+	z-index: 1;
+}
+.brainpod.portal-ready .brainpod-entrance-pin {
+	position: sticky;
+	top: var(--portal-pin-top);
+	overflow: clip;
+}
+.brainpod.portal-ready .curiosity-poster {
+	transform-origin: 0 0;
+}
+.brainpod.portal-ready .brainpod-world-anchor {
+	margin-top: var(--portal-world-overlap);
+}
+.brainpod[data-portal-active] .curiosity-poster {
+	will-change: transform;
+}
+.brainpod[data-portal-active] .curiosity-poster > :not(.device-column) {
+	opacity: var(--portal-decor-opacity) !important;
+}
+.brainpod[data-portal-active] .device-toolbar,
+.brainpod[data-portal-active] .floor-shadow {
+	opacity: var(--portal-decor-opacity);
+}
+.brainpod[data-portal-active] .product-render {
+	rotate: var(--portal-stage-rotate) !important;
+	translate: var(--portal-stage-translate) !important;
+}
+.brainpod[data-portal-active] .lcd > * {
+	opacity: var(--portal-lcd-opacity);
+}
+.brainpod.portal-ready .brainpod-directory {
+	margin-top: 0;
+}
+@media (max-width: 720px) {
+	.portal-unlock-hint {
+		bottom: 60px;
+	}
+	.brainpod .portal-enter {
+		bottom: 53px;
+		left: 20px;
+		translate: none;
+		padding-left: 6px;
+	}
+}

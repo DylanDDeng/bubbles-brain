@@ -1,0 +1,169 @@
+/* The entrance becomes one physical object in an open white space. */
+.brainpod.brainpod--device {
+	--scene-height: 100svh;
+	--device-height: clamp(220px, 70svh, 660px);
+}
+.brainpod--device .curiosity-poster {
+	height: var(--scene-height);
+	min-height: 0;
+	padding: 0;
+	background: #fff;
+}
+.brainpod--device .poster-title {
+	inset: 0 auto auto 0;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+}
+.brainpod--device .poster-edition,
+.brainpod--device .poster-manifesto,
+.brainpod--device .curiosity-flower,
+.brainpod--device .poster-pencil,
+.brainpod--device .topic-sticker,
+.brainpod--device .surprise-stamp,
+.brainpod--device .preview-column,
+.brainpod--device .poster-footnote,
+.brainpod--device .controls-hint,
+.brainpod--device .poster-brand img,
+.brainpod--device .poster-search > span,
+.brainpod--device .portal-enter > span,
+.brainpod--device .poster-motion-control > span {
+	display: none;
+}
+.brainpod--device .device-column {
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+	width: min(100%, 720px);
+}
+.brainpod--device .product-render {
+	height: var(--device-height);
+}
+.brainpod.brainpod--device[data-motion='on'] .product-render {
+	animation-name: bpPodUprightFloat;
+}
+.brainpod--device .floor-shadow {
+	left: 24%;
+	transform: none;
+}
+@keyframes bpPodUprightFloat {
+	0%,
+	100% {
+		translate: 0 0;
+	}
+	50% {
+		translate: 0 -14px;
+	}
+}
+.brainpod--device .select-button span {
+	opacity: 1;
+}
+.brainpod--device .product-render:focus-visible {
+	outline: none;
+}
+.brainpod--device .product-render:focus-visible .lcd {
+	outline: 3px solid #657e59;
+	outline-offset: 4px;
+}
+.brainpod--device .poster-navigation {
+	top: 24px;
+	left: 32px;
+	right: 32px;
+	min-height: 44px;
+	align-items: center;
+}
+.brainpod--device .poster-brand {
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.035em;
+	color: var(--bp-secondary);
+}
+.brainpod--device .poster-nav-actions {
+	display: none;
+}
+.brainpod--device .poster-search,
+.brainpod--device .poster-menu > summary {
+	min-height: 44px;
+	font-size: 12px;
+	color: var(--bp-secondary);
+}
+.brainpod--device .poster-search {
+	width: 44px;
+	justify-content: center;
+}
+.brainpod--device .poster-menu > summary i {
+	font-size: 18px;
+}
+.brainpod--device .portal-enter {
+	left: 50%;
+	bottom: 28px;
+	translate: -50% 0;
+	min-height: 44px;
+	padding: 8px 12px;
+	gap: 10px;
+	color: var(--bp-muted);
+}
+.brainpod--device .portal-enter > strong {
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: 0.04em;
+}
+.brainpod--device .poster-motion-control,
+.brainpod--device .device-toolbar {
+	position: absolute;
+	top: auto;
+	bottom: 28px;
+	margin: 0;
+	padding: 0;
+	color: var(--bp-muted);
+}
+.brainpod--device .poster-motion-control {
+	left: 28px;
+	width: 44px;
+	height: 44px;
+	display: grid;
+	place-items: center;
+}
+.brainpod--device .poster-motion-control i {
+	font-size: 16px;
+}
+.brainpod--device .device-toolbar {
+	right: 28px;
+	left: auto;
+	z-index: 10;
+}
+.brainpod--device .device-settings > summary {
+	width: 44px;
+	height: 44px;
+}
+.brainpod--device .settings-panel {
+	top: auto;
+	bottom: 52px;
+	left: auto;
+	right: 0;
+}
+@media (max-width: 720px) {
+	.brainpod.brainpod--device {
+		--device-height: min(62svh, 116vw);
+	}
+	.brainpod--device .poster-navigation {
+		top: 16px;
+		left: 20px;
+		right: 20px;
+	}
+	.brainpod--device .poster-nav-actions {
+		gap: 8px;
+	}
+	.brainpod--device .portal-enter,
+	.brainpod--device .poster-motion-control,
+	.brainpod--device .device-toolbar {
+		bottom: max(20px, env(safe-area-inset-bottom));
+	}
+	.brainpod--device .poster-motion-control {
+		left: 12px;
+	}
+	.brainpod--device .device-toolbar {
+		right: 12px;
+	}
+}

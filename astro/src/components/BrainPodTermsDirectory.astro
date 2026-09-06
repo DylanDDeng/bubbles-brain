@@ -1,0 +1,96 @@
+---
+import { buildBrainPodTerms } from '../lib/brainpodTerms';
+const categories = buildBrainPodTerms();
+---
+
+<div class="bc-term-directory">
+	<div data-room-subview="vibe-coding-terms">
+		<a class="bc-parent-link" href="#bc-vibe-coding" data-room-section="vibe-coding">
+			<i class="ph ph-arrow-left" aria-hidden="true"></i>Vibe Coding
+		</a>
+		<header class="bc-panel-heading">
+			<h3 id="bc-title-vibe-coding-terms" tabindex="-1">术语</h3>
+		</header>
+		<ul class="bc-tracks bc-term-categories">
+			{
+				categories.map((category) => (
+					<li>
+						<a href={'#bc-' + category.pages[0].id} data-room-pick={category.pages[0].id}>
+							<>
+								<span>{category.label}</span>
+								<i class="ph ph-arrow-right" aria-hidden="true" />
+							</>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+	{
+		categories.flatMap((category) =>
+			category.pages.map((page, index) => (
+				<section
+					id={'bc-' + page.id}
+					data-room-subview={page.id}
+					aria-labelledby={'bc-title-' + page.id}
+				>
+					<a class="bc-parent-link" href="#bc-vibe-coding-terms" data-room-pick="vibe-coding-terms">
+						<i class="ph ph-arrow-left" aria-hidden="true" />
+						术语
+					</a>
+					<header class="bc-panel-heading">
+						<h3 id={'bc-title-' + page.id} tabindex="-1">
+							{category.label}
+						</h3>
+					</header>
+					{page.group && <p class="bc-term-group">{page.group}</p>}
+					<ul class="bc-tracks">
+						{page.terms.map((term) => (
+							<li>
+								<a href={`/vibe-coding/terms/${term.id}/`}>
+									<span>
+										{term.chineseName}
+										{term.chineseName !== term.name && `（${term.name}）`}
+									</span>
+									<i class="ph ph-arrow-up-right" aria-hidden="true" />
+								</a>
+							</li>
+						))}
+					</ul>
+					{category.pages.length > 1 && (
+						<nav class="bc-term-pagination" aria-label={`${category.label}翻页`}>
+							{index > 0 ? (
+								<a
+									href={'#bc-' + category.pages[index - 1].id}
+									data-room-pick={category.pages[index - 1].id}
+								>
+									<i class="ph ph-arrow-left" aria-hidden="true" />
+									上一页
+								</a>
+							) : (
+								<span />
+							)}
+							<span
+								class="bc-term-page-number"
+								aria-label={`第 ${index + 1} 页，共 ${category.pages.length} 页`}
+							>
+								{index + 1} / {category.pages.length}
+							</span>
+							{index < category.pages.length - 1 ? (
+								<a
+									href={'#bc-' + category.pages[index + 1].id}
+									data-room-pick={category.pages[index + 1].id}
+								>
+									下一页
+									<i class="ph ph-arrow-right" aria-hidden="true" />
+								</a>
+							) : (
+								<span />
+							)}
+						</nav>
+					)}
+				</section>
+			)),
+		)
+	}
+</div>

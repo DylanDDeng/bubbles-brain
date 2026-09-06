@@ -52,7 +52,8 @@ export async function createReadingMagazineScene(
 	camera.position.set(0, 0, 10);
 	const book = new T.Group();
 	scene.add(book);
-	const base = { x: 0.48, y: -0.52, z: 0.12 };
+	// Use one upright display pose for every collection, with a little visible depth.
+	const base = { x: 0, y: -0.3, z: 0 };
 	book.rotation.set(base.x, base.y, base.z);
 	const key = new T.DirectionalLight(0xffffff, 1.8);
 	key.position.set(-3, 5, 8);
@@ -119,7 +120,7 @@ export async function createReadingMagazineScene(
 		if (disposed || !visible || document.hidden) return;
 		x += (targetX - x) * 0.13;
 		y += (targetY - y) * 0.13;
-		book.rotation.set(base.x + y * 0.055, base.y + x * 0.085, base.z + x * 0.012);
+		book.rotation.set(base.x + y * 0.02, base.y + x * 0.085, base.z);
 		renderer.render(scene, camera);
 		if (Math.abs(targetX - x) + Math.abs(targetY - y) > 0.0005) schedule();
 	}

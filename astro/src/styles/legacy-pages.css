@@ -1521,6 +1521,28 @@
 	max-width: 560px;
 }
 
+/* An authored comparison: paired charts share a row, dense charts stay full width. */
+.article-content .article-figure-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+	gap: 28px 20px;
+	margin: 32px 0 40px;
+}
+
+.article-figure-grid__item {
+	min-width: 0;
+}
+
+.article-content .article-figure-grid .article-figure {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.article-figure-grid .article-figure__trigger {
+	padding: 8px;
+}
+
 .article-content .article-figure--breakout {
 	width: min(960px, calc(100% + 140px));
 	max-width: none;

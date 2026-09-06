@@ -15,6 +15,7 @@ import {
 import ImageCompressTool from './tools/ImageCompressTool.astro';
 import AIInfographicTool from './tools/AIInfographicTool.astro';
 import CollectionCover from './CollectionCover.astro';
+import AboutProfile from './AboutProfile.astro';
 import Discussion from './Discussion.astro';
 import DirectoryItemRow from './DirectoryItemRow.astro';
 import HighlightArchive from './HighlightArchive.astro';
@@ -362,7 +363,11 @@ const libraryApi =
 	canonicalPath={record.route}
 >
 	{
-		record.isIndex ? (
+		record.isIndex && record.section === 'about' ? (
+			<AboutProfile locale={record.locale} frontmatter={record.frontmatter}>
+				{MarkdownContent && <MarkdownContent />}
+			</AboutProfile>
+		) : record.isIndex ? (
 			<section
 				class="legacy-shell directory-page"
 				data-directory-page={directoryKind ?? undefined}

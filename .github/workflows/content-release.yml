@@ -484,9 +484,14 @@ jobs:
           node "$verifier" "$PREVIEW_URL" "$EXACT_CODE_SHA" astro/dist/client/release-manifests/site-route-manifest.json
 
       - name: Record Preview evidence
-        if: ${{ steps.resume.outputs.stage != 'promote' }}
         run: |
-          evidence="$(jq -nc --arg url "$PREVIEW_URL" --arg artifact "$ARTIFACT_SHA256" --arg content "$CONTENT_ROOT_SHA256" --arg code "$EXACT_CODE_SHA" --arg contract "$RESUME_CONTRACT_VERSION" '{preview_url:$url,artifact_sha256:$artifact,content_sha256:$content,code_sha:$code,route_parity:true,resume_contract_version:($contract | if length > 0 then . else null end)}')"
+          if [[ "$SERVER_RESUME_STAGE" == "promote" ]]; then
+            # The new attempt starts in building state. Re-attest the verified
+            # checkpoint with its current fence before requesting promotion.
+            evidence="$(jq -ce '.preview_checkpoint.evidence' server-resume-plan.json)"
+          else
+            evidence="$(jq -nc --arg url "$PREVIEW_URL" --arg artifact "$ARTIFACT_SHA256" --arg content "$CONTENT_ROOT_SHA256" --arg code "$EXACT_CODE_SHA" --arg contract "$RESUME_CONTRACT_VERSION" '{preview_url:$url,artifact_sha256:$artifact,content_sha256:$content,code_sha:$code,route_parity:true,resume_contract_version:($contract | if length > 0 then . else null end)}')"
+          fi
           node "$RUNNER_TEMP/content-release-helper.mjs" callback preview_verified "$evidence"
 
       - name: Request fenced production promotion

@@ -16,7 +16,7 @@ VERIFY_MIN_EXACT_ENDPOINTS = "2"
 # From production upload start through exact multi-origin convergence. Pending
 # origins are probed in parallel until this hard limit; exceeding it restores
 # the last-known-good release while leaving the database pointer unchanged.
-MAX_PRODUCTION_INCONSISTENCY_MS = "120000"
+MAX_PRODUCTION_INCONSISTENCY_MS = "240000"
 # Knowledge-base releases are immutable static artifacts. Exact multi-origin
 # verification runs before the pointer commits, and the scheduled reconciler
 # continues checking production afterwards, so no time-based hold is needed.

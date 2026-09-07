@@ -362,38 +362,61 @@
 .collection-site .article-outline li[data-depth='3'] a {
 	padding-left: 14px;
 }
+.collection-site .article-ending {
+	margin-top: 48px;
+	padding-top: 24px;
+	border-top: 1px solid var(--rule);
+}
 .collection-site .article-pagination {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 32px;
-	margin-top: 72px;
-	border: 0;
-	padding-top: 0;
 }
-.collection-site .article-pagination > div:has(a) {
-	border: 0;
-	padding: 0;
-	background: none;
+.collection-site .article-pagination > a {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	padding-block: 8px;
+	text-decoration: none;
+	color: var(--ink);
 }
-.collection-site .article-pagination > div:last-child {
-	text-align: right;
+.collection-site .article-pagination > a:hover {
+	color: var(--blue);
 }
 .collection-site .article-pagination span {
-	font-size: var(--type-meta);
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--ink-faint);
 }
-.collection-site .article-pagination > div a {
-	margin-top: 10px;
-	font-size: 17px;
-	font-weight: 450;
+.collection-site .article-pagination strong {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	font-size: 15px;
+	line-height: 1.7;
+	font-weight: 400;
+	overflow-wrap: anywhere;
 }
-.collection-site .article-back {
-	grid-row: 2;
-	grid-column: 1/-1;
-	justify-self: center;
-	padding: 12px;
-	border: 0;
-	background: none;
-	font-size: var(--type-ui);
+.collection-site .article-pagination i {
+	flex-shrink: 0;
+	font-size: 14px;
+}
+.collection-site .article-next {
+	grid-column: 2;
+	text-align: right;
+	align-items: flex-end;
+}
+@media (max-width: 600px) {
+	.collection-site .article-pagination {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+	}
+	.collection-site .article-next {
+		grid-column: 1;
+		text-align: left;
+		align-items: flex-start;
+	}
 }
 /* The specialist tools retain their own artwork and interactive examples. */
 .collection-site :is(.vibe-terms, .design-page, .concept-detail) {

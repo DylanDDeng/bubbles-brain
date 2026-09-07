@@ -1612,8 +1612,12 @@
 	white-space: nowrap;
 }
 .brainpod .lcd-row .row-count {
-	font: 18px var(--lcd-font);
-	color: #7b8a73;
+	font: 400 20px/1 var(--lcd-font);
+	color: #596852;
+	min-width: 3ch;
+	flex-shrink: 0;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
 }
 .brainpod .lcd-row .row-chevron {
 	font-size: 24px;
@@ -1631,7 +1635,7 @@
 	text-shadow: none;
 }
 .brainpod .lcd-row[aria-current='true'] .row-count {
-	color: #d3e0ff;
+	color: #fff;
 }
 .brainpod .lcd-footer {
 	height: 32px;

@@ -57,6 +57,8 @@ const expectedArticleRoutes = [
 	'/en/highlights/2026-09-02-the-anatomy-of-effective-commerce-agents/',
 	'/highlights/2026-09-06-research-acceleration-view-inside-openai/',
 	'/en/highlights/2026-09-06-research-acceleration-view-inside-openai/',
+	'/highlights/2026-09-06-slop-creep-when-building-gets-cheaper/',
+	'/en/highlights/2026-09-06-slop-creep-when-building-gets-cheaper/',
 ];
 
 function highlightRecords(entries: LegacyContentEntry[]) {

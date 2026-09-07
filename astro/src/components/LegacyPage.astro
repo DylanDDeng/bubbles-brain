@@ -130,6 +130,14 @@ const outlineHeadings =
 	rendered?.headings.filter((heading) => heading.depth === 2 || heading.depth === 3) ?? [];
 const sourceUrl =
 	typeof record.frontmatter.sourceUrl === 'string' ? record.frontmatter.sourceUrl : null;
+const articleIntro =
+	markdownCollection === 'highlights'
+		? (
+				markdownEntry?.data as {
+					articleIntro?: { author: string; sourceName: string; note: string };
+				}
+			)?.articleIntro
+		: undefined;
 const readingMinutesFor = (body: string) => {
 	const units =
 		(body.match(/[\u3400-\u9fff]/g)?.length ?? 0) +
@@ -550,19 +558,24 @@ const libraryApi =
 						{isEnglish ? label.en : label.zh}
 					</a>
 					<h1>{title}</h1>
-					{description && <p class="article-lede">{description}</p>}
+					{description && !articleIntro && <p class="article-lede">{description}</p>}
 					<div class="reading-meta">
+						{articleIntro && <span class="reading-author">{articleIntro.author}</span>}
 						{record.date && (
 							<time datetime={record.date.toISOString()}>
 								{record.date.toISOString().slice(0, 10)}
 							</time>
 						)}
-						<span>
-							{readingMinutes} {isEnglish ? 'min read' : '分钟阅读'}
-						</span>
+						{!articleIntro && (
+							<span>
+								{readingMinutes} {isEnglish ? 'min read' : '分钟阅读'}
+							</span>
+						)}
 						{sourceUrl && (
 							<a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-								{sourceLabel}
+								{articleIntro
+									? `${articleIntro.sourceName} · ${isEnglish ? 'Original' : '原文'}`
+									: sourceLabel}
 								<i class="ph ph-arrow-up-right" aria-hidden="true" />
 							</a>
 						)}
@@ -576,6 +589,7 @@ const libraryApi =
 					]}
 				>
 					<div class="article-main">
+						{articleIntro && <p class="article-editorial-note">{articleIntro.note}</p>}
 						{isStandaloneHtml ? (
 							<iframe
 								class="standalone-article"
@@ -596,47 +610,50 @@ const libraryApi =
 							</p>
 						)}
 
-						{threadId && <Discussion threadId={threadId} locale={record.locale} />}
-						<nav
-							class="article-pagination"
-							aria-label={isEnglish ? 'Article navigation' : '文章导航'}
-						>
-							<div>
-								{newer && (
-									<>
-										<span>
-											{isTutorialArticle
-												? isEnglish
-													? 'Previous chapter'
-													: '上一章'
-												: isEnglish
-													? 'Newer'
-													: '较新'}
-										</span>
-										<a href={newer.route}>← {newer.title}</a>
-									</>
-								)}
-							</div>
-							<a class="article-back" href={sectionHref}>
-								{isEnglish ? 'Back to collection' : '返回收藏'}
-							</a>
-							<div>
-								{older && (
-									<>
-										<span>
-											{isTutorialArticle
-												? isEnglish
-													? 'Next chapter'
-													: '下一章'
-												: isEnglish
-													? 'Older'
-													: '较早'}
-										</span>
-										<a href={older.route}>{older.title} →</a>
-									</>
-								)}
-							</div>
-						</nav>
+						<footer class="article-ending">
+							{(newer || older) && (
+								<nav
+									class="article-pagination"
+									aria-label={isEnglish ? 'Article navigation' : '文章导航'}
+								>
+									{newer && (
+										<a href={newer.route} class="article-previous" rel="prev">
+											<span>
+												{isTutorialArticle
+													? isEnglish
+														? 'Previous chapter'
+														: '上一章'
+													: isEnglish
+														? 'Previous'
+														: '上一篇'}
+											</span>
+											<strong>
+												<i class="ph ph-arrow-left" aria-hidden="true" />
+												{newer.title}
+											</strong>
+										</a>
+									)}
+									{older && (
+										<a href={older.route} class="article-next" rel="next">
+											<span>
+												{isTutorialArticle
+													? isEnglish
+														? 'Next chapter'
+														: '下一章'
+													: isEnglish
+														? 'Next'
+														: '下一篇'}
+											</span>
+											<strong>
+												{older.title}
+												<i class="ph ph-arrow-right" aria-hidden="true" />
+											</strong>
+										</a>
+									)}
+								</nav>
+							)}
+							{threadId && <Discussion threadId={threadId} locale={record.locale} />}
+						</footer>
 					</div>
 					{outlineHeadings.length > 0 && (
 						<ArticleOutline headings={outlineHeadings} locale={record.locale} />

@@ -10,6 +10,18 @@ export function portalEase(start: number, end: number, progress: number) {
 	return t * t * (3 - 2 * t);
 }
 
+/** Visible content can be used before the camera finishes its entrance. */
+export function brainPodPortalWorldState(progress: number, locked = false) {
+	const opacity = portalEase(0.3, 0.48, progress);
+	return { opacity, visible: opacity > 0, interactive: opacity > 0 && !locked };
+}
+
+export function brainPodPortalPageMode(progress: number, enabled: boolean, locked: boolean) {
+	if (locked) return 'hidden';
+	if (!enabled || progress >= 1) return 'fullscreen';
+	return brainPodPortalWorldState(progress).visible ? 'windowed' : 'hidden';
+}
+
 /** Layout and scroll offsets can round differently at the end of a short page. */
 export function brainPodPortalProgress(scrollY: number, start: number, end: number) {
 	if (scrollY >= end - 1) return 1;

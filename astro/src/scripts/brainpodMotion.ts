@@ -54,10 +54,10 @@ export function mountBrainPodMotion(root: HTMLElement, signal: AbortSignal) {
 			reduced.matches ? '已按系统偏好减少动态效果' : enabled ? '暂停画面动效' : '开启画面动效',
 		);
 		toggle.querySelector('span')!.textContent = reduced.matches
-			? '静静地，保持好奇'
+			? '已按系统设置减少动效'
 			: enabled
-				? '让时间慢一点'
-				: '让好奇心动起来';
+				? '暂停动效'
+				: '开启动效';
 		toggle.querySelector('i')!.className =
 			enabled && !reduced.matches ? 'ph ph-pause' : 'ph ph-play';
 		if (!active()) {

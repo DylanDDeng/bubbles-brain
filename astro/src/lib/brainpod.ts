@@ -1,5 +1,6 @@
 import type { KnowledgeSearchIndex, KnowledgeSearchItem } from './searchIndex';
 import { changelog, type ChangelogItem } from '../data/changelog';
+import { buildReadingUpdates, type ReadingUpdate } from './readingUpdates';
 
 export type BrainPodItem = Pick<
 	KnowledgeSearchItem,
@@ -26,6 +27,7 @@ export interface BrainPodLibrary {
 	playlists: Record<string, BrainPodPlaylist>;
 	featured: { item: BrainPodItem; reason: string; detail: string } | null;
 	recent: { item: BrainPodItem; recordedAt: string }[];
+	updates: ReadingUpdate[];
 }
 
 const collections = [
@@ -137,6 +139,7 @@ export function buildBrainPodLibrary(
 		collections: grouped,
 		featured,
 		recent,
+		updates: buildReadingUpdates(items, updates),
 		playlists: {
 			start: {
 				title: 'AI 的第一课',

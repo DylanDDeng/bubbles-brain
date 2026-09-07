@@ -1,5 +1,12 @@
-import { brainPodPortalFrame, brainPodPortalProgress, portalEase } from '../lib/brainpodPortal';
+import {
+	brainPodPortalFrame,
+	brainPodPortalPageMode,
+	brainPodPortalProgress,
+	brainPodPortalWorldState,
+	portalEase,
+} from '../lib/brainpodPortal';
 import type { BrainPodScene } from './brainpodScene';
+import { mountPortalPreview } from './brainpodPortalPreview';
 
 /** Pin only the entrance. The real homepage returns to normal document flow at the seam. */
 export function mountBrainPodPortal(
@@ -26,8 +33,7 @@ export function mountBrainPodPortal(
 	let touchY = 0;
 	function requestUnlock() {
 		if (!locked) return false;
-		if (!unlockHint.textContent)
-			unlockHint.textContent = '请先按 ENTER 或拨动顶部 Lock 开关解锁';
+		if (!unlockHint.textContent) unlockHint.textContent = '请先按 ENTER 或拨动顶部 Lock 开关解锁';
 		enter.style.visibility = 'hidden';
 		return true;
 	}
@@ -49,6 +55,14 @@ export function mountBrainPodPortal(
 	let worldHeight = 0;
 	let initialized = false;
 	let pendingFocus: HTMLElement | undefined;
+	const preview = mountPortalPreview(content, signal, {
+		isWindowed: () => brainPodPortalPageMode(lastProgress, enabled, locked) === 'windowed',
+		isFullscreen: () => brainPodPortalPageMode(lastProgress, enabled, locked) === 'fullscreen',
+		scrollBy(delta) {
+			window.scrollBy({ top: delta, behavior: 'instant' });
+			schedule();
+		},
+	});
 	function restorePosterFocus() {
 		if (pendingFocus && !poster.inert) {
 			pendingFocus.focus({ preventScroll: true });
@@ -79,9 +93,11 @@ export function mountBrainPodPortal(
 		else world.removeAttribute('aria-hidden');
 		world.style.cssText = '';
 		content.style.removeProperty('transform');
+		content.style.removeProperty('--portal-page-height');
 		getScene()?.setEntranceProgress(0);
 		previous = { scale: 1, x: 0, y: 0 };
 		lastProgress = -1;
+		preview.sync();
 	}
 	function measure() {
 		viewport = { width: root.clientWidth, height: window.innerHeight };
@@ -118,15 +134,18 @@ export function mountBrainPodPortal(
 		root.style.setProperty('--portal-decor-opacity', String(1 - portalEase(0.03, 0.4, progress)));
 		root.style.setProperty('--portal-lcd-opacity', String(1 - portalEase(0.29, 0.47, progress)));
 		const entered = progress >= 1;
+		const worldState = brainPodPortalWorldState(progress, locked);
 		// Keep the physical controls usable until the LCD starts revealing the destination.
 		poster.inert = progress >= 0.3;
 		restorePosterFocus();
 		poster.style.visibility = entered ? 'hidden' : '';
-		world.inert = !entered;
-		world.setAttribute('aria-hidden', String(!entered));
+		world.inert = !worldState.interactive;
+		world.setAttribute('aria-hidden', String(!worldState.interactive));
 		if (entered) {
 			world.style.cssText = '';
 			content.style.removeProperty('transform');
+			content.style.removeProperty('--portal-page-height');
+			preview.sync();
 			return;
 		}
 		const lcd = stage.querySelector<HTMLElement>('.lcd');
@@ -146,12 +165,16 @@ export function mountBrainPodPortal(
 		const aperture = camera.window;
 		const release = portalEase(0.68, 1, progress);
 		const scale = Math.min(1, aperture.width / viewport.width);
+		const visibleHeight =
+			Math.min(viewport.height, aperture.y + aperture.height) - Math.max(0, aperture.y);
+		// The child document must fit the aperture; focusing it must not scroll the camera.
+		content.style.setProperty('--portal-page-height', `${Math.max(1, visibleHeight / scale)}px`);
 		// A landscape LCD opens vertically on phones; never carry its negative left edge
 		// into the actual portrait page, where it would cut off headings and search.
 		content.style.transform = `translate3d(${Math.max(0, aperture.x)}px,${Math.max(0, aperture.y)}px,0) scale(${scale})`;
 		world.style.transform = `translateY(${window.scrollY - end}px)`;
-		world.style.opacity = String(portalEase(0.3, 0.48, progress));
-		world.style.visibility = progress <= 0.3 ? 'hidden' : 'visible';
+		world.style.opacity = String(worldState.opacity);
+		world.style.visibility = worldState.visible ? 'visible' : 'hidden';
 		world.style.clipPath = `inset(${Math.max(0, aperture.y)}px ${Math.max(0, viewport.width - aperture.x - aperture.width)}px ${Math.max(0, worldHeight - Math.min(viewport.height, aperture.y + aperture.height))}px ${Math.max(0, aperture.x)}px round ${Math.max(0, 5 * camera.scale * (1 - release))}px)`;
 	}
 	function schedule() {
@@ -291,6 +314,7 @@ export function mountBrainPodPortal(
 			unlockHint.textContent = '';
 			enter.style.removeProperty('visibility');
 			if (locked) {
+				preview.close();
 				// Return a partially zoomed device to its fully usable entrance pose.
 				lockedScrollY = track.getBoundingClientRect().top + window.scrollY;
 				window.scrollTo({ top: lockedScrollY, behavior: 'instant' });

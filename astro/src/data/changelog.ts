@@ -7,6 +7,8 @@ export interface ChangelogItem {
 	type: ChangelogCategory;
 	summary: string;
 	highlights?: string[];
+	/** Explicit content changes in a mixed feature/polish entry. */
+	readingUpdates?: string[];
 	links?: Array<{
 		label: string;
 		href: string;
@@ -15,7 +17,26 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-06',
+		tag: '精选阅读',
+		type: 'content',
+		title: '新增 OpenAI 研究加速与 Slop-Creep 精选阅读',
+		summary:
+			'收录 OpenAI 关于 AI 研究加速的一手观察，以及 Brandon Sovran 对构建成本下降与思考的讨论；提供中文译文和原文出处。',
+		links: [
+			{
+				label: '低质系统的蔓延：当构建比思考更便宜',
+				href: '/highlights/2026-09-06-slop-creep-when-building-gets-cheaper/',
+			},
+			{
+				label: '研究加速：从 OpenAI 内部看 AI 研究的变化',
+				href: '/highlights/2026-09-06-research-acceleration-view-inside-openai/',
+			},
+		],
+	},
+	{
 		date: '2026-09-04',
+		readingUpdates: ['/highlights/2026-08-31-how-our-agents-build-on-brand-pages-with-design-md/'],
 		tag: '搜索与阅读体验',
 		type: 'feature',
 		title: '全站知识搜索与文章阅读体验升级',
@@ -56,6 +77,7 @@ export const changelog: ChangelogItem[] = [
 	},
 	{
 		date: '2026-08-31',
+		readingUpdates: ['/newbie-tutorials/why-ai-forgets/'],
 		tag: '交互与教程',
 		type: 'polish',
 		title: '侧边栏手风琴导航升级 & 新手村《AI 为什么会遗忘》',
@@ -78,8 +100,7 @@ export const changelog: ChangelogItem[] = [
 		tag: '新栏目上线',
 		type: 'content',
 		title: '「新手村」栏目正式上线',
-		summary:
-			'专为零技术背景读者打造，用直觉比喻、动图与交互小实验讲透大模型的核心工作原理。',
+		summary: '专为零技术背景读者打造，用直觉比喻、动图与交互小实验讲透大模型的核心工作原理。',
 		highlights: [
 			'首发上线《AI 为什么会胡说八道》《什么是知识库》等核心图解教程',
 			'内置动态交互小实验，直观体验大模型概率采样与幻觉成因',

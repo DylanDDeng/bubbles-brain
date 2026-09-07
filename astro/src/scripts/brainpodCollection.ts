@@ -29,6 +29,7 @@ export function mountBrainPodCollection(
 	let lastCollection = root.dataset.brainpodCollection;
 	let view = (brainPodParent(lastCollection || '')?.id as string) || 'tutorials';
 	let hashFrame = 0;
+	let changingView = false;
 	room.classList.add('bc-enhanced');
 	function paint() {
 		const selectedView = findView(view) || panels[0];
@@ -40,7 +41,7 @@ export function mountBrainPodCollection(
 		subviews.forEach((panel) => {
 			panel.hidden = panel !== selectedView;
 		});
-		const heading = selectedView.querySelector<HTMLElement>('h3');
+		const heading = selectedView.querySelector<HTMLElement>('.bc-panel-heading h2');
 		if (heading?.id) selected.setAttribute('aria-labelledby', heading.id);
 		const collection = panelId(selected)!;
 		const section =
@@ -66,7 +67,7 @@ export function mountBrainPodCollection(
 		const id = location.hash.replace(/^#bc-/, '');
 		if (!findView(id)) return;
 		selectView(id);
-		if (initial || root.querySelector<HTMLElement>('.brainpod-world')?.inert) {
+		if (!changingView && (initial || root.querySelector<HTMLElement>('.brainpod-world')?.inert)) {
 			cancelAnimationFrame(hashFrame);
 			hashFrame = requestAnimationFrame(() => {
 				if (!signal.aborted) actions.revealCollection();
@@ -103,12 +104,16 @@ export function mountBrainPodCollection(
 			event.preventDefault();
 			const scroll = { left: window.scrollX, top: window.scrollY, behavior: 'instant' as const };
 			selectView(id);
+			changingView = true;
 			// Astro owns history; compensate its native fragment jump so the directory changes in place.
 			void navigate(pick.getAttribute('href')!, { history: 'push' }).then(() => {
 				if (signal.aborted) return;
 				window.scrollTo(scroll);
+				changingView = false;
 				if (!pick.hasAttribute('data-room-index')) {
-					findView(view)?.querySelector<HTMLElement>('h3')?.focus({ preventScroll: true });
+					findView(view)
+						?.querySelector<HTMLElement>('.bc-panel-heading h2')
+						?.focus({ preventScroll: true });
 				}
 			});
 		},

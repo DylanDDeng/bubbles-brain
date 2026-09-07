@@ -1,14 +1,16 @@
 ---
 import { buildKnowledgeSearchIndex } from '../lib/searchIndex';
 import { buildBrainPodLibrary } from '../lib/brainpod';
-import { brainPodSections, brainPodParent } from '../lib/brainpodSections';
+import { brainPodSections } from '../lib/brainpodSections';
 import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import CollectionCover from './CollectionCover.astro';
 import SiteActions from './SiteActions.astro';
+import FooterLinks from './FooterLinks.astro';
 import BrainPodTermsDirectory from './BrainPodTermsDirectory.astro';
 import '../styles/brainpodCollection.css';
 
 const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
+const previewLimit = 5;
 ---
 
 <section class="brainpod-collection-room" data-collection-room aria-label="知识收藏">
@@ -20,7 +22,7 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 		<SiteActions locale="zh-CN" languageHref="/en/" />
 	</header>
 	<section class="bc-browser" id="bc-browser" aria-labelledby="bc-browser-title">
-		<h1 id="bc-browser-title">收藏</h1>
+		<h1 id="bc-browser-title" class="sr-only">收藏</h1>
 		<nav class="bc-index" aria-label="选择知识栏目">
 			{
 				brainPodSections.map((section, i) => (
@@ -31,6 +33,14 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 						aria-current={i === 0 ? 'true' : undefined}
 					>
 						{section.title}
+						<span
+							class="reading-update-dot"
+							data-update-sections={section.children.join(' ')}
+							role="img"
+							aria-label="有未读更新"
+							title="有未读更新"
+							hidden
+						/>
 					</a>
 				))
 			}
@@ -51,9 +61,9 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 							</div>
 							<div class="bc-panel-content">
 								<header class="bc-panel-heading">
-									<h3 id={'bc-title-' + section.id} tabindex="-1">
+									<h2 id={'bc-title-' + section.id} tabindex="-1">
 										{section.title}
-									</h3>
+									</h2>
 								</header>
 								<ul class="bc-tracks bc-subsections">
 									{section.children.map((id) => {
@@ -63,7 +73,17 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 										return (
 											<li>
 												<a href={'#bc-' + id} data-room-pick={id}>
-													<span>{collection.title.replace('Vibe Coding ', '')}</span>
+													<span>
+														{collection.title.replace('Vibe Coding ', '')}
+														<span
+															class="reading-update-dot"
+															data-update-sections={collection.id}
+															role="img"
+															aria-label="有未读更新"
+															title="有未读更新"
+															hidden
+														/>
+													</span>
 													<i class="ph ph-arrow-right" aria-hidden="true" />
 												</a>
 											</li>
@@ -92,23 +112,13 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 								<BrainPodTermsDirectory />
 							) : (
 								<>
-									{brainPodParent(collection.id)!.children.length > 1 && (
-										<a
-											class="bc-parent-link"
-											href={'#bc-' + brainPodParent(collection.id)!.id}
-											data-room-section={brainPodParent(collection.id)!.id}
-										>
-											<i class="ph ph-arrow-left" aria-hidden="true" />
-											{brainPodParent(collection.id)!.title}
-										</a>
-									)}
 									<header class="bc-panel-heading">
-										<h3 id={'bc-title-' + collection.id} tabindex="-1">
+										<h2 id={'bc-title-' + collection.id} tabindex="-1">
 											{collection.title}
-										</h3>
+										</h2>
 									</header>
 									<ol class="bc-tracks">
-										{collection.items.slice(0, 5).map((item) => (
+										{collection.items.slice(0, previewLimit).map((item) => (
 											<li>
 												<a
 													href={item.href}
@@ -121,10 +131,12 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 											</li>
 										))}
 									</ol>
-									<a class="bc-all-link" href={collection.href}>
-										查看全部
-										<i class="ph ph-arrow-right" aria-hidden="true" />
-									</a>
+									{collection.items.length > previewLimit && (
+										<a class="bc-all-link" href={collection.href}>
+											查看全部 {collection.items.length} 篇
+											<i class="ph ph-arrow-right" aria-hidden="true" />
+										</a>
+									)}
 								</>
 							)}
 						</div>
@@ -134,9 +146,6 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 		</div>
 	</section>
 	<footer class="bc-footer">
-		<a href="#brainpod-stage" data-room-return>回到 iPod</a>
-		<nav aria-label="更多">
-			<a href="/changelog/">更新</a><a href="/rss.xml">RSS</a>
-		</nav>
+		<FooterLinks />
 	</footer>
 </section>

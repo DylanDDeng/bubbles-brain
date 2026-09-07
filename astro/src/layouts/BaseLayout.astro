@@ -4,6 +4,7 @@ import '../styles/ricoui-theme.css';
 import '../styles/collection-pages.css';
 import { ClientRouter } from 'astro:transitions';
 import SiteActions from '../components/SiteActions.astro';
+import FooterLinks from '../components/FooterLinks.astro';
 import CommandSearch from '../components/CommandSearch.astro';
 import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 
@@ -83,13 +84,7 @@ const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
 							<>
-								<img
-									class="site-avatar"
-									src={CAT_CURATOR_AVATAR}
-									alt=""
-									width="36"
-									height="36"
-								/>
+								<img class="site-avatar" src={CAT_CURATOR_AVATAR} alt="" width="36" height="36" />
 								<span>Bubble’s Brain</span>
 							</>
 						</a>
@@ -102,26 +97,16 @@ const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 				{
 					!immersive && (
 						<footer class="site-footer">
-							<a href={homeHref}>Bubble’s Brain</a>
-							<nav aria-label={isEnglish ? 'More' : '更多'}>
-								<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
-								{!isEnglish && <a href="/changelog/">更新</a>}
-								<a href={isEnglish ? '/en/rss.xml' : '/rss.xml'}>RSS</a>
-								<a
-									href="https://github.com/DylanDDeng/bubbles-brain"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									GitHub
-								</a>
-								<a href={languageHref}>{isEnglish ? '中文' : 'EN'}</a>
-							</nav>
+							<FooterLinks locale={lang} />
 						</footer>
 					)
 				}
 			</div>
 		</div>
 		<CommandSearch locale={lang} />
+		<script>
+			import '../scripts/readingUpdates';
+		</script>
 		<script is:inline type="module" src="/js/site-shell.js"></script>
 	</body>
 </html>

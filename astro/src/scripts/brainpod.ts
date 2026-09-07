@@ -7,6 +7,7 @@ import { createBrainPodScene, type BrainPodScene } from './brainpodScene';
 import { mountBrainPodMotion } from './brainpodMotion';
 import { mountBrainPodPortal } from './brainpodPortal';
 import { mountBrainPodCollection } from './brainpodCollection';
+import { markReadingUpdateSeen, refreshReadingIndicators } from './readingUpdates';
 
 type Row = BrainPodCollection | BrainPodItem;
 interface MenuPage {
@@ -35,9 +36,24 @@ export function mountBrainPod(root: HTMLElement): () => void {
 	if (!payload?.textContent) return () => {};
 	const library: BrainPodLibrary = JSON.parse(payload.textContent);
 	const { items, collections, playlists, featured } = library;
+	const availableUpdates = library.updates.filter(
+		(update) => update.recordedAt <= new Date().toISOString().slice(0, 10),
+	);
+	const recentCollection: BrainPodCollection = {
+		kind: 'collection',
+		id: 'recent-updates',
+		title: '最近更新',
+		description: '最近收录与实质更新的知识内容。',
+		href: '/changelog/',
+		index: 0,
+		items: availableUpdates.slice(0, 20).map((update) => update.item),
+	};
+	const menuCollections = recentCollection.items.length
+		? [recentCollection, ...collections]
+		: collections;
 	const deviceOnly = root.classList.contains('brainpod--device');
 	// The device entrance starts as a browser, independently of the old featured-paper view.
-	const storageKey = deviceOnly ? 'bubble-brainpod-navigation-v4' : STORAGE_KEY;
+	const storageKey = deviceOnly ? 'bubble-brainpod-navigation-v5' : STORAGE_KEY;
 	const discoveryOrder = createBrainPodDiscoveryOrder(items, Number(root.dataset.seed) || 483101);
 	let discoveryIndex = 0;
 	const controller = new AbortController(),
@@ -58,7 +74,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 		finish: 'white' | 'graphite';
 		sound: boolean;
 	} = {
-		pages: [{ title: '知识资料库', rows: collections, selected: 0, key: 'home' }],
+		pages: [{ title: '知识资料库', rows: menuCollections, selected: 0, key: 'home' }],
 		detail: deviceOnly ? null : (featured?.item ?? null),
 		finish: 'white',
 		sound: false,
@@ -88,10 +104,10 @@ export function mountBrainPod(root: HTMLElement): () => void {
 				discoveryIndex = saved.discoveryIndex! % Math.max(1, discoveryOrder.length);
 			const selected = (n: number | undefined, length: number) =>
 				Math.max(0, Math.min(length - 1, Number.isFinite(n) ? Math.floor(n!) : 0));
-			state.pages[0].selected = selected(saved.pages?.[0]?.selected, collections.length);
+			state.pages[0].selected = selected(saved.pages?.[0]?.selected, menuCollections.length);
 			if (Array.isArray(saved.pages))
 				for (const p of saved.pages.slice(1, 2)) {
-					const c = collections.find((c) => c.id === p.key) || playlists[p.key];
+					const c = menuCollections.find((c) => c.id === p.key) || playlists[p.key];
 					if (c?.items.length)
 						state.pages.push({
 							title: c.title,
@@ -239,12 +255,15 @@ export function mountBrainPod(root: HTMLElement): () => void {
 				? deviceOnly
 					? '↑↓选择 · 确认进入'
 					: `${items.length} 条知识`
-				: deviceOnly
-					? '确认阅读 · MENU 返回'
-					: '中央键查看';
+				: p.key === 'recent-updates'
+					? `${availableUpdates.find((update) => update.item.key === (entry as BrainPodItem)?.key)?.recordedAt.slice(5) ?? ''} · 确认阅读`
+					: deviceOnly
+						? '确认阅读 · MENU 返回'
+						: '中央键查看';
 		updateSelectButton();
 		if (entry) {
-			root.dataset.brainpodCollection = isCollection(entry) ? entry.id : entry.section;
+			if (!isCollection(entry) || entry.id !== 'recent-updates')
+				root.dataset.brainpodCollection = isCollection(entry) ? entry.id : entry.section;
 			const key = isCollection(entry) ? entry.id : entry.key;
 			const isFeatured = !isCollection(entry) && key === featured?.item.key;
 			$('preview').dataset.featured = String(isFeatured);
@@ -308,6 +327,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 	}
 	function openArticle(item: BrainPodItem) {
 		persist();
+		markReadingUpdateSeen(item.key);
 		if (item.external) window.open(item.href, '_blank', 'noopener,noreferrer');
 		else void navigate(item.href);
 	}
@@ -707,6 +727,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 	);
 	paint();
 	changeFinish(state.finish);
+	refreshReadingIndicators();
 	const portal = mountBrainPodPortal(root, () => scene, signal);
 	mountBrainPodCollection(root, signal, {
 		select(id) {
@@ -716,8 +737,8 @@ export function mountBrainPod(root: HTMLElement): () => void {
 			state.pages = [
 				{
 					title: '知识资料库',
-					rows: collections,
-					selected: collections.indexOf(collection),
+					rows: menuCollections,
+					selected: menuCollections.indexOf(collection),
 					key: 'home',
 				},
 				{

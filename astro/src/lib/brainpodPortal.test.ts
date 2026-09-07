@@ -1,17 +1,51 @@
 import { describe, expect, it } from 'vitest';
-import { brainPodPortalFrame, brainPodPortalProgress, portalEase } from './brainpodPortal';
+import {
+	brainPodPortalFrame,
+	brainPodPortalPageMode,
+	brainPodPortalProgress,
+	brainPodPortalWorldState,
+	portalEase,
+} from './brainpodPortal';
 
 describe('BrainPod scroll entrance', () => {
+	it('keeps page navigation windowed until fullscreen, including after reverse scrolling', () => {
+		expect(
+			[0, 0.3, 0.5, 0.9, 0.2, 0.7, 1].map((p) => brainPodPortalPageMode(p, true, false)),
+		).toEqual(['hidden', 'hidden', 'windowed', 'windowed', 'hidden', 'windowed', 'fullscreen']);
+		expect(brainPodPortalPageMode(0.5, false, false)).toBe('fullscreen');
+		expect(brainPodPortalPageMode(1, true, true)).toBe('hidden');
+		expect(brainPodPortalPageMode(0.5, false, true)).toBe('hidden');
+	});
 	it('releases the directory when browser rounding stops short of the scroll endpoint', () => {
 		// Observed in the in-app browser at a 997px viewport and devicePixelRatio 2.
 		expect(brainPodPortalProgress(2093.5, 0, 997 * 2.1)).toBe(1);
 		expect(brainPodPortalProgress(2093, 0, 997 * 2.1)).toBe(1);
 		expect(brainPodPortalProgress(2100, 0, 997 * 2.1)).toBe(1);
 	});
-	it('keeps the room locked during the transition and restores it on reverse scroll', () => {
+	it('tracks intermediate and reverse scroll independently of click availability', () => {
 		expect(brainPodPortalProgress(2092, 0, 997 * 2.1)).toBeLessThan(1);
 		expect(brainPodPortalProgress(1000, 0, 2000)).toBe(0.5);
 		expect(brainPodPortalProgress(-10, 0, 2000)).toBe(0);
+	});
+	it('makes the page interactive as soon as it appears and disables it when hidden again', () => {
+		for (const progress of [0.31, 0.48, 0.6, 0.85, 1, 0.5]) {
+			expect(brainPodPortalWorldState(progress)).toMatchObject({
+				visible: true,
+				interactive: true,
+			});
+		}
+		for (const progress of [0.3, 0.2, 0, -1]) {
+			expect(brainPodPortalWorldState(progress)).toEqual({
+				opacity: 0,
+				visible: false,
+				interactive: false,
+			});
+		}
+	});
+	it('never enables the page while the device is locked', () => {
+		for (const progress of [0, 0.31, 0.5, 0.9, 1]) {
+			expect(brainPodPortalWorldState(progress, true).interactive).toBe(false);
+		}
 	});
 	const screen = { x: 562, y: 236, width: 234, height: 176 };
 	it('starts with the original poster camera and clamps overscroll', () => {

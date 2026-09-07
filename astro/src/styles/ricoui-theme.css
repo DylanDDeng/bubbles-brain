@@ -152,7 +152,7 @@ h3 {
 .collection-site .site-footer {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	width: min(1080px, calc(100% - 80px));
 	margin: auto;
 	padding: 64px 0 40px;
@@ -195,7 +195,7 @@ h3 {
 	}
 	.collection-site .site-footer {
 		width: calc(100% - 48px);
-		align-items: flex-start;
+		align-items: flex-end;
 		flex-direction: column;
 		gap: 22px;
 		padding: 40px 0;

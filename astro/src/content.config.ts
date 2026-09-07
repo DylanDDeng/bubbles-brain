@@ -16,6 +16,13 @@ const highlights = defineCollection({
 		date: z.coerce.date().optional(),
 		updatedAt: z.coerce.date().optional(),
 		sourceUrl: z.url(),
+		articleIntro: z
+			.object({
+				author: z.string().min(1),
+				sourceName: z.string().min(1),
+				note: z.string().min(1),
+			})
+			.optional(),
 		cover: z.string().optional(),
 		tags: z.array(z.string()).optional().default([]),
 		featured: z.boolean().optional().default(false),

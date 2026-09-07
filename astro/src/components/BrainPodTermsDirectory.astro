@@ -5,11 +5,8 @@ const categories = buildBrainPodTerms();
 
 <div class="bc-term-directory">
 	<div data-room-subview="vibe-coding-terms">
-		<a class="bc-parent-link" href="#bc-vibe-coding" data-room-section="vibe-coding">
-			<i class="ph ph-arrow-left" aria-hidden="true"></i>Vibe Coding
-		</a>
 		<header class="bc-panel-heading">
-			<h3 id="bc-title-vibe-coding-terms" tabindex="-1">术语</h3>
+			<h2 id="bc-title-vibe-coding-terms" tabindex="-1">术语</h2>
 		</header>
 		<ul class="bc-tracks bc-term-categories">
 			{
@@ -39,9 +36,9 @@ const categories = buildBrainPodTerms();
 						术语
 					</a>
 					<header class="bc-panel-heading">
-						<h3 id={'bc-title-' + page.id} tabindex="-1">
+						<h2 id={'bc-title-' + page.id} tabindex="-1">
 							{category.label}
-						</h3>
+						</h2>
 					</header>
 					{page.group && <p class="bc-term-group">{page.group}</p>}
 					<ul class="bc-tracks">

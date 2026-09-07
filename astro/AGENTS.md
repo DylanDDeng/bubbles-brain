@@ -24,10 +24,14 @@ npm run lint     # eslint
 npm run format   # prettier
 npm run test     # vitest
 npm run build    # release build (astro build + redirects + legacy compat + site contract)
-npm run verify   # check + lint + test + build + CSP + site verification
+npm run verify   # check + lint + test + images:check + build + CSP + site verification
+npm run images:generate  # regenerate ../static/_responsive variants + responsive-images.lock.json
+npm run images:check     # fail if referenced images changed without regenerating variants
 ```
 
 Build output lands in `dist/`.
+
+Responsive image variants (`../static/_responsive/`) are committed content assets, not build output. After adding or changing an image referenced from `../content`, run `npm run images:generate` and commit the variants together with `responsive-images.lock.json`; CI only verifies, it never generates.
 
 ## Development rules
 

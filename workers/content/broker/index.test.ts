@@ -1703,6 +1703,117 @@ describe("content-addressed Pages upload", () => {
     ]);
   });
 
+  it("uploads many missing assets in bounded parallel batches", async () => {
+    const fileCount = 100;
+    const files = Array.from({ length: fileCount }, (_, index) => {
+      const bytes = encoder.encode(`<html>${index}</html>`);
+      const path = `page-${index}/index.html`;
+      const sha = createHash("sha256").update(bytes).digest("hex");
+      return {
+        path,
+        bytes,
+        sha,
+        record: {
+          path,
+          byte_length: bytes.byteLength,
+          sha256: sha,
+          pages_hash: pagesAssetHash({ path, bytes }),
+          object_key: `assets/sha256/${sha}`,
+        },
+      };
+    });
+    const bySha = new Map(files.map((file) => [file.sha, file.bytes]));
+    const uploads: string[][] = [];
+    let inFlightUploads = 0;
+    let maxInFlightUploads = 0;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init: RequestInit = {}) => {
+        const url = String(input);
+        let result: unknown = {};
+        if (url.endsWith("/upload-token")) result = { jwt: "pages-jwt" };
+        else if (url.endsWith("/check-missing")) {
+          result = JSON.parse(String(init.body)).hashes;
+        } else if (url.endsWith("/assets/upload")) {
+          inFlightUploads += 1;
+          maxInFlightUploads = Math.max(maxInFlightUploads, inFlightUploads);
+          await new Promise((resolve) => setTimeout(resolve, 5));
+          inFlightUploads -= 1;
+          uploads.push(
+            JSON.parse(String(init.body)).map(
+              (entry: { key: string }) => entry.key,
+            ),
+          );
+        } else if (url.endsWith("/deployments")) {
+          result = {
+            id: "123e4567-e89b-42d3-a456-426614174000",
+            url: "https://release.pages.dev",
+          };
+        }
+        return new Response(JSON.stringify({ success: true, result }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }),
+    );
+    let inFlightReads = 0;
+    let maxInFlightReads = 0;
+    const get = vi.fn(async (key: string) => {
+      inFlightReads += 1;
+      maxInFlightReads = Math.max(maxInFlightReads, inFlightReads);
+      await new Promise((resolve) => setTimeout(resolve, 2));
+      inFlightReads -= 1;
+      const value = bySha.get(key.slice("assets/sha256/".length));
+      if (!value) throw new Error(`unexpected key ${key}`);
+      return {
+        size: value.byteLength,
+        arrayBuffer: async () => value.slice().buffer,
+      };
+    });
+    const bundle = {
+      kind: "content-addressed" as const,
+      manifest: {
+        schema_version: 1 as const,
+        hash_algorithm: "sha256-content-addressed-pages-v1" as const,
+        build: {},
+        artifact_fingerprint_sha256: "e".repeat(64),
+        file_count: fileCount,
+        total_asset_bytes: files.reduce(
+          (sum, file) => sum + file.bytes.byteLength,
+          0,
+        ),
+        files: files.map((file) => file.record),
+      },
+    };
+
+    await expect(
+      uploadPages(
+        bundle,
+        context,
+        {
+          ARTIFACTS: { get },
+          PAGES_PROJECT: "production-project",
+          CLOUDFLARE_ACCOUNT_ID: "account-id",
+          CLOUDFLARE_API_TOKEN: "api-token",
+          PRODUCTION_BRANCH: "main",
+        } as never,
+      ),
+    ).resolves.toEqual({
+      id: "123e4567-e89b-42d3-a456-426614174000",
+      url: "https://release.pages.dev",
+    });
+
+    expect(get).toHaveBeenCalledTimes(fileCount);
+    expect(
+      uploads.map((batch) => batch.length).sort((left, right) => right - left),
+    ).toEqual([40, 40, 20]);
+    expect(new Set(uploads.flat()).size).toBe(fileCount);
+    expect(maxInFlightUploads).toBeGreaterThan(1);
+    expect(maxInFlightUploads).toBeLessThanOrEqual(2);
+    expect(maxInFlightReads).toBeGreaterThan(1);
+    expect(maxInFlightReads).toBeLessThanOrEqual(6);
+  });
+
   it("stops before Pages upload when an immutable R2 asset length drifts", async () => {
     const value = setup(pageBytes.slice(1));
     await expect(
@@ -2336,6 +2447,79 @@ describe("production rollback handler", () => {
     expect(queries).toHaveLength(1);
     expect(queries[0]).toContain("get_authorized_rollback_context_v1");
     expect(end).toHaveBeenCalledOnce();
+  });
+
+  it("starts the inconsistency window after the Pages deployment exists", async () => {
+    const targetId = "123e4567-e89b-42d3-a456-426614174000";
+    const context = {
+      ...databaseContentContract,
+      site_release_id: targetId,
+      site_release_sequence: 7,
+      manifest_sha256: "a".repeat(64),
+      content_sha256: "b".repeat(64),
+      artifact_object_key: `artifacts/sha256/${"c".repeat(64)}.json`,
+      artifact_byte_length: 1,
+      artifact_sha256: "c".repeat(64),
+      artifact_fingerprint_sha256: "e".repeat(64),
+      artifact_hash_algorithm: "sha256-content-addressed-pages-v1",
+      code_sha: "d".repeat(40),
+      build_environment_version: "node22.17-astro7-hugo0.147.9-v1",
+    };
+    const sql = vi.fn(async (strings: TemplateStringsArray) => {
+      if (strings.join("?").includes("get_authorized_rollback_context_v1")) {
+        return [{ result: context }];
+      }
+      throw new Error("stop after verification");
+    });
+    Object.assign(sql, {
+      json: vi.fn((value: unknown) => value),
+      end: vi.fn(async () => undefined),
+    });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const uploadStartedAt = 1_800_000_000_000;
+    vi.setSystemTime(uploadStartedAt);
+    const uploadDurationMs = 10 * 60 * 1_000;
+    const verify = vi.fn(async () => ({ multi_edge_verified: true }));
+    try {
+      await handleRollbackRequest(
+        new Request("https://broker.test/v1/rollback", {
+          method: "POST",
+          headers: { "X-Content-Control-Secret": "control-secret" },
+          body: JSON.stringify({
+            target_site_release_id: targetId,
+            fencing_token: 9,
+            expected_pointer_generation: 7,
+          }),
+        }),
+        { CONTROL_BROKER_SECRET: "control-secret" } as never,
+        {
+          openDatabase: vi.fn(() => sql as never),
+          loadArtifact: vi.fn(
+            async () => ({ kind: "tar", files: [] }) as never,
+          ),
+          upload: vi.fn(async () => {
+            vi.setSystemTime(uploadStartedAt + uploadDurationMs);
+            return {
+              id: "123e4567-e89b-42d3-a456-426614174000",
+              url: "https://rollback.pages.dev",
+            };
+          }),
+          verify,
+          latestDeployment: vi.fn(async () => {
+            throw new Error("rollback target is not yet current");
+          }),
+          purge: vi.fn(async () => {
+            throw new Error("stop after verification");
+          }),
+        },
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+
+    expect(verify).toHaveBeenCalledOnce();
+    const windowStartedAt = verify.mock.calls[0]?.[4];
+    expect(windowStartedAt).toBe(uploadStartedAt + uploadDurationMs);
   });
 });
 

@@ -303,6 +303,7 @@ jobs:
           npm run check --prefix astro
           npm run lint --prefix astro
           env -u CONTENT_RELEASE_ID npm run test --prefix astro
+          npm run images:check --prefix astro
           env -u GITHUB_SHA CF_PAGES_COMMIT_SHA="$EXACT_CODE_SHA" npm run build --prefix astro
           npm run verify:csp --prefix astro
           npm run verify:site --prefix astro

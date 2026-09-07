@@ -1,0 +1,2915 @@
+{
+	"version": 1,
+	"params": {
+		"avif": {
+			"quality": 55,
+			"effort": 4
+		},
+		"webp": {
+			"quality": 82,
+			"smartSubsample": true
+		}
+	},
+	"sources": {
+		"/media/codex-tutorials/codex-app-beginner-guide/img_001.png": {
+			"source_sha256": "5f4d271c9056122f45d62cef53df4659c1a4b8493e2338e821f4a38c1bb26f74",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_001-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_002.png": {
+			"source_sha256": "16fc15fabac80fc5f20a1dcd909976f3aef27fc6a122d61d839548ea01c51ca1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_002-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_003.png": {
+			"source_sha256": "a071659b48d420e5d15cfacadce97c335dd7a4929012e50cfba892f79b09bc41",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_003-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_004.png": {
+			"source_sha256": "5f4098a170d5abab17abdcf7a16cea225d54f20fad74abfdcbf664017d18a658",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_004-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_005.png": {
+			"source_sha256": "28a06b70c366a2784162accc936405d091ace2fb56a4ba0a512f7c1d5dc69540",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_005-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_006.png": {
+			"source_sha256": "d6d9d13356b9af04af6201b6aaba3ec2e05a1b6cc17d5f01dea3733d12805227",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_006-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_008.png": {
+			"source_sha256": "654614f5acc0e3d23bdce9479c4f4a345476166495a179ba85426cc44a797457",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_008-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_009.png": {
+			"source_sha256": "0fc0304c4e07e24f3177ee5d3db75d929a0e22327598faf72fc88328a2afc037",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_009-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_010.png": {
+			"source_sha256": "d266f47154ab32b2bb0de0faf68e6edeed880819379a896332eab386fa3b2f6f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_010-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_011.png": {
+			"source_sha256": "911b3cb38716eade89eb3eaae2795649125defbb2ac7ac95c933d3c9506a3846",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_011-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_012.png": {
+			"source_sha256": "eb051237df29c4d5bd693d72e49d643522c8461caf4f84a5360b811dc89633be",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_012-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_013.png": {
+			"source_sha256": "61c640ea1ffcc5b88161ee42a952012d76e78a7c66820516375299da36249aa5",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_013-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_014.png": {
+			"source_sha256": "c9651342fb1c0d06c553bfab884f1d94a6cf8563f38071fa0d660d6f6f346636",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_014-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_015.png": {
+			"source_sha256": "549510816251763d61200e4debc40b90f86abc183f21fea0de140ff0e36ab942",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_015-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_016.png": {
+			"source_sha256": "76b475a999290af4ebddfae2c51699b2daa412a32591390ddb60469e87adbf95",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_016-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_017.png": {
+			"source_sha256": "af7dcda64a6c0183a56c4ce91c70a1bcdee741afb465f652badbfe541789ef7c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_017-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_018.png": {
+			"source_sha256": "949b9b70d0dafc5a301e2ee4d18ef7f671bf106c1ae6d31900bf3bad00794027",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_018-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_019.png": {
+			"source_sha256": "e46851e7bbf45e19ea66dbb0a887953f7ab76cd0651268b33b3c55ded644a729",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_019-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_020.png": {
+			"source_sha256": "539b1292f9ac0b3fc569269de1377f43eb87560ee98077a190152f1accd50cab",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_020-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_021.jpeg": {
+			"source_sha256": "7574731576cd41e17e022ae4e649c06c08b1d09acdbcd051d8f9563162cd27cf",
+			"width": 235,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_021-235.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_021-235.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_022.png": {
+			"source_sha256": "7c1326452519ef008eb9826ccd4755b1abe8f6c530ad148cbbb9d6ddef1f95ef",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_022-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_023.png": {
+			"source_sha256": "e4b5394128920a406d9da371c5c73f545b7138758c04cb06b7f073d3ff22d23b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_023-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_024.png": {
+			"source_sha256": "54d339b5f9307d08757e7ec4ec5ba7a93c90fc8edf3d35b0e430c913bb155d31",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_024-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_025.png": {
+			"source_sha256": "cfae74b071d12c406162411abf4118c9975c6ef548dde1e6f9c9a8c8af36ca7a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_025-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_026.png": {
+			"source_sha256": "c110ac7d3aca2c3d8e9f02e334d61718ddd0e5def3f538bdb3de8b2e27477c63",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_026-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_027.png": {
+			"source_sha256": "85436999c8aff9877c134a8e78771d7ae926ce1598abcf3143eec3d9bdc4890b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_027-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_028.png": {
+			"source_sha256": "1f537e4f0a985269a28db8a1adeb41db9ec5a18e84eef7d187970d228fb2be04",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_028-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-beginner-guide/img_029.png": {
+			"source_sha256": "2ab5d89716119fa77292409710cfc8573e4a7340427ac088dc32ed15f172cb68",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-beginner-guide/img_029-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_001.png": {
+			"source_sha256": "78bc0469f54f98dd4a2c2e595e7a78d6a6a26c17aa1cdf77592105920d3b5745",
+			"width": 220,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_001-220.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_001-220.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_002.png": {
+			"source_sha256": "daaf0229cbaf01bf3a8cf8294cb84e2500adcc3f55c2c04ba54a09e613d17024",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_002-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_003.png": {
+			"source_sha256": "779ef2454d869f3780b175e1c7a857908fb94a4244b7b58fe85a31e3ecee4197",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_003-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_004.png": {
+			"source_sha256": "1e5ede60ad9f2e0fac5362002c1c50f7bcf00884da5faa24e2f7e39621ff212d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_004-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_005.png": {
+			"source_sha256": "c5e7b693bb95e7ff2699da352a55d9292892030abbe9b498c0daaa0e285895cb",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_005-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_006.png": {
+			"source_sha256": "b574c48c850e8c6f6e602686d781790d5bedbc6c2361ff242e0c7b2f03b7fe0e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_006-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_007.png": {
+			"source_sha256": "d3963aa045b92d5b0e838f075134d4e5f39e71bd3b38a90361270183f4fc5a97",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_007-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_008.png": {
+			"source_sha256": "344acb751c32ddd6b6f20ca2834a5ca6aa9a9965c9d4c169b6002d3b41d4c907",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_008-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_009.jpeg": {
+			"source_sha256": "c242153c506746b9a9d51d41997a0a89c1968ee846a83ed30dc623fb8189d83d",
+			"width": 225,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_009-225.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_009-225.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_010.png": {
+			"source_sha256": "5c44fa1f582161add253ce85fd19fedd6d7385b965a25cb3d0c7d2b58318174c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_010-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_011.jpeg": {
+			"source_sha256": "e8ad61252b7163d1e7cdbc8502e6c747193803489426477fb8084daae00e1f30",
+			"width": 264,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_011-264.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_011-264.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_012.png": {
+			"source_sha256": "f829c4fa4b99ddd5867ad774454d6a3bfbef35f794e9cdbc6151a358e226edf3",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_012-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_013.png": {
+			"source_sha256": "3d44a115e5f8fd1139529225c41e472cde4bef3ce02ac08943fb9d80dcf2b759",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_013-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_015.png": {
+			"source_sha256": "a0a1ac82e3543f9a9b95ec91ae0bd511de13e8f506b644804794cd4e583eb96e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_015-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_016.png": {
+			"source_sha256": "4a402c9e98a2876730154659ed3539cf2372c5bdd258badf5fe4642b5b5595cd",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_016-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_017.png": {
+			"source_sha256": "63a4537b15ddbbb40f9d75db15a9edff5682db4fc3bffa198f17483822680626",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_017-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-app-practical-tips/img_018.png": {
+			"source_sha256": "634e5ad48f1036b7f0d354df635c3e25aa104b6149209f9414ab62d959828e1e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-640.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-640.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-960.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-960.webp",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-app-practical-tips/img_018-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001.png": {
+			"source_sha256": "c1a87fc8023556139c82521590a26362c0371b5052ff9a34bcb50283be22b45b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_001-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002.png": {
+			"source_sha256": "7b62a5b1ca7b36f2fa71f5ebd73fc5096de69a237cc4d86d4d6e2e5b6f6a974b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_002-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003.png": {
+			"source_sha256": "5acde8df829b6baac5fcb90edda950c30003e61d3862a9932ffde8ce2ea87e20",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_003-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004.jpeg": {
+			"source_sha256": "7168981d37c523fb6a5702086abc457844f9ed0c5db17340a3569131629725a6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_004-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005.jpeg": {
+			"source_sha256": "f931036cb3029c7733c4359d8c4c4c3c72d6444d046a3e5cd4040ca0ba394ac0",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_005-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006.jpeg": {
+			"source_sha256": "45a44c154e2be255a8d0e171279a011b2fdc29e8154668f8d7021dd7ac1c563a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_006-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007.jpeg": {
+			"source_sha256": "7b0fc52830b720b1cc1b17952a6f1aa4e8b2bfb94307797fd29927931fbd0163",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_007-1080.webp"
+			]
+		},
+		"/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008.jpeg": {
+			"source_sha256": "560914783b73e0bc51a7b6f6819955820bb37f82bfaa891f0bf8864895823b99",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-640.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-640.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-960.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-960.webp",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-1080.avif",
+				"/_responsive/media/codex-tutorials/codex-mobile-chatgpt-guide/img_008-1080.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox.png": {
+			"source_sha256": "efc49e7bad89b7356ae2ad50e8d8ed8bd9a4e6b87502cce979fc527d38ff9a63",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/browser-sandbox-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff.png": {
+			"source_sha256": "fd1cd51119bc070ca9f6edf593cad9f2e5824163df1a2cb330f05f3ecf2fb035",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/editor-git-diff-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/markdown-preview.png": {
+			"source_sha256": "1ed3cce4fc0d57cc984009f982a863938913ddb7de178c704c22fd8c10d38015",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/markdown-preview-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/mobile-sidebar.png": {
+			"source_sha256": "8f386c1c0de17268c218ee90356eedfc9ff907786ffe347577ed936dbb7066a1",
+			"width": 390,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/mobile-sidebar-390.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/mobile-sidebar-390.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/settings-side-card.png": {
+			"source_sha256": "1fce26ad1a86d7d3d2c00414f22deaf242193121468af2660dd813261e06899e",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/settings-side-card-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/terminal-panel.png": {
+			"source_sha256": "6e26f107662a633dfbba6306f5372be7785f6e92157fc79aaafef04baf14524d",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/terminal-panel-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/better-sidebar/workspace-overview.png": {
+			"source_sha256": "3ccb11113e780ec52b55b74cc14b9fad57959c8c38feb9befbc8217bfdb2aebc",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/better-sidebar/workspace-overview-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/cc-tui/splash.png": {
+			"source_sha256": "440cf05250b9f032ac9954616330db92be8d695369ba8bd5d8c8c8f1091cb6d7",
+			"width": 2559,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/splash-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/cc-tui/working-line.png": {
+			"source_sha256": "c56b026da25e427b05a661cd980a6c153672a159ef1ccdd112fad6fe4917ad7c",
+			"width": 1600,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/cc-tui/working-line-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/getting-started/web-ui-conversation.png": {
+			"source_sha256": "7519d2f050e9f34e961a7a48a85262cbd509c3f7e4f95b8948262c4b41383d18",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-conversation-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/getting-started/web-ui-home.png": {
+			"source_sha256": "bc46799ccd4c199659c6ab8193f1c6a3952450fa0c1ec3cba5caaf1d41c65779",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/getting-started/web-ui-home-1440.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/model-configuration/providers-custom-form.png": {
+			"source_sha256": "3f2ffd931ee8776603e0f2fcc3a4b0e57795c05190f643be3989546f4395c63e",
+			"width": 1128,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-1128.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-custom-form-1128.webp"
+			]
+		},
+		"/media/deepseek-harness-tutorials/model-configuration/providers-models-page.png": {
+			"source_sha256": "6fed6f3796b9a13cb9d5aabb4a71df93fa3747b6f6d558e05a664e7d845d8354",
+			"width": 1600,
+			"variants": [
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-640.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-640.webp",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-960.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-960.webp",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-1440.avif",
+				"/_responsive/media/deepseek-harness-tutorials/model-configuration/providers-models-page-1440.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_001.png": {
+			"source_sha256": "1398d264b0bccb8ad8104b481120845ec4488f8d1300891122d2dba59891d419",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_001-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_003.png": {
+			"source_sha256": "cabe30f20b6055aa412c6030b627b9c5db6d5c15a2ac38b86251c31b8546c73c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_003-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_004.png": {
+			"source_sha256": "e1f758147525cdee91779805fa79ea9f57b502dedf97a75080f193c31ecb908f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_004-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_005.png": {
+			"source_sha256": "72699336c342ce0b327537606520225d459af662a6abd8ad8f88af768407ead1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_005-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_006.png": {
+			"source_sha256": "2bd7fb18ef48a1296f0e833623650c3a9f625c916c1fa854289e64d992277625",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_006-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_007.png": {
+			"source_sha256": "b033c292616500f102878c3b403a264abca6fb1622842cf21ecf296fa474f464",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_007-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_008.png": {
+			"source_sha256": "b57747a98dfc1d06ae3dc51a49a41ec90297b934b1683ac5e72a272306dd5fc0",
+			"width": 902,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_008-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_008-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_008-902.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_008-902.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_009.png": {
+			"source_sha256": "21f7b6479e2971f01d82c1435add22fccbfa6c587528ea57626747ad8db935a5",
+			"width": 1003,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-1003.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_009-1003.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_010.png": {
+			"source_sha256": "495a06e0eaac9180e12cd03a974afe5f5d16685929eec27036cff0d6eeea2e32",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_010-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_011.png": {
+			"source_sha256": "26983730086e06d5e56702a5dc7afee77d30f1c59800889a025777cbd1a8d005",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_011-1080.webp"
+			]
+		},
+		"/media/highlights/ai-basics-cli-harness-skills-html-github/img_012.png": {
+			"source_sha256": "012fecd05925684254cbf50899fa724f4ef8142c6af52a510b41e36b61fa1cbf",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-640.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-640.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-960.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-960.webp",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-1080.avif",
+				"/_responsive/media/highlights/ai-basics-cli-harness-skills-html-github/img_012-1080.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/file-context.png": {
+			"source_sha256": "96fe6ab53100d7f9c23755c125a69432bb181fff2b8b9bf65835d0a8c8ab91db",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/file-context-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/input-output-token-flow.png": {
+			"source_sha256": "2963fea450e08a43c2f2e70907ff6cf34283844cd9658109a725ee26711e2ea6",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/input-output-token-flow-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/model-cost.png": {
+			"source_sha256": "a4d3c11978f6c421ad39d4c52ec60b9185b69e357da83fd745eced112bd221a9",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/model-cost-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/session-length.png": {
+			"source_sha256": "0f839129220fd18e3dbdd857ae541bfbb34394ea39cbf948200b320b4215e068",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-length-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/session-token-cost.png": {
+			"source_sha256": "8654b1f3bc6dbc792acee8bdec165fe5f366c700d5e73623224b67bc5a867b9b",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/session-token-cost-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/subagents.png": {
+			"source_sha256": "b61ad1245583f8b063423295342cf34127ff16e24511826a317af85935808484",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/subagents-1360.webp"
+			]
+		},
+		"/media/highlights/maximizing-claude-code-sessions/where-to-start.png": {
+			"source_sha256": "74dcbbc66f657e983d581978f096da4b42dc4b3b85cf81118bb18a6f7d2e98b0",
+			"width": 1360,
+			"variants": [
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-640.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-640.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-960.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-960.webp",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-1360.avif",
+				"/_responsive/media/highlights/maximizing-claude-code-sessions/where-to-start-1360.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_001.png": {
+			"source_sha256": "1398d264b0bccb8ad8104b481120845ec4488f8d1300891122d2dba59891d419",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_001-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_003.png": {
+			"source_sha256": "8342a0d034b830f2006f18af394b48d2ddbe71cb074354717823061d932d6bd0",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_003-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_004.png": {
+			"source_sha256": "c637fabcfeecfcf33800e1ac1cb7ede1caef6f11f65d029c80775dbc9f631bb7",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_004-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_005.png": {
+			"source_sha256": "27664891c07f1438bd6240d1a2ec0b302de8facf2cb10d19ede5d66cb8ea16ae",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_005-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_006.png": {
+			"source_sha256": "e9d48f3d7229183bd2aba736021cc5212b0b3aeffc410feb441839dbf41c691a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_006-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_007.png": {
+			"source_sha256": "8097ca13051a8418a7a8d9760073f68fca19b044f56d99d9a2eeb7af9c8c6466",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_007-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_008.png": {
+			"source_sha256": "9f84023a690fe10ec94f3fc05bc2bf24f13e72747f9d9ad5018d67faa3925e34",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_008-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_009.png": {
+			"source_sha256": "a5359dbadb397854b6dc70a540f11ad4c74637b4941e27d26858b21953ea0690",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_009-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_010.png": {
+			"source_sha256": "752c1f59de498a9108828219dadcd72bbde7c1950ff6e81e82ee53327ec17082",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_010-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_011.png": {
+			"source_sha256": "f9b9f9a64f0ba266d1fb9ead3301679a77939fef870d249e49de32b076bbc416",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_011-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_012.png": {
+			"source_sha256": "376dae8506c202ff1fb5dade9d7f49ebc9862c71ccf047b795d7931ee805224a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_012-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_013.png": {
+			"source_sha256": "e7ae223295b794a5e572d4ce9d30c23757add172b5b6b26704336455d104b1e1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_013-1080.webp"
+			]
+		},
+		"/media/highlights/minimax-h3-ama/img_014.png": {
+			"source_sha256": "5856e00f9c2882174ec9f8cc2596653ab94ab964e30dade011b31c99d3f67a11",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-640.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-640.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-960.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-960.webp",
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-1080.avif",
+				"/_responsive/media/highlights/minimax-h3-ama/img_014-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/codicons-a.png": {
+			"source_sha256": "259d7d1dcde9fb6c83897af481b3394d446791ddb78f70516d8af9b466a16e0a",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-a-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/codicons-b.png": {
+			"source_sha256": "8e9a701526ac0a865d3f69d869e269e9bc77e60fe884d9af1dbec5319e9c1d69",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-b-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/codicons-c.png": {
+			"source_sha256": "6b2fbbcd88ed3e7397ca4074fc3ad4bfd6bc350d8be1ee8f8382db9aa48b617b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/codicons-c-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/companion-concepts.png": {
+			"source_sha256": "1f3a2c7af0ff3f9835c1c8a80e362b5b46e53c4e7222a84d18c459242bc528a6",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-concepts-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/companion-file-types.png": {
+			"source_sha256": "bebdc682cde77e4fd907635c5db5affb9ef625434e6b3295bc34c378708a2d5f",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-file-types-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/companion-search.png": {
+			"source_sha256": "6f6b68ebed143617c90961c0468a679f325573c72f4feaa66605f35d177ed942",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-search-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/companion-sidebar.png": {
+			"source_sha256": "e4815a2de8d9318f20cd617491a44dbc5eed48b595c9b0d738f0f1f0805d3d4a",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-sidebar-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/companion.png": {
+			"source_sha256": "b8fd80d0c673692316cb61e1ba11b34a2de6dc4bd4f7b83a3fa956bc08c3e74a",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/companion-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/cuts.png": {
+			"source_sha256": "3b8b76cc0e1b0619ac83c7f60a6e4b3b394d885ef07ee838fdc7b3bd4cf9024f",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/cuts-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/files-explorations.png": {
+			"source_sha256": "c7df14ace44b28bd01e2cd4908a49812f995c34981287f33db8498233abf88df",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-explorations-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/files-icons.png": {
+			"source_sha256": "c9bf30f630a8d1e6862bd7e93b05cca267516f16a4382ebca3a7d11b5a22c90a",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-icons-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/files-overviews.png": {
+			"source_sha256": "e52c94399abe6a8a16743489d4911a56f8940ac8f8c5c1eb4c279ef6c5e1c255",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-overviews-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/files.png": {
+			"source_sha256": "93e6978fda215719f02923c8662d6c5bc9d6331e57550dda109d5b46ca0c552d",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/files-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-compose.png": {
+			"source_sha256": "7136ec55c24c17fe120d07c9fe5586ad2bc3fa32823a88bf68843bd96f4e7834",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-compose-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-filled.png": {
+			"source_sha256": "c97d7b77ba6b31067afb4b44d63860c6020c4d39cdef9b5d6e9fbdc9e7f31e4e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-filled-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-main.png": {
+			"source_sha256": "66395e1789ea6313c144603a2732dab92e8824fc773b0280094cdcd48c07da6a",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-main-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-menu.png": {
+			"source_sha256": "3d9efc448b7462280e49f704ad1658bebd0c8841b42fe3080e9aad3e449fbd6f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-menu-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-rebus.png": {
+			"source_sha256": "0ddeb2facfc24358745cee8e739a8866ab36e6f942fdba4bfbabf54bf2f7e47c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-rebus-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/final-ui.png": {
+			"source_sha256": "9ec75955143ba8e8d77481f95b5d99675bc25b10353fdc6bffcc8dd43c9415f6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-1080.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/final-ui-1080.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/natural-proportions.png": {
+			"source_sha256": "711ea4db00b3d6de602d85b1b0848d529339596636af5281d5b2b890ea64456b",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/natural-proportions-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/optical-shapes.png": {
+			"source_sha256": "5582631e60614b01c662a248e5b9264d8dc7a34bc2002e58e0d139a6b727cd35",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/optical-shapes-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/perfection.png": {
+			"source_sha256": "4d20b9d94f8ed9cca743397d9737ca58a848198b98c0a52c822de3314f994aa1",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/perfection-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/sharp-exploration.png": {
+			"source_sha256": "158e03c1c94edf66b42dbfa12bf09668152141927bcee93acabe85a52bf76ac2",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/sharp-exploration-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/ship-it.png": {
+			"source_sha256": "4008c6a20495499bf72f92d08dd484a5834d702e27c2464d010bc00de50d4004",
+			"width": 1200,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-1200.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/ship-it-1200.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/stroke-caps.png": {
+			"source_sha256": "4c384d268924536ebae7153139ae95418566b471b554aaf7ffbee38cf7600c14",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-caps-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/stroke-width.png": {
+			"source_sha256": "173ed012430289155d0fd148aaa6ae90a8c13fd16416a72daf957735d9d40126",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/stroke-width-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes.png": {
+			"source_sha256": "a2945458029bd729ee892ede181a2ca990316bac4ab2f1bee12d1f1f3c3709c0",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-closed-shapes-1440.webp"
+			]
+		},
+		"/media/highlights/the-making-of-cursors-icons/technical-look-slashes.png": {
+			"source_sha256": "61b3b6ee0882750009e63035b6d9241720ab49cccfa70d5097aef73bd23f58c5",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-640.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-640.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-960.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-960.webp",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-1440.avif",
+				"/_responsive/media/highlights/the-making-of-cursors-icons/technical-look-slashes-1440.webp"
+			]
+		},
+		"/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check.png": {
+			"source_sha256": "752ad88a2d490b8c95250beb1054b341cc04c86e758b90fad379f1e6e5d84497",
+			"width": 1430,
+			"variants": [
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-640.avif",
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-640.webp",
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-960.avif",
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-960.webp",
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-1430.avif",
+				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-1430.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001.png": {
+			"source_sha256": "5003736fda6e7efb76e76b1ffee0d8140125d9e5413c6f58db63967436811c56",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002.png": {
+			"source_sha256": "34f453a9e71aa102ee7149f11593d3169e4cade117a84adae95d7aade2beff9e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_002-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003.png": {
+			"source_sha256": "5c900baf5f18553ec5a3beb610c1d70bb96109432c1a8e92596ba75986bf67bf",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_003-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004.png": {
+			"source_sha256": "913cdb426f875dc64ce33d74eecc69a6b920d28b3a03e95a8d268b2f5773ee45",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_004-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005.png": {
+			"source_sha256": "e02f4c3639e365c9fdc5b6316236c994bc27a45b585ba0320ca1c745dae9d85f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_005-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006.png": {
+			"source_sha256": "06d1af15755d29db71da1729204ca1bbd1368d93306b15984707c0a3804a6696",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_006-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007.png": {
+			"source_sha256": "876345c0ee3e20c1d419709bac0c2c8bf77c7d80e0cabe1d2176bf3fe2a644b1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_007-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008.png": {
+			"source_sha256": "954af84bf0ca8741f02d83bd329ea4277338f29c337303410e2ef5651399466f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_008-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009.png": {
+			"source_sha256": "11f9bcef6a0b00c0d3306c11c9c9151643104e5efa2b0d5d0e0ae1400f0501c8",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_009-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010.png": {
+			"source_sha256": "a181a39100a0e035b4b5eb92e18d016230858cb40413d5bc5550a6fa64fc9a64",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_010-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011.png": {
+			"source_sha256": "85e5a00e299dc65f54e487a15c8b8c5ecd7e63aa51a7e2c5ab9babebc456b0e4",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_011-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012.png": {
+			"source_sha256": "73adf83c268c78d51d0e4fb44d7ca5030f76ad396fff0ceeda6633c7ff52fb76",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_012-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013.png": {
+			"source_sha256": "eb0c85d3ab65913a8eb47c892cb4f26cf4392545b075bc1f621af209000891af",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_013-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014.png": {
+			"source_sha256": "2200fc261d40eb3b4ba840b1e74cf1bc56f64eff4eef62190886617515be980c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_014-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015.png": {
+			"source_sha256": "701a9a769fba93cb85349cbbd8bb1b5afe8437f6d432f777a0791865db185c8c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_015-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016.png": {
+			"source_sha256": "f99305ee93b63a2dd174b5350a6465da0fda768f1ea9e3206ff94f3966ec4865",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_016-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017.png": {
+			"source_sha256": "270e85ef11ecc7e11344e080fc555d35049f9d153e6f7b4af9cf91c20ef35aca",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_017-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018.png": {
+			"source_sha256": "18906735f3970c2a28587435c8cc5ae0334d0bcd7ef648c03c5ea0fa4e81bc6f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_018-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019.png": {
+			"source_sha256": "cb7b7dd5f755001d8130894b3515cab73bd52b52ba085d55be7bca48f6c312ce",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_019-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020.png": {
+			"source_sha256": "04c2874d6327ca6b56972139abc325729f05a82165fb5213f6f7051d39b3e9e5",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_020-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021.png": {
+			"source_sha256": "9a6fd9848dd842396bbfdbaf18bca3a7a4cc3632353b35be390ddcc5f7dabe61",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_021-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022.png": {
+			"source_sha256": "3ea9b13f1e5d9a21a19a2e1ac2971074cd6fad7693ece8578d7e54dae06737eb",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_022-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023.png": {
+			"source_sha256": "f54fd5124beab7958c9b86cf4cafad4e195405b0c84bb5c779aa72744c0d2c01",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_023-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024.png": {
+			"source_sha256": "c8fe77aa6496d6f710ce58a9495b6b5d53c384e24b4cefff7e783b25ff06f012",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_024-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025.png": {
+			"source_sha256": "6eabe1682538056bb096ca2971d11146db59f92c975f5b91dc229f9b1d96824d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_025-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026.png": {
+			"source_sha256": "0539626fd68e7f41aedf7278458d5f3fe2e84f346d3572240f257ec03cbbc834",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_026-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027.png": {
+			"source_sha256": "a37f37af5db8099e4d87b5ddd17d85b13263ceefffb7a4b2e20df4527639eb0d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_027-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028.png": {
+			"source_sha256": "7343297e2588ec71d761cea92293d2dd6861cfe541b9fea77ae4b4233f3031e4",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_028-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029.png": {
+			"source_sha256": "228567b5bd4cb5e10565dfa850176d5bf487c3fe9cc068d77a8ed3459dc96029",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_029-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001.png": {
+			"source_sha256": "eb8ffd46474f907f6494e22c9db9d55c4f282fd91a03873dd3db2c85fbfc6bf1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_001-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002.png": {
+			"source_sha256": "0efd6ab82550c7512c59eb5a2ff67db5d06a9646a3e5384119d570218a4effc6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_002-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003.png": {
+			"source_sha256": "52c71d0adf8031902e9b439895194b9ca30b954cc688ff9806ccd5b81638ed09",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_003-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004.png": {
+			"source_sha256": "8814310e0e0aef8085952cf8c4681bfbfa144c9e5921f651db61647ab50ca31f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_004-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005.png": {
+			"source_sha256": "6e413b3abd3873aac60b553b589c6b5c2b8356c6c81852cd1e10e2f32f8d2635",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_005-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006.png": {
+			"source_sha256": "a2cafeffbd566d9fedb1413e2fd0091ca640ee1123791612f44ca8ec1fd39cad",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_006-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007.png": {
+			"source_sha256": "94890b6f28289d2e46e3dbc79d7d8009179e2b3116532041d1399ac36a49d208",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_007-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008.png": {
+			"source_sha256": "a2cd3e92dd27716a365736516a968840dfcff5b68f794d06a7d2ad5633c62450",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_008-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009.png": {
+			"source_sha256": "2b79f8aff47b71991b6f7e917eaef2e025451f4b76161f21e4688797fc5d3d1b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_009-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010.png": {
+			"source_sha256": "5aeba68bf0a910f0703b8cb0d72212dd7d514b9bcab687fca15fb6068a3a9448",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_010-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011.png": {
+			"source_sha256": "5618bdff362e0d43cc06cc982695603b5c5c7acf0739a576af49af8f965f7266",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_011-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012.png": {
+			"source_sha256": "4fab34ed1cdec34678e6d04085c61434f9f09037d319c9c7f231a72b72d671b1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_012-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013.png": {
+			"source_sha256": "767d790a5af7e121e0cabf177134165cc683b201814d8553236950192d9c9708",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_013-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014.png": {
+			"source_sha256": "9933657da935bf733bd45b8ff60af08a5db44b540f40c0209765b981474aabbe",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_014-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015.png": {
+			"source_sha256": "3f4c88e6b3ad1aa14bcb1d089f42b1e8d64402540f94306033fe713938531af9",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_015-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016.png": {
+			"source_sha256": "366fc8eae06200ca03ff2b60aff24213f919d9f3a0f7f2b4ac46b829eb991089",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_016-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017.png": {
+			"source_sha256": "c19d0716c7801ea57d57421a8f704447a9a328081177419080aaa28e1c70989f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_017-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018.png": {
+			"source_sha256": "65c646f61bbef4455f4c0e3eb924338428a10bca97ed35cdbf394e80b7560ab2",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_018-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019.png": {
+			"source_sha256": "877af17792a42d7f458e47dd70ed59928ada00699f114c9b4ffc5fb7ed03a1e1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_019-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020.png": {
+			"source_sha256": "181a586da79b89a927617b2490827242d1a8de3eceea36994ca649ebbec9ac1c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_020-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021.png": {
+			"source_sha256": "8896fa8494b12833673c16b4ce0edb0c0b5873e934b19dfc5d08822937a29bef",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_021-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022.png": {
+			"source_sha256": "8e04a3ebc11bee385a0b9e1118fc57fd6bc4ea4e8afcbc21e92191973e35a640",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_022-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023.png": {
+			"source_sha256": "dc9f66e48e70e7161ff138537d80ff69cdfa19af4cddb9a07a8ef699bfd7fa9a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_023-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024.png": {
+			"source_sha256": "4fbb004306f5371cc899f4000a2781d05d277527229f6fba1c3305e7d4953107",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_024-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025.png": {
+			"source_sha256": "841d732366db5765b6f0299ba704af4d61ec3090335139bb97b75e8e62d3031a",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_025-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026.png": {
+			"source_sha256": "8be2c33cce663b058347353c53675a23a16a160c4e3d8c7a5b114d282e9be27e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_026-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027.png": {
+			"source_sha256": "6056c5321a2f79f6c13c8ea50291ced954a2cb4ca0aad52f91e5862513e8ae9f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_027-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028.png": {
+			"source_sha256": "6f92af59412accd329423a7a2e0894cd071f8d9d74ec3632956321de93807687",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_028-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029.png": {
+			"source_sha256": "85aaa3cbe6461da3aa9d00e881911d7458463962798a91f2765e2153a23754c6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_029-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030.png": {
+			"source_sha256": "32b61fcf29487b9ecdf8c22dc27735ddca5fdb244142ab9916883e54bb1757fc",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_030-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031.png": {
+			"source_sha256": "5f24fffac21f70521bfcc0b8613bb0a435f9f6c65d4ee203ac1268ef0d8f7dd4",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_031-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032.png": {
+			"source_sha256": "c8a28b85d27f93e7c28936a38fdd8fd088d0ed8b8408163e49c9b7c663ecedee",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_032-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033.png": {
+			"source_sha256": "8028f0a207a4ff9360c8ea32d405cc3b06afc71e5749fb40630818856075f4ec",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_033-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034.png": {
+			"source_sha256": "7d934068ef12e65b23ccf85f1692ba96e10a6d141a1e5a5a22799dae848084b6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_034-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035.png": {
+			"source_sha256": "36002cc74d2a914c65ae7d9ef9cf84c61d9e12f734fc1d74ccdc0a8e6bbecd41",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_035-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036.png": {
+			"source_sha256": "1768ce52826e3e65b9bb0fa1072fb50163a9f36a55c1dff9a583732d626468bf",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_036-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037.png": {
+			"source_sha256": "20460b36a4f8a2db378d3adb927dce5d2b13c0ed554916aa61cc56b87268fa64",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_037-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038.png": {
+			"source_sha256": "3cfb9f211f12d7795190812ce528d55075a018dafe6647b173423daedf4315b7",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_038-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039.png": {
+			"source_sha256": "f31b4921bf4c51f1834216724114a45d9c5fa81fe25541f299b3a6ebe291f850",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_039-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040.png": {
+			"source_sha256": "2161897fa81410ba5faad7c58eb9814b96e5dbecdca1bdfe75f3410f011a8c50",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001.jpeg": {
+			"source_sha256": "099057b562816bbaddef34cbe4a6c3ce4e3d56c2983b2cf0746a3c4819fd5e95",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003.jpeg": {
+			"source_sha256": "9651b9390390eb711cf511e70c850ffdd0f0ee0cf56589fb7a3ebe8f6e7f5768",
+			"width": 1020,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-1020.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_003-1020.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004.png": {
+			"source_sha256": "f8db3773a6d87b14495638fe57d35b20e5829ee665fe7fbdbdbe3580301dedb4",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_004-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005.png": {
+			"source_sha256": "27bc3bea1fb0953ed8c5a8d3d9a559d92aeb00c1fd28c2978648f9647067796d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_005-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006.png": {
+			"source_sha256": "6ccd3a0f0badf5cfc186f956dfa45d0a0c112bb8a99a44d023b0f38adc3dea6c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_006-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007.png": {
+			"source_sha256": "c4d2b55a14b7411ab061e19dc8b6f9be23ebe76eb732c5e518e157b8cf270aae",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_007-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008.png": {
+			"source_sha256": "b92995689138a41e8532f0a11e9fe768eca6e1f6dfa05f9528cd8994b3f484c6",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_008-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009.png": {
+			"source_sha256": "2100f5a3c5aee17457d19ebeda4e226c1c5642f18e67fd10bd5f4c64068ec80d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_009-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010.png": {
+			"source_sha256": "d92b6524c239e7f488e31f6a2dd1b0fc33c61eb1f4b6a2f8744ddffbdf737667",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_010-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011.png": {
+			"source_sha256": "be93be87b6f96fd20042d25466f56bee8a9d815626dc6540dd2141f667100c1f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_011-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012.png": {
+			"source_sha256": "d1e9e4542a33b1e56e13511bd310f743fff642e0934ea1e1f2ec4a21067f187f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_012-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013.png": {
+			"source_sha256": "9a658e3b165e414cd60fe730b520c44ab0f802d24277cd2a4b6fae15ad213a04",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_013-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014.png": {
+			"source_sha256": "26baced2c5e25ae21aa360da44ba8c1a5674aef38ced1a55303cf30c88b83cc1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_014-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015.png": {
+			"source_sha256": "3bdac70b76947a9934144eb568d555858fed0b1456a56ad74f990262c22bb19f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_015-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016.png": {
+			"source_sha256": "2d3330a5bf78e66706c6be05ca14f9de0e674e6ee99c64051d25c99a388a106c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_016-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017.png": {
+			"source_sha256": "71ff06284c8049bfcc3a71370c63a81b1d24f61fcd4d4da99e18a1ac72f08007",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_017-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018.png": {
+			"source_sha256": "38311b6e40be04b03cc6c1769ba7cfc856eebdefc932abc072b32810ef20ad7d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_018-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019.png": {
+			"source_sha256": "b30543754104afb212aa37a10943b519d806b35ff850acef71ad5a585bdcb820",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_019-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020.png": {
+			"source_sha256": "cdbf7166d133040cd238a5840d536fdb394e810e4c92b0fcdec444999557475e",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_020-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021.png": {
+			"source_sha256": "ae4109bde810925d12135113e1b37338785660f26a50f8bbd96123d60f65a1b1",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_021-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022.png": {
+			"source_sha256": "a6fb03cde7d55daae6ecdb80565708257512a8f0b12d8fd5880efb8857254733",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_022-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023.png": {
+			"source_sha256": "17fc1f29654b3e2122f8fce8bdcc2fb788cf2b4bac23ad79b3caf588d017019c",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_023-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024.png": {
+			"source_sha256": "a317b6646994d3b07a55e63200dac7ef88338954d186c7022cdb834c708b6f87",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_024-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025.png": {
+			"source_sha256": "4156bb332119eaaf3feb94fb5240a7030a6e815fd81e1d8fa8c97ddf42c5f1c2",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_025-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026.png": {
+			"source_sha256": "b196107bf83eb4b6e7316f8ed9667f93ee3522ee9968ea6a5f0df10f78efefec",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_026-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027.png": {
+			"source_sha256": "864556ef456c1e32a4eee4bca769e23d8fcd0826b3432c4f8b6adf1effd19075",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_027-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_028.jpeg": {
+			"source_sha256": "aca0eceb75a006b89e33dfe6ae74f7509b23256081428ffaf8fb7544246a7cab",
+			"width": 391,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_028-391.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_028-391.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029.png": {
+			"source_sha256": "d058127b895e526bbc82828b75f51b33cc6a01a33f7f09e0f3bfc45e090efc8b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_029-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030.png": {
+			"source_sha256": "86752da1a5b1d4042dae90daf7200e164f451b524c5a9ff4f8b3e341a3906706",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_030-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031.png": {
+			"source_sha256": "32439bf1347cf6bcafd86150ae6eabe57611c0a2edfa118be7f897ca91edf3b8",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_031-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032.png": {
+			"source_sha256": "3c6fac613f78f8e9815306c9aace1b9d11a08e03e55bcda16312047c1ae90138",
+			"width": 1013,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-1013.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_032-1013.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_034.png": {
+			"source_sha256": "9162387b85f15a9d31f730204940f3093750467657e0ecc7d8b00bfeaaf1b441",
+			"width": 939,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_034-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_034-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_034-939.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_034-939.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035.png": {
+			"source_sha256": "0768f82810c27ea1f1c209f42d97d0b349be6e23aff518c409a782cee32a0540",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001.png": {
+			"source_sha256": "1398d264b0bccb8ad8104b481120845ec4488f8d1300891122d2dba59891d419",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003.jpeg": {
+			"source_sha256": "b7f67168d16363296af8a0e469e115497e6d5d512299d623b8c51993f67a8b9b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_003-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004.png": {
+			"source_sha256": "3c9e28e2bbde75bc254b21b457bddd5e64a7b501e1598bed08e505ee3de7f813",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_004-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005.jpeg": {
+			"source_sha256": "142f49827467ed15e218b285e168a825e067b4b42370a7496185976bc8b167e9",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_005-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006.png": {
+			"source_sha256": "923e36c0a06ab63e4cd6f02d91793fc508ff507ed8b929fdd3a582ac8b44a37f",
+			"width": 1074,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-1074.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_006-1074.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007.png": {
+			"source_sha256": "9e9ea8627240923ae69b1362cbf8422d94e45755c0b023153601389d99aeba0b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_007-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008.png": {
+			"source_sha256": "59c7901458139da7c1ab72ed0e00d2fba95c6c95304c227a171d96af3b34f735",
+			"width": 1078,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-1078.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_008-1078.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009.jpeg": {
+			"source_sha256": "b99583296dc22161f08e28e3bcaa1f7971323ea63c2905a82a78da735b676cf2",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_009-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010.jpeg": {
+			"source_sha256": "e0285008fc97022bda194e615ddbc156413c83d3042c19260c716f83b6776c9f",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_010-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011.jpeg": {
+			"source_sha256": "0ddfb02e158250158578713c6bf01bd57060d3be0fc620b56c7e8fe854ce7248",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_011-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012.png": {
+			"source_sha256": "2ef153fbecbbfa5b8af0cebfca1933206963f4eb9766035150bdd7ed6a8f1c71",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_012-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013.png": {
+			"source_sha256": "8dc6b17b23e54319ac70f442880c5902013d289ce80e98fb5d1fe8e8b49c3a86",
+			"width": 1066,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-1066.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_013-1066.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014.png": {
+			"source_sha256": "64f0252ddd08cf12a9dcf14db229b01f7475d166ebd45476ebc9a31a2a762bb6",
+			"width": 1070,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-1070.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_014-1070.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015.png": {
+			"source_sha256": "1c7f990479b9bf0f02598b6e42e65923f6bda1638f2b4e42c841da200c719293",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_015-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016.png": {
+			"source_sha256": "5dceb9d59f8d4765e454834da8200cd137b55224394d053cee6a7359091e1d9d",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_016-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017.png": {
+			"source_sha256": "0ce81b2761ce5f16f6e402c5e9f31be8b851adeb8a6ef7e9ed6e9bb6676f3d22",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_017-1080.webp"
+			]
+		}
+	}
+}

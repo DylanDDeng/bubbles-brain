@@ -140,6 +140,11 @@ const MAX_ARTIFACT_MANIFEST_BYTES = 2 * 1024 * 1024;
 const MAX_CONTENT_ADDRESSED_BYTES = 1280 * 1024 * 1024;
 const MAX_ASSET_BYTES = 25 * 1024 * 1024;
 const MAX_UPLOAD_BATCH_BYTES = 4 * 1024 * 1024;
+// Workers allow at most six simultaneous outbound connections per invocation.
+// Two batches are prepared concurrently (bounding base64 memory to ~2 x 4 MiB)
+// and each reads its R2 assets three at a time, so the total stays within six.
+const R2_ASSET_FETCH_CONCURRENCY = 3;
+const PAGES_UPLOAD_CONCURRENCY = 2;
 const MAX_ARTIFACT_FILES = 20_000;
 const ROUTE_MANIFEST = "release-manifests/site-route-manifest.json";
 const CONTRACT_VERSION = /^[a-z0-9][a-z0-9._-]{0,127}$/i;
@@ -608,6 +613,25 @@ async function fetchContentAddressedAsset(
   return bytes;
 }
 
+async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results = new Array<R>(items.length);
+  let cursor = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+      while (cursor < items.length) {
+        const index = cursor;
+        cursor += 1;
+        results[index] = await worker(items[index] as T, index);
+      }
+    }),
+  );
+  return results;
+}
+
 export async function uploadPages(
   bundle: ArtifactBundle,
   context: ArtifactContext,
@@ -682,15 +706,18 @@ export async function uploadPages(
     batchBytes += asset.byteLength;
   }
   if (batch.length) batches.push(batch);
-  for (const pendingBatch of batches) {
-    const resolved = [];
-    for (const file of pendingBatch) {
-      const bytes =
-        file.bytes ||
-        (file.source && (await fetchContentAddressedAsset(file.source, env)));
-      if (!bytes) throw new Error("Artifact asset bytes are unavailable");
-      resolved.push({ ...file, bytes });
-    }
+  await mapWithConcurrency(batches, PAGES_UPLOAD_CONCURRENCY, async (pendingBatch) => {
+    const resolved = await mapWithConcurrency(
+      pendingBatch,
+      R2_ASSET_FETCH_CONCURRENCY,
+      async (file) => {
+        const bytes =
+          file.bytes ||
+          (file.source && (await fetchContentAddressedAsset(file.source, env)));
+        if (!bytes) throw new Error("Artifact asset bytes are unavailable");
+        return { ...file, bytes };
+      },
+    );
     await cfApi(
       `${api}/pages/assets/upload`,
       {
@@ -707,7 +734,7 @@ export async function uploadPages(
       },
       uploadJwt,
     );
-  }
+  });
   await cfApi(
     `${api}/pages/assets/upsert-hashes`,
     {
@@ -1643,13 +1670,16 @@ export async function performPromotion(
       context,
       env,
     );
-    const deploymentStartedAt = Date.now();
     promotionStage = "upload_pages";
     const deployment = await (dependencies.upload || uploadPages)(
       files,
       context,
       env,
     );
+    // Production can only become inconsistent once the Pages deployment
+    // exists, so the inconsistency window starts here rather than at the
+    // beginning of the (potentially long) asset upload.
+    const deploymentStartedAt = Date.now();
     deploymentChanged = true;
     promotionStage = "mark_verifying";
     await sql`select private.mark_promotion_verifying_v1(
@@ -1836,12 +1866,12 @@ export async function handleRollbackRequest(
       });
       deployment = latest;
     } catch {
-      const deploymentStartedAt = Date.now();
       deployment = await (dependencies.upload || uploadPages)(
         artifact,
         context,
         env,
       );
+      const deploymentStartedAt = Date.now();
       evidence = await verify(
         context,
         deployment.url,

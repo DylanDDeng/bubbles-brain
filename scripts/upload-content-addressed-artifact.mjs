@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { R2ObjectStore } from "./r2-object-store.mjs";
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const MAX_FILES = 20_000;
@@ -161,6 +162,19 @@ function runCommand(command, args) {
   });
 }
 
+/**
+ * Selects the R2 client for release scripts. The native client keeps a
+ * connection pool open for the whole run; the AWS CLI client remains as an
+ * explicit fallback (`R2_STORE_CLIENT=aws-cli`) with identical semantics.
+ */
+export function createObjectStore(env = process.env) {
+  const options = { bucket: env.R2_ARTIFACT_BUCKET, endpoint: env.R2_ENDPOINT };
+  if (env.R2_STORE_CLIENT === "aws-cli") {
+    return new AwsCliObjectStore({ ...options, aws: env.AWS_CLI || "aws" });
+  }
+  return new R2ObjectStore(options);
+}
+
 export class AwsCliObjectStore {
   constructor({ bucket, endpoint, aws = "aws" }) {
     if (!bucket || !endpoint) {
@@ -232,6 +246,8 @@ export class AwsCliObjectStore {
     });
     return Buffer.concat(chunks);
   }
+
+  async close() {}
 }
 
 async function loadPlan(manifestPath, distRoot, expectedManifestSha256) {
@@ -412,11 +428,7 @@ const isMain =
 if (isMain) {
   const manifestPath = process.argv[2] || "content-release-artifact.json";
   const distRoot = process.argv[3] || "astro/dist/client";
-  const store = new AwsCliObjectStore({
-    bucket: process.env.R2_ARTIFACT_BUCKET,
-    endpoint: process.env.R2_ENDPOINT,
-    aws: process.env.AWS_CLI || "aws",
-  });
+  const store = createObjectStore();
   const incrementalReuseEnabled =
     process.env.R2_INCREMENTAL_REUSE_ENABLED === "true";
   let trustedBaseline = null;
@@ -432,22 +444,26 @@ if (isMain) {
       manifestBytes: await readFile(process.env.R2_TRUSTED_BASE_MANIFEST_PATH),
     };
   }
-  const result = await uploadContentAddressedArtifact({
-    manifestPath,
-    distRoot,
-    artifactObjectKey: process.env.ARTIFACT_OBJECT_KEY,
-    expectedManifestSha256: process.env.ARTIFACT_SHA256,
-    incrementalReuseEnabled,
-    trustedBaseline,
-    concurrency: process.env.R2_UPLOAD_CONCURRENCY || DEFAULT_CONCURRENCY,
-    store,
-    onProgress: ({ completed, total, disposition }) => {
-      if (completed === total || completed % 100 === 0) {
-        process.stderr.write(
-          `Verified ${completed}/${total} immutable R2 objects (${disposition})\n`,
-        );
-      }
-    },
-  });
-  process.stdout.write(`${JSON.stringify(result)}\n`);
+  try {
+    const result = await uploadContentAddressedArtifact({
+      manifestPath,
+      distRoot,
+      artifactObjectKey: process.env.ARTIFACT_OBJECT_KEY,
+      expectedManifestSha256: process.env.ARTIFACT_SHA256,
+      incrementalReuseEnabled,
+      trustedBaseline,
+      concurrency: process.env.R2_UPLOAD_CONCURRENCY || DEFAULT_CONCURRENCY,
+      store,
+      onProgress: ({ completed, total, disposition }) => {
+        if (completed === total || completed % 100 === 0) {
+          process.stderr.write(
+            `Verified ${completed}/${total} immutable R2 objects (${disposition})\n`,
+          );
+        }
+      },
+    });
+    process.stdout.write(`${JSON.stringify(result)}\n`);
+  } finally {
+    await store.close();
+  }
 }

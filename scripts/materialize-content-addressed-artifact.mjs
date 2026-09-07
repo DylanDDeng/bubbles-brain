@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { AwsCliObjectStore } from "./upload-content-addressed-artifact.mjs";
+import { createObjectStore } from "./upload-content-addressed-artifact.mjs";
 
 const SHA256 = /^[a-f0-9]{64}$/;
 const SHA1 = /^[a-f0-9]{40}$/;
@@ -254,22 +254,23 @@ if (isMain) {
     ),
   );
   const descriptor = plan.artifact;
-  const store = new AwsCliObjectStore({
-    bucket: process.env.R2_ARTIFACT_BUCKET,
-    endpoint: process.env.R2_ENDPOINT,
-    aws: process.env.AWS_CLI || "aws",
-  });
-  const result = await materializeContentAddressedArtifact({
-    descriptor,
-    expectedSiteReleaseId: process.env.SITE_RELEASE_ID,
-    expectedCodeSha: process.env.EXACT_CODE_SHA,
-    expectedContentSha256: process.env.CONTENT_ROOT_SHA256,
-    targetRoot: positional[1] || "astro/dist/client",
-    store,
-    concurrency: process.env.R2_MATERIALIZE_CONCURRENCY || DEFAULT_CONCURRENCY,
-    includeFile: verificationBaseline
-      ? isPreviewVerificationBaselinePath
-      : undefined,
-  });
-  process.stdout.write(`${JSON.stringify(result)}\n`);
+  const store = createObjectStore();
+  try {
+    const result = await materializeContentAddressedArtifact({
+      descriptor,
+      expectedSiteReleaseId: process.env.SITE_RELEASE_ID,
+      expectedCodeSha: process.env.EXACT_CODE_SHA,
+      expectedContentSha256: process.env.CONTENT_ROOT_SHA256,
+      targetRoot: positional[1] || "astro/dist/client",
+      store,
+      concurrency:
+        process.env.R2_MATERIALIZE_CONCURRENCY || DEFAULT_CONCURRENCY,
+      includeFile: verificationBaseline
+        ? isPreviewVerificationBaselinePath
+        : undefined,
+    });
+    process.stdout.write(`${JSON.stringify(result)}\n`);
+  } finally {
+    await store.close();
+  }
 }

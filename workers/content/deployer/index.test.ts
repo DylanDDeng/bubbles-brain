@@ -938,6 +938,42 @@ describe("automatic code release boundary", () => {
     ).toHaveLength(11);
   });
 
+  it("accepts BrainPod models, reading assets, and their source documentation", () => {
+    const releasePaths = [
+      "astro/src/data/brainpodModel.json",
+      "astro/src/data/catCurator.ts",
+      "astro/src/data/brainpod-art/magazine/read-again.json",
+      "astro/src/data/brainpod-art/collection-objects/tutorials-cover.png",
+      "static/js/about-profile.js",
+      "static/js/cat-curator.js",
+      "static/images/cat-curator.jpg",
+      "static/images/highlights/research-acceleration/task-horizon-validation.svg",
+      "artifacts/brainpod/fonts/fusion-pixel/LICENSES/ark-pixel/OFL.txt",
+      "artifacts/highlights/research-acceleration/render-charts.py",
+      "artifacts/highlights/research-acceleration/source-charts.json.gz",
+    ];
+    expect(
+      validateCodeReleaseChangeSet(
+        comparison(
+          releasePaths.map((filename) => ({ filename, status: "added" })),
+        ),
+        { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+      ),
+    ).toHaveLength(releasePaths.length);
+    for (const filename of [
+      "artifacts/brainpod/private.txt",
+      "astro/src/data/unknown.ts",
+      "static/js/unknown.js",
+    ]) {
+      expect(() =>
+        validateCodeReleaseChangeSet(
+          comparison([{ filename, status: "added" }]),
+          { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+        ),
+      ).toThrow(`Code release contains forbidden or unknown path: ${filename}`);
+    }
+  });
+
   it("accepts the Vibe Coding and Pi tutorial release paths", () => {
     const releasePaths = [
       "astro/src/data/vibeCodingPatternDetails.ts",

@@ -383,6 +383,8 @@ function classifyCodeReleasePath(
     path.startsWith("tests/") ||
     path.startsWith("docs/") ||
     path.startsWith("design-reference/") ||
+    path.startsWith("artifacts/brainpod/fonts/fusion-pixel/") ||
+    path.startsWith("artifacts/highlights/research-acceleration/") ||
     path.startsWith("astro/tests/") ||
     path.startsWith("astro/.vscode/") ||
     // Root worker pipeline code and its Wrangler config do not affect the
@@ -431,13 +433,17 @@ function classifyCodeReleasePath(
       "content/newbie-tutorials/",
       "content/skills/",
       "astro/src/data/design-md/",
+      "astro/src/data/brainpod-art/",
       "content/workbuddy-tutorials/",
       "static/fonts/",
       "static/media/",
+      "static/images/highlights/research-acceleration/",
     ].some((prefix) => path.startsWith(prefix)) ||
     [
       "astro/src/content.config.ts",
       "astro/src/data/changelog.ts",
+      "astro/src/data/brainpodModel.json",
+      "astro/src/data/catCurator.ts",
       "astro/src/data/designBrands.ts",
       "astro/src/data/vibeCodingPatternDetails.ts",
       "astro/src/data/vibeCodingSkills.ts",
@@ -457,6 +463,8 @@ function classifyCodeReleasePath(
       "static/css/daily-timeline.css",
       "static/_headers",
       "static/js/ai-infographic.js",
+      "static/js/about-profile.js",
+      "static/js/cat-curator.js",
       "static/js/daily-timeline.js",
       "static/js/knowledge-home-v2.js",
       "static/js/knowledge-search.js",
@@ -470,6 +478,7 @@ function classifyCodeReleasePath(
       "static/js/vibe-coding-skills.js",
       "static/js/vibe-coding-terms.js",
       "static/images/brain-cat.jpg",
+      "static/images/cat-curator.jpg",
       "static/images/wechat-qrcode.jpg",
       "static/images/cat-pose-1.jpg",
       "static/images/cat-pose-2.jpg",

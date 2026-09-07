@@ -39,6 +39,14 @@ function setupArticleOutline(): void {
 
 	if (entries.length === 0) return;
 
+	const desktopOutline = matchMedia('(min-width: 701px)');
+	const syncOutline = () => {
+		if (document.body.classList.contains('collection-site'))
+			outline.toggleAttribute('open', desktopOutline.matches);
+	};
+	syncOutline();
+	desktopOutline.addEventListener('change', syncOutline);
+
 	let frame = 0;
 	const update = () => {
 		frame = 0;
@@ -65,6 +73,7 @@ function setupArticleOutline(): void {
 	update();
 
 	cleanupOutline = () => {
+		desktopOutline.removeEventListener('change', syncOutline);
 		if (frame !== 0) window.cancelAnimationFrame(frame);
 		for (const entry of entries) entry.link.removeEventListener('click', scheduleUpdate);
 		window.removeEventListener('scroll', scheduleUpdate);

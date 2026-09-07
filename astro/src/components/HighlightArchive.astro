@@ -27,7 +27,6 @@ const yearHref = (year: string) =>
 			{years.map((entry) => (
 				<a href={yearHref(entry.year)} class:list={[{ 'is-active': entry.year === activeYear }]}>
 					<span data-label={entry.year}>{entry.year}</span>
-					<small>{entry.count}</small>
 				</a>
 			))}
 		</nav>
@@ -52,13 +51,7 @@ const yearHref = (year: string) =>
 		months.map((group) => (
 			<section class="month-group hl-month">
 				<header class="hl-month-header">
-					<span class="hl-month-index" aria-hidden="true">
-						{group.key ? group.key.slice(5) : '——'}
-					</span>
 					<h2>{group.label}</h2>
-					<p>
-						{group.items.length} {isEnglish ? 'picks' : '篇'}
-					</p>
 				</header>
 				<div class="hl-month-list">
 					{group.items.map((item) => (

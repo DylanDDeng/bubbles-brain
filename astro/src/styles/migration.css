@@ -109,7 +109,9 @@ a:hover {
 	outline-offset: 3px;
 }
 
-input[type='search']:focus {
+input[type='search']:focus,
+.knowledge-shell input[type='search']:focus {
+	outline: none;
 	border-color: var(--rule);
 	box-shadow: none;
 }

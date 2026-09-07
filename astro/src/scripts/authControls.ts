@@ -45,6 +45,18 @@ function render(root: HTMLElement, state: AuthState): void {
 	const label = root.querySelector('[data-auth-label]');
 	const detail = root.querySelector('[data-auth-detail]');
 	const avatar = root.querySelector('[data-auth-avatar]');
+	const inline = root.dataset.authInline === 'true';
+	if (inline) {
+		const entry = root.querySelector<HTMLElement>('[data-auth-entry]');
+		const signedIn = state.user !== null;
+		if (entry) entry.hidden = signedIn;
+		if (trigger) trigger.hidden = !signedIn;
+		if (!signedIn) {
+			const panel = root.querySelector<HTMLElement>('[data-auth-panel]');
+			if (panel) panel.hidden = true;
+			if (trigger) trigger.ariaExpanded = 'false';
+		}
+	}
 	if (trigger)
 		trigger.ariaBusy = String(
 			['booting', 'redirecting', 'authenticated', 'provisioning_profile', 'signing_out'].includes(
@@ -57,7 +69,7 @@ function render(root: HTMLElement, state: AuthState): void {
 
 	if (state.status === 'ready') {
 		const name = state.profile?.display_name ?? state.user?.email ?? copy.ready;
-		text(label, name);
+		text(label, inline ? copy.account : name);
 		text(detail, state.user?.email ?? copy.ready);
 		text(avatar, name.trim().slice(0, 1).toLocaleUpperCase(locale));
 	} else if (state.status === 'anonymous') {
@@ -73,6 +85,7 @@ function render(root: HTMLElement, state: AuthState): void {
 		text(detail, copy.loading);
 		text(avatar, '·');
 	}
+	if (inline && state.user) text(label, copy.account);
 }
 
 const cleanupByRoot = new Map<HTMLElement, () => void>();

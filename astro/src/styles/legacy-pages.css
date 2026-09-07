@@ -27,6 +27,22 @@
 	color: var(--ink-soft);
 }
 
+/* 右列：上面是馆长，下面是计数 */
+.directory-hero > div:first-child {
+	grid-row: 1 / span 2;
+}
+
+.directory-hero-cat {
+	grid-column: 2;
+	align-self: end;
+	justify-self: end;
+}
+
+.directory-hero .directory-count {
+	grid-column: 2;
+	justify-self: end;
+}
+
 .directory-count {
 	display: flex;
 	align-items: baseline;
@@ -179,99 +195,6 @@
 	border: 1px solid var(--rule);
 	color: var(--ink-faint);
 	font-size: 0.6rem;
-}
-
-/* Highlights top section: drop the stacked hairlines — the hero ends with
-   whitespace instead of a rule, and the search becomes a quiet boxed field
-   with the icon inside, so the first month heading is the only rule left. */
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-hero {
-	padding-bottom: 8px;
-	border-bottom: 0;
-}
-
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-toolbar {
-	margin-top: 10px;
-	padding: 0;
-	border-block: 0;
-}
-
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-toolbar
-	> div {
-	position: relative;
-	display: block;
-	max-width: 320px;
-}
-
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-toolbar
-	i {
-	position: absolute;
-	top: 50%;
-	left: 10px;
-	transform: translateY(-50%);
-	pointer-events: none;
-}
-
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-toolbar
-	input {
-	min-height: 38px;
-	padding: 4px 10px 4px 32px;
-	border: 1px solid var(--rule);
-	border-radius: 999px;
-	background: var(--paper-raised);
-}
-
-.directory-page:is(
-		[data-directory-page='highlights'],
-		[data-directory-page='codex-tutorials'],
-		[data-directory-page='deepseek-harness-tutorials'],
-		[data-directory-page='pi-agent-tutorials'],
-		[data-directory-page='newbie-tutorials'],
-		[data-directory-page='workbuddy-tutorials']
-	)
-	.directory-toolbar
-	input:focus {
-	border-color: #b9b9b5;
-	box-shadow: none;
 }
 
 /* Highlights uses the same editorial list rhythm as My Writing. */
@@ -536,6 +459,22 @@
 	padding-bottom: clamp(24px, 4vw, 40px);
 }
 
+.article-editorial-note {
+	margin: 0 0 24px;
+	max-width: 650px;
+	color: var(--ink-soft);
+	font: 400 14px/1.8 var(--sans);
+	text-wrap: pretty;
+}
+
+.collection-site .article-editorial-note + .article-content {
+	padding-top: 0;
+}
+
+.collection-site .article-editorial-note + .article-content > :first-child {
+	margin-top: 0;
+}
+
 .article-header h1 {
 	margin-top: 18px;
 	color: var(--ink);
@@ -773,58 +712,6 @@
 	background: #fff;
 }
 
-.article-pagination {
-	display: grid;
-	align-items: stretch;
-	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-	gap: 16px;
-	margin-top: 72px;
-	font-size: 0.72rem;
-}
-
-.article-pagination > div {
-	display: grid;
-	gap: 6px;
-}
-
-.article-pagination > div:has(a) {
-	align-content: center;
-	min-height: 84px;
-	padding: 16px 18px;
-	border: 1px solid var(--rule);
-	background: #fff;
-	transition: background 0.2s ease;
-}
-
-.article-pagination > div:has(a):hover {
-	background: var(--blue-soft);
-}
-
-.article-pagination > div:last-child {
-	text-align: right;
-}
-
-.article-pagination span {
-	color: var(--ink-faint);
-	font-family: var(--sans);
-	font-size: 0.6rem;
-}
-
-.article-pagination a {
-	text-decoration: none;
-}
-
-.article-pagination > div a {
-	font-size: 0.8rem;
-	font-weight: 650;
-	letter-spacing: -0.01em;
-}
-
-.article-back {
-	align-self: center;
-	color: var(--blue-strong);
-}
-
 .tool-shell {
 	padding-top: clamp(48px, 7vw, 88px);
 }
@@ -968,6 +855,28 @@
 		grid-template-columns: 1fr;
 	}
 
+	.directory-hero > div:first-child {
+		grid-row: auto;
+	}
+
+	.directory-hero-cat,
+	.directory-hero .directory-count {
+		grid-column: auto;
+		justify-self: start;
+	}
+
+	.directory-hero-cat {
+		flex-direction: row;
+	}
+
+	.directory-hero-cat .cat-curator-bubble::before {
+		left: -8px;
+		right: auto;
+		border: 0;
+		border-left: 1.5px solid var(--ink);
+		border-bottom: 1.5px solid var(--ink);
+	}
+
 	.directory-count {
 		justify-self: start;
 	}
@@ -1025,18 +934,6 @@
 	.editorial-archive article {
 		grid-template-columns: 1fr;
 		gap: 8px;
-	}
-
-	.article-pagination {
-		grid-template-columns: 1fr;
-	}
-
-	.article-pagination > div:last-child {
-		text-align: left;
-	}
-
-	.article-back {
-		grid-row: 3;
 	}
 
 	.compress-workspace {
@@ -1574,6 +1471,28 @@
 
 .article-content .article-figure--compact {
 	max-width: 560px;
+}
+
+/* An authored comparison: paired charts share a row, dense charts stay full width. */
+.article-content .article-figure-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+	gap: 28px 20px;
+	margin: 32px 0 40px;
+}
+
+.article-figure-grid__item {
+	min-width: 0;
+}
+
+.article-content .article-figure-grid .article-figure {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.article-figure-grid .article-figure__trigger {
+	padding: 8px;
 }
 
 .article-content .article-figure--breakout {

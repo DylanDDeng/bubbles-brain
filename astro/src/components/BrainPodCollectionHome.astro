@@ -1,0 +1,151 @@
+---
+import { buildKnowledgeSearchIndex } from '../lib/searchIndex';
+import { buildBrainPodLibrary } from '../lib/brainpod';
+import { brainPodSections } from '../lib/brainpodSections';
+import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import CollectionCover from './CollectionCover.astro';
+import SiteActions from './SiteActions.astro';
+import FooterLinks from './FooterLinks.astro';
+import BrainPodTermsDirectory from './BrainPodTermsDirectory.astro';
+import '../styles/brainpodCollection.css';
+
+const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
+const previewLimit = 5;
+---
+
+<section class="brainpod-collection-room" data-collection-room aria-label="知识收藏">
+	<header class="bc-topbar">
+		<a class="bc-return" href="#brainpod-stage" data-room-return aria-label="回到 iPod">
+			<img class="bc-avatar" src={CAT_CURATOR_AVATAR} alt="" width="36" height="36" />
+			<span>MENU</span>
+		</a>
+		<SiteActions locale="zh-CN" languageHref="/en/" />
+	</header>
+	<section class="bc-browser" id="bc-browser" aria-labelledby="bc-browser-title">
+		<h1 id="bc-browser-title" class="sr-only">收藏</h1>
+		<nav class="bc-index" aria-label="选择知识栏目">
+			{
+				brainPodSections.map((section, i) => (
+					<a
+						href={'#bc-' + section.id}
+						data-room-section={section.id}
+						data-room-index
+						aria-current={i === 0 ? 'true' : undefined}
+					>
+						{section.title}
+						<span
+							class="reading-update-dot"
+							data-update-sections={section.children.join(' ')}
+							role="img"
+							aria-label="有未读更新"
+							title="有未读更新"
+							hidden
+						/>
+					</a>
+				))
+			}
+		</nav>
+		<div class="bc-track-panels">
+			{
+				brainPodSections
+					.filter((section) => section.children.length > 1)
+					.map((section) => (
+						<section
+							id={'bc-' + section.id}
+							class="bc-track-panel bc-section-panel"
+							data-room-group={section.id}
+							aria-labelledby={'bc-title-' + section.id}
+						>
+							<div class="bc-cover-art">
+								<CollectionCover section={section.id} />
+							</div>
+							<div class="bc-panel-content">
+								<header class="bc-panel-heading">
+									<h2 id={'bc-title-' + section.id} tabindex="-1">
+										{section.title}
+									</h2>
+								</header>
+								<ul class="bc-tracks bc-subsections">
+									{section.children.map((id) => {
+										const collection = library.collections.find(
+											(collection) => collection.id === id,
+										)!;
+										return (
+											<li>
+												<a href={'#bc-' + id} data-room-pick={id}>
+													<span>
+														{collection.title.replace('Vibe Coding ', '')}
+														<span
+															class="reading-update-dot"
+															data-update-sections={collection.id}
+															role="img"
+															aria-label="有未读更新"
+															title="有未读更新"
+															hidden
+														/>
+													</span>
+													<i class="ph ph-arrow-right" aria-hidden="true" />
+												</a>
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						</section>
+					))
+			}
+			{
+				library.collections.map((collection) => (
+					<section
+						id={'bc-' + collection.id}
+						class="bc-track-panel"
+						data-room-panel={collection.id}
+						aria-labelledby={'bc-title-' + collection.id}
+					>
+						<div class="bc-cover-art">
+							<CollectionCover
+								section={collection.id === 'vibe-coding-terms' ? 'vibe-coding' : collection.id}
+							/>
+						</div>
+						<div class="bc-panel-content">
+							{collection.id === 'vibe-coding-terms' ? (
+								<BrainPodTermsDirectory />
+							) : (
+								<>
+									<header class="bc-panel-heading">
+										<h2 id={'bc-title-' + collection.id} tabindex="-1">
+											{collection.title}
+										</h2>
+									</header>
+									<ol class="bc-tracks">
+										{collection.items.slice(0, previewLimit).map((item) => (
+											<li>
+												<a
+													href={item.href}
+													target={item.external ? '_blank' : undefined}
+													rel={item.external ? 'noopener noreferrer' : undefined}
+												>
+													<span>{item.title}</span>
+													<i class="ph ph-arrow-up-right" aria-hidden="true" />
+												</a>
+											</li>
+										))}
+									</ol>
+									{collection.items.length > previewLimit && (
+										<a class="bc-all-link" href={collection.href}>
+											查看全部 {collection.items.length} 篇
+											<i class="ph ph-arrow-right" aria-hidden="true" />
+										</a>
+									)}
+								</>
+							)}
+						</div>
+					</section>
+				))
+			}
+		</div>
+	</section>
+	<footer class="bc-footer">
+		<FooterLinks />
+	</footer>
+</section>

@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import { vibeCodingSkillCategories, vibeCodingSkillMeta } from '../data/vibeCodingSkills';
+import CatCurator from './CatCurator.astro';
+import { CAT_SECTION_LINES } from '../data/catCurator';
 import '../styles/vibe-coding-terms.css';
 
 const entries = await getCollection('skills');
@@ -21,6 +23,12 @@ const categories = vibeCodingSkillCategories
 		<h1>Skills</h1>
 		<span>可直接装进 AI 编码工具的技能包，按用途分类整理。</span>
 	</header>
+	<CatCurator
+		class="vibe-terms-cat"
+		pose={CAT_SECTION_LINES['vibe-coding-skills'].pose}
+		line={CAT_SECTION_LINES['vibe-coding-skills'].zh}
+		side="left"
+	/>
 
 	<nav class="vibe-category-nav" aria-label="技能分类">
 		{

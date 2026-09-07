@@ -1,9 +1,12 @@
 ---
 import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingDetailProfile } from '../data/vibeCodingTermDetails';
 import VibeCodingConceptVisual from './VibeCodingConceptVisual.astro';
 import VibeCodingFlowLab from './VibeCodingFlowLab.astro';
+import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import '../styles/vibe-coding-term-detail.css';
+import '../styles/cat-curator.css';
 
 interface Props {
 	concept: VibeCodingConcept;
@@ -16,7 +19,7 @@ const { concept, profile, previousConcept, nextConcept } = Astro.props;
 ---
 
 <article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
-	<a class="concept-detail-back" href={`/vibe-coding/terms/#${concept.categoryId}`}>
+	<a class="concept-detail-back" href={brainPodTermReturn(concept.id)}>
 		<i class="ph ph-arrow-left" aria-hidden="true"></i>
 		返回术语
 	</a>
@@ -40,9 +43,18 @@ const { concept, profile, previousConcept, nextConcept } = Astro.props;
 				</div>
 			</div>
 			<div class="concept-qa-row concept-qa-answer">
-				<span class="concept-qa-glyph" aria-hidden="true">A</span>
+				<span class="concept-qa-glyph concept-qa-glyph--cat" aria-hidden="true">
+					<img
+						src={CAT_CURATOR_AVATAR}
+						alt=""
+						width="44"
+						height="44"
+						loading="lazy"
+						decoding="async"
+					/>
+				</span>
 				<div class="concept-qa-body">
-					<span class="concept-qa-label">简单来说</span>
+					<span class="concept-qa-label">馆长说，简单来说</span>
 					<p>{concept.description}</p>
 				</div>
 			</div>

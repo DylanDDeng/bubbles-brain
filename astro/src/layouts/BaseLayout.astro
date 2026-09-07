@@ -1,9 +1,12 @@
 ---
 import '../styles/migration.css';
 import '../styles/ricoui-theme.css';
+import '../styles/collection-pages.css';
 import { ClientRouter } from 'astro:transitions';
-import AuthControls from '../components/AuthControls.astro';
+import SiteActions from '../components/SiteActions.astro';
+import FooterLinks from '../components/FooterLinks.astro';
 import CommandSearch from '../components/CommandSearch.astro';
+import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 
 interface Props {
 	title: string;
@@ -13,22 +16,8 @@ interface Props {
 	canonicalPath?: string;
 	noindex?: boolean;
 	section?: string;
+	immersive?: boolean;
 }
-
-interface NavLink {
-	kind: 'link';
-	href: string;
-	label: string;
-	commandSearch?: boolean;
-}
-
-interface NavGroup {
-	kind: 'group';
-	label: string;
-	items: NavLink[];
-}
-
-type NavItem = NavLink | NavGroup;
 
 const {
 	title,
@@ -37,6 +26,7 @@ const {
 	alternateHref = null,
 	canonicalPath = Astro.url.pathname,
 	noindex = false,
+	immersive = false,
 } = Astro.props;
 
 const isEnglish = lang === 'en';
@@ -44,34 +34,6 @@ const homeHref = isEnglish ? '/en/' : '/';
 const languageHref = alternateHref ?? (isEnglish ? '/' : '/en/');
 const canonicalUrl = new URL(canonicalPath, Astro.site);
 const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
-const tutorialLinks: NavLink[] = [
-	{ kind: 'link', href: '/newbie-tutorials/', label: '新手村' },
-	{ kind: 'link', href: '/codex-tutorials/', label: 'Codex 教程' },
-	{ kind: 'link', href: '/pi-agent-tutorials/', label: 'Pi Agent 教程' },
-	{ kind: 'link', href: '/workbuddy-tutorials/', label: 'WorkBuddy 教程' },
-];
-const vibeCodingLinks: NavLink[] = [
-	{ kind: 'link', href: '/vibe-coding/terms/', label: '术语' },
-	{ kind: 'link', href: '/vibe-coding/skills/', label: 'Skills' },
-	{ kind: 'link', href: '/vibe-coding/design/', label: 'Design' },
-];
-const navItems: NavItem[] = isEnglish
-	? [
-			{ kind: 'link', href: '/search/', label: 'Search', commandSearch: true },
-			{ kind: 'link', href: '/en/highlights/', label: 'Highlights' },
-			{ kind: 'link', href: '/en/about/', label: 'About' },
-		]
-	: [
-			{ kind: 'link', href: '/search/', label: '知识搜索', commandSearch: true },
-			{ kind: 'group', label: '教程', items: tutorialLinks },
-			{ kind: 'group', label: 'Vibe Coding', items: vibeCodingLinks },
-			{ kind: 'link', href: '/highlights/', label: '精选阅读' },
-			{ kind: 'link', href: '/about/', label: '关于' },
-		];
-const navItemIsActive = (item: NavItem) =>
-	item.kind === 'link'
-		? Astro.url.pathname.startsWith(item.href)
-		: item.items.some((child) => Astro.url.pathname.startsWith(child.href));
 ---
 
 <!doctype html>
@@ -110,130 +72,41 @@ const navItemIsActive = (item: NavItem) =>
 			src="https://cloud.umami.is/script.js"
 			data-website-id="2a4e6219-c7bc-4336-96e3-5d1dc2f0b330"></script>
 	</head>
-	<body>
+	<body class="collection-site">
 		<a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳到正文'}</a>
-		<div class="site-frame">
-			<aside class="site-rail" aria-label={isEnglish ? 'Site navigation' : '网站导航'}>
-				<div class="rail-topline">
-					<a class="site-brand" href={homeHref} aria-label="Bubble's Brain">
-						<span class="site-brand-mark" aria-hidden="true">
-							<img src="/favicon-512x512.png" alt="" width="32" height="32" />
-						</span>
-						<span class="site-brand-name">Bubble's Brain</span>
-					</a>
-					<div class="rail-mobile-actions">
-						<AuthControls locale={lang} compact />
-						<button
-							class="mobile-nav-toggle"
-							type="button"
-							aria-expanded="false"
-							aria-controls="rail-menu"
-						>
-							<i class="ph ph-list" aria-hidden="true"></i>
-							<span class="sr-only">{isEnglish ? 'Open menu' : '打开菜单'}</span>
-						</button>
-					</div>
-				</div>
-				<div class="rail-menu" id="rail-menu">
-					<div class="rail-today">
-						<span>{isEnglish ? 'NAVIGATION' : '知识导航'}</span>
-						<strong>{isEnglish ? 'KNOWLEDGE BASE' : '个人 AI 知识库'}</strong>
-					</div>
-					<nav class="rail-nav" aria-label={isEnglish ? 'Primary navigation' : '主导航'}>
-						{
-							navItems.map((item) =>
-								item.kind === 'group' ? (
-									<details class="rail-nav-group" data-nav-group>
-										<summary aria-current={navItemIsActive(item) ? 'page' : undefined}>
-											<span>{item.label}</span>
-											<i class="ph ph-caret-down" aria-hidden="true" />
-										</summary>
-										<div class="rail-nav-submenu">
-											{item.items.map((child) => (
-												<a
-													href={child.href}
-													aria-current={navItemIsActive(child) ? 'page' : undefined}
-												>
-													{child.label}
-												</a>
-											))}
-										</div>
-									</details>
-								) : (
-									<a
-										href={item.href}
-										data-command-search-trigger={item.commandSearch ? '' : undefined}
-										aria-current={navItemIsActive(item) ? 'page' : undefined}
-									>
-										<span>{item.label}</span>
-										{item.commandSearch && <kbd aria-hidden="true">⌘K</kbd>}
-									</a>
-								),
-							)
-						}
-					</nav>
-					<div class="rail-controls">
-						<AuthControls locale={lang} />
-						<a href={languageHref}>{isEnglish ? '中文' : 'EN'}</a>
+		<div class:list={['site-frame', { 'site-frame--immersive': immersive }]}>
+			{
+				!immersive && (
+					<header class="site-header">
 						<a
-							class="rail-github-link"
-							href="https://github.com/DylanDDeng/bubbles-brain"
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="GitHub"
-							title="GitHub"
+							class="site-home"
+							href={homeHref}
+							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
-							<i class="ph ph-github-logo" aria-hidden="true"></i>
+							<>
+								<img class="site-avatar" src={CAT_CURATOR_AVATAR} alt="" width="36" height="36" />
+								<span>Bubble’s Brain</span>
+							</>
 						</a>
-					</div>
-					<p class="rail-motto">{isEnglish ? 'Build links, not noise.' : '建立连接，长期主义。'}</p>
-				</div>
-			</aside>
+						<SiteActions locale={lang} languageHref={languageHref} />
+					</header>
+				)
+			}
 			<div class="site-canvas">
-				<main id="main-content" tabindex="-1">
-					<slot />
-				</main>
-				<footer class="site-footer">
-					<div class="site-footer-intro">
-						<a class="site-brand-mark" href={homeHref} aria-label="Bubble's Brain">
-							<img src="/favicon-512x512.png" alt="" width="32" height="32" />
-						</a>
-						<p>
-							{
-								isEnglish
-									? 'A curated AI knowledge base for sources and field notes.'
-									: '一个持续整理的个人 AI 知识库，收录 Agent 教程、一手资料与实践笔记。'
-							}
-						</p>
-					</div>
-					<div class="site-footer-links">
-						<nav aria-label={isEnglish ? 'Knowledge collections' : '知识栏目'}>
-							<strong>{isEnglish ? 'Library' : '知识库'}</strong>
-							{!isEnglish && <a href="/newbie-tutorials/">新手村</a>}
-							{!isEnglish && <a href="/codex-tutorials/">Codex 教程</a>}
-							{!isEnglish && <a href="/pi-agent-tutorials/">Pi Agent 教程</a>}
-							{!isEnglish && <a href="/workbuddy-tutorials/">WorkBuddy 教程</a>}
-							{!isEnglish && <a href="/vibe-coding/terms/">Vibe Coding 术语</a>}
-							{!isEnglish && <a href="/vibe-coding/skills/">Vibe Coding Skills</a>}
-							{!isEnglish && <a href="/vibe-coding/design/">Vibe Coding Design</a>}
-							<a href={isEnglish ? '/en/highlights/' : '/highlights/'}
-								>{isEnglish ? 'Highlights' : '精选阅读'}</a
-							>
-						</nav>
-						<nav aria-label={isEnglish ? 'Resources' : '更多资源'}>
-							<strong>{isEnglish ? 'More' : '更多'}</strong>
-							<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
-							{!isEnglish && <a href="/changelog/">更新日志</a>}
-							<a href={isEnglish ? '/en/rss.xml' : '/rss.xml'}>RSS</a>
-						</nav>
-					</div>
-					<div class="site-footer-meta">
-						<span>© {new Date().getFullYear()} Bubble's Brain</span>
-					</div>
-				</footer>
+				<main id="main-content" tabindex="-1"><slot /></main>
+				{
+					!immersive && (
+						<footer class="site-footer">
+							<FooterLinks locale={lang} />
+						</footer>
+					)
+				}
 			</div>
 		</div>
 		<CommandSearch locale={lang} />
+		<script>
+			import '../scripts/readingUpdates';
+		</script>
 		<script is:inline type="module" src="/js/site-shell.js"></script>
 	</body>
 </html>

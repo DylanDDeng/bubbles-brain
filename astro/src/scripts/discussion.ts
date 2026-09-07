@@ -136,6 +136,7 @@ function initDiscussions(): void {
 		let turnstileWidget: string | null = null;
 		let turnstileSetupPromise: Promise<void> | null = null;
 		let turnstileFailed = false;
+		let activated = false;
 		let observer: IntersectionObserver | null = null;
 
 		function setState(next: string, message: string, isError = false): void {
@@ -307,6 +308,7 @@ function initDiscussions(): void {
 				list.append(item);
 			}
 			text(count, String(comments.length));
+			if (count instanceof HTMLElement) count.hidden = comments.length === 0;
 			if (turnstileFailed && authSnapshot().status === 'ready')
 				setState('turnstile_error', labels.turnstileError, true);
 			else
@@ -382,6 +384,7 @@ function initDiscussions(): void {
 		}
 
 		function updateAuth(state: AuthState): void {
+			if (!activated) return;
 			const config = browserCommunityConfig();
 			if (!authNote || !form) return;
 			authNote.replaceChildren();
@@ -506,22 +509,25 @@ function initDiscussions(): void {
 		});
 		const unsubscribe = subscribeAuth(updateAuth);
 
+		function activate(): void {
+			if (activated) return;
+			activated = true;
+			updateAuth(authSnapshot());
+			void bootAuth();
+			void load();
+		}
 		if ('IntersectionObserver' in window) {
 			observer = new IntersectionObserver(
 				(entries) => {
 					if (entries.some((entry) => entry.isIntersecting)) {
 						observer?.disconnect();
-						void bootAuth();
-						void load();
+						activate();
 					}
 				},
 				{ rootMargin: '600px 0px' },
 			);
 			observer.observe(root);
-		} else {
-			void bootAuth();
-			void load();
-		}
+		} else activate();
 		cleanupByRoot.set(root, () => {
 			unsubscribe();
 			observer?.disconnect();

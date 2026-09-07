@@ -1,0 +1,15 @@
+---
+interface Props {
+	locale?: 'zh-CN' | 'en';
+}
+const { locale = 'zh-CN' } = Astro.props;
+const isEnglish = locale === 'en';
+---
+
+<nav aria-label={isEnglish ? 'More' : '更多'}>
+	<a href="/changelog/">{isEnglish ? 'Updates' : '更新'}</a>
+	<a href={isEnglish ? '/en/rss.xml' : '/rss.xml'}>RSS</a>
+	<a href="https://github.com/DylanDDeng/bubbles-brain" target="_blank" rel="noopener noreferrer">
+		GitHub
+	</a>
+</nav>

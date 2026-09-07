@@ -1,13 +1,37 @@
 ---
-import KnowledgeIndexHome from '../../components/KnowledgeIndexHome.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionCover from '../../components/CollectionCover.astro';
+import { buildKnowledgeSearchIndex } from '../../lib/searchIndex';
+const index = await buildKnowledgeSearchIndex({ locale: 'en' });
+const articles = index.items.filter((item) => item.section === 'highlights').slice(0, 8);
 ---
 
 <BaseLayout
 	title="Bubble's Brain · Personal AI knowledge archive"
-	description="Curated sources, practical guides, and field notes for durable AI knowledge."
+	description="A personal collection of AI knowledge, primary sources and practical guides."
 	lang="en"
 	alternateHref="/"
 >
-	<KnowledgeIndexHome locale="en" />
+	<section class="legacy-shell directory-page english-collection">
+		<header class="directory-hero collection-masthead">
+			<div><h1>A place for<br />curiosity.</h1></div>
+			<a href="/en/highlights/" class="masthead-cover" aria-label="Open Highlights"
+				><CollectionCover section="highlights" /></a
+			>
+		</header>
+		<div class="english-reading">
+			<h2>Highlights</h2>
+			<div>
+				{
+					articles.map((item) => (
+						<a href={item.href}>
+							{item.title}
+							<i class="ph ph-arrow-up-right" aria-hidden="true" />
+						</a>
+					))
+				}<a class="collection-back" href="/en/highlights/"
+					>View all<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+			</div>
+		</div>
+	</section>
 </BaseLayout>

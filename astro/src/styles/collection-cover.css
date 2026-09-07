@@ -1,0 +1,120 @@
+.collection-cover {
+	container-type: inline-size;
+	position: relative;
+	width: 100%;
+	aspect-ratio: 0.78;
+	overflow: hidden;
+	color: #fff;
+	background: var(--blue, #2867d5);
+	box-shadow:
+		-3px 0 0 #00000012,
+		0 12px 20px -14px #1b243d50;
+	font-family: 'Instrument Serif', Georgia, serif;
+	user-select: none;
+}
+.collection-cover > span {
+	position: absolute;
+}
+.collection-cover[data-reading-magazine] {
+	overflow: visible;
+	background: transparent;
+	box-shadow: none;
+}
+.reading-magazine-fallback,
+.reading-magazine-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+.reading-magazine-canvas {
+	filter: drop-shadow(1.8cqw 3.5cqw 3.2cqw #222c371e) drop-shadow(0.2cqw 0.5cqw 0.6cqw #222c370c);
+}
+[data-magazine-ready] > .reading-magazine-fallback {
+	visibility: hidden;
+}
+.bc-cover-art:has([data-reading-magazine]),
+.bc-cover-art:has([data-reading-magazine]):hover,
+.collection-site .masthead-cover:has([data-reading-magazine]) {
+	transform: none;
+}
+.cover-question {
+	inset: 8% 0 0;
+	text-align: center;
+	font-size: 104cqw;
+	line-height: 1;
+}
+.cover-orbit {
+	inset: 12% 11%;
+	border: 1px solid #ffffff50;
+	border-radius: 50%;
+	transform: rotate(28deg);
+}
+.cover-orbit::after {
+	content: '';
+	position: absolute;
+	inset: -2% 21%;
+	border: 1px solid #ffffff60;
+	border-radius: 50%;
+	transform: rotate(-48deg);
+}
+.collection-cover--agent {
+	background: linear-gradient(120deg, #eceef0, #d7dbe0 65%, #f1f2f4);
+	color: #505b6b;
+}
+.cover-agent {
+	top: 16%;
+	left: 12%;
+	font-family: var(--mono);
+	font-size: 19cqw;
+	letter-spacing: -0.07em;
+	line-height: 1.2;
+}
+.cover-agent i {
+	display: block;
+	margin-bottom: 18%;
+	color: #9ca6b4;
+	font: inherit;
+}
+.cover-agent > span {
+	color: var(--blue);
+}
+.collection-cover--design {
+	background: #f0f3f4;
+	color: var(--blue);
+}
+.cover-design {
+	left: 12%;
+	top: 15%;
+	font: 600 76cqw/1 var(--sans);
+	letter-spacing: -0.14em;
+}
+.cover-design em {
+	position: absolute;
+	top: 28%;
+	left: 53%;
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-weight: 400;
+	color: #253735;
+}
+.collection-cover--terms {
+	background: #e5eaf0;
+	color: #272d36;
+}
+.cover-terms {
+	top: 27%;
+	left: 9%;
+	font-size: 64cqw;
+	line-height: 1;
+	letter-spacing: -0.09em;
+}
+.collection-cover--skills {
+	background: #e9eee9;
+	color: #2867d5;
+}
+.cover-skills {
+	inset: 12% 0 0;
+	font: 104cqw/1.1 var(--sans);
+	text-align: center;
+}

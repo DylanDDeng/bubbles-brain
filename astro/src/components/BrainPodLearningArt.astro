@@ -1,0 +1,41 @@
+---
+// An original line illustration of a learning loop, drawn as a folded torus.
+// The three reading steps come from the featured article; this is cover art, not a data plot.
+const loops = Array.from({ length: 58 }, (_, i) => {
+	const v = (i / 58) * Math.PI * 2;
+	const points = Array.from({ length: 181 }, (_, j) => {
+		const u = (j / 180) * Math.PI * 2;
+		const radius = 140 + 51 * Math.cos(v);
+		const x = radius * Math.cos(u);
+		const y = radius * Math.sin(u);
+		const z = 51 * Math.sin(v) + 36 * Math.sin(u * 2);
+		return (
+			(250 + x * 0.94 + y * 0.23).toFixed(2) +
+			',' +
+			(250 + y * 0.61 - z * 0.93 - x * 0.23).toFixed(2)
+		);
+	});
+	return 'M' + points.join('L') + 'Z';
+});
+---
+
+<svg class="bc-learning-art" viewBox="0 0 500 500" fill="none" aria-hidden="true">
+	<defs>
+		<linearGradient
+			id="bc-loop-ink"
+			x1="60"
+			y1="120"
+			x2="420"
+			y2="410"
+			gradientUnits="userSpaceOnUse"
+		>
+			<stop stop-color="#95c2ff"></stop><stop offset=".42" stop-color="#245cd1"></stop>
+			<stop offset=".74" stop-color="#153990"></stop><stop offset="1" stop-color="#8ba8dc"></stop>
+		</linearGradient>
+	</defs>
+	<g class="bc-learning-loops" stroke="url(#bc-loop-ink)" stroke-width="1.05" opacity=".84">
+		{loops.map((d) => <path d={d} />)}
+	</g>
+	<circle cx="419" cy="290" r="5" fill="#2867d5"></circle>
+	<circle cx="419" cy="290" r="11" stroke="#2867d5" opacity=".24"></circle>
+</svg>

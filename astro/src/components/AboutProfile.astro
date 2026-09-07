@@ -1,0 +1,128 @@
+---
+import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import '../styles/about-profile.css';
+interface Props {
+	locale: 'zh-CN' | 'en';
+	frontmatter: Record<string, unknown>;
+}
+const { locale, frontmatter } = Astro.props;
+const en = locale === 'en';
+const headline = frontmatter.headline as string[];
+const contacts = frontmatter.contacts as Record<string, string>;
+const socialLinks = [
+	{
+		icon: 'globe',
+		label: 'bubblebrain.me',
+		href: contacts.website,
+		title: en ? 'Personal website' : '个人网站',
+	},
+	{ icon: 'x-logo', label: '@BubbleBrain', href: contacts.x, title: 'X · @BubbleBrain' },
+];
+---
+
+<article class="about-profile" aria-label={en ? 'About BubbleBrain' : '关于 BubbleBrain'}>
+	<header class="about-profile-hero">
+		<h1>
+			{
+				headline.map((line, index) => (
+					<span class:list={{ 'about-profile-accent': index === 1 }}>{line}</span>
+				))
+			}
+		</h1>
+		<img
+			class="about-profile-cat"
+			src={CAT_CURATOR_AVATAR}
+			alt={en ? 'BubbleBrain’s cat avatar' : 'BubbleBrain 的猫猫头像'}
+			width="180"
+			height="180"
+		/>
+	</header>
+	<div class="about-profile-copy"><slot /></div>
+	<div class="about-profile-connect">
+		<nav class="about-profile-socials" aria-label={en ? 'Find me' : '找到我'}>
+			{
+				socialLinks.map((link) => (
+					<a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.title}>
+						<>
+							<i class={`ph ph-${link.icon}`} aria-hidden="true" />
+							<span>{link.label}</span>
+						</>
+					</a>
+				))
+			}
+			<button
+				type="button"
+				data-copy-account="BubbleBrain"
+				data-copy-message={en
+					? 'Copied. Search BubbleBrain in WeChat Official Accounts.'
+					: '已复制，请在微信公众号中搜索 BubbleBrain'}
+				title={en ? 'Copy WeChat Official Account name' : '复制公众号名称'}
+			>
+				<i class="ph ph-broadcast" aria-hidden="true"></i><span>BubbleBrain</span><span
+					class="about-profile-channel">{en ? 'WeChat OA' : '公众号'}</span
+				>
+			</button>
+			{
+				contacts.xiaohongshu ? (
+					<a
+						href={contacts.xiaohongshu}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label="小红书 · Bubble Brain"
+					>
+						<>
+							<span class="about-profile-rednote" aria-hidden="true">
+								小红书
+							</span>
+							<span>Bubble Brain</span>
+						</>
+					</a>
+				) : (
+					<button
+						type="button"
+						data-copy-account="Bubble Brain"
+						data-copy-message={
+							en
+								? 'Copied. Search Bubble Brain on Xiaohongshu.'
+								: '已复制，请在小红书搜索 Bubble Brain'
+						}
+						title={en ? 'Copy Xiaohongshu account name' : '复制小红书账号'}
+					>
+						<>
+							<span class="about-profile-rednote" aria-hidden="true">
+								小红书
+							</span>
+							<span>Bubble Brain</span>
+							<i class="ph ph-copy about-profile-arrow" aria-hidden="true" />
+						</>
+					</button>
+				)
+			}
+			<button
+				type="button"
+				popovertarget="about-wechat"
+				aria-label={en ? 'Show WeChat QR code' : '查看微信二维码'}
+				><i class="ph ph-wechat-logo" aria-hidden="true"></i><span
+					>{en ? 'BubbleBrain Assistant' : 'BubbleBrain小助手'}</span
+				><i class="ph ph-qr-code about-profile-arrow" aria-hidden="true"></i></button
+			>
+		</nav>
+		<p class="about-profile-status" role="status" aria-live="polite" data-copy-status></p>
+	</div>
+	<div id="about-wechat" class="about-profile-qr" popover>
+		<button
+			type="button"
+			class="about-profile-close"
+			popovertarget="about-wechat"
+			popovertargetaction="hide"
+			aria-label={en ? 'Close' : '关闭'}><i class="ph ph-x" aria-hidden="true"></i></button
+		>
+		<img
+			src={contacts.wechatQr}
+			alt={en ? 'WeChat QR code: BubbleBrain Assistant' : '微信二维码：BubbleBrain小助手'}
+			width="360"
+			loading="lazy"
+		/>
+	</div>
+</article>
+<script is:inline type="module" src="/js/about-profile.js"></script>

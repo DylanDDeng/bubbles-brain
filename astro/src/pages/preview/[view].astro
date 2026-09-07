@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BrainPodHome from '../../components/BrainPodHome.astro';
+import BrainPodCollectionHome from '../../components/BrainPodCollectionHome.astro';
+import '../../styles/brainpodPortal.css';
+import '../../styles/brainpodDevice.css';
+
+// Design review only: this route is deliberately absent from production builds.
+export function getStaticPaths() {
+	return import.meta.env.DEV ? [{ params: { view: 'brainpod' } }] : [];
+}
+---
+
+<BaseLayout
+	title="Bubble's Brain · iPod 首页预览"
+	description="在知识随身听里浏览个人 AI 知识库。"
+	noindex
+	immersive
+	canonicalPath="/"
+>
+	<BrainPodHome composition="device" collectionWorld>
+		<BrainPodCollectionHome slot="world" />
+	</BrainPodHome>
+</BaseLayout>

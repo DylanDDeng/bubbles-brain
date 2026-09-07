@@ -1,0 +1,249 @@
+/* 猫馆长 · 角色系统
+ * 姿态图 + 气泡（figure），Q/A 头像（concept-qa-glyph--cat），
+ * 文章末尾印章（cat-stamp）。 */
+
+.cat-curator {
+	--portrait: 112px;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 0;
+}
+
+.cat-curator--lg {
+	--portrait: 168px;
+	gap: 22px;
+}
+
+.cat-curator--left {
+	flex-direction: row-reverse;
+}
+
+.cat-curator--below {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.cat-curator-portrait {
+	/* 裁切框由组件以 --cx / --cy / --cs（原图像素）内联给出 */
+	position: relative;
+	flex: none;
+	display: block;
+	width: var(--portrait);
+	height: var(--portrait);
+	overflow: hidden;
+	border: 1px solid var(--rule);
+	border-radius: 50%;
+	background: #fff;
+}
+
+.cat-curator-portrait img {
+	position: absolute;
+	top: calc(var(--portrait) * -1 * var(--cy) / var(--cs));
+	left: calc(var(--portrait) * -1 * var(--cx) / var(--cs));
+	width: calc(var(--portrait) * 1100 / var(--cs));
+	max-width: none;
+	height: auto;
+}
+
+.cat-curator-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.cat-curator-canvas[hidden] {
+	display: none;
+}
+
+/* 气泡 */
+
+.cat-curator-bubble {
+	position: relative;
+	max-width: 30ch;
+	padding: 12px 16px 13px;
+	border: 1.5px solid var(--ink);
+	border-radius: 16px;
+	background: var(--paper);
+	color: var(--ink);
+	line-height: 1.55;
+}
+
+.cat-curator-bubble::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: -8px;
+	width: 12px;
+	height: 12px;
+	border-left: 1.5px solid var(--ink);
+	border-bottom: 1.5px solid var(--ink);
+	background: var(--paper);
+	transform: translateY(-50%) rotate(45deg);
+}
+
+.cat-curator--left .cat-curator-bubble::before {
+	left: auto;
+	right: -8px;
+	border-left: 0;
+	border-bottom: 0;
+	border-right: 1.5px solid var(--ink);
+	border-top: 1.5px solid var(--ink);
+}
+
+.cat-curator--below .cat-curator-bubble::before {
+	top: -8px;
+	left: calc(var(--portrait) / 2 - 6px);
+	border-left: 1.5px solid var(--ink);
+	border-bottom: 0;
+	border-top: 1.5px solid var(--ink);
+	transform: rotate(45deg);
+}
+
+.cat-curator-role {
+	display: block;
+	margin-bottom: 3px;
+	color: var(--blue-strong);
+	font-family: var(--mono);
+	font-size: 0.66rem;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.cat-curator-line {
+	display: block;
+	font-size: 0.98rem;
+	font-weight: 500;
+}
+
+.cat-curator--lg .cat-curator-line {
+	font-size: 1.08rem;
+}
+
+/* Q/A 里的馆长头像 */
+
+.concept-qa-glyph--cat {
+	width: 56px;
+	height: 56px;
+	margin: -6px 0 0 -6px;
+	overflow: hidden;
+	padding: 0;
+	background: #fff;
+}
+
+.concept-qa-glyph--cat img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* 文章末尾印章 */
+
+.cat-stamp {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	margin: 40px 0 0;
+	padding: 8px 16px 8px 8px;
+	border: 1.5px solid var(--blue-strong);
+	border-radius: 999px;
+	color: var(--blue-strong);
+	transform: rotate(-2deg);
+}
+
+.cat-stamp-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 1px solid color-mix(in srgb, var(--blue-strong) 40%, transparent);
+	object-fit: cover;
+}
+
+.cat-stamp-text {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+
+.cat-stamp-title {
+	font-family: var(--mono);
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.cat-stamp-date {
+	font-family: var(--mono);
+	font-size: 0.68rem;
+	letter-spacing: 0.08em;
+	color: var(--ink-faint);
+}
+
+/* 出场位置的微调 */
+
+.vibe-terms,
+.design-page {
+	position: relative;
+}
+
+.vibe-terms {
+	--cat-top: clamp(72px, 9vw, 116px);
+}
+
+.design-page {
+	--cat-top: 56px;
+	--cat-right: 24px;
+}
+
+.vibe-terms-cat {
+	position: absolute;
+	top: var(--cat-top, 0);
+	right: var(--cat-right, 0);
+	max-width: 46%;
+}
+
+.error-page-cat {
+	margin: -24px 0 40px;
+}
+
+.knowledge-empty-cat {
+	justify-content: center;
+	margin: 0 auto 24px;
+}
+
+@media (max-width: 960px) {
+	.vibe-terms-cat {
+		position: static;
+		max-width: none;
+		margin: -16px 0 32px;
+		flex-direction: row;
+	}
+
+	.vibe-terms-cat .cat-curator-bubble::before {
+		left: -8px;
+		right: auto;
+		border: 0;
+		border-left: 1.5px solid var(--ink);
+		border-bottom: 1.5px solid var(--ink);
+	}
+}
+
+@media (max-width: 720px) {
+	.cat-curator {
+		--portrait: 88px;
+		gap: 12px;
+	}
+
+	.cat-curator--lg {
+		--portrait: 120px;
+	}
+
+	.cat-curator-bubble {
+		max-width: none;
+		padding: 10px 14px;
+	}
+}

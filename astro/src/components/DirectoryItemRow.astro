@@ -61,15 +61,6 @@ const meta = item.company ?? (item.model || item.date) ?? item.author_name ?? it
 				)
 			}
 		</Heading>
-		{detail && <p>{detail}</p>}
-		{
-			tags.length > 0 && (
-				<ul>
-					{tags.map((tag) => (
-						<li>{tag}</li>
-					))}
-				</ul>
-			)
-		}
+		{detail && <p class="directory-item-description">{detail}</p>}
 	</div>
 </article>

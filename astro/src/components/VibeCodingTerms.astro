@@ -1,5 +1,7 @@
 ---
 import { vibeCodingTermCategories, type VibeCodingTerm } from '../data/vibeCodingTerms';
+import CatCurator from './CatCurator.astro';
+import { CAT_SECTION_LINES } from '../data/catCurator';
 import '../styles/vibe-coding-terms.css';
 
 /**
@@ -29,6 +31,12 @@ function groupTerms(terms: VibeCodingTerm[]): { name: string | null; terms: Vibe
 		<h1>术语</h1>
 		<span>按开发环节理解 AI 编程中的常见概念。</span>
 	</header>
+	<CatCurator
+		class="vibe-terms-cat"
+		pose={CAT_SECTION_LINES['vibe-coding-terms'].pose}
+		line={CAT_SECTION_LINES['vibe-coding-terms'].zh}
+		side="left"
+	/>
 
 	<nav class="vibe-category-nav" aria-label="术语分类">
 		{

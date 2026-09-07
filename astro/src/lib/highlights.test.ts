@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { legacyEntryIsRoutable, loadLegacyContent, type LegacyContentEntry } from './legacyContent';
@@ -53,6 +55,10 @@ const expectedArticleRoutes = [
 	'/en/highlights/2026-09-02-prompting-claude-fable-5-1/',
 	'/highlights/2026-09-02-the-anatomy-of-effective-commerce-agents/',
 	'/en/highlights/2026-09-02-the-anatomy-of-effective-commerce-agents/',
+	'/highlights/2026-09-06-research-acceleration-view-inside-openai/',
+	'/en/highlights/2026-09-06-research-acceleration-view-inside-openai/',
+	'/highlights/2026-09-06-slop-creep-when-building-gets-cheaper/',
+	'/en/highlights/2026-09-06-slop-creep-when-building-gets-cheaper/',
 ];
 
 function highlightRecords(entries: LegacyContentEntry[]) {
@@ -60,6 +66,36 @@ function highlightRecords(entries: LegacyContentEntry[]) {
 }
 
 describe('unified highlights content', () => {
+	it('preserves the OpenAI research acceleration article and its measurement limits in both languages', async () => {
+		const records = highlightRecords(await loadLegacyContent()).filter(
+			(entry) => entry.frontmatter.externalId === 'research-acceleration-view-inside-openai',
+		);
+
+		expect(records.map((entry) => entry.locale).sort()).toEqual(['en', 'zh-CN']);
+		for (const entry of records) {
+			expect(entry.frontmatter.sourceUrl).toBe(
+				'https://openai.com/index/research-acceleration-view-inside-openai/',
+			);
+			expect(entry.body.match(/^## /gm)).toHaveLength(6);
+			for (const evidence of ['7,000', '3.1', '59.2', '17.2', '85', '4.5%', '0.59%', 'n=25']) {
+				expect(entry.body).toContain(evidence);
+			}
+			expect(entry.body).toContain('https://epoch.ai/gradient-updates/toward-an-onet-for-ai-rnd');
+			expect(entry.body).toContain('Success | Failure | Tool errors | Uncertain | No clear goal');
+			expect(entry.body.match(/^```text$/gm)).toHaveLength(3);
+			expect(entry.body).toContain('Do not guess or assume the outcome without clear evidence');
+			const charts = [
+				...entry.body.matchAll(
+					/!\[[^\]]*\]\((\/images\/highlights\/research-acceleration\/[^)]+)\)/g,
+				),
+			];
+			expect(charts).toHaveLength(14);
+			for (const chart of charts) {
+				expect(existsSync(resolve(process.cwd(), '..', 'static', chart[1]!.slice(1)))).toBe(true);
+			}
+		}
+	});
+
 	it('keeps the Compression is prediction interpretation grounded and linked', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
 			(entry) => entry.frontmatter.externalId === 'compression-is-prediction',
@@ -68,7 +104,9 @@ describe('unified highlights content', () => {
 		expect(records).toHaveLength(1);
 		expect(records[0]?.locale).toBe('zh-CN');
 		expect(records[0]?.body.match(/^## /gm)).toHaveLength(7);
-		expect(records[0]?.body.match(/https:\/\/ngrok\.com\/blog\/compression-is-prediction/g)).toHaveLength(2);
+		expect(
+			records[0]?.body.match(/https:\/\/ngrok\.com\/blog\/compression-is-prediction/g),
+		).toHaveLength(2);
 		expect(records[0]?.body).toContain('0.3876953125');
 		expect(records[0]?.body).toContain('GPT-2');
 		expect(records[0]?.body).toContain('https://arxiv.org/abs/2309.10668');
@@ -189,8 +227,7 @@ describe('unified highlights content', () => {
 
 	it('keeps the long-running Agent Harness article complete in both languages', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
-			(entry) =>
-				entry.frontmatter.externalId === 'build-a-long-running-agent-open-source-harness',
+			(entry) => entry.frontmatter.externalId === 'build-a-long-running-agent-open-source-harness',
 		);
 
 		expect(records).toHaveLength(2);
@@ -279,8 +316,7 @@ describe('unified highlights content', () => {
 	it('keeps the Vercel design.md article complete in both languages', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
 			(entry) =>
-				entry.frontmatter.externalId ===
-				'how-our-agents-build-on-brand-pages-with-design-md',
+				entry.frontmatter.externalId === 'how-our-agents-build-on-brand-pages-with-design-md',
 		);
 
 		expect(records).toHaveLength(2);

@@ -2,20 +2,38 @@
 interface Props {
 	locale: 'zh-CN' | 'en';
 	compact?: boolean;
+	inline?: boolean;
 }
 
-const { locale, compact = false } = Astro.props;
-const id = `auth-${compact ? 'compact' : 'rail'}-${locale.toLowerCase()}`;
+const { locale, compact = false, inline = false } = Astro.props;
+const loginPath = locale === 'en' ? '/en/login/' : '/login/';
+const loginHref =
+	Astro.url.pathname === loginPath
+		? loginPath
+		: `${loginPath}?next=${encodeURIComponent(Astro.url.pathname)}`;
+const id = `auth-${inline ? 'inline' : compact ? 'compact' : 'rail'}-${locale.toLowerCase()}`;
 ---
 
 <div
-	class:list={['auth-controls', { 'auth-controls--compact': compact }]}
+	class:list={[
+		'auth-controls',
+		{ 'auth-controls--compact': compact, 'auth-controls--inline': inline },
+	]}
 	data-auth-controls
 	data-locale={locale}
+	data-auth-inline={inline ? 'true' : undefined}
 >
+	{
+		inline && (
+			<a data-auth-entry href={loginHref}>
+				{locale === 'en' ? 'Sign in' : '登录'}
+			</a>
+		)
+	}
 	<button
 		type="button"
 		class="auth-trigger"
+		hidden={inline}
 		data-auth-trigger
 		aria-expanded="false"
 		aria-controls={`${id}-panel`}

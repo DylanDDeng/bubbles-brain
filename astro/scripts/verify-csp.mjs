@@ -32,6 +32,16 @@ assert.doesNotMatch(
 	/script-src[^\n;]*'unsafe-inline'/i,
 	'global script-src must not allow unsafe-inline',
 );
+assert.match(
+	globalHeaders,
+	/frame-src 'self' data: https:\/\/challenges\.cloudflare\.com;/,
+	'the iPod reading window must be able to load same-origin pages',
+);
+assert.match(
+	globalHeaders,
+	/frame-ancestors 'self'(?:\s|$)/,
+	'only this site may embed the reading pages',
+);
 
 for (const asset of ['js/theme-bootstrap.js', 'js/site-shell.js']) {
 	assert((await readFile(path.join(dist, asset))).length > 0, `${asset} is missing or empty`);

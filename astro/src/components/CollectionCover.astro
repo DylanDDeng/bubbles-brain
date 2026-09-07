@@ -1,0 +1,92 @@
+---
+import '../styles/collection-cover.css';
+import { brainPodParent } from '../lib/brainpodSections';
+import magazineFallback from '../data/brainpod-art/magazine/read-again-fallback.webp?url';
+import tutorialsFallback from '../data/brainpod-art/collection-objects/tutorials-fallback.webp?url';
+import notebookFallback from '../data/brainpod-art/collection-objects/vibe-coding-fallback.webp?url';
+
+interface Props {
+	section: string;
+}
+const { section } = Astro.props;
+const kind =
+	section === 'highlights'
+		? 'reading'
+		: section === 'newbie-tutorials' || section === 'tutorials'
+			? 'curious'
+			: section.includes('design')
+				? 'design'
+				: section.includes('terms') || section === 'vibe-coding'
+					? 'terms'
+					: section.includes('skills')
+						? 'skills'
+						: 'agent';
+const symbol =
+	section === 'pi-agent-tutorials' ? 'π' : section === 'workbuddy-tutorials' ? '↗' : '↳';
+// Child directories and standalone collection pages share their parent's 3D object.
+const parentSection = brainPodParent(section)?.id || section;
+const publication =
+	parentSection === 'tutorials' || parentSection === 'vibe-coding'
+		? parentSection
+		: kind === 'reading'
+			? 'reading'
+			: undefined;
+const fallback =
+	publication === 'tutorials'
+		? tutorialsFallback
+		: publication === 'vibe-coding'
+			? notebookFallback
+			: magazineFallback;
+---
+
+<div
+	class={`collection-cover collection-cover--${kind}`}
+	aria-hidden="true"
+	transition:name={`cover-${section}`}
+	data-reading-magazine={publication}
+>
+	{
+		publication && (
+			<img
+				class="reading-magazine-fallback"
+				src={fallback}
+				alt=""
+				width="780"
+				height="1001"
+				loading="lazy"
+				decoding="async"
+			/>
+		)
+	}
+	{
+		!publication && kind === 'curious' && (
+			<>
+				<>
+					<span class="cover-orbit" />
+					<span class="cover-question">?</span>
+				</>
+			</>
+		)
+	}
+	{
+		!publication && kind === 'agent' && (
+			<span class="cover-agent">
+				<i>{symbol}</i>hello,
+				<br />
+				agent<span>_</span>
+			</span>
+		)
+	}
+	{
+		!publication && kind === 'design' && (
+			<span class="cover-design">
+				A<em>a</em>
+			</span>
+		)
+	}
+	{!publication && kind === 'terms' && <span class="cover-terms">a—z</span>}
+	{!publication && kind === 'skills' && <span class="cover-skills">✳</span>}
+</div>
+<script>
+	import '../scripts/readingMagazine';
+</script>

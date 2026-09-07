@@ -1,47 +1,40 @@
+/* A compact, always-visible discussion at the end of the article. */
 .discussion {
-	width: min(780px, calc(100% - 40px));
-	margin: clamp(56px, 9vw, 112px) auto;
-	padding-block: clamp(28px, 5vw, 48px);
-	border-block: 1px solid var(--rule);
-}
-
-.article-shell > .discussion {
 	width: 100%;
+	margin: 28px 0 0;
+	padding: 0;
+	border: 0;
 }
 
-.discussion-composer[hidden],
-.discussion-reply-context[hidden] {
+.discussion [hidden] {
 	display: none !important;
 }
 
 .discussion-heading {
 	display: flex;
-	align-items: end;
-	justify-content: space-between;
-	gap: 24px;
+	align-items: center;
+	gap: 10px;
+	min-height: 44px;
+	color: var(--ink-soft);
+	font-family: var(--sans);
+	font-size: 14px;
+	font-weight: 400;
 }
 
-.discussion-heading p {
-	margin: 0 0 8px;
-	color: var(--red);
-	font-family: var(--mono);
-	font-size: 0.68rem;
-	letter-spacing: 0.08em;
-}
-
-.discussion-heading .discussion-title {
+.discussion-heading h2 {
 	margin: 0;
-	color: var(--ink);
-	font-family: var(--serif);
-	font-size: clamp(1.55rem, 4vw, 2.35rem);
-	font-weight: 600;
-	letter-spacing: normal;
+	font: inherit;
+	color: inherit;
 }
 
-.discussion-heading > span {
-	color: var(--blue-strong);
-	font-family: var(--mono);
-	font-size: 1rem;
+.discussion-count {
+	color: var(--ink-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+
+.discussion-body {
+	padding-top: 12px;
 }
 
 .discussion-status,
@@ -216,10 +209,6 @@
 }
 
 @media (max-width: 640px) {
-	.discussion {
-		width: min(100% - 28px, 780px);
-	}
-
 	.discussion-list article > header,
 	.discussion-composer-footer {
 		align-items: flex-start;

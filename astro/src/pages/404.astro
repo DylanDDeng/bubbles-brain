@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CatCurator from '../components/CatCurator.astro';
+import { CAT_STATE_LINES } from '../data/catCurator';
 ---
 
 <BaseLayout
@@ -15,6 +17,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 			<h1>这条知识路径暂时不存在。</h1>
 			<p>你可以返回首页，或者从知识搜索重新开始。</p>
 		</header>
+		<CatCurator
+			class="error-page-cat"
+			pose={CAT_STATE_LINES.notFound.pose}
+			line={CAT_STATE_LINES.notFound.zh}
+			size="lg"
+		/>
 		<nav aria-label="404 导航">
 			<a href="/">返回首页</a>
 			<a href="/search/">知识搜索</a>

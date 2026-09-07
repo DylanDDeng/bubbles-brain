@@ -6,9 +6,9 @@
 	--kn-ink-soft: var(--ink-soft);
 	--kn-ink-faint: var(--ink-faint);
 	--kn-rule: var(--rule);
-	--kn-accent: #ff4d2e;
-	--kn-accent-strong: #d9341c;
-	--kn-focus: #ff4d2e;
+	--kn-accent: var(--blue);
+	--kn-accent-strong: var(--blue-strong);
+	--kn-focus: var(--focus);
 	width: min(70rem, calc(100% - 2rem));
 	margin: clamp(2rem, 5vw, 4.5rem) auto clamp(4rem, 8vw, 7rem);
 	padding: clamp(1.25rem, 4vw, 3rem);

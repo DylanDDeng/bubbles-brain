@@ -379,6 +379,60 @@ describe("production coordinator", () => {
       attempts: 0,
     });
   });
+  it.each(["authorize_attempt", "verify_deployment", "commit_promotion"])("only rechecks failures before authorization: %s", async (stage) => {
+    const { state, values } = fakeCoordinatorState();
+    const attemptToken = "123e4567-e89b-42d3-a456-426614174088";
+    const payload = {
+      attempt_token: attemptToken,
+      execution_generation: 3,
+      site_release_id: "123e4567-e89b-42d3-a456-426614174001",
+    };
+    values.set(`production-operation:${attemptToken}`, {
+      id: attemptToken,
+      kind: "promote",
+      payload,
+      status: "completed",
+      attempts: 1,
+      created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: new Date().toISOString(),
+      completed_at: new Date().toISOString(),
+      response_status: 503,
+      response_body: JSON.stringify({ error: "promotion_failed", stage, diagnostics: { errorMessage: "Stale production deployment attempt" } }),
+    });
+    values.set("production-operation-completed", [
+      {
+        id: attemptToken,
+        completed_at: new Date().toISOString(),
+      },
+    ]);
+    const coordinator = new ProductionCoordinator(
+      state,
+      {} as never,
+      vi.fn() as never,
+    );
+
+    const response = await coordinator.fetch(
+      new Request("https://coordinator.internal/internal/enqueue", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "promote", payload }),
+      }),
+    );
+
+    expect(response.status).toBe(202);
+    const retryable = stage === "authorize_attempt";
+    await expect(response.json()).resolves.toMatchObject({
+      operation_id: attemptToken,
+      deduplicated: !retryable,
+    });
+    expect(values.get("production-operation-queue")).toEqual(retryable ? [attemptToken] : undefined);
+    expect(values.get(`production-operation:${attemptToken}`)).toMatchObject({
+      id: attemptToken,
+      status: retryable ? "queued" : "completed",
+      attempts: retryable ? 0 : 1,
+    });
+  });
+
 });
 
 describe("asynchronous production promotion protocol", () => {

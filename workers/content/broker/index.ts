@@ -2231,9 +2231,34 @@ export class ProductionCoordinator {
               idempotencyConflict = true;
               return;
             }
-            acceptedId = existing.id;
-            deduplicated = true;
-            return;
+            let failedBeforeAuthorization = false;
+            if (existing.status === "completed" && existing.response_status === 503) {
+              try {
+                const failure = JSON.parse(existing.response_body || "null");
+                failedBeforeAuthorization =
+                  failure?.error === "promotion_failed" &&
+                  failure?.stage === "authorize_attempt" &&
+                  failure?.diagnostics?.errorMessage === "Stale production deployment attempt";
+              } catch {
+                // An unknown result must retain its idempotency protection.
+              }
+            }
+            if (!failedBeforeAuthorization) {
+              acceptedId = existing.id;
+              deduplicated = true;
+              return;
+            }
+            // No promotion was authorized and no Pages write happened. A
+            // resumed workflow may now have restored preview_verified; let
+            // the database re-check this exact payload's current fence.
+            const completed =
+              (await transaction.get<CompletedCoordinatorOperation[]>(
+                COORDINATOR_COMPLETED_KEY,
+              )) || [];
+            await transaction.put(
+              COORDINATOR_COMPLETED_KEY,
+              completed.filter((item) => item.id !== id),
+            );
           }
         }
         if (kind === "reconcile") {

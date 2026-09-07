@@ -909,6 +909,14 @@ describe("automatic code release boundary", () => {
             status: "added",
           },
           {
+            filename: "static/_responsive/media/workbuddy-tutorials/guide-640.avif",
+            status: "added",
+          },
+          {
+            filename: "astro/responsive-images.lock.json",
+            status: "modified",
+          },
+          {
             filename: "design-reference/knowledge-base.png",
             status: "added",
           },
@@ -935,7 +943,7 @@ describe("automatic code release boundary", () => {
           structuredCutoverDate: "2026-07-16",
         },
       ),
-    ).toHaveLength(11);
+    ).toHaveLength(13);
   });
 
   it("accepts BrainPod models, reading assets, and their source documentation", () => {

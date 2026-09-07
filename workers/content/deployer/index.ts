@@ -437,9 +437,11 @@ function classifyCodeReleasePath(
       "content/workbuddy-tutorials/",
       "static/fonts/",
       "static/media/",
+      "static/_responsive/",
       "static/images/highlights/research-acceleration/",
     ].some((prefix) => path.startsWith(prefix)) ||
     [
+      "astro/responsive-images.lock.json",
       "astro/src/content.config.ts",
       "astro/src/data/changelog.ts",
       "astro/src/data/brainpodModel.json",

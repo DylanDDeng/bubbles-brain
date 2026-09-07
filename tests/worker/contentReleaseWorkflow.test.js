@@ -1,7 +1,47 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("fenced content release workflow", () => {
+  it("replays the trusted preview evidence through the current attempt callback", async () => {
+    const workflow = await readFile(
+      new URL("../../.github/workflows/content-release.yml", import.meta.url),
+      "utf8",
+    );
+    const step = workflow.split("      - name: Record Preview evidence\n")[1]
+      .split("\n      - name:")[0];
+    expect(step).not.toMatch(/^\s+if:/m);
+    const shell = step.split("        run: |\n")[1]
+      .split("\n").map((line) => line.replace(/^          /, "")).join("\n");
+    const directory = await mkdtemp(join(tmpdir(), "preview-resume-"));
+    const evidence = {
+      preview_url: "https://release-769.bubble-content-preview.pages.dev",
+      artifact_sha256: "a".repeat(64),
+      content_sha256: "b".repeat(64),
+      code_sha: "c".repeat(40),
+      route_parity: true,
+      resume_contract_version: "r2-materialize-v1",
+    };
+    try {
+      await writeFile(join(directory, "server-resume-plan.json"),
+        JSON.stringify({ preview_checkpoint: { evidence } }));
+      await writeFile(join(directory, "content-release-helper.mjs"),
+        "console.log(JSON.stringify(process.argv.slice(2)));");
+      const result = execFileSync("bash", ["-e", "-c", shell], {
+        cwd: directory,
+        env: { ...process.env, SERVER_RESUME_STAGE: "promote", RUNNER_TEMP: directory },
+        encoding: "utf8",
+      });
+      expect(JSON.parse(result)).toEqual([
+        "callback", "preview_verified", JSON.stringify(evidence),
+      ]);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
   it("derives resume stages from the deployer and materializes R2 checkpoints", async () => {
     const [workflow, deployerConfig] = await Promise.all([
       readFile(
@@ -65,7 +105,10 @@ describe("fenced content release workflow", () => {
       /- name: Verify Preview route parity and exact bytes\n\s+if: \$\{\{ steps\.resume\.outputs\.stage == 'build' \|\| \(steps\.resume\.outputs\.stage == 'preview' && steps\.preview-reuse\.outputs\.reused != 'true'\) \}\}/,
     );
     expect(workflow).toMatch(
-      /- name: Record Preview evidence\n\s+if: \$\{\{ steps\.resume\.outputs\.stage != 'promote' \}\}/,
+      /- name: Record Preview evidence\n\s+run: \|/,
+    );
+    expect(workflow).toContain(
+      "jq -ce '.preview_checkpoint.evidence' server-resume-plan.json",
     );
     expect(workflow).toContain(
       "Materialize trusted Preview verification baseline",

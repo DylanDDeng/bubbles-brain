@@ -54,11 +54,12 @@ describe('reading updates', () => {
 		expect(updates[0].item.date).toBe('2020-01-01');
 		expect(buildReadingUpdates([a], [])).toEqual([]);
 	});
-	it('shows the first seven days, keeps unread items across visits, and hides read or future updates', () => {
+	it('shows the first three days, keeps unread items across visits, and hides read or future updates', () => {
 		const history = initialReadingHistory(now);
+		expect(history.since).toBe('2026-09-04');
 		const updates = [
 			{ item: a, recordedAt: '2026-09-06' },
-			{ item: b, recordedAt: '2026-08-20' },
+			{ item: b, recordedAt: '2026-09-03' },
 			{ item: item('/future/'), recordedAt: '2026-09-08' },
 		];
 		expect(unreadReadingUpdates(updates, history, now).map((u) => u.item.key)).toEqual(['/a/']);

@@ -125,7 +125,17 @@ const previewLimit = 5;
 													target={item.external ? '_blank' : undefined}
 													rel={item.external ? 'noopener noreferrer' : undefined}
 												>
-													<span>{item.title}</span>
+													<span>
+														{item.title}
+														<span
+															class="reading-update-dot"
+															data-update-item={item.key}
+															role="img"
+															aria-label="未读更新"
+															title="未读更新"
+															hidden
+														/>
+													</span>
 													<i class="ph ph-arrow-up-right" aria-hidden="true" />
 												</a>
 											</li>

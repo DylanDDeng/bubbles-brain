@@ -47,6 +47,9 @@ export function refreshReadingIndicators() {
 		const sections = dot.dataset.updateSections?.split(' ') ?? [];
 		dot.hidden = !unread.some((update) => sections.includes(update.item.section));
 	}
+	for (const dot of document.querySelectorAll<HTMLElement>('[data-update-item]')) {
+		dot.hidden = !unread.some((update) => update.item.key === dot.dataset.updateItem);
+	}
 }
 
 function init() {
@@ -69,7 +72,9 @@ document.addEventListener('click', (event) => {
 	if (!payload?.textContent) return;
 	try {
 		const updates: ReadingUpdate[] = JSON.parse(payload.textContent).updates ?? [];
-		const update = updates.find((update) => update.item.external && update.item.href === link.href);
+		const update = updates.find(
+			(update) => new URL(update.item.href, location.origin).href === link.href,
+		);
 		if (update) markReadingUpdateSeen(update.item.key);
 	} catch {
 		/* Invalid optional metadata must not interrupt navigation. */

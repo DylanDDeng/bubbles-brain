@@ -241,7 +241,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 						.slice(start, start + 5)
 						.map(
 							(r, i) =>
-								`<button class="lcd-row" data-row="${i + start}" aria-current="${i + start === p.selected}" title="${escapeHTML(r.title)}"><span>${escapeHTML(r.title)}</span>${isCollection(r) ? `<span class="row-count">${r.items.length}</span>` : ''}<span class="row-chevron">›</span></button>`,
+								`<button class="lcd-row" data-row="${i + start}" aria-current="${i + start === p.selected}" title="${escapeHTML(r.title)}"><span>${escapeHTML(r.title)}</span>${isCollection(r) ? `<span class="row-count">${r.items.length}</span>` : `<span class="reading-update-dot" data-update-item="${escapeHTML(r.key)}" role="img" aria-label="未读更新" hidden></span>`}<span class="row-chevron">›</span></button>`,
 						)
 						.join('')
 				: '<div class="lcd-detail"><p>这里的内容正在整理中。</p></div>';
@@ -261,6 +261,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 						? '确认阅读 · MENU 返回'
 						: '中央键查看';
 		updateSelectButton();
+		refreshReadingIndicators();
 		if (entry) {
 			if (!isCollection(entry) || entry.id !== 'recent-updates')
 				root.dataset.brainpodCollection = isCollection(entry) ? entry.id : entry.section;

@@ -35,7 +35,7 @@ export interface ReadingHistory {
 }
 
 export function initialReadingHistory(now = new Date()): ReadingHistory {
-	return { since: new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10), read: {} };
+	return { since: new Date(now.getTime() - 3 * 86400000).toISOString().slice(0, 10), read: {} };
 }
 
 export function unreadReadingUpdates(

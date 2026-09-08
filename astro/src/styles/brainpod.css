@@ -1619,6 +1619,17 @@
 	text-align: right;
 	font-variant-numeric: tabular-nums;
 }
+.brainpod .lcd-row .reading-update-dot {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	flex-shrink: 0;
+	border-radius: 50%;
+	background: #2162cc;
+}
+.brainpod .lcd-row[aria-current='true'] .reading-update-dot {
+	background: #fff;
+}
 .brainpod .lcd-row .row-chevron {
 	font-size: 24px;
 	font-weight: 400;

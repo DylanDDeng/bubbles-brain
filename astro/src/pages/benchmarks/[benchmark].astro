@@ -1,0 +1,25 @@
+---
+import BenchmarkDetail from '../../components/BenchmarkDetail.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { benchmarkLedger, benchmarkRoute, pick } from '../../lib/benchmarks';
+
+export function getStaticPaths() {
+	return benchmarkLedger.benchmarks.map((benchmark) => ({
+		params: { benchmark: benchmark.id },
+		props: { benchmark },
+	}));
+}
+
+const { benchmark } = Astro.props;
+const name = pick(benchmark.name, 'zh-CN');
+---
+
+<BaseLayout
+	title={`${name} · Benchmarks · Bubble's Brain`}
+	description={`${name}：${pick(benchmark.measures, 'zh-CN')}。附前沿模型的第三方评测成绩。`}
+	canonicalPath={benchmarkRoute(benchmark.id, 'zh-CN')}
+	alternateHref={benchmarkRoute(benchmark.id, 'en')}
+	section="benchmarks"
+>
+	<BenchmarkDetail benchmark={benchmark} locale="zh-CN" />
+</BaseLayout>

@@ -11,6 +11,7 @@ export const brainPodSections = [
 		children: ['vibe-coding-terms', 'vibe-coding-skills', 'vibe-coding-design'],
 	},
 	{ id: 'highlights', title: '精选阅读', children: ['highlights'] },
+	{ id: 'benchmarks', title: 'Benchmarks', children: ['benchmarks'] },
 ] as const;
 
 export function brainPodParent(collection: string) {

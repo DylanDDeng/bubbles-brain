@@ -4,11 +4,9 @@ import { basename, extname, resolve } from 'node:path';
 import matter from 'gray-matter';
 
 import { designBrands } from '../data/designBrands';
-import {
-	vibeCodingSkillCategories,
-	vibeCodingSkillMeta,
-} from '../data/vibeCodingSkills';
+import { vibeCodingSkillCategories, vibeCodingSkillMeta } from '../data/vibeCodingSkills';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
+import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import {
 	legacyEntryIsRoutable,
 	loadLegacyContent,
@@ -17,10 +15,7 @@ import {
 } from './legacyContent';
 
 export type KnowledgeSearchSection =
-	| LegacySection
-	| 'vibe-coding-terms'
-	| 'vibe-coding-skills'
-	| 'vibe-coding-design';
+	LegacySection | 'vibe-coding-terms' | 'vibe-coding-skills' | 'vibe-coding-design' | 'benchmarks';
 
 export interface KnowledgeSearchItem {
 	key: string;
@@ -90,17 +85,19 @@ const sectionLabels: Record<LegacyLocale, Record<LegacySection, string>> = {
 
 const knowledgeSectionLabels: Record<
 	LegacyLocale,
-	Record<'vibe-coding-terms' | 'vibe-coding-skills' | 'vibe-coding-design', string>
+	Record<'vibe-coding-terms' | 'vibe-coding-skills' | 'vibe-coding-design' | 'benchmarks', string>
 > = {
 	'zh-CN': {
 		'vibe-coding-terms': 'Vibe Coding 术语',
 		'vibe-coding-skills': 'Vibe Coding Skills',
 		'vibe-coding-design': 'Vibe Coding Design',
+		benchmarks: 'Benchmarks',
 	},
 	en: {
 		'vibe-coding-terms': 'Vibe Coding terms',
 		'vibe-coding-skills': 'Vibe Coding Skills',
 		'vibe-coding-design': 'Vibe Coding Design',
+		benchmarks: 'Benchmarks',
 	},
 };
 
@@ -113,6 +110,7 @@ const sectionOrder: KnowledgeSearchSection[] = [
 	'vibe-coding-terms',
 	'vibe-coding-skills',
 	'vibe-coding-design',
+	'benchmarks',
 	'about',
 	'x-trending',
 ];
@@ -211,8 +209,8 @@ function buildVibeCodingItems(locale: LegacyLocale): KnowledgeSearchItem[] {
 			concept.name === concept.chineseName
 				? concept.chineseName
 				: `${concept.chineseName}（${concept.name}）`;
-		const tags = [concept.categoryLabel, concept.group].filter(
-			(value): value is string => Boolean(value),
+		const tags = [concept.categoryLabel, concept.group].filter((value): value is string =>
+			Boolean(value),
 		);
 		return {
 			key: `/vibe-coding/terms/${concept.id}/`,
@@ -268,6 +266,38 @@ function buildVibeCodingItems(locale: LegacyLocale): KnowledgeSearchItem[] {
 	return [...terms, ...designs];
 }
 
+/** Each benchmark is one entry with its own page: what it measures, then the scores. */
+function buildBenchmarkItems(locale: LegacyLocale): KnowledgeSearchItem[] {
+	const section = 'benchmarks' as const;
+	const sectionLabel = knowledgeSectionLabels[locale][section];
+	return benchmarkLedger.benchmarks.map((benchmark): KnowledgeSearchItem => {
+		const title = pick(benchmark.name, locale);
+		const summary = pick(benchmark.measures, locale);
+		const tags = ['Benchmark', benchmark.source];
+		const route = benchmarkRoute(benchmark.id, locale);
+		return {
+			key: route,
+			href: route,
+			title,
+			summary,
+			section,
+			section_label: sectionLabel,
+			date: null,
+			tags,
+			external: false,
+			search_text: normalizedSearchText(locale, [
+				title,
+				benchmark.name.en,
+				summary,
+				pick(benchmark.explainer, locale),
+				benchmark.source,
+				sectionLabel,
+				tags,
+			]),
+		};
+	});
+}
+
 export async function buildKnowledgeSearchIndex(
 	options: { locale?: LegacyLocale } = {},
 ): Promise<KnowledgeSearchIndex> {
@@ -299,11 +329,15 @@ export async function buildKnowledgeSearchIndex(
 				]),
 			};
 		});
-	const items = [...legacyItems, ...buildVibeCodingItems(locale), ...(await buildSkillItems(locale))]
-		.sort((left, right) => {
-			const dateOrder = (right.date ?? '').localeCompare(left.date ?? '');
-			return dateOrder || left.title.localeCompare(right.title, locale);
-		});
+	const items = [
+		...legacyItems,
+		...buildVibeCodingItems(locale),
+		...(await buildSkillItems(locale)),
+		...buildBenchmarkItems(locale),
+	].sort((left, right) => {
+		const dateOrder = (right.date ?? '').localeCompare(left.date ?? '');
+		return dateOrder || left.title.localeCompare(right.title, locale);
+	});
 	const includedSections = new Set(items.map((item) => item.section));
 	return {
 		schema_version: 3,

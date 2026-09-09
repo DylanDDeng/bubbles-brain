@@ -79,6 +79,12 @@ const collections = [
 		description: '从品牌的色彩、字体与界面语言中寻找灵感，看看设计如何写进 AI 的工作方式。',
 		href: '/vibe-coding/design/',
 	},
+	{
+		id: 'benchmarks',
+		title: 'Benchmarks',
+		description: '先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。',
+		href: '/benchmarks/',
+	},
 ];
 
 /** Use the same published index as the rest of the site; never maintain a separate article catalog. */

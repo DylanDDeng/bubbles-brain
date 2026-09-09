@@ -14,13 +14,15 @@ const kind =
 		? 'reading'
 		: section === 'newbie-tutorials' || section === 'tutorials'
 			? 'curious'
-			: section.includes('design')
-				? 'design'
-				: section.includes('terms') || section === 'vibe-coding'
-					? 'terms'
-					: section.includes('skills')
-						? 'skills'
-						: 'agent';
+			: section === 'benchmarks'
+				? 'bench'
+				: section.includes('design')
+					? 'design'
+					: section.includes('terms') || section === 'vibe-coding'
+						? 'terms'
+						: section.includes('skills')
+							? 'skills'
+							: 'agent';
 const symbol =
 	section === 'pi-agent-tutorials' ? 'π' : section === 'workbuddy-tutorials' ? '↗' : '↳';
 // Child directories and standalone collection pages share their parent's 3D object.
@@ -86,6 +88,15 @@ const fallback =
 	}
 	{!publication && kind === 'terms' && <span class="cover-terms">a—z</span>}
 	{!publication && kind === 'skills' && <span class="cover-skills">✳</span>}
+	{
+		!publication && kind === 'bench' && (
+			<span class="cover-bench">
+				<i />
+				<i />
+				<i />
+			</span>
+		)
+	}
 </div>
 <script>
 	import '../scripts/readingMagazine';

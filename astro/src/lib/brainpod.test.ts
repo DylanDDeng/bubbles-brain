@@ -7,7 +7,7 @@ describe('BrainPod integration with the published knowledge index', () => {
 	it('keeps article identity and external-source behavior from the shared index', async () => {
 		const index = await buildKnowledgeSearchIndex({ locale: 'zh-CN' });
 		const library = buildBrainPodLibrary(index);
-		expect(library.collections).toHaveLength(8);
+		expect(library.collections).toHaveLength(9);
 		expect(new Set(library.items.map((item) => item.key)).size).toBe(library.items.length);
 		expect(library.items.some((item) => item.external)).toBe(true);
 		expect(library.items.some((item) => ['about', 'x-trending'].includes(item.section))).toBe(

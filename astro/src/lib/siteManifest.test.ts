@@ -53,6 +53,32 @@ describe('site feeds', () => {
 		);
 	});
 
+	it('publishes the bilingual benchmarks routes as alternates of each other', async () => {
+		const records = await loadSiteManifest();
+
+		expect(records).toContainEqual(
+			expect.objectContaining({
+				route: '/benchmarks/',
+				section: 'benchmarks',
+				alternateRoute: '/en/benchmarks/',
+			}),
+		);
+		expect(records).toContainEqual(
+			expect.objectContaining({
+				route: '/en/benchmarks/',
+				locale: 'en',
+				alternateRoute: '/benchmarks/',
+			}),
+		);
+		expect(records).toContainEqual(
+			expect.objectContaining({
+				route: '/benchmarks/aa-index/',
+				section: 'benchmarks',
+				alternateRoute: '/en/benchmarks/aa-index/',
+			}),
+		);
+	});
+
 	it('keeps every dated compatibility record instead of silently truncating the feed', () => {
 		const records: SiteRecord[] = Array.from({ length: 150 }, (_, index) => ({
 			route: `/daily/2026/01/item-${index}/`,

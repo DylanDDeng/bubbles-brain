@@ -109,6 +109,31 @@
 	line-height: 1;
 	letter-spacing: -0.09em;
 }
+.collection-cover--bench {
+	background: #eef0ec;
+	color: #2d3a2f;
+}
+.cover-bench {
+	display: grid;
+	gap: 9cqw;
+	inset: 26% 12% auto;
+}
+.cover-bench i {
+	display: block;
+	height: 9cqw;
+	background: currentColor;
+}
+.cover-bench i:nth-child(1) {
+	width: 100%;
+}
+.cover-bench i:nth-child(2) {
+	width: 68%;
+	opacity: 0.55;
+}
+.cover-bench i:nth-child(3) {
+	width: 41%;
+	opacity: 0.3;
+}
 .collection-cover--skills {
 	background: #e9eee9;
 	color: #2867d5;

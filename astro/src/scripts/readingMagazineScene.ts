@@ -12,10 +12,15 @@ async function loadPublication(kind: string | undefined) {
 						import('../data/brainpod-art/collection-objects/vibe-coding.json'),
 						import('../data/brainpod-art/collection-objects/vibe-coding-cover.png?url'),
 					])
-				: await Promise.all([
-						import('../data/brainpod-art/magazine/read-again.json'),
-						import('../data/brainpod-art/magazine/cover.png?url'),
-					]);
+				: kind === 'benchmarks'
+					? await Promise.all([
+							import('../data/brainpod-art/collection-objects/benchmarks.json'),
+							import('../data/brainpod-art/collection-objects/benchmarks-cover.png?url'),
+						])
+					: await Promise.all([
+							import('../data/brainpod-art/magazine/read-again.json'),
+							import('../data/brainpod-art/magazine/cover.png?url'),
+						]);
 	return { packedModel: model.default, printUrl: print.default };
 }
 

@@ -29,7 +29,7 @@ npm run images:generate  # regenerate ../static/_responsive variants + responsiv
 npm run images:check     # fail if referenced images changed without regenerating variants
 ```
 
-Build output lands in `dist/`.
+Build output lands in `dist/`. For browser checks against release output, serve `dist/client/` after building; avoid running browser checks against the dev server concurrently with check/build commands that refresh its Vite cache.
 
 Responsive image variants (`../static/_responsive/`) are committed content assets, not build output. After adding or changing an image referenced from `../content`, run `npm run images:generate` and commit the variants together with `responsive-images.lock.json`; CI only verifies, it never generates.
 
@@ -41,3 +41,8 @@ Responsive image variants (`../static/_responsive/`) are committed content asset
 - Preserve canonical URLs, language routes, RSS behavior, and no-JavaScript readability.
 - Add or update tests whenever route identity or data-contract behavior changes.
 - Run `npm run verify` before claiming work on this directory is ready.
+
+## Vibe Coding UI patterns
+
+- Add glossary entries in `src/data/vibeCodingTerms.ts` and their illustrated profiles in `src/data/vibeCodingPatternDetails.ts`. Anatomy, variant sketches, and recognition exercises are rendered by `src/components/VibeCodingPatternDetail.astro` with `src/styles/vibe-coding-pattern-detail.css`.
+- The homepage term directory and detail routes are generated from the glossary data. `brainPodTermReturn` returns to the exact directory page containing a term; `/vibe-coding/terms/ui-patterns/` is a category explainer, not the directory. Focused checks: `npm run test -- src/lib/brainpodTerms.test.ts src/lib/searchIndex.test.ts`.

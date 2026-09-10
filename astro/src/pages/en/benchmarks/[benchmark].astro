@@ -1,0 +1,26 @@
+---
+import BenchmarkDetail from '../../../components/BenchmarkDetail.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { benchmarkLedger, benchmarkRoute, pick } from '../../../lib/benchmarks';
+
+export function getStaticPaths() {
+	return benchmarkLedger.benchmarks.map((benchmark) => ({
+		params: { benchmark: benchmark.id },
+		props: { benchmark },
+	}));
+}
+
+const { benchmark } = Astro.props;
+const name = pick(benchmark.name, 'en');
+---
+
+<BaseLayout
+	title={`${name} · Benchmarks · Bubble's Brain`}
+	description={`${name}: ${pick(benchmark.measures, 'en')}. With third-party scores for frontier models.`}
+	lang="en"
+	canonicalPath={benchmarkRoute(benchmark.id, 'en')}
+	alternateHref={benchmarkRoute(benchmark.id, 'zh-CN')}
+	section="benchmarks"
+>
+	<BenchmarkDetail benchmark={benchmark} locale="en" />
+</BaseLayout>

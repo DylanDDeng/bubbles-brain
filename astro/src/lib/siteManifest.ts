@@ -1,3 +1,4 @@
+import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import { legacyEntryIsRoutable, loadLegacyContent } from './legacyContent';
 import { designBrands } from '../data/designBrands';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
@@ -80,7 +81,36 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 			section: 'changelog',
 			lastmod: null,
 		},
+		{
+			route: '/benchmarks/',
+			title: 'Benchmarks',
+			description: '前沿模型的第三方评测成绩汇总，手工核对',
+			locale: 'zh-CN',
+			section: 'benchmarks',
+			lastmod: null,
+		},
+		{
+			route: '/en/benchmarks/',
+			title: 'Benchmarks',
+			description: 'Hand-checked third-party benchmark results for frontier models',
+			locale: 'en',
+			section: 'benchmarks',
+			lastmod: null,
+		},
 	];
+
+	for (const benchmark of benchmarkLedger.benchmarks) {
+		for (const locale of ['zh-CN', 'en'] as const) {
+			records.push({
+				route: benchmarkRoute(benchmark.id, locale),
+				title: pick(benchmark.name, locale),
+				description: pick(benchmark.measures, locale),
+				locale,
+				section: 'benchmarks',
+				lastmod: null,
+			});
+		}
+	}
 
 	for (const concept of getVibeCodingConcepts()) {
 		records.push({

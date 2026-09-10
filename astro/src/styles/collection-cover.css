@@ -28,7 +28,8 @@
 	height: 100%;
 	pointer-events: none;
 }
-.reading-magazine-canvas {
+.reading-magazine-canvas,
+.collection-cover--bench .reading-magazine-fallback {
 	filter: drop-shadow(1.8cqw 3.5cqw 3.2cqw #222c371e) drop-shadow(0.2cqw 0.5cqw 0.6cqw #222c370c);
 }
 [data-magazine-ready] > .reading-magazine-fallback {
@@ -108,6 +109,10 @@
 	font-size: 64cqw;
 	line-height: 1;
 	letter-spacing: -0.09em;
+}
+.collection-cover--bench {
+	background: #eef0ec;
+	color: #2d3a2f;
 }
 .collection-cover--skills {
 	background: #e9eee9;

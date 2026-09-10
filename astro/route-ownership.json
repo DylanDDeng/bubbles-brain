@@ -10,6 +10,8 @@
 		"/en/auth/**",
 		"/about/**",
 		"/changelog/**",
+		"/benchmarks/**",
+		"/en/benchmarks/**",
 		"/codex-tutorials/**",
 		"/deepseek-harness-tutorials/**",
 		"/pi-agent-tutorials/**",

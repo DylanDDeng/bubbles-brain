@@ -1044,6 +1044,126 @@ export const vibeCodingPatternProfiles: Record<string, VibeCodingPatternProfile>
 		promptTip: '把选项列表和默认值直接给 AI，别让它自己编选项。',
 		warning: '下拉会藏选项：点开之前谁也不知道里面有什么。三个以内的选项别藏，平铺出来一眼选完。',
 	},
+	'date-picker': {
+		question: '到底是什么？是一个日历，还是一种输入框？',
+		spot: {
+			title: '这个出行表单里，哪一块是 Date Picker？',
+			intro: '下面是示意界面，点整块控件来辨认：谁在选择日期，谁只是在选地点或时间？',
+			regions: [
+				{
+					id: 'select',
+					name: '下拉选择',
+					en: 'Select',
+					correct: false,
+					note: '这是目的地的下拉选择，从预设地点里挑一项；它没有年、月、日的关系。',
+				},
+				{
+					id: 'date-picker',
+					name: '日期选择器',
+					en: 'Date Picker',
+					correct: true,
+					note: '就是它！日期输入框连着月历，选择某一天后把结果填回框里；这里选中的是 9 月 17 日。',
+				},
+				{
+					id: 'time-picker',
+					name: '时间选择器',
+					en: 'Time Picker',
+					correct: false,
+					note: '它只选择「几点几分」，不选择「哪一天」。需要完整预约时间时，两种选择器可以一起用。',
+				},
+			],
+		},
+		quiz: {
+			question: '报表需要筛选「9 月 14 日到 18 日」的数据，怎样让用户选得清楚又不容易出错？',
+			options: [
+				{
+					key: 'A',
+					text: '用日期范围选择器，标明开始和结束日期，高亮区间，并校验结束不早于开始',
+					correct: true,
+					feedback: '对。两个端点和中间范围都看得见，规则也明确；还要说明筛选是否包含结束日。',
+				},
+				{
+					key: 'B',
+					text: '只用一个单日选择器，让用户在备注里写结束日期',
+					correct: false,
+					feedback: '日期被拆到不同地方，既难确认范围，也难校验。范围选择器能把这件事一次说清。',
+				},
+				{
+					key: 'C',
+					text: '给两个没有标签的日期框，先后顺序让用户自己猜',
+					correct: false,
+					feedback: '两只框不等于清晰的范围。必须说明哪个是开始、哪个是结束，并处理倒序和空值。',
+				},
+			],
+		},
+		anatomyIntro:
+			'Picker 是「选择器」：日历不只是用来看的，还负责把选中的日期交给表单。它可以点开才出现，也可以直接铺在页面上。下面以 2026 年 9 月为例，演示当天为 10 日、选中 17 日：',
+		parts: [
+			{
+				name: '日期入口',
+				en: 'Date Field',
+				note: '有明确标签的日期框，显示所选日期；日历图标提示可以展开选择。',
+			},
+			{
+				name: '月份导航',
+				en: 'Month Navigation',
+				note: '显示当前年月，左右翻月；选生日等较远日期时，应支持快速切换年份。',
+			},
+			{
+				name: '日期网格',
+				en: 'Calendar Grid',
+				note: '星期标题加日期格，让人按周定位；一周从哪天开始要符合地区习惯。',
+			},
+			{
+				name: '日期状态',
+				en: 'Date States',
+				note: '今天、已选中、不可选要能区分：图中 10 日描边、17 日填色、过去日期淡化并划线。',
+			},
+			{
+				name: '快捷操作',
+				en: 'Quick Actions',
+				note: '可按需提供「今天」「清空」或确认按钮；是否立即提交要保持一致。',
+			},
+		],
+		variants: [
+			{
+				title: '单日选择',
+				description: '从弹出的月历里选一天，适合预约日期、截止日期等单个值。',
+				sketch: 'dp-single',
+			},
+			{
+				title: '日期范围',
+				description: '选择开始和结束日期，连起一段区间，适合报表筛选和出行日期。',
+				sketch: 'dp-range',
+			},
+			{
+				title: '内嵌日历',
+				description: '月历直接铺在页面里，不需要先展开，适合日期选择是主要任务的预约页。',
+				sketch: 'dp-inline',
+			},
+		],
+		usage: {
+			fit: [
+				'预约、出发或截止日期，需要看清星期和可选日期',
+				'报表筛选、住宿等需要选择起止日期的任务',
+				'需要禁止过去日期或限制可预约范围的表单',
+			],
+			unfit: [
+				'只选几点几分——用 Time Picker',
+				'只展示日程、不需要填写日期——用日历视图',
+				'输入生日却只能逐月翻几十年——改用直接输入或快捷选年',
+			],
+		},
+		prompts: [
+			'给预约表单加一个 date picker，标签写「预约日期」，只允许选今天及以后，选中后回填日期',
+			'报表筛选改成 date range picker，标明开始和结束日期，结束不能早于开始，范围包含结束日',
+			'生日字段的 date picker 支持直接输入 YYYY-MM-DD 和快速选年，输入无效日期时给出明确提示',
+			'手机上使用原生日期选择器；这里保存的是日期而非时间点，统一存 YYYY-MM-DD，不做时区转换',
+		],
+		promptTip: '说清单日还是范围、默认值、可选区间、日期格式和确认方式；别只说「放一个日历」。',
+		warning:
+			'日期不等于时间点：生日等纯日期不要因时区换算偏移一天。原生 input type="date" 的外观随浏览器和地区变化；自定义日历还要支持键盘选日、焦点返回和可读的完整日期，不能只做一个能用鼠标点的网格。',
+	},
 	toggle: {
 		question: '到底是什么？它和复选框是一回事吗？',
 		spot: {
@@ -1826,6 +1946,125 @@ export const vibeCodingPatternProfiles: Record<string, VibeCodingPatternProfile>
 		promptTip: '用它做定位词：「哪个 section 的什么位置」——AI 改页面几乎不会跑偏。',
 		warning:
 			'Section 越多页面越长，但用户的耐心不会跟着变长。每加一段先问：删了它，页面会缺什么吗？',
+	},
+	divider: {
+		question: '就是一条线吗？什么时候该画出来，什么时候只留空白？',
+		spot: {
+			title: '这个设置面板里，哪一处是 Divider？',
+			intro: '不是所有边线都叫分割线。点一点，找出把两组设置隔开的那一条。',
+			regions: [
+				{
+					id: 'heading',
+					name: '分组标题',
+					en: 'Heading',
+					correct: false,
+					note: '这是标题，用文字说清这一组是什么；Divider 用线标出两组之间的边界。',
+				},
+				{
+					id: 'border',
+					name: '容器边框',
+					en: 'Border',
+					correct: false,
+					note: '这是包围账号信息的边框，用来圈定容器；要找的 Divider 在两组内容之间。',
+				},
+				{
+					id: 'divider',
+					name: '分割线',
+					en: 'Divider',
+					correct: true,
+					note: '就是它！一条细线把账号信息和通知设置分开，不包围内容，也不承担点击操作。',
+				},
+				{
+					id: 'button',
+					name: '保存按钮',
+					en: 'Button',
+					correct: false,
+					note: '这是触发保存的按钮。普通 Divider 只负责分组，不是可点击或可拖动的控件。',
+				},
+			],
+		},
+		quiz: {
+			question: '设置页中，「账号信息」和「通知偏好」挨在一起，不容易看出分组。怎么改更合适？',
+			options: [
+				{
+					key: 'A',
+					text: '在两组之间加一条细分割线，保留上下留白，组内不重复加线',
+					correct: true,
+					feedback: '对。线标出分组边界，留白提供呼吸空间；组内保持紧凑，关系就清楚了。',
+				},
+				{
+					key: 'B',
+					text: '给每个字段上下都加一条粗黑线，保证一眼看到',
+					correct: false,
+					feedback: '线比内容还抢眼了。每一行都切开，反而看不出哪些字段属于同一组。',
+				},
+				{
+					key: 'C',
+					text: '把分割线做成可拖动的手柄，让用户自己拉开距离',
+					correct: false,
+					feedback:
+						'那是调整面板尺寸的 Splitter，不是普通 Divider。这里需要的是分组，不是新增操作。',
+				},
+			],
+		},
+		anatomyIntro:
+			'Divider 来自 divide（分开），也常叫 Separator。它像文章里的段间横线：不装内容，只标出内容之间的边界。样式可以很轻，但方向、长度和留白要说清楚：',
+		parts: [
+			{
+				name: '线条',
+				en: 'Stroke',
+				note: '通常是 1px 的细线，颜色比正文轻；横向分上下，纵向分左右。',
+			},
+			{ name: '两端缩进', en: 'Inset', note: '决定线有多长：通栏铺满，或缩进后与文字起点对齐。' },
+			{
+				name: '两侧留白',
+				en: 'Spacing',
+				note: '线与内容之间的距离。水平线留上下间距，竖线留左右间距。',
+			},
+			{
+				name: '可选文字',
+				en: 'Label',
+				note: '线中间可放「或」「今天」等短文字，说明两边的关系；普通分割线不需要。',
+			},
+		],
+		variants: [
+			{
+				title: '水平式',
+				description: '横着隔开上下内容，常见于设置分组、列表和文章段落。',
+				sketch: 'dv-horizontal',
+			},
+			{
+				title: '垂直式',
+				description: '竖着隔开左右操作组，常见于工具栏；要有明确的高度。',
+				sketch: 'dv-vertical',
+			},
+			{
+				title: '带文字式',
+				description: '中间嵌一句「或」或日期，常见于登录方式切换和消息时间分组。',
+				sketch: 'dv-label',
+			},
+		],
+		usage: {
+			fit: [
+				'设置页、菜单里需要明确区分的内容组',
+				'工具栏中不同用途的操作组',
+				'登录方式之间的「或」、消息列表里的日期分隔',
+			],
+			unfit: [
+				'留白和标题已经足够清楚的地方',
+				'给每一小段内容都画线，让页面变成格子',
+				'需要拖动调整两侧面板尺寸时——那是 Splitter',
+			],
+		},
+		prompts: [
+			'在账号信息和通知设置之间加一条水平 divider，1px 浅灰色，上下各留 24px',
+			'工具栏的编辑操作和分享操作之间加一条竖向 divider，高 20px，左右各留 12px',
+			'邮箱登录和手机号登录之间加一个带「或」字的 divider，文字两边的线等长',
+			'列表里的 divider 左侧缩进到文字起点，不要穿过头像；最后一项下面不加线',
+		],
+		promptTip: '说清位置、方向、线条样式和间距；需要缩进或文字时也一并说明，别只说「加条线」。',
+		warning:
+			'别把分割线当装饰铺满页面，先看留白能否解决。HTML 的 <hr> 表示主题分隔，纯装饰线用 CSS；有语义的竖向分隔符用 role="separator" 并声明 aria-orientation="vertical"。普通 Divider 不需要进入键盘 Tab 顺序。',
 	},
 	table: {
 		question: '到底是什么？和一堆卡片摆在一起有什么区别？',

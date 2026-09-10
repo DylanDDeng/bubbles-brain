@@ -382,6 +382,14 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 			},
 			{
 				group: '布局骨架',
+				id: 'divider',
+				name: 'Divider',
+				chineseName: '分割线',
+				description:
+					'用一条细线把相邻内容或操作分成几组，横着隔开段落，竖着隔开工具，让界面更好扫读。',
+			},
+			{
+				group: '布局骨架',
 				id: 'accordion',
 				name: 'Accordion',
 				chineseName: '折叠面板',
@@ -414,6 +422,13 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				name: 'Select',
 				chineseName: '下拉选择',
 				description: '点开一个列表从中挑一项，把「能选什么」提前圈定。',
+			},
+			{
+				group: '输入控件',
+				id: 'date-picker',
+				name: 'Date Picker',
+				chineseName: '日期选择器',
+				description: '点开日历选一天或一段日期，把「哪天」填进表单；常见于预约、出行和报表筛选。',
 			},
 			{
 				group: '输入控件',

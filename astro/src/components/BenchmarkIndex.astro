@@ -1,0 +1,44 @@
+---
+import { benchmarkLedger, benchmarkRoute, pick, type BenchmarkLocale } from '../lib/benchmarks';
+import '../styles/benchmarks.css';
+
+interface Props {
+	locale: BenchmarkLocale;
+}
+
+const { locale } = Astro.props;
+const isEnglish = locale === 'en';
+---
+
+<section class="page-shell bench-shell bench-index">
+	<header class="bench-header">
+		<a class="collection-back" href={isEnglish ? '/en/' : '/#bc-benchmarks'}>
+			<i class="ph ph-arrow-left" aria-hidden="true"></i>
+			{isEnglish ? 'Collections' : '收藏'}
+		</a>
+		<h1>Benchmarks</h1>
+		<p class="bench-lede">
+			{
+				isEnglish
+					? 'What do model benchmarks actually measure? Start with the task, then explore the scores.'
+					: '模型的高分意味着什么？先了解评测在测什么，再看模型表现。'
+			}
+		</p>
+	</header>
+
+	<ol class="bench-list">
+		{
+			benchmarkLedger.benchmarks.map((benchmark) => (
+				<li>
+					<a href={benchmarkRoute(benchmark.id, locale)}>
+						<div>
+							<h2 class="bench-list-name">{pick(benchmark.name, locale)}</h2>
+							<p class="bench-list-measures">{pick(benchmark.measures, locale)}</p>
+						</div>
+						<i class="ph ph-arrow-up-right" aria-hidden="true" />
+					</a>
+				</li>
+			))
+		}
+	</ol>
+</section>

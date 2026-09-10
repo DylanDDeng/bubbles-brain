@@ -26,6 +26,7 @@ const isTabs = concept.id === 'tabs';
 const isSlider = concept.id === 'slider';
 const isInput = concept.id === 'input';
 const isSelect = concept.id === 'select';
+const isDatePicker = concept.id === 'date-picker';
 const isToggle = concept.id === 'toggle';
 const isDrawer = concept.id === 'drawer';
 const isSkeleton = concept.id === 'skeleton';
@@ -35,6 +36,7 @@ const isBreadcrumb = concept.id === 'breadcrumb';
 const isPagination = concept.id === 'pagination';
 const isSidebar = concept.id === 'sidebar';
 const isSection = concept.id === 'section';
+const isDivider = concept.id === 'divider';
 const isAlert = concept.id === 'alert';
 const isCommandPalette = concept.id === 'command-palette';
 const isTooltip = concept.id === 'tooltip';
@@ -50,6 +52,10 @@ const isTable = concept.id === 'table';
 const isCtrlGroup = isInput || isSelect || isToggle;
 const isWayGroup = isBreadcrumb || isPagination || isSidebar;
 const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
+const datePickerWeekdays = ['一', '二', '三', '四', '五', '六', '日'];
+const datePickerDays = Array.from({ length: 35 }, (_, index) =>
+	index >= 1 && index <= 30 ? index : null,
+);
 ---
 
 <article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
@@ -477,6 +483,84 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 							4
 						</span>
 					</div>
+				) : isDatePicker ? (
+					<div class="pattern-anatomy-mock pam-dp-wrap" aria-hidden="true">
+						<div class="pam-dp">
+							<span class="dp-field" data-part-target="1">
+								<b>出发日期</b>
+								<span class="dp-value">
+									2026-09-17
+									<i class="ph ph-calendar-blank" />
+								</span>
+							</span>
+							<div class="dp-calendar">
+								<span class="dp-month" data-part-target="2">
+									<>
+										<i class="ph ph-caret-left" />
+										<b>2026 年 9 月</b>
+										<i class="ph ph-caret-right" />
+									</>
+								</span>
+								<div class="dp-grid" data-part-target="3">
+									{datePickerWeekdays.map((day) => (
+										<span class="dp-weekday">{day}</span>
+									))}
+									{datePickerDays.map((day) => (
+										<span
+											class:list={[
+												'dp-day',
+												{
+													'is-disabled': day !== null && day < 10,
+													'is-today': day === 10,
+													'is-selected': day === 17,
+												},
+											]}
+											data-part-target={day === 3 || day === 10 || day === 17 ? '4' : undefined}
+										>
+											{day}
+										</span>
+									))}
+								</div>
+								<span class="dp-actions" data-part-target="5">
+									<>
+										<b>今天</b>
+										<span>清空</span>
+									</>
+								</span>
+							</div>
+							<span class="pattern-part-badge" style="left: -28px; top: 16px;" data-part-target="1">
+								1
+							</span>
+							<span
+								class="pattern-part-badge"
+								style="right: -28px; top: 90px;"
+								data-part-target="2"
+							>
+								2
+							</span>
+							<span
+								class="pattern-part-badge"
+								style="left: -28px; top: 160px;"
+								data-part-target="3"
+							>
+								3
+							</span>
+							<span
+								class="pattern-part-badge"
+								style="right: -28px; top: 206px;"
+								data-part-target="4"
+							>
+								4
+							</span>
+							<span
+								class="pattern-part-badge"
+								style="left: -28px; bottom: 4px;"
+								data-part-target="5"
+							>
+								5
+							</span>
+						</div>
+					</div>
 				) : isToggle ? (
 					<div class="pattern-anatomy-mock pam-form-wrap" aria-hidden="true">
 						<div class="pam-toggle-stage">
@@ -713,6 +797,42 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 							3
 						</span>
 						<span class="pattern-part-badge" style="left: 12%; top: 8%;" data-part-target="4">
+							4
+						</span>
+					</div>
+				) : isDivider ? (
+					<div class="pattern-anatomy-mock pam-form-wrap" aria-hidden="true">
+						<div class="pam-dv">
+							<span class="dv-content">
+								<b>账号信息</b>
+								<i class="pv-bar" />
+								<i class="pv-bar is-short" />
+							</span>
+							<div class="pam-dv-spacing" data-part-target="3">
+								<div class="pam-dv-inset" data-part-target="2">
+									<span class="dv-rule">
+										<i class="dv-line" data-part-target="1" />
+										<span data-part-target="4">通知偏好</span>
+										<i class="dv-line" data-part-target="1" />
+									</span>
+								</div>
+							</div>
+							<span class="dv-content">
+								<b>邮件通知</b>
+								<i class="pv-bar" />
+								<i class="pv-bar is-short" />
+							</span>
+						</div>
+						<span class="pattern-part-badge" style="right: 22%; top: 40%;" data-part-target="1">
+							1
+						</span>
+						<span class="pattern-part-badge" style="left: 6%; top: 45%;" data-part-target="2">
+							2
+						</span>
+						<span class="pattern-part-badge" style="right: 6%; top: 60%;" data-part-target="3">
+							3
+						</span>
+						<span class="pattern-part-badge" style="left: 46%; top: 61%;" data-part-target="4">
 							4
 						</span>
 					</div>
@@ -1535,6 +1655,52 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 									</span>
 								</span>
 							) : null}
+							{variant.sketch.startsWith('dp-') ? (
+								<div class="pv-dp">
+									{variant.sketch !== 'dp-inline' ? (
+										<span class="dp-value">
+											{variant.sketch === 'dp-range' ? '09-14 → 09-18' : '2026-09-17'}
+											<i class="ph ph-calendar-blank" />
+										</span>
+									) : (
+										<b class="dp-inline-title">选择预约日期</b>
+									)}
+									<div
+										class:list={['dp-calendar', { 'is-inline': variant.sketch === 'dp-inline' }]}
+									>
+										<span class="dp-month">
+											<i class="ph ph-caret-left" />
+											<b>2026 年 9 月</b>
+											<i class="ph ph-caret-right" />
+										</span>
+										<div class="dp-grid">
+											{datePickerWeekdays.map((day) => (
+												<span class="dp-weekday">{day}</span>
+											))}
+											{datePickerDays.map((day) => (
+												<span
+													class:list={[
+														'dp-day',
+														{
+															'is-selected':
+																variant.sketch === 'dp-range'
+																	? day === 14 || day === 18
+																	: day === 17,
+															'is-range':
+																variant.sketch === 'dp-range' &&
+																day !== null &&
+																day > 14 &&
+																day < 18,
+														},
+													]}
+												>
+													{day}
+												</span>
+											))}
+										</div>
+									</div>
+								</div>
+							) : null}
 							{variant.sketch === 'tg-basic' ? (
 								<span class="pv-center">
 									<span class="pv-toggle is-on">
@@ -1757,6 +1923,37 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 										<i class="pv-bar" />
 										<u />
 									</span>
+								</span>
+							) : null}
+							{variant.sketch === 'dv-horizontal' ? (
+								<span class="pv-dv">
+									<span class="dv-content">
+										<b>账号信息</b>
+										<i class="pv-bar is-short" />
+									</span>
+									<i class="dv-line" />
+									<span class="dv-content">
+										<b>通知偏好</b>
+										<i class="pv-bar is-short" />
+									</span>
+								</span>
+							) : null}
+							{variant.sketch === 'dv-vertical' ? (
+								<span class="pv-dv is-vertical">
+									<span>编辑</span>
+									<i class="dv-line" />
+									<span>分享</span>
+								</span>
+							) : null}
+							{variant.sketch === 'dv-label' ? (
+								<span class="pv-dv">
+									<span>邮箱登录</span>
+									<span class="dv-rule">
+										<i class="dv-line" />
+										<span>或</span>
+										<i class="dv-line" />
+									</span>
+									<span>手机号登录</span>
 								</span>
 							) : null}
 							{variant.sketch === 'tb-plain' ? (
@@ -2572,6 +2769,69 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 								</span>
 							</label>
 						</div>
+					) : isDatePicker ? (
+						<div class="pattern-spot-mock ps-panelize ps-dp-stage">
+							{profile.spot.regions.map((region) => (
+								<input
+									class="pattern-pick-input"
+									type="radio"
+									name={`spot-${concept.id}`}
+									id={`spot-${concept.id}-${region.id}`}
+									value={region.id}
+								/>
+							))}
+							<label
+								class="pattern-spot-region ps-ctl"
+								for={`spot-${concept.id}-select`}
+								data-pick-option="select"
+								aria-label="目的地下拉区域"
+							>
+								<b>目的地</b>
+								<span class="dp-value">
+									杭州
+									<i class="ph ph-caret-down" />
+								</span>
+							</label>
+							<label
+								class="pattern-spot-region ps-ctl"
+								for={`spot-${concept.id}-date-picker`}
+								data-pick-option="date-picker"
+								aria-label="日期输入框和月历区域"
+							>
+								<b>出发日期</b>
+								<span class="dp-value">
+									2026-09-17
+									<i class="ph ph-calendar-blank" />
+								</span>
+								<span class="dp-calendar">
+									<span class="dp-month">
+										<i class="ph ph-caret-left" />
+										<b>2026 年 9 月</b>
+										<i class="ph ph-caret-right" />
+									</span>
+									<span class="dp-grid">
+										{datePickerWeekdays.map((day) => (
+											<span class="dp-weekday">{day}</span>
+										))}
+										{datePickerDays.map((day) => (
+											<span class:list={['dp-day', { 'is-selected': day === 17 }]}>{day}</span>
+										))}
+									</span>
+								</span>
+							</label>
+							<label
+								class="pattern-spot-region ps-ctl"
+								for={`spot-${concept.id}-time-picker`}
+								data-pick-option="time-picker"
+								aria-label="时间输入区域"
+							>
+								<b>出发时间</b>
+								<span class="dp-value">
+									09:30
+									<i class="ph ph-clock" />
+								</span>
+							</label>
+						</div>
 					) : isCtrlGroup ? (
 						<div class="pattern-spot-mock ps-panelize">
 							{profile.spot.regions.map((region) => (
@@ -2733,6 +2993,56 @@ const isStatusGroup = isSkeleton || isEmpty || isBadge || isSpinner;
 							>
 								<i class="ps-spinner-ring" />
 								加载中…
+							</label>
+						</div>
+					) : isDivider ? (
+						<div class="pattern-spot-mock ps-dv-stage">
+							{profile.spot.regions.map((region) => (
+								<input
+									class="pattern-pick-input"
+									type="radio"
+									name={`spot-${concept.id}`}
+									id={`spot-${concept.id}-${region.id}`}
+									value={region.id}
+								/>
+							))}
+							<label
+								class="pattern-spot-region ps-dv-heading"
+								for={`spot-${concept.id}-heading`}
+								data-pick-option="heading"
+								aria-label="分组标题区域"
+							>
+								账号设置
+							</label>
+							<label
+								class="pattern-spot-region ps-dv-account"
+								for={`spot-${concept.id}-border`}
+								data-pick-option="border"
+								aria-label="账号信息边框区域"
+							>
+								<b>账号信息</b>
+								<span>昵称 · Bubble</span>
+								<span>邮箱 · hello@example.com</span>
+							</label>
+							<label
+								class="pattern-spot-region ps-dv-divider"
+								for={`spot-${concept.id}-divider`}
+								data-pick-option="divider"
+								aria-label="两组设置之间的细线区域"
+							>
+								<span class="dv-line" />
+							</label>
+							<div class="dv-content ps-dv-notifications">
+								<b>通知偏好</b>
+								<span>每周摘要 · 已开启</span>
+							</div>
+							<label
+								class="pattern-spot-region ps-dv-save"
+								for={`spot-${concept.id}-button`}
+								data-pick-option="button"
+								aria-label="保存按钮区域"
+							>
+								保存设置
 							</label>
 						</div>
 					) : isSection ? (

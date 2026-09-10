@@ -4,6 +4,7 @@ import { brainPodParent } from '../lib/brainpodSections';
 import magazineFallback from '../data/brainpod-art/magazine/read-again-fallback.webp?url';
 import tutorialsFallback from '../data/brainpod-art/collection-objects/tutorials-fallback.webp?url';
 import notebookFallback from '../data/brainpod-art/collection-objects/vibe-coding-fallback.webp?url';
+import benchmarksFallback from '../data/brainpod-art/collection-objects/benchmarks-fallback.webp?url';
 
 interface Props {
 	section: string;
@@ -14,19 +15,21 @@ const kind =
 		? 'reading'
 		: section === 'newbie-tutorials' || section === 'tutorials'
 			? 'curious'
-			: section.includes('design')
-				? 'design'
-				: section.includes('terms') || section === 'vibe-coding'
-					? 'terms'
-					: section.includes('skills')
-						? 'skills'
-						: 'agent';
+			: section === 'benchmarks'
+				? 'bench'
+				: section.includes('design')
+					? 'design'
+					: section.includes('terms') || section === 'vibe-coding'
+						? 'terms'
+						: section.includes('skills')
+							? 'skills'
+							: 'agent';
 const symbol =
 	section === 'pi-agent-tutorials' ? 'π' : section === 'workbuddy-tutorials' ? '↗' : '↳';
 // Child directories and standalone collection pages share their parent's 3D object.
 const parentSection = brainPodParent(section)?.id || section;
 const publication =
-	parentSection === 'tutorials' || parentSection === 'vibe-coding'
+	parentSection === 'tutorials' || parentSection === 'vibe-coding' || parentSection === 'benchmarks'
 		? parentSection
 		: kind === 'reading'
 			? 'reading'
@@ -36,7 +39,9 @@ const fallback =
 		? tutorialsFallback
 		: publication === 'vibe-coding'
 			? notebookFallback
-			: magazineFallback;
+			: publication === 'benchmarks'
+				? benchmarksFallback
+				: magazineFallback;
 ---
 
 <div

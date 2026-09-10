@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { designBrands } from '../data/designBrands';
 import { vibeCodingSkillMeta } from '../data/vibeCodingSkills';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
+import { benchmarkLedger } from './benchmarks';
 import { highlightArchiveFor } from './highlightsArchive';
 import { buildKnowledgeSearchIndex, knowledgeReadingCount } from './searchIndex';
 
@@ -86,6 +87,15 @@ describe('knowledge search index', () => {
 		);
 		expect(index.items.filter((item) => item.section === 'vibe-coding-design')).toHaveLength(
 			designBrands.length,
+		);
+		expect(index.items.filter((item) => item.section === 'benchmarks')).toEqual(
+			benchmarkLedger.benchmarks.map((benchmark) =>
+				expect.objectContaining({
+					href: `/benchmarks/${benchmark.id}/`,
+					title: benchmark.name.zh,
+					section_label: 'Benchmarks',
+				}),
+			),
 		);
 		expect(index.items.every((item) => !item.href.startsWith('/daily/'))).toBe(true);
 		expect(index.items.every((item) => !item.href.startsWith('/changelog/'))).toBe(true);

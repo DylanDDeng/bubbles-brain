@@ -1,0 +1,197 @@
+---
+import {
+	benchmarkLedger,
+	benchmarkParagraphs,
+	collectNotes,
+	formatScore,
+	pick,
+	rankedScores,
+	type BenchmarkDefinition,
+	type BenchmarkLocale,
+} from '../lib/benchmarks';
+import '../styles/benchmarks.css';
+
+interface Props {
+	benchmark: BenchmarkDefinition;
+	locale: BenchmarkLocale;
+}
+
+const { benchmark, locale } = Astro.props;
+const isEnglish = locale === 'en';
+const rows = rankedScores(benchmark.id);
+const notes = collectNotes(rows);
+const noteIndex = new Map(notes.map((note, index) => [note.key, index + 1]));
+const checkedAt = benchmarkLedger.checked_at;
+const dateLabel = new Intl.DateTimeFormat(locale, {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+	timeZone: 'Asia/Shanghai',
+}).format(new Date(`${checkedAt}T00:00:00+08:00`));
+const showAgent = rows.some(({ score }) => score.agent);
+const paragraphs = benchmarkParagraphs(pick(benchmark.explainer, locale), locale);
+const scoreReading = pick(benchmark.description, locale).replace(
+	/^(?:分数怎么读：|How to read it:\s*)/,
+	'',
+);
+---
+
+<section class="page-shell bench-shell bench-detail">
+	<header class="bench-header">
+		<a class="collection-back" href={isEnglish ? '/en/benchmarks/' : '/#bc-benchmarks'}>
+			<i class="ph ph-arrow-left" aria-hidden="true"></i>
+			Benchmarks
+		</a>
+		<h1>{pick(benchmark.name, locale)}</h1>
+		<p class="bench-lede">{pick(benchmark.measures, locale)}</p>
+	</header>
+
+	<section class="bench-guide" aria-labelledby="bench-guide-title">
+		<h2 id="bench-guide-title" class="bench-section-title">
+			{isEnglish ? 'What it measures' : '它测什么'}
+		</h2>
+		{paragraphs.map((paragraph) => <p class="bench-explainer">{paragraph}</p>)}
+		<h2 class="bench-section-title">{isEnglish ? 'Reading the scores' : '怎么看分数'}</h2>
+		<p class="bench-guide-reading">{scoreReading}</p>
+		<p class="bench-guide-source">
+			{isEnglish ? 'Source' : '来源'}
+			<a href={benchmark.url} target="_blank" rel="noopener noreferrer">
+				{benchmark.source}
+				<i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+			</a>
+		</p>
+	</section>
+
+	<section class="bench-results" aria-labelledby="scores">
+		<header class="bench-results-heading">
+			<h2 class="bench-section-title" id="scores">
+				{isEnglish ? 'Model performance' : '模型表现'}
+			</h2>
+			<p class="bench-meta">
+				<span>{isEnglish ? 'Checked' : '核对于'} <time datetime={checkedAt}>{dateLabel}</time></span
+				>
+				<span>{rows.length} {isEnglish ? 'results' : '条成绩'}</span>
+			</p>
+		</header>
+
+		<div class="bench-table-wrap">
+			<table class="bench-table" data-bench-table>
+				<caption class="sr-only">
+					{pick(benchmark.name, locale)} — {
+						isEnglish
+							? 'Model performance. Select a column heading to sort.'
+							: '模型表现。选择列标题可排序。'
+					}
+				</caption>
+				<thead>
+					<tr>
+						<th scope="col" class="bench-col-model">
+							<button type="button" data-sort="name">{isEnglish ? 'Model' : '模型'}</button>
+						</th>
+						{
+							showAgent && (
+								<th scope="col" class="bench-col-agent">
+									<button type="button" data-sort="agent">
+										Agent
+									</button>
+								</th>
+							)
+						}
+						<th scope="col" class="bench-col-score" aria-sort="descending">
+							<button type="button" data-sort="score" data-numeric>
+								{
+									benchmark.format === 'percent'
+										? isEnglish
+											? 'Resolved'
+											: '解决率'
+										: isEnglish
+											? 'Index'
+											: '指数'
+								}
+							</button>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{
+						rows.map(({ model, score }) => {
+							const noteNumber = noteIndex.get(model.id);
+							return (
+								<tr
+									data-name={model.name}
+									data-creator={model.creator}
+									data-agent={score.agent ?? ''}
+								>
+									<th scope="row">
+										<span class="bench-model-name">{model.name}</span>
+										<span class="bench-creator">{model.creator}</span>
+										{score.agent && <span class="bench-mobile-agent">Agent · {score.agent}</span>}
+									</th>
+									{showAgent && <td class="bench-agent-cell">{score.agent ?? '—'}</td>}
+									<td class="bench-score" data-value={score.value}>
+										<span class="bench-result">
+											<span class="bench-value">{formatScore(score, benchmark.format)}</span>
+											{noteNumber && (
+												<a
+													class="bench-note-ref"
+													href={`#bench-note-${noteNumber}`}
+													id={`bench-ref-${noteNumber}`}
+													aria-label={isEnglish ? `Note ${noteNumber}` : `注释 ${noteNumber}`}
+												>
+													<sup>{noteNumber}</sup>
+												</a>
+											)}
+										</span>
+										{score.ci !== undefined && (
+											<span
+												class="bench-ci"
+												aria-label={
+													isEnglish
+														? `95% confidence interval: plus or minus ${score.ci}${benchmark.format === 'percent' ? ' percentage points' : ''}`
+														: `95% 置信区间：正负 ${score.ci}${benchmark.format === 'percent' ? ' 个百分点' : ''}`
+												}
+											>
+												± {score.ci}
+											</span>
+										)}
+									</td>
+								</tr>
+							);
+						})
+					}
+				</tbody>
+			</table>
+		</div>
+
+		{
+			notes.length > 0 && (
+				<footer class="bench-footer">
+					<ol class="bench-notes">
+						{notes.map((note, index) => (
+							<li id={`bench-note-${index + 1}`}>
+								{pick(note.score.note!, locale)}
+								{note.score.note_url && (
+									<a href={note.score.note_url} target="_blank" rel="noopener noreferrer">
+										{isEnglish ? 'source' : '来源'}
+										<i class="ph ph-arrow-up-right" aria-hidden="true" />
+									</a>
+								)}
+								<a
+									href={`#bench-ref-${index + 1}`}
+									class="bench-note-back"
+									aria-label={isEnglish ? 'Back to table' : '返回表格'}
+								>
+									↩
+								</a>
+							</li>
+						))}
+					</ol>
+				</footer>
+			)
+		}
+	</section>
+</section>
+
+<script>
+	import '../scripts/benchmarkSort';
+</script>

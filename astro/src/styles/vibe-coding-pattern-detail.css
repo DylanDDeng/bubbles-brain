@@ -2763,6 +2763,175 @@
 	outline-offset: 3px;
 }
 
+.pam-dp-wrap {
+	padding: 24px 42px;
+}
+
+.pam-dp {
+	position: relative;
+	display: grid;
+	gap: 10px;
+	width: min(100%, 270px);
+	margin: auto;
+}
+
+.dp-field {
+	display: grid;
+	gap: 8px;
+	font-size: 0.65rem;
+}
+
+.dp-value {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 10px;
+	border: 1px solid #dcdcd7;
+	border-radius: 7px;
+	background: #fff;
+	color: var(--ink-soft);
+	font-size: 0.65rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.dp-value i {
+	font-size: 0.85rem;
+}
+
+.dp-calendar {
+	display: grid;
+	gap: 10px;
+	padding: 12px;
+	border: 1px solid #e3e3df;
+	border-radius: 10px;
+	background: #fff;
+}
+
+.dp-month {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	color: var(--ink);
+	font-size: 0.65rem;
+}
+
+.dp-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	row-gap: 3px;
+	text-align: center;
+	font-size: 0.62rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.dp-weekday,
+.dp-day {
+	display: grid;
+	place-items: center;
+	min-width: 0;
+	height: 26px;
+	border: 1px solid transparent;
+	border-radius: 5px;
+}
+
+.dp-weekday {
+	color: var(--ink-faint);
+	font-size: 0.55rem;
+}
+
+.dp-day.is-disabled {
+	color: #b3b3ae;
+	text-decoration: line-through;
+}
+
+.dp-day.is-today {
+	border-color: var(--blue-strong);
+	color: var(--blue-strong);
+}
+
+.dp-day.is-selected {
+	background: var(--blue-strong);
+	color: #fff;
+	font-weight: 750;
+}
+
+.dp-day.is-range {
+	border-radius: 0;
+	background: var(--blue-soft);
+	color: var(--blue-strong);
+}
+
+.dp-actions {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 10px;
+	border-top: 1px solid var(--rule);
+	color: var(--ink-soft);
+	font-size: 0.6rem;
+}
+
+.dp-actions b {
+	color: var(--blue-strong);
+}
+
+.pv-dp {
+	display: grid;
+	align-content: start;
+	gap: 8px;
+	width: min(100%, 240px);
+	margin-inline: auto;
+}
+
+.pv-dp .dp-value {
+	padding: 7px;
+	font-size: 0.55rem;
+}
+
+.pv-dp .dp-calendar {
+	gap: 6px;
+	padding: 8px;
+}
+
+.pv-dp .dp-calendar.is-inline {
+	border-color: transparent;
+	padding-inline: 0;
+}
+
+.dp-inline-title {
+	padding: 8px 0;
+	color: var(--ink-soft);
+	font-size: 0.6rem;
+}
+
+.pv-dp .dp-month {
+	font-size: 0.55rem;
+}
+
+.pv-dp :is(.dp-day, .dp-weekday) {
+	height: 20px;
+	font-size: 0.5rem;
+}
+
+.ps-dp-stage .dp-calendar {
+	width: min(100%, 270px);
+	margin-inline: auto;
+}
+
+[data-vibe-coding-term-detail='date-picker']
+	:is(
+		:has(#spot-date-picker-select:focus-visible) > [for='spot-date-picker-select'],
+		:has(#spot-date-picker-date-picker:focus-visible) > [for='spot-date-picker-date-picker'],
+		:has(#spot-date-picker-time-picker:focus-visible) > [for='spot-date-picker-time-picker'],
+		:has(#quiz-date-picker-A:focus-visible) > [for='quiz-date-picker-A'],
+		:has(#quiz-date-picker-B:focus-visible) > [for='quiz-date-picker-B'],
+		:has(#quiz-date-picker-C:focus-visible) > [for='quiz-date-picker-C']
+	) {
+	outline: 2px solid var(--blue-strong);
+	outline-offset: 3px;
+}
+
 .ps-ctl-input {
 	display: flex;
 	align-items: center;

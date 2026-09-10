@@ -29,7 +29,7 @@ npm run images:generate  # regenerate ../static/_responsive variants + responsiv
 npm run images:check     # fail if referenced images changed without regenerating variants
 ```
 
-Build output lands in `dist/`.
+Build output lands in `dist/`. For browser checks against release output, serve `dist/client/` after building; avoid running browser checks against the dev server concurrently with check/build commands that refresh its Vite cache.
 
 Responsive image variants (`../static/_responsive/`) are committed content assets, not build output. After adding or changing an image referenced from `../content`, run `npm run images:generate` and commit the variants together with `responsive-images.lock.json`; CI only verifies, it never generates.
 

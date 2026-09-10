@@ -425,6 +425,13 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 			},
 			{
 				group: '输入控件',
+				id: 'date-picker',
+				name: 'Date Picker',
+				chineseName: '日期选择器',
+				description: '点开日历选一天或一段日期，把「哪天」填进表单；常见于预约、出行和报表筛选。',
+			},
+			{
+				group: '输入控件',
 				id: 'checkbox',
 				name: 'Checkbox / Radio',
 				chineseName: '复选与单选',

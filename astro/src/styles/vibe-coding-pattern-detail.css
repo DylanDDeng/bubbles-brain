@@ -2630,6 +2630,139 @@
 	text-decoration: none;
 }
 
+.pam-dv {
+	width: 78%;
+	margin: 0 auto;
+}
+
+.dv-content {
+	display: grid;
+	gap: 8px;
+	color: var(--ink-soft);
+	font-size: 0.65rem;
+}
+
+.dv-content b {
+	color: var(--ink);
+}
+
+.dv-line {
+	display: block;
+	width: 100%;
+	height: 1px;
+	background: #b9b9b2;
+}
+
+.dv-rule {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--ink-soft);
+	font-size: 0.6rem;
+	white-space: nowrap;
+}
+
+.dv-rule .dv-line {
+	flex: 1;
+}
+
+.pam-dv-spacing {
+	margin: 14px 0;
+	padding: 22px 0;
+	border-block: 1px dashed #e0e0db;
+	background: #f7f7f4;
+}
+
+.pam-dv-inset {
+	padding-inline: 16px;
+	border-inline: 1px dashed #b9b9b2;
+}
+
+.pv-dv {
+	display: grid;
+	gap: 12px;
+	width: 82%;
+	margin: auto;
+	color: var(--ink-soft);
+	font-size: 0.65rem;
+	text-align: center;
+}
+
+.pv-dv .dv-content {
+	text-align: left;
+}
+
+.pv-dv.is-vertical {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+}
+
+.pv-dv.is-vertical .dv-line {
+	width: 1px;
+	height: 28px;
+	flex: none;
+}
+
+.ps-dv-stage {
+	display: grid;
+	padding: 20px;
+}
+
+.ps-dv-heading {
+	padding: 12px 10px;
+	color: var(--ink);
+	font-size: 0.85rem;
+	font-weight: 750;
+}
+
+.ps-dv-account {
+	display: grid;
+	gap: 8px;
+	padding: 16px;
+	border: 1px solid #dcdcd7;
+	border-radius: 8px;
+	color: var(--ink-soft);
+	font-size: 0.7rem;
+}
+
+.ps-dv-divider {
+	display: flex;
+	align-items: center;
+	min-height: 48px;
+	padding-inline: 10px;
+}
+
+.ps-dv-notifications {
+	padding: 0 10px 18px;
+	font-size: 0.7rem;
+}
+
+.ps-dv-save {
+	justify-self: end;
+	padding: 14px 18px;
+	border-radius: 8px;
+	background: var(--blue-soft);
+	color: var(--blue-strong);
+	font-size: 0.7rem;
+	font-weight: 700;
+}
+
+[data-vibe-coding-term-detail='divider']
+	:is(
+		:has(#spot-divider-heading:focus-visible) > [for='spot-divider-heading'],
+		:has(#spot-divider-border:focus-visible) > [for='spot-divider-border'],
+		:has(#spot-divider-divider:focus-visible) > [for='spot-divider-divider'],
+		:has(#spot-divider-button:focus-visible) > [for='spot-divider-button'],
+		:has(#quiz-divider-A:focus-visible) > [for='quiz-divider-A'],
+		:has(#quiz-divider-B:focus-visible) > [for='quiz-divider-B'],
+		:has(#quiz-divider-C:focus-visible) > [for='quiz-divider-C']
+	) {
+	outline: 2px solid var(--blue-strong);
+	outline-offset: 3px;
+}
+
 .ps-ctl-input {
 	display: flex;
 	align-items: center;

@@ -28,7 +28,8 @@
 	height: 100%;
 	pointer-events: none;
 }
-.reading-magazine-canvas {
+.reading-magazine-canvas,
+.collection-cover--bench .reading-magazine-fallback {
 	filter: drop-shadow(1.8cqw 3.5cqw 3.2cqw #222c371e) drop-shadow(0.2cqw 0.5cqw 0.6cqw #222c370c);
 }
 [data-magazine-ready] > .reading-magazine-fallback {
@@ -112,27 +113,6 @@
 .collection-cover--bench {
 	background: #eef0ec;
 	color: #2d3a2f;
-}
-.cover-bench {
-	display: grid;
-	gap: 9cqw;
-	inset: 26% 12% auto;
-}
-.cover-bench i {
-	display: block;
-	height: 9cqw;
-	background: currentColor;
-}
-.cover-bench i:nth-child(1) {
-	width: 100%;
-}
-.cover-bench i:nth-child(2) {
-	width: 68%;
-	opacity: 0.55;
-}
-.cover-bench i:nth-child(3) {
-	width: 41%;
-	opacity: 0.3;
 }
 .collection-cover--skills {
 	background: #e9eee9;

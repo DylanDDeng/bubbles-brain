@@ -982,6 +982,31 @@ describe("automatic code release boundary", () => {
     }
   });
 
+  it("accepts the hand-checked benchmark ledger and its schema only", () => {
+    const releasePaths = ["data/benchmarks.json", "schemas/benchmarks.schema.json"];
+    expect(
+      validateCodeReleaseChangeSet(
+        comparison(
+          releasePaths.map((filename) => ({ filename, status: "added" })),
+        ),
+        { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+      ),
+    ).toHaveLength(releasePaths.length);
+    for (const filename of [
+      "data/benchmarks-draft.json",
+      "data/models.json",
+      "schemas/knowledge-taxonomy.schema.json",
+      "schemas/benchmarks.schema.json.bak",
+    ]) {
+      expect(() =>
+        validateCodeReleaseChangeSet(
+          comparison([{ filename, status: "added" }]),
+          { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+        ),
+      ).toThrow(`Code release contains forbidden or unknown path: ${filename}`);
+    }
+  });
+
   it("accepts the Vibe Coding and Pi tutorial release paths", () => {
     const releasePaths = [
       "astro/src/data/vibeCodingPatternDetails.ts",

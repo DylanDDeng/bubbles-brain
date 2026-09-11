@@ -1,5 +1,17 @@
 # Astro release route ownership
 
+## Unified Chinese collection directories
+
+The nine Chinese homepage collections use `/#bc-<collection>` as their only directory.
+Their former standalone directory routes, including `/highlights/<year>/`, are removed;
+no compatibility pages or redirects are generated. Article detail URLs and English routes
+remain separate published content. Search, year filtering and pagination live in the
+home collection room, with complete server-rendered lists for no-JavaScript reading.
+`astro/route-ownership.json` declares removed directories and the build rejects their
+reintroduction. Historical Markdown directory links are normalized during rendering,
+without rewriting the original article files.
+
+
 Phase 4 uses an explicit build-time coexistence boundary. Cloudflare Pages publishes one artifact,
 `astro/dist`, while route ownership is split as follows:
 

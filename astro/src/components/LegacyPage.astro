@@ -4,6 +4,7 @@ import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
+import { collectionHref } from '../lib/collectionRoutes';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
 	legacyAlternate,
@@ -338,7 +339,7 @@ const older =
 	articleIndex >= 0 && articleIndex < articleSiblings.length - 1
 		? articleSiblings[articleIndex + 1]
 		: null;
-const sectionHref = `${isEnglish ? '/en' : ''}/${record.section}/`;
+const sectionHref = collectionHref(`${isEnglish ? '/en' : ''}/${record.section}/`);
 const isImageCompressor = record.route.endsWith('/ai-tools/image-compress/');
 const isAIInfographic = record.route.endsWith('/ai-tools/ai-infographics/');
 const isStandaloneHtml = record.sourcePath.endsWith('.html');

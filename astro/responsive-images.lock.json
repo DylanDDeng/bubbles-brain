@@ -2329,6 +2329,294 @@
 				"/_responsive/media/workbuddy-tutorials/workbuddy-beginner-guide/img_040-1080.webp"
 			]
 		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001.png": {
+			"source_sha256": "1398d264b0bccb8ad8104b481120845ec4488f8d1300891122d2dba59891d419",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_001-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_003.png": {
+			"source_sha256": "8feb359940d2adb2f0ff44b552051b24f89c944e093c68ad8d3a1571e3c22bec",
+			"width": 300,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_003-300.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_003-300.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004.png": {
+			"source_sha256": "89e7ed3ef70fc8e7db8c370c0a5804d4b018bb10aa96ec5f6acddfdc0a94f647",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_004-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_005.png": {
+			"source_sha256": "3de0c881a1bb3da26bdea80eb0d25ed400f538ca26cad7ceb31ca6650c9c31be",
+			"width": 788,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_005-788.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_005-788.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_006.png": {
+			"source_sha256": "bbf1e625252565bba700a5c73312d5a8e7febc05b39bc0bdd2360d91a0ae1575",
+			"width": 804,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_006-804.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_006-804.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_007.png": {
+			"source_sha256": "1af6c45960a9f36685ee0d89cf6424e7f8265e2900bc7118106510250db651dc",
+			"width": 756,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_007-756.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_007-756.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008.png": {
+			"source_sha256": "43ff5801d0ec6cde148c64b846822151824b812b1f5916fadec36cee30c23d8e",
+			"width": 1018,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-1018.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_008-1018.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009.png": {
+			"source_sha256": "c9f8ee1530aa3f41fa60e4bbd34ae89679711b2fc870c1d47f2038e7a23bbd03",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_009-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010.png": {
+			"source_sha256": "efda4f52e5d94c2547eccb991fa8b215210ad1337a305bc209a3952685d347fd",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_010-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011.png": {
+			"source_sha256": "d363e62106f2647a23ef8d9d10eca6bae83ebd4e64338f02fbceb6f900af0d17",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_011-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012.png": {
+			"source_sha256": "ef89ab7e4f467ba367e805b1a81748e7844af195639dcc3f738ace5a4c22359b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_012-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013.png": {
+			"source_sha256": "3c3a25fd00c7b3592b29d5fd2fc7f834d3f23635e4e9616f9b1d9491d5a87aaf",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_013-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014.png": {
+			"source_sha256": "bd0cd07573cd265236ef485c3b15ad2116a57b7d3035f67904256b5e57c66e08",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_014-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015.png": {
+			"source_sha256": "4ef1cf2c11c2abcd74fc8ba2cc4f3758d722c623fcb71c4e760dde58ff7f8711",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_015-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_016.png": {
+			"source_sha256": "65a658552942875403cfc7ea609fff43584d61bd5c1abfac85e4800fb85f9c6c",
+			"width": 880,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_016-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_016-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_016-880.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_016-880.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017.png": {
+			"source_sha256": "e0ac72cea5ecdd593ea30ec294666316bd1f08c467764a70b1f4dc7d24464c94",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_017-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018.png": {
+			"source_sha256": "6290ef85dee1f64956bc08dc5b1ba626116d71ac40dd795f5f33a170225a0a4b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_018-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019.png": {
+			"source_sha256": "c1f137aa89d562d9f743ae354cddb2e90a6e2d3be4269dfadfd6670742f46cf5",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_019-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020.png": {
+			"source_sha256": "eec140f9cd535d38d6729add1c5ce2b4488b93b80d53b7bb0a46f981246a9463",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_020-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021.png": {
+			"source_sha256": "e2738b1caa7bc65c9f0a8ca93615b4591523032e4780c878c5fd417e52cd16cb",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_021-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022.png": {
+			"source_sha256": "356b3467548e5b0da5f52c304faa50b327ad96f9ad48c3950f74a2d109e446c0",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_022-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023.png": {
+			"source_sha256": "609550d387244756082dfd52063edc88285d2c2594680c912b5b9d434817d829",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_023-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024.png": {
+			"source_sha256": "33907056c9242f1e9987eb76ac361afeec730b8aa37084be7b4d6f73bf7ae065",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_024-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025.png": {
+			"source_sha256": "626317942cad62bd87054f5e67f3ae20eceee3e9723cb3da1ce37fd33b5563e4",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_025-1080.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026.png": {
+			"source_sha256": "f118a4711a6495b9477b01f633170351ab235c605aa8cf0afd9d0c0738cc4f95",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-1080.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-feishu-workflow-guide/img_026-1080.webp"
+			]
+		},
 		"/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_001.jpeg": {
 			"source_sha256": "099057b562816bbaddef34cbe4a6c3ce4e3d56c2983b2cf0746a3c4819fd5e95",
 			"width": 1080,

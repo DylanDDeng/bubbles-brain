@@ -180,7 +180,6 @@ const requiredRoutes = [
   "/",
   "/en/",
   "/search/",
-  "/vibe-coding/terms/",
   "/vibe-coding/terms/frontend/",
   "/search/index.json",
   "/index.json",
@@ -446,8 +445,13 @@ invariant(
 
 const specializedMarkers = new Map([
   [
-    "vibe-coding/terms/index.html",
-    ["data-vibe-coding-terms", 'id="vibe-coding"', 'id="agent"'],
+    "index.html",
+    [
+      'id="bc-vibe-coding-terms"',
+      'data-collection-list="highlights"',
+      'data-collection-list="workbuddy-tutorials"',
+      "data-list-pagination",
+    ],
   ],
   [
     "vibe-coding/terms/frontend/index.html",
@@ -456,21 +460,6 @@ const specializedMarkers = new Map([
       'data-concept-animation="frontend"',
       "什么时候会遇到它",
     ],
-  ],
-  [
-    "codex-tutorials/index.html",
-    ['id="codex-tutorials-search"', "content-directory--codex-tutorials"],
-  ],
-  [
-    "workbuddy-tutorials/index.html",
-    [
-      'id="workbuddy-tutorials-search"',
-      "content-directory--workbuddy-tutorials",
-    ],
-  ],
-  [
-    "highlights/index.html",
-    ['id="highlight-search"', "data-directory-list", "<script"],
   ],
 ]);
 for (const [path, markers] of specializedMarkers) {
@@ -482,10 +471,7 @@ for (const [path, markers] of specializedMarkers) {
     );
 }
 
-const highlightsHtml = await readFile(
-  resolve(distRoot, "highlights/index.html"),
-  "utf8",
-);
+const highlightsHtml = await readFile(resolve(distRoot, "index.html"), "utf8");
 invariant(
   !highlightsHtml.includes("highlights.json") &&
     !highlightsHtml.includes("/v1/highlights"),

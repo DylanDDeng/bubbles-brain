@@ -1,3 +1,4 @@
+import { isRetiredDirectory } from './collectionRoutes';
 import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import { legacyEntryIsRoutable, loadLegacyContent } from './legacyContent';
 import { designBrands } from '../data/designBrands';
@@ -147,7 +148,7 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 	}
 
 	const byRoute = new Map<string, Omit<SiteRecord, 'alternateRoute'>>();
-	for (const record of records) {
+	for (const record of records.filter((record) => !isRetiredDirectory(record.route))) {
 		if (byRoute.has(record.route))
 			throw new Error(`Duplicate site manifest route: ${record.route}`);
 		byRoute.set(record.route, record);

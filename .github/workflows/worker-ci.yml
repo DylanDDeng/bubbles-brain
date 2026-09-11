@@ -28,7 +28,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm ci --prefix astro
 
       - name: Run Worker security tests
         run: npm run test:worker
@@ -48,6 +50,7 @@ jobs:
           npm run admin:check
           npm run content:deployer:check
           npm run content:broker:check
+          npx wrangler deploy --dry-run --config workers/retired-collections/wrangler.toml
 
   astro-verify:
     runs-on: ubuntu-latest

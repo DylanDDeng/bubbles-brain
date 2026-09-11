@@ -9,7 +9,7 @@ describe("retired collection responses", () => {
   it("returns an uncached 404 without consulting a stale origin", async () => {
     const upstream = vi.fn(() => new Response("stale directory"));
     vi.stubGlobal("fetch", upstream);
-    for (const path of Object.keys(collectionDirectories)) {
+    for (const path of [...Object.keys(collectionDirectories), "/highlights/2025/"]) {
       for (const suffix of ["", "?page=2"]) {
         const response = await worker.fetch(new Request(`https://bubblenews.today${path}${suffix}`));
         expect(response.status).toBe(404);
@@ -34,10 +34,10 @@ describe("retired collection responses", () => {
     }
   });
 
-  it("deploys only the nine exact directory paths, without article wildcards", () => {
+  it("deploys only the exact directories and retired year archive, without article wildcards", () => {
     const config = readFileSync("workers/retired-collections/wrangler.toml", "utf8");
     const paths = [...config.matchAll(/pattern = "bubblenews\.today([^"]+)"/g)].map(match => match[1]);
-    expect(paths.sort()).toEqual(Object.keys(collectionDirectories).sort());
+    expect(paths.sort()).toEqual([...Object.keys(collectionDirectories), "/highlights/2025/"].sort());
     expect(paths.every(path => !path.includes("*"))).toBe(true);
   });
 });

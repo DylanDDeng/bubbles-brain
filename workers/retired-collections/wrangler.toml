@@ -1,0 +1,18 @@
+name = "bubble-retired-collections"
+main = "index.ts"
+compatibility_date = "2026-09-11"
+workers_dev = false
+preview_urls = false
+
+# Exact retired paths only. Do not append wildcards: article routes belong to Pages.
+routes = [
+  { pattern = "bubblenews.today/newbie-tutorials/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/codex-tutorials/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/pi-agent-tutorials/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/workbuddy-tutorials/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/highlights/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/vibe-coding/terms/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/vibe-coding/skills/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/vibe-coding/design/", zone_name = "bubblenews.today" },
+  { pattern = "bubblenews.today/benchmarks/", zone_name = "bubblenews.today" },
+]

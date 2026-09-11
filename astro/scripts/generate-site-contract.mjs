@@ -171,6 +171,14 @@ for (const file of await walk(distRoot)) {
 	if (path === '_headers' || path === '_redirects' || path === '.assetsignore') continue;
 	const fileRoute = routeFromPath(path);
 	let owner;
+	if (
+		(ownership.removed_directories ?? []).includes(fileRoute) ||
+		(ownership.removed_directory_patterns ?? []).some((pattern) =>
+			new RegExp(pattern).test(fileRoute),
+		)
+	) {
+		throw new Error(`Duplicate collection directory must not be generated: ${fileRoute}`);
+	}
 	if (matches(fileRoute, ownership.static ?? [])) owner = 'static';
 	else if (matches(fileRoute, ownership.astro ?? [])) owner = 'astro';
 	else throw new Error(`No declared route owner for ${fileRoute} (${path})`);

@@ -1,3 +1,4 @@
+import { isRetiredDirectory } from './collectionRoutes';
 import { readdir, readFile } from 'node:fs/promises';
 import { extname, relative, resolve } from 'node:path';
 
@@ -51,7 +52,7 @@ export interface LegacyContentEntry {
 }
 
 export function legacyEntryIsRoutable(entry: LegacyContentEntry): boolean {
-	if (!PUBLIC_LEGACY_SECTIONS.includes(entry.section)) return false;
+	if (!PUBLIC_LEGACY_SECTIONS.includes(entry.section) || isRetiredDirectory(entry.route)) return false;
 	return entry.isIndex || entry.section !== 'highlights' || entry.frontmatter.kind !== 'bookmark';
 }
 

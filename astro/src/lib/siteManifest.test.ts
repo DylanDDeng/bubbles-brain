@@ -7,13 +7,7 @@ describe('site feeds', () => {
 	it('publishes the Vibe Coding terms route', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records).toContainEqual(
-			expect.objectContaining({
-				route: '/vibe-coding/terms/',
-				title: 'Vibe Coding 术语',
-				section: 'vibe-coding',
-			}),
-		);
+		expect(records.some((record) => record.route === '/vibe-coding/terms/')).toBe(false);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/vibe-coding/terms/frontend/',
@@ -26,13 +20,7 @@ describe('site feeds', () => {
 	it('publishes the Vibe Coding design routes', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records).toContainEqual(
-			expect.objectContaining({
-				route: '/vibe-coding/design/',
-				title: 'Design 设计理念库',
-				section: 'vibe-coding',
-			}),
-		);
+		expect(records.some((record) => record.route === '/vibe-coding/design/')).toBe(false);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/vibe-coding/design/stripe/',
@@ -56,18 +44,12 @@ describe('site feeds', () => {
 	it('publishes the bilingual benchmarks routes as alternates of each other', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records).toContainEqual(
-			expect.objectContaining({
-				route: '/benchmarks/',
-				section: 'benchmarks',
-				alternateRoute: '/en/benchmarks/',
-			}),
-		);
+		expect(records.some((record) => record.route === '/benchmarks/')).toBe(false);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/en/benchmarks/',
 				locale: 'en',
-				alternateRoute: '/benchmarks/',
+				alternateRoute: null,
 			}),
 		);
 		expect(records).toContainEqual(

@@ -62,6 +62,10 @@ describe('knowledge search index', () => {
 					section_label: 'WorkBuddy 教程',
 				}),
 				expect.objectContaining({
+					href: '/workbuddy-tutorials/workbuddy-feishu-workflow-guide/',
+					section_label: 'WorkBuddy 教程',
+				}),
+				expect.objectContaining({
 					href: '/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/',
 					section_label: 'WorkBuddy 教程',
 				}),

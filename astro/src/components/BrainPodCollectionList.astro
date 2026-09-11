@@ -1,0 +1,72 @@
+---
+import type { BrainPodCollection } from '../lib/brainpod';
+interface Props {
+	collection: BrainPodCollection;
+}
+const { collection } = Astro.props;
+const years = [...new Set(collection.items.map((item) => item.date?.slice(0, 4)).filter(Boolean))];
+---
+
+<div data-collection-list={collection.id}>
+	<div class="bc-list-controls" data-list-controls hidden>
+		<label class="sr-only" for={`bc-search-${collection.id}`}>搜索{collection.title}</label>
+		<input
+			id={`bc-search-${collection.id}`}
+			data-list-search
+			type="search"
+			placeholder="搜索标题或简介"
+			autocomplete="off"
+		/>
+		{
+			collection.id === 'highlights' && years.length > 1 && (
+				<select data-list-year aria-label="收录年份">
+					<option value="">全部年份</option>
+					{years.map((year) => (
+						<option value={year}>{year}</option>
+					))}
+				</select>
+			)
+		}
+	</div>
+	<ol class="bc-tracks" id={`bc-list-${collection.id}`}>
+		{
+			collection.items.map((item) => (
+				<li
+					data-list-item
+					data-search={`${item.title} ${item.summary}`.toLocaleLowerCase()}
+					data-year={item.date?.slice(0, 4) || ''}
+				>
+					<a
+						href={item.href}
+						target={item.external ? '_blank' : undefined}
+						rel={item.external ? 'noopener noreferrer' : undefined}
+					>
+						<span>
+							{item.title}
+							<span
+								class="reading-update-dot"
+								data-update-item={item.key}
+								role="img"
+								aria-label="未读更新"
+								title="未读更新"
+								hidden
+							/>
+						</span>
+						<i class="ph ph-arrow-up-right" aria-hidden="true" />
+					</a>
+				</li>
+			))
+		}
+	</ol>
+	<p class="bc-list-empty" data-list-empty hidden>没有匹配的内容。</p>
+	<nav
+		class="bc-list-pagination"
+		data-list-pagination
+		aria-label={`${collection.title}分页`}
+		hidden
+	>
+		<button type="button" data-list-prev aria-controls={`bc-list-${collection.id}`}>上一页</button>
+		<span data-list-status role="status" aria-live="polite"></span>
+		<button type="button" data-list-next aria-controls={`bc-list-${collection.id}`}>下一页</button>
+	</nav>
+</div>

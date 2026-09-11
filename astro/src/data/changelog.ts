@@ -109,7 +109,7 @@ export const changelog: ChangelogItem[] = [
 		links: [
 			{
 				label: '前往「新手村」体验',
-				href: '/newbie-tutorials/',
+				href: '/#bc-newbie-tutorials',
 			},
 		],
 	},
@@ -154,8 +154,8 @@ export const changelog: ChangelogItem[] = [
 			'提供一键复制的 Prompt 指令，帮助 AI 编码工具输出顶级工程代码',
 		],
 		links: [
-			{ label: '浏览 Design 专区', href: '/vibe-coding/design/' },
-			{ label: '探索 Skills 技能库', href: '/vibe-coding/skills/' },
+			{ label: '浏览 Design 专区', href: '/#bc-vibe-coding-design' },
+			{ label: '探索 Skills 技能库', href: '/#bc-vibe-coding-skills' },
 		],
 	},
 	{

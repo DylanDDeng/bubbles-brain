@@ -1,3 +1,4 @@
+import { mountCollectionLists } from './collectionList';
 import { navigate } from 'astro:transitions/client';
 import { brainPodParent, brainPodSections } from '../lib/brainpodSections';
 
@@ -15,6 +16,7 @@ export function mountBrainPodCollection(
 ) {
 	const room = root.querySelector<HTMLElement>('[data-collection-room]');
 	if (!room) return;
+	mountCollectionLists(room, signal);
 	const panels = Array.from(
 		room.querySelectorAll<HTMLElement>('[data-room-panel], [data-room-group]'),
 	);

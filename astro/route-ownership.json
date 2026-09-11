@@ -67,5 +67,19 @@
 		"/en/model-evals-2026.json",
 		"/en/model-evals.json",
 		"/en/x-trending.json"
+	],
+	"removed_directories": [
+		"/newbie-tutorials/",
+		"/codex-tutorials/",
+		"/pi-agent-tutorials/",
+		"/workbuddy-tutorials/",
+		"/highlights/",
+		"/vibe-coding/terms/",
+		"/vibe-coding/skills/",
+		"/vibe-coding/design/",
+		"/benchmarks/"
+	],
+	"removed_directory_patterns": [
+		"^/highlights/\\d{4}/$"
 	]
 }

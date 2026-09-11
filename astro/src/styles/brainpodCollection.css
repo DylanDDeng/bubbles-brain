@@ -137,13 +137,49 @@
 	transform: translate(2px, -2px);
 	color: var(--blue);
 }
-.bc-all-link {
-	display: inline-flex;
+/* Filters and paging stay inside the collection. */
+.bc-list-controls {
+	display: flex;
+	gap: 12px;
+	margin-top: 24px;
+}
+.bc-list-controls input {
+	min-width: 0;
+	flex: 1;
+}
+.bc-list-controls :is(input, select) {
+	font: inherit;
+	font-size: 14px;
+	color: var(--ink);
+	border: 0;
+	border-radius: 8px;
+	background: #f5f5f6;
+	padding: 12px;
+}
+.bc-list-pagination {
+	display: flex;
 	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+.bc-list-pagination button {
+	font: inherit;
+	color: var(--blue);
+	border: 0;
+	background: transparent;
 	min-height: 44px;
-	gap: 16px;
-	font-size: var(--type-ui);
-	color: var(--blue) !important;
+	padding: 8px 0;
+	cursor: pointer;
+}
+.bc-list-pagination button:disabled {
+	color: #a2a6ad;
+	cursor: default;
+}
+.bc-list-empty {
+	padding: 24px 0;
+	color: var(--ink-faint);
 }
 .bc-footer {
 	margin-top: auto;

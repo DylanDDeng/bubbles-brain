@@ -1,9 +1,14 @@
+import { isRetiredDirectory } from './collectionRoutes';
 import { legacyEntryIsRoutable, type LegacyContentEntry } from './legacyContent';
 
 export function legacyRedirectLines(entries: LegacyContentEntry[]): string[] {
 	return entries
 		.filter(legacyEntryIsRoutable)
-		.flatMap((entry) => entry.aliases.map((alias) => `${alias} ${entry.route} 301`))
+		.flatMap((entry) =>
+			entry.aliases
+				.filter((alias) => !isRetiredDirectory(alias))
+				.map((alias) => `${alias} ${entry.route} 301`),
+		)
 		.sort();
 }
 

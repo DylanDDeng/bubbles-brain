@@ -1,3 +1,4 @@
+import { collectionHref } from './collectionRoutes';
 import type { KnowledgeSearchIndex, KnowledgeSearchItem } from './searchIndex';
 import { changelog, type ChangelogItem } from '../data/changelog';
 import { buildReadingUpdates, type ReadingUpdate } from './readingUpdates';
@@ -107,6 +108,7 @@ export function buildBrainPodLibrary(
 		}));
 	const grouped = collections.map((c, index): BrainPodCollection => ({
 		...c,
+		href: collectionHref(c.href),
 		index,
 		kind: 'collection',
 		items: items.filter((i) => i.section === c.id),

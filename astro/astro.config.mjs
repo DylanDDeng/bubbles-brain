@@ -4,6 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
 import { fileURLToPath, URL } from 'node:url';
 
+import { rehypeCollectionLinks } from './src/lib/collectionRoutes.ts';
 import { rehypeArticleFigures } from './src/lib/articleFigures.ts';
 
 const staticRoot = fileURLToPath(new URL('../static', import.meta.url));
@@ -17,7 +18,9 @@ export default defineConfig({
 	output: 'static',
 	trailingSlash: 'always',
 	markdown: {
-		processor: unified({ rehypePlugins: [[rehypeArticleFigures, { staticRoot }]] }),
+		processor: unified({
+			rehypePlugins: [rehypeCollectionLinks, [rehypeArticleFigures, { staticRoot }]],
+		}),
 		shikiConfig: {
 			theme: 'min-light',
 		},

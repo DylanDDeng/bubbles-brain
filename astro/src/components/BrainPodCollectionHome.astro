@@ -6,11 +6,11 @@ import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import CollectionCover from './CollectionCover.astro';
 import SiteActions from './SiteActions.astro';
 import FooterLinks from './FooterLinks.astro';
+import BrainPodCollectionList from './BrainPodCollectionList.astro';
 import BrainPodTermsDirectory from './BrainPodTermsDirectory.astro';
 import '../styles/brainpodCollection.css';
 
 const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
-const previewLimit = 5;
 ---
 
 <section class="brainpod-collection-room" data-collection-room aria-label="知识收藏">
@@ -117,36 +117,7 @@ const previewLimit = 5;
 											{collection.title}
 										</h2>
 									</header>
-									<ol class="bc-tracks">
-										{collection.items.slice(0, previewLimit).map((item) => (
-											<li>
-												<a
-													href={item.href}
-													target={item.external ? '_blank' : undefined}
-													rel={item.external ? 'noopener noreferrer' : undefined}
-												>
-													<span>
-														{item.title}
-														<span
-															class="reading-update-dot"
-															data-update-item={item.key}
-															role="img"
-															aria-label="未读更新"
-															title="未读更新"
-															hidden
-														/>
-													</span>
-													<i class="ph ph-arrow-up-right" aria-hidden="true" />
-												</a>
-											</li>
-										))}
-									</ol>
-									{collection.items.length > previewLimit && (
-										<a class="bc-all-link" href={collection.href}>
-											查看全部 {collection.items.length} 篇
-											<i class="ph ph-arrow-right" aria-hidden="true" />
-										</a>
-									)}
+									<BrainPodCollectionList collection={collection} />
 								</>
 							)}
 						</div>

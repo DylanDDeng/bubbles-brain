@@ -135,7 +135,7 @@ const articleIntro =
 	markdownCollection === 'highlights'
 		? (
 				markdownEntry?.data as {
-					articleIntro?: { author: string; sourceName: string; note: string };
+					articleIntro?: { author?: string; sourceName: string; note: string };
 				}
 			)?.articleIntro
 		: undefined;
@@ -561,7 +561,7 @@ const libraryApi =
 					<h1>{title}</h1>
 					{description && !articleIntro && <p class="article-lede">{description}</p>}
 					<div class="reading-meta">
-						{articleIntro && <span class="reading-author">{articleIntro.author}</span>}
+						{articleIntro?.author && <span class="reading-author">{articleIntro.author}</span>}
 						{record.date && (
 							<time datetime={record.date.toISOString()}>
 								{record.date.toISOString().slice(0, 10)}

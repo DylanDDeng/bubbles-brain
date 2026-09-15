@@ -143,11 +143,11 @@
 	gap: 12px;
 	margin-top: 24px;
 }
-.bc-list-controls input {
+.bc-list-controls input[type='search'] {
 	min-width: 0;
 	flex: 1;
 }
-.bc-list-controls :is(input, select) {
+.bc-list-controls input[type='search'] {
 	font: inherit;
 	font-size: 14px;
 	color: var(--ink);
@@ -155,6 +155,94 @@
 	border-radius: 8px;
 	background: #f5f5f6;
 	padding: 12px;
+}
+.bc-year-filter {
+	position: relative;
+	flex: 0 0 auto;
+	align-self: stretch;
+}
+.bc-year-filter .bc-year-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	min-width: 116px;
+	height: 100%;
+	min-height: 44px;
+	padding: 10px 14px;
+	border: 1px solid #e7e7e5;
+	border-radius: 8px;
+	background: #fff;
+	color: var(--ink);
+	font: 400 14px/1.5 var(--sans);
+	cursor: pointer;
+}
+.bc-year-trigger i {
+	font-size: 12px;
+	color: #838581;
+}
+.bc-year-trigger:hover,
+.bc-year-trigger[aria-expanded='true'] {
+	background: #f6f6f4;
+	border-color: #ccceca;
+}
+.bc-year-trigger[aria-expanded='true'] i {
+	transform: rotate(180deg);
+}
+.bc-year-options {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	z-index: 20;
+	min-width: 152px;
+	padding: 5px;
+	border: 1px solid #e7e7e5;
+	border-radius: 10px;
+	background: #fff;
+	box-shadow:
+		0 8px 24px #23251f0d,
+		0 2px 5px #23251f05;
+}
+.bc-year-options [role='option'] {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	width: 100%;
+	min-height: 40px;
+	padding: 9px 11px;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--ink);
+	font: 400 14px/1.5 var(--sans);
+	text-align: left;
+	cursor: pointer;
+}
+.bc-year-options [role='option'] i {
+	font-size: 13px;
+	visibility: hidden;
+}
+.bc-year-options [aria-selected='true'] {
+	background: #f3f3f0;
+}
+.bc-year-options [aria-selected='true'] i {
+	visibility: visible;
+}
+.bc-year-options [role='option']:hover {
+	background: #f3f3f0;
+}
+.brainpod-collection-room .bc-year-filter button:focus {
+	outline: none;
+	box-shadow: none;
+}
+.brainpod-collection-room .bc-year-filter button:focus-visible {
+	outline: 1px solid #7d8178;
+	outline-offset: 2px;
+}
+.bc-year-options [role='option']:focus-visible {
+	outline-offset: -2px;
+	background: #f3f3f0;
 }
 .bc-list-pagination {
 	display: flex;

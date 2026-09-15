@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { legacyEntryIsRoutable, loadLegacyContent, type LegacyContentEntry } from './legacyContent';
 
 const expectedArticleRoutes = [
+	'/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
+	'/en/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
 	'/highlights/2025-11-10-best-practices-prompt-engineering/',
 	'/highlights/2025-11-14-gpt-5.1-prompt-guide/',
 	'/highlights/2025-11-15-claude-skills-explained/',
@@ -66,6 +68,37 @@ function highlightRecords(entries: LegacyContentEntry[]) {
 }
 
 describe('unified highlights content', () => {
+	it('preserves the Astra skills guide and every instruction example in both languages', async () => {
+		const records = highlightRecords(await loadLegacyContent()).filter(
+			(entry) => entry.frontmatter.externalId === 'rethinking-skills-and-prompts-for-gpt-6-astra',
+		);
+
+		expect(records.map((entry) => entry.locale).sort()).toEqual(['en', 'zh-CN']);
+		for (const entry of records) {
+			expect(entry.frontmatter.sourceUrl).toBe(
+				'https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra',
+			);
+			expect(entry.frontmatter.kind).toBe('article');
+			expect(entry.frontmatter.draft).toBe(false);
+			expect(entry.body.match(/^## /gm)).toHaveLength(4);
+			expect(entry.body.match(/^> /gm)).toHaveLength(5);
+			for (const term of [
+				'$skill-creator',
+				'Postgres',
+				'progressive disclosure',
+				'compaction',
+				'architecture.md',
+				'database.md',
+				'deployment.md',
+				'https://agents.md/',
+				'GPT-5.6 Sol',
+				'Luna',
+			]) {
+				expect(entry.body).toContain(term);
+			}
+		}
+	});
+
 	it('preserves the OpenAI research acceleration article and its measurement limits in both languages', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
 			(entry) => entry.frontmatter.externalId === 'research-acceleration-view-inside-openai',

@@ -19,12 +19,41 @@ const years = [...new Set(collection.items.map((item) => item.date?.slice(0, 4))
 		/>
 		{
 			collection.id === 'highlights' && years.length > 1 && (
-				<select data-list-year aria-label="收录年份">
-					<option value="">全部年份</option>
-					{years.map((year) => (
-						<option value={year}>{year}</option>
-					))}
-				</select>
+				<div class="bc-year-filter" data-year-filter>
+					<input type="hidden" data-list-year value="" />
+					<button
+						type="button"
+						class="bc-year-trigger"
+						data-year-trigger
+						aria-label="收录年份：全部年份"
+						aria-haspopup="listbox"
+						aria-expanded="false"
+						aria-controls={`bc-years-${collection.id}`}
+					>
+						<span data-year-label>全部年份</span>
+						<i class="ph ph-caret-down" aria-hidden="true" />
+					</button>
+					<div
+						class="bc-year-options"
+						id={`bc-years-${collection.id}`}
+						role="listbox"
+						aria-label="收录年份"
+						hidden
+					>
+						{['', ...years].map((year) => (
+							<button
+								type="button"
+								role="option"
+								aria-selected={year === ''}
+								tabindex="-1"
+								data-year-option={year}
+							>
+								<span>{year || '全部年份'}</span>
+								<i class="ph ph-check" aria-hidden="true" />
+							</button>
+						))}
+					</div>
+				</div>
 			)
 		}
 	</div>

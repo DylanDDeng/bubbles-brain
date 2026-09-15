@@ -18,7 +18,7 @@ const highlights = defineCollection({
 		sourceUrl: z.url(),
 		articleIntro: z
 			.object({
-				author: z.string().min(1),
+				author: z.string().min(1).optional(),
 				sourceName: z.string().min(1),
 				note: z.string().min(1),
 			})

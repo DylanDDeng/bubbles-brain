@@ -384,7 +384,7 @@
 .collection-site .article-pagination > a:hover {
 	color: var(--blue);
 }
-.collection-site .article-pagination span {
+.collection-site .article-pagination > a > span {
 	font-size: 12px;
 	font-weight: 400;
 	color: var(--ink-faint);
@@ -396,7 +396,12 @@
 	font-size: 15px;
 	line-height: 1.7;
 	font-weight: 400;
+	max-width: 100%;
 	overflow-wrap: anywhere;
+}
+.collection-site .article-pagination-title {
+	min-width: 0;
+	text-wrap: balance;
 }
 .collection-site .article-pagination i {
 	flex-shrink: 0;
@@ -406,6 +411,9 @@
 	grid-column: 2;
 	text-align: right;
 	align-items: flex-end;
+}
+.collection-site .article-pagination > a:only-child {
+	grid-column: 1 / -1;
 }
 @media (max-width: 600px) {
 	.collection-site .article-pagination {

@@ -61,6 +61,18 @@ describe('site feeds', () => {
 		);
 	});
 
+	it('publishes DeepSWE in both languages with reciprocal alternate routes', async () => {
+		const records = await loadSiteManifest();
+		for (const [route, alternateRoute] of [
+			['/benchmarks/deepswe/', '/en/benchmarks/deepswe/'],
+			['/en/benchmarks/deepswe/', '/benchmarks/deepswe/'],
+		]) {
+			expect(records).toContainEqual(
+				expect.objectContaining({ route, alternateRoute, section: 'benchmarks' }),
+			);
+		}
+	});
+
 	it('keeps every dated compatibility record instead of silently truncating the feed', () => {
 		const records: SiteRecord[] = Array.from({ length: 150 }, (_, index) => ({
 			route: `/daily/2026/01/item-${index}/`,

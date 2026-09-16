@@ -11,6 +11,7 @@ export interface BenchmarkDefinition {
 	id: string;
 	name: Bilingual;
 	source: string;
+	checked_at?: string;
 	url: string;
 	format: 'integer' | 'percent';
 	measures: Bilingual;

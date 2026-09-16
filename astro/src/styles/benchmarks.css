@@ -199,7 +199,7 @@
 }
 
 .bench-table tbody :is(th, td) {
-	padding: 18px 24px 18px 0;
+	padding: 14px 24px 14px 0;
 	vertical-align: top;
 	line-height: 1.6;
 }
@@ -209,10 +209,35 @@
 	font-weight: 400;
 }
 
+.bench-model-identity {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.bench-model-icon {
+	flex: 0 0 18px;
+	width: 18px;
+	height: 18px;
+	margin-top: 3px;
+	object-fit: contain;
+}
+
+.bench-model-initial {
+	display: grid;
+	place-items: center;
+	color: var(--ink-soft);
+	font-size: 14px;
+}
+
+.bench-model-text {
+	min-width: 0;
+}
+
 .bench-model-name {
 	display: block;
 	color: var(--ink);
-	font-size: 17px;
+	font-size: 15px;
 	overflow-wrap: anywhere;
 }
 
@@ -246,7 +271,7 @@
 
 .bench-value {
 	color: var(--ink);
-	font: 16px/1.7 var(--mono);
+	font: 15px/1.7 var(--mono);
 }
 
 .bench-ci {
@@ -381,10 +406,6 @@
 
 	.bench-table tbody th {
 		padding-right: 12px;
-	}
-
-	.bench-model-name {
-		font-size: 16px;
 	}
 }
 

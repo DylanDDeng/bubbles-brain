@@ -1,0 +1,312 @@
+---
+interface Props {
+	mode: 'overview' | 'lab';
+}
+const { mode } = Astro.props;
+// Wilson score intervals for independent Bernoulli trials, z = 1.96.
+const samples = [100, 400, 1600].map((n) => {
+	const p = 0.7;
+	const z = 1.96;
+	const denominator = 1 + (z * z) / n;
+	const center = (p + (z * z) / (2 * n)) / denominator;
+	const half = (z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n))) / denominator;
+	return { n, passed: n * p, low: (center - half) * 100, high: (center + half) * 100 };
+});
+// Every chart uses the same 50–90% scale. Coordinate range: 32–368.
+const x = (percent: number) => 32 + ((percent - 50) / 40) * 336;
+---
+
+{
+	mode === 'overview' ? (
+		<figure class="ci-overview">
+			<header>
+				<>
+					<span>图解 · 示意数据</span>
+					<h2>70% ± 3，分别在说什么？</h2>
+				</>
+			</header>
+			<svg
+				viewBox="0 0 400 148"
+				role="img"
+				aria-label="点估计 70%，95% 置信区间 67% 到 73%，左右各 3 个百分点。这是一组示意数据。"
+			>
+				<line class="ci-axis" x1="32" x2="368" y1="92" y2="92" />
+				{[50, 60, 70, 80, 90].map((tick) => (
+					<text class="ci-tick" x={x(tick)} y="120" text-anchor="middle">
+						{tick}%
+					</text>
+				))}
+				<line class="ci-range" x1={x(67)} x2={x(73)} y1="70" y2="70" />
+				<path class="ci-cap" d={`M ${x(67)} 60 v 20 M ${x(73)} 60 v 20`} />
+				<circle class="ci-point" cx={x(70)} cy="70" r="5" />
+				<text class="ci-score" x="200" y="37" text-anchor="middle">
+					70%
+				</text>
+				<text class="ci-endpoint" x={x(67) - 12} y="74" text-anchor="end">
+					67%
+				</text>
+				<text class="ci-endpoint" x={x(73) + 12} y="74">
+					73%
+				</text>
+			</svg>
+			<figcaption>
+				圆点表示“这次测到了 70%”，蓝线表示“估计还有不确定性，算出的范围是 67%–73%”。这里的 ±
+				3，就是从 70% 往左、往右各 3 个百分点。这是一组用来说明记号的数字，不是下方 100
+				次抽样的计算结果。
+			</figcaption>
+		</figure>
+	) : (
+		<section class="concept-section ci-lab" aria-labelledby="ci-lab-title">
+			<div class="concept-section-heading">
+				<p class="concept-section-index">02 · 动手看看</p>
+				<h2 id="ci-lab-title">同样是 70%，测多少题有区别吗？</h2>
+			</div>
+			<p class="ci-intro">
+				接着上面的糖果例子，把抽一次糖换成测一道题。下面三组示意结果都恰好有 70%
+				通过；点一下题数，看看蓝线怎么变。
+			</p>
+			<fieldset class="ci-choices">
+				<legend>如果分别测了这么多题</legend>
+				{samples.map(({ n }, index) => (
+					<label>
+						<input type="radio" name="ci-sample-size" value={n} checked={index === 0} />
+						<span>{n.toLocaleString('zh-CN')} 题</span>
+					</label>
+				))}
+			</fieldset>
+			{samples.map(({ n, passed, low, high }) => (
+				<div class="ci-sample" data-sample={n}>
+					<div class="ci-summary">
+						<strong>
+							{low.toFixed(1)}%–{high.toFixed(1)}%
+						</strong>
+						<span>
+							95% 置信区间 · {passed.toLocaleString('zh-CN')} / {n.toLocaleString('zh-CN')} 题通过
+						</span>
+					</div>
+					<svg
+						viewBox="0 0 400 110"
+						role="img"
+						aria-label={`${n} 道独立任务，观测通过率 70%，95% Wilson 置信区间 ${low.toFixed(1)}% 到 ${high.toFixed(1)}%。`}
+					>
+						<line class="ci-axis" x1="32" x2="368" y1="64" y2="64" />
+						{[50, 60, 70, 80, 90].map((tick) => (
+							<text class="ci-tick" x={x(tick)} y="94" text-anchor="middle">
+								{tick}%
+							</text>
+						))}
+						<line class="ci-range" x1={x(low)} x2={x(high)} y1="40" y2="40" />
+						<path class="ci-cap" d={`M ${x(low)} 30 v 20 M ${x(high)} 30 v 20`} />
+						<circle class="ci-point" cx={x(70)} cy="40" r="5" />
+					</svg>
+					<p>
+						区间总宽度约为 <strong>{(high - low).toFixed(1)} 个百分点</strong>。
+						{n === 100
+							? '就像只摸了一小部分糖，估计范围还比较宽。'
+							: '分数还是 70%，范围却收窄了：我们估得更准了，模型并没有因此变强。'}
+					</p>
+				</div>
+			))}
+			<details class="ci-method">
+				<summary>想深入一点：这些范围怎么算？</summary>
+				<p>
+					三组结果都使用 95% Wilson 置信区间（z =
+					1.96），假设每道题彼此独立、来自同一类目标任务，结果只有通过或失败。这是教学数据，不是真实模型成绩。
+				</p>
+				<p>
+					重复同一道题，或者只挑一类很相似的题，不能简单当成增加了同样多的独立样本。“95%”描述这种方法长期能覆盖真实值的比例，不是对已经算出的某一个区间再分配
+					95% 的概率。
+				</p>
+				<p>
+					区间不一定左右对称；榜单上的 ±
+					也可能表示标准差等其他东西，要看说明。两个模型的区间有重叠，不能直接证明它们没有差异，需要针对分数之差做合适的统计分析。
+				</p>
+			</details>
+			<p class="ci-links">
+				<>
+					<a href="/benchmarks/deepswe/#scores">回到 DeepSWE 看真实成绩 →</a>
+					<a
+						href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda352.htm"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						延伸阅读：NIST 对置信区间的解释 ↗
+					</a>
+				</>
+			</p>
+		</section>
+	)
+}
+
+<style>
+	.ci-overview {
+		margin: 0 0 64px;
+		padding: 28px 32px;
+		border: 1px solid var(--rule);
+		border-radius: 16px;
+		background: var(--paper);
+	}
+	.ci-overview header span {
+		color: var(--ink-soft);
+		font-size: 13px;
+	}
+	.ci-overview h2 {
+		margin: 10px 0 0;
+		font-size: 20px;
+		font-weight: 500;
+	}
+	svg {
+		display: block;
+		width: 100%;
+		max-width: 560px;
+		margin: 20px auto 0;
+		overflow: visible;
+	}
+	.ci-axis {
+		stroke: var(--rule);
+		stroke-width: 1;
+	}
+	.ci-range {
+		stroke: var(--blue);
+		stroke-width: 5;
+		stroke-linecap: round;
+	}
+	.ci-cap {
+		stroke: var(--blue);
+		stroke-width: 2;
+	}
+	.ci-point {
+		fill: var(--blue);
+		stroke: var(--paper);
+		stroke-width: 2;
+	}
+	.ci-tick {
+		fill: var(--ink-soft);
+		font-size: 12px;
+	}
+	.ci-score {
+		fill: var(--ink);
+		font-size: 22px;
+		font-weight: 500;
+	}
+	.ci-endpoint {
+		fill: var(--ink-soft);
+		font-size: 13px;
+	}
+	figcaption,
+	.ci-intro,
+	.ci-sample p,
+	.ci-method {
+		color: var(--ink-soft);
+		font-size: 15px;
+		line-height: 1.85;
+	}
+	figcaption {
+		margin-top: 8px;
+	}
+	.ci-intro {
+		margin: 24px 0;
+	}
+	.ci-choices {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin: 0 0 24px;
+		padding: 0;
+		border: 0;
+	}
+	.ci-choices legend {
+		margin-bottom: 12px;
+		font-size: 14px;
+		color: var(--ink-soft);
+	}
+	.ci-choices label {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 44px;
+		padding: 0 16px;
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		font-size: 15px;
+		cursor: pointer;
+	}
+	.ci-choices label:has(:checked) {
+		color: var(--blue);
+		border-color: var(--blue);
+	}
+	.ci-choices input {
+		accent-color: var(--blue);
+		margin: 0;
+	}
+	.ci-choices label:has(:focus-visible) {
+		outline: 2px solid var(--blue);
+		outline-offset: 3px;
+	}
+	.ci-sample {
+		display: none;
+		padding: 24px;
+		background: var(--paper-muted);
+		border-radius: 12px;
+	}
+	.ci-lab:has([value='100']:checked) [data-sample='100'],
+	.ci-lab:has([value='400']:checked) [data-sample='400'],
+	.ci-lab:has([value='1600']:checked) [data-sample='1600'] {
+		display: block;
+	}
+	.ci-summary strong {
+		display: block;
+		font-size: 26px;
+		font-weight: 500;
+		font-variant-numeric: tabular-nums;
+	}
+	.ci-summary span {
+		display: block;
+		margin-top: 8px;
+		color: var(--ink-soft);
+		font-size: 14px;
+	}
+	.ci-sample p {
+		margin-bottom: 0;
+	}
+	.ci-method {
+		margin-top: 20px;
+		font-size: 14px;
+	}
+	.ci-method summary {
+		cursor: pointer;
+		color: var(--blue);
+		padding-block: 12px;
+	}
+	.ci-method summary:focus-visible {
+		outline: 2px solid var(--blue);
+		outline-offset: 4px;
+	}
+	.ci-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 24px;
+		font-size: 14px;
+		line-height: 1.7;
+	}
+	.ci-links a {
+		color: var(--blue);
+	}
+	@media (max-width: 600px) {
+		.ci-overview {
+			padding: 20px 16px;
+		}
+		.ci-overview h2 {
+			font-size: 18px;
+		}
+		.ci-sample {
+			padding: 20px 16px;
+		}
+		.ci-choices {
+			gap: 8px;
+		}
+		.ci-choices label {
+			padding: 0 12px;
+		}
+	}
+</style>

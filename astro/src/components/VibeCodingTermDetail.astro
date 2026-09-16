@@ -4,6 +4,7 @@ import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingDetailProfile } from '../data/vibeCodingTermDetails';
 import VibeCodingConceptVisual from './VibeCodingConceptVisual.astro';
 import VibeCodingFlowLab from './VibeCodingFlowLab.astro';
+import ConfidenceIntervalExample from './ConfidenceIntervalExample.astro';
 import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import '../styles/vibe-coding-term-detail.css';
 import '../styles/cat-curator.css';
@@ -61,7 +62,13 @@ const { concept, profile, previousConcept, nextConcept } = Astro.props;
 		</div>
 	</header>
 
-	<VibeCodingConceptVisual concept={concept} profile={profile} />
+	{
+		concept.id === 'confidence-interval' ? (
+			<ConfidenceIntervalExample mode="overview" />
+		) : (
+			<VibeCodingConceptVisual concept={concept} profile={profile} />
+		)
+	}
 
 	<section class="concept-explanation" aria-labelledby="concept-understand-title">
 		<div class="concept-section-heading">
@@ -72,12 +79,18 @@ const { concept, profile, previousConcept, nextConcept } = Astro.props;
 			<p class="concept-explanation-lead">{concept.description}</p>
 			<blockquote>
 				<span><i class="ph ph-lightbulb" aria-hidden="true"></i>换个角度想</span>
-				<p>{profile.analogy}</p>
+				{profile.analogy.split('\n\n').map((paragraph) => <p>{paragraph}</p>)}
 			</blockquote>
 		</div>
 	</section>
 
-	<VibeCodingFlowLab concept={concept} profile={profile} />
+	{
+		concept.id === 'confidence-interval' ? (
+			<ConfidenceIntervalExample mode="lab" />
+		) : (
+			<VibeCodingFlowLab concept={concept} profile={profile} />
+		)
+	}
 
 	<section class="concept-section" aria-labelledby="concept-scenes-title">
 		<div class="concept-section-heading">

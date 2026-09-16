@@ -1564,6 +1564,10 @@
 	line-height: 1.85;
 }
 
+.concept-explanation blockquote p + p {
+	margin-top: 16px;
+}
+
 .concept-flow-lab {
 	display: grid;
 	grid-template-columns: minmax(250px, 0.78fr) minmax(0, 1.22fr);

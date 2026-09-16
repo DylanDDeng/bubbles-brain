@@ -63,6 +63,31 @@ describe('benchmark ledger', () => {
 		expect(benchmarkRoute('tbench-4', 'en')).toBe('/en/benchmarks/tbench-4/');
 	});
 
+	it('keeps the DeepSWE v1.1 snapshot separate from older benchmark checks', () => {
+		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'deepswe');
+		expect(benchmark).toMatchObject({
+			checked_at: '2026-09-15',
+			url: 'https://deepswe.datacurve.ai/',
+			format: 'percent',
+		});
+		expect(benchmarkLedger.checked_at).toBe('2026-09-07');
+		const rows = rankedScores('deepswe');
+		expect(rows).toHaveLength(21);
+		expect(rows[0]).toMatchObject({
+			model: { id: 'gpt-6-astra-xhigh' },
+			score: { value: 74.1, ci: 2.9, agent: 'mini-swe-agent' },
+		});
+		expect(rows.at(-1)).toMatchObject({
+			model: { id: 'gemini-3-5-flash-high' },
+			score: { value: 36.1 },
+		});
+		for (const { score } of rows) {
+			expect(score.agent).toBe('mini-swe-agent');
+			expect(score.value).toBeLessThanOrEqual(100);
+			expect(score.ci).toBeGreaterThan(0);
+		}
+	});
+
 	it('returns Chinese details to the homepage tab and keeps the English directory fallback', async () => {
 		const component = await readFile(
 			new URL('../components/BenchmarkDetail.astro', import.meta.url),

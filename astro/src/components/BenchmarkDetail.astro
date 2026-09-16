@@ -1,4 +1,5 @@
 ---
+import { benchmarkIcons } from '../lib/benchmarkIcons';
 import {
 	benchmarkLedger,
 	benchmarkParagraphs,
@@ -21,7 +22,7 @@ const isEnglish = locale === 'en';
 const rows = rankedScores(benchmark.id);
 const notes = collectNotes(rows);
 const noteIndex = new Map(notes.map((note, index) => [note.key, index + 1]));
-const checkedAt = benchmarkLedger.checked_at;
+const checkedAt = benchmark.checked_at ?? benchmarkLedger.checked_at;
 const dateLabel = new Intl.DateTimeFormat(locale, {
 	year: 'numeric',
 	month: 'long',
@@ -123,9 +124,29 @@ const scoreReading = pick(benchmark.description, locale).replace(
 									data-agent={score.agent ?? ''}
 								>
 									<th scope="row">
-										<span class="bench-model-name">{model.name}</span>
-										<span class="bench-creator">{model.creator}</span>
-										{score.agent && <span class="bench-mobile-agent">Agent · {score.agent}</span>}
+										<div class="bench-model-identity">
+											{benchmarkIcons[model.creator] ? (
+												<img
+													class="bench-model-icon"
+													src={benchmarkIcons[model.creator]}
+													width="18"
+													height="18"
+													alt=""
+													aria-hidden="true"
+												/>
+											) : (
+												<span class="bench-model-icon bench-model-initial" aria-hidden="true">
+													{model.creator.charAt(0)}
+												</span>
+											)}
+											<div class="bench-model-text">
+												<span class="bench-model-name">{model.name}</span>
+												<span class="bench-creator">{model.creator}</span>
+												{score.agent && (
+													<span class="bench-mobile-agent">Agent · {score.agent}</span>
+												)}
+											</div>
+										</div>
 									</th>
 									{showAgent && <td class="bench-agent-cell">{score.agent ?? '—'}</td>}
 									<td class="bench-score" data-value={score.value}>

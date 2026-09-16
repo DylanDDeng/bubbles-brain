@@ -191,6 +191,13 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				chineseName: '技能',
 				description: '封装特定任务的方法、约束、脚本和素材，让 Agent 稳定复用一套工作流程。',
 			},
+			{
+				id: 'confidence-interval',
+				name: 'Confidence Interval',
+				chineseName: '置信区间',
+				description:
+					'只测一部分题，算出的分数难免有偶然性。置信区间就是给这个估计配上一个范围，提醒你不要把单次分数看得太精确。例如 70% ± 3 个百分点，表示区间从 67% 到 73%。',
+			},
 		],
 	},
 	{

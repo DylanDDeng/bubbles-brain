@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { vibeCodingTermCategories, getVibeCodingConcepts } from '../data/vibeCodingTerms';
+import { vibeCodingDetailProfiles } from '../data/vibeCodingTermDetails';
 import { vibeCodingPatternProfiles } from '../data/vibeCodingPatternDetails';
 import { brainPodTermReturn, buildBrainPodTerms } from './brainpodTerms';
 
@@ -22,6 +23,20 @@ describe('Collection room term directory', () => {
 				vibeCodingTermCategories[index].terms,
 			);
 		}
+	});
+	it('publishes Confidence Interval once in AI with its own explanation and return link', () => {
+		expect(
+			getVibeCodingConcepts().filter((concept) => concept.id === 'confidence-interval'),
+		).toEqual([
+			expect.objectContaining({
+				categoryId: 'ai-agent',
+				name: 'Confidence Interval',
+				chineseName: '置信区间',
+				isCategory: false,
+			}),
+		]);
+		expect(vibeCodingDetailProfiles['confidence-interval']).toBeDefined();
+		expect(brainPodTermReturn('confidence-interval')).toBe('/#bc-vibe-coding-terms-ai-agent-2');
 	});
 	it('places Divider after Section in the UI layout group with a detail route', () => {
 		const terms = vibeCodingTermCategories.find((category) => category.id === 'ui-patterns')!.terms;

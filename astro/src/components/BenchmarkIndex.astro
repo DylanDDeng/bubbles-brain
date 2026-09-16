@@ -1,5 +1,6 @@
 ---
-import { benchmarkLedger, benchmarkRoute, pick, type BenchmarkLocale } from '../lib/benchmarks';
+import type { BenchmarkLocale } from '../lib/benchmarks';
+import BenchmarkDirectory from './BenchmarkDirectory.astro';
 import '../styles/benchmarks.css';
 
 interface Props {
@@ -26,19 +27,5 @@ const isEnglish = locale === 'en';
 		</p>
 	</header>
 
-	<ol class="bench-list">
-		{
-			benchmarkLedger.benchmarks.map((benchmark) => (
-				<li>
-					<a href={benchmarkRoute(benchmark.id, locale)}>
-						<div>
-							<h2 class="bench-list-name">{pick(benchmark.name, locale)}</h2>
-							<p class="bench-list-measures">{pick(benchmark.measures, locale)}</p>
-						</div>
-						<i class="ph ph-arrow-up-right" aria-hidden="true" />
-					</a>
-				</li>
-			))
-		}
-	</ol>
+	<BenchmarkDirectory locale={locale} />
 </section>

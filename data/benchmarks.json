@@ -4,6 +4,7 @@
   "benchmarks": [
     {
       "id": "aa-index",
+      "category": "general",
       "name": {
         "zh": "Artificial Analysis Intelligence Index",
         "en": "Artificial Analysis Intelligence Index"
@@ -26,6 +27,7 @@
     },
     {
       "id": "tbench-4",
+      "category": "agent",
       "name": { "zh": "Terminal-Bench 4.0", "en": "Terminal-Bench 4.0" },
       "source": "tbench.ai",
       "url": "https://www.tbench.ai/leaderboard/terminal-bench/4.0",
@@ -45,6 +47,7 @@
     },
     {
       "id": "deepswe",
+      "category": "coding",
       "name": {
         "zh": "DeepSWE v1.1",
         "en": "DeepSWE v1.1"

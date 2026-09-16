@@ -1,0 +1,43 @@
+---
+import { benchmarkRoute, groupedBenchmarks, pick, type BenchmarkLocale } from '../lib/benchmarks';
+import '../styles/benchmarks.css';
+
+interface Props {
+	locale: BenchmarkLocale;
+	embedded?: boolean;
+}
+const { locale, embedded = false } = Astro.props;
+const Heading = embedded ? 'h3' : 'h2';
+---
+
+<div class="bench-directory">
+	{
+		groupedBenchmarks().map((group) => (
+			<section class="bench-directory-group" aria-labelledby={`bench-group-${group.id}`}>
+				<Heading class="bench-domain" id={`bench-group-${group.id}`}>
+					{pick(group.name, locale)}
+				</Heading>
+				<p class="bench-domain-description">{pick(group.description, locale)}</p>
+				<ul class="bench-directory-list">
+					{group.benchmarks.map((benchmark) => (
+						<li>
+							<a href={benchmarkRoute(benchmark.id, locale)}>
+								<span>
+									{pick(benchmark.name, locale)}
+									<span
+										class="reading-update-dot"
+										data-update-item={benchmarkRoute(benchmark.id, locale)}
+										role="img"
+										aria-label={locale === 'en' ? 'Unread update' : '未读更新'}
+										hidden
+									/>
+								</span>
+								<i class="ph ph-arrow-up-right" aria-hidden="true" />
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+</div>

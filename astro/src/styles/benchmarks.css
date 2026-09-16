@@ -39,57 +39,72 @@
 	border-radius: 2px;
 }
 
-/* Index: one row per benchmark */
-.bench-list {
-	max-width: 760px;
-	margin: 56px 0 0 auto;
+/* Shared directory: one primary domain per benchmark. */
+.bench-directory {
+	margin-top: 28px;
+}
+.bench-directory-group + .bench-directory-group {
+	margin-top: 24px;
+	padding-top: 22px;
+	border-top: 1px solid var(--rule, #e4e7eb);
+}
+.bench-domain {
+	margin: 0;
+	color: var(--blue, #2162cc);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.6;
+}
+.bench-domain-description {
+	margin: 5px 0 0;
+	color: var(--ink-faint);
+	font-size: 13px;
+	line-height: 1.7;
+}
+.bench-directory-list {
+	margin: 5px 0 0;
 	padding: 0;
 	list-style: none;
 }
-
-.bench-list li + li {
-	margin-top: 12px;
-}
-
-.bench-list a {
+.bench-directory-list a {
 	display: flex;
-	justify-content: space-between;
 	align-items: baseline;
-	gap: 24px;
-	padding: 24px 0;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 10px 0;
 	color: var(--ink);
+	font-size: 18px;
+	line-height: 1.6;
 	text-decoration: none;
 }
-
-.bench-list-name {
-	margin: 0;
-	font-size: 22px;
-	font-weight: 500;
-	line-height: 1.5;
-	letter-spacing: 0;
+.bench-directory-list a > span {
+	min-width: 0;
+	overflow-wrap: anywhere;
+	text-wrap: balance;
 }
-
-.bench-list-measures {
-	margin: 8px 0 0;
-	color: var(--ink-soft);
-	font-size: 16px;
-	line-height: 1.65;
-}
-
-.bench-list i {
+.bench-directory-list i {
 	flex-shrink: 0;
 	color: var(--ink-faint);
 	font-size: 17px;
 	transition: transform 160ms ease-out;
 }
-
-.bench-list a:hover .bench-list-name,
-.bench-list a:hover i {
+.bench-directory-list a:hover,
+.bench-directory-list a:hover i {
 	color: var(--blue);
 }
-
-.bench-list a:hover i {
+.bench-directory-list a:hover i {
 	transform: translate(2px, -2px);
+}
+.bench-directory-list a:focus-visible {
+	outline: 2px solid var(--blue);
+	outline-offset: 4px;
+}
+.bench-index .bench-directory {
+	max-width: 760px;
+	margin: 48px 0 0 auto;
+}
+.bench-detail-domain {
+	margin: 0 0 12px;
 }
 
 /* Detail: explainer */
@@ -363,17 +378,13 @@
 }
 
 @media (max-width: 600px) {
-	.bench-list {
+	.bench-index .bench-directory {
 		margin-top: 32px;
 	}
 
-	.bench-list a {
+	.bench-directory-list a {
 		gap: 16px;
-		padding-block: 20px;
-	}
-
-	.bench-list-name {
-		font-size: 20px;
+		font-size: 17px;
 	}
 
 	.bench-guide {
@@ -410,7 +421,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.bench-list i {
+	.bench-directory-list i {
 		transition: none;
 	}
 }

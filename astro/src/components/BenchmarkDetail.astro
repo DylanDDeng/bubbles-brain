@@ -2,6 +2,7 @@
 import { benchmarkIcons } from '../lib/benchmarkIcons';
 import {
 	benchmarkLedger,
+	benchmarkCategories,
 	benchmarkParagraphs,
 	collectNotes,
 	formatScore,
@@ -43,6 +44,14 @@ const scoreReading = pick(benchmark.description, locale).replace(
 			<i class="ph ph-arrow-left" aria-hidden="true"></i>
 			Benchmarks
 		</a>
+		<p class="bench-domain bench-detail-domain">
+			{
+				pick(
+					benchmarkCategories.find((category) => category.id === benchmark.category)!.name,
+					locale,
+				)
+			}
+		</p>
 		<h1>{pick(benchmark.name, locale)}</h1>
 		<p class="bench-lede">{pick(benchmark.measures, locale)}</p>
 	</header>

@@ -10,6 +10,7 @@ import {
 	benchmarkParagraphs,
 	collectNotes,
 	formatScore,
+	groupedBenchmarks,
 	rankedScores,
 } from './benchmarks';
 
@@ -20,6 +21,33 @@ describe('benchmark ledger', () => {
 		);
 		const validate = new Ajv({ allErrors: true, strict: true }).compile(schema);
 		expect(validate(benchmarkLedger), JSON.stringify(validate.errors, null, 2)).toBe(true);
+		for (const category of [undefined, 'unknown']) {
+			const invalid = structuredClone(benchmarkLedger);
+			Object.assign(invalid.benchmarks[0]!, { category });
+			expect(validate(invalid)).toBe(false);
+		}
+	});
+
+	it('groups every benchmark once by primary domain and omits empty groups', () => {
+		const groups = groupedBenchmarks();
+		expect(
+			groups.map((group) => [group.id, group.benchmarks.map((benchmark) => benchmark.id)]),
+		).toEqual([
+			['general', ['aa-index']],
+			['coding', ['deepswe']],
+			['agent', ['tbench-4']],
+		]);
+		const ids = groups.flatMap((group) => group.benchmarks.map((benchmark) => benchmark.id));
+		expect(ids.length).toBe(new Set(ids).size);
+		expect(ids.slice().sort()).toEqual(
+			benchmarkLedger.benchmarks.map((benchmark) => benchmark.id).sort(),
+		);
+		expect(groupedBenchmarks([])).toEqual([]);
+		expect(
+			groupedBenchmarks(
+				benchmarkLedger.benchmarks.filter((benchmark) => benchmark.category === 'coding'),
+			).map((group) => group.id),
+		).toEqual(['coding']);
 	});
 
 	it('keeps model and benchmark ids unique and every score attached to a known benchmark', () => {
@@ -39,6 +67,7 @@ describe('benchmark ledger', () => {
 			benchmarks: [
 				{
 					id: 'a',
+					category: 'general',
 					name: { zh: 'A', en: 'A' },
 					source: 's',
 					url: 'https://example.com',

@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 import { designBrands } from '../data/designBrands';
 import { vibeCodingSkillCategories, vibeCodingSkillMeta } from '../data/vibeCodingSkills';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
-import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
+import { benchmarkCategories, benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import {
 	legacyEntryIsRoutable,
 	loadLegacyContent,
@@ -273,7 +273,8 @@ function buildBenchmarkItems(locale: LegacyLocale): KnowledgeSearchItem[] {
 	return benchmarkLedger.benchmarks.map((benchmark): KnowledgeSearchItem => {
 		const title = pick(benchmark.name, locale);
 		const summary = pick(benchmark.measures, locale);
-		const tags = ['Benchmark', benchmark.source];
+		const category = benchmarkCategories.find((category) => category.id === benchmark.category)!;
+		const tags = ['Benchmark', benchmark.source, pick(category.name, locale)];
 		const route = benchmarkRoute(benchmark.id, locale);
 		return {
 			key: route,

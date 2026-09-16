@@ -7,8 +7,38 @@ interface Bilingual {
 	en: string;
 }
 
+export const benchmarkCategories = [
+	{
+		id: 'general',
+		name: { zh: '综合能力', en: 'General intelligence' },
+		description: {
+			zh: '看知识、推理、数学与编程的总体表现。',
+			en: 'Overall performance across knowledge, reasoning, math and coding.',
+		},
+	},
+	{
+		id: 'coding',
+		name: { zh: 'Coding · 软件工程', en: 'Coding · Software engineering' },
+		description: {
+			zh: '看能否读懂代码库、修复问题并完成开发需求。',
+			en: 'Understanding repositories, fixing bugs and delivering working changes.',
+		},
+	},
+	{
+		id: 'agent',
+		name: { zh: 'Agent · 终端任务', en: 'Agents · Terminal tasks' },
+		description: {
+			zh: '看能否使用工具，完成编程、数据处理和环境配置等任务。',
+			en: 'Using tools to complete coding, data processing and environment setup tasks.',
+		},
+	},
+] as const;
+
+export type BenchmarkCategory = (typeof benchmarkCategories)[number]['id'];
+
 export interface BenchmarkDefinition {
 	id: string;
+	category: BenchmarkCategory;
 	name: Bilingual;
 	source: string;
 	checked_at?: string;
@@ -42,6 +72,16 @@ export interface BenchmarkLedger {
 }
 
 export const benchmarkLedger = ledger as BenchmarkLedger;
+
+/** Each benchmark has one primary domain; only render populated groups. */
+export function groupedBenchmarks(benchmarks = benchmarkLedger.benchmarks) {
+	return benchmarkCategories
+		.map((category) => ({
+			...category,
+			benchmarks: benchmarks.filter((benchmark) => benchmark.category === category.id),
+		}))
+		.filter((group) => group.benchmarks.length > 0);
+}
 
 export function pick(text: Bilingual, locale: BenchmarkLocale): string {
 	return locale === 'en' ? text.en : text.zh;

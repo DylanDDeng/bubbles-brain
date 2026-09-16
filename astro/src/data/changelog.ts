@@ -17,6 +17,111 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-16',
+		tag: '模型评测与 AI 术语',
+		type: 'content',
+		title: '新增 DeepSWE 评测与置信区间图解',
+		summary:
+			'Benchmarks 收录 DeepSWE v1.1 软件工程评测；AI 术语新增 Confidence Interval，用抽糖果的例子解释分数背后的不确定性。',
+		highlights: [
+			'DeepSWE 页面介绍任务、评测方式与阅读要点，整理官方快照中的 21 个模型成绩、推理设置和置信区间',
+			'各评测表格增加模型品牌图标，缩小字体并调整行距，让模型与分数更容易对照',
+			'置信区间配有样本量切换实验，演示抽样数量如何影响区间宽度，并解释 95% 置信水平的含义',
+		],
+		links: [
+			{ label: '查看 DeepSWE', href: '/benchmarks/deepswe/' },
+			{ label: '理解置信区间', href: '/vibe-coding/terms/confidence-interval/' },
+		],
+	},
+	{
+		date: '2026-09-15',
+		tag: '精选阅读与筛选体验',
+		type: 'content',
+		title: '收录 OpenAI Astra Skills 与提示词指南',
+		summary:
+			'新增 OpenAI 官方博文《重新审视 GPT-6 Astra 的 Skills 与提示词》中英双语全文，讨论模型升级后如何调整 Skill 描述、上下文与任务完成标准。',
+		highlights: [
+			'中文版本保留技术细节、示例与原文出处，方便对照阅读',
+			'栏目年份筛选改为与网站风格一致的下拉菜单，调整选中态，并支持键盘操作',
+		],
+		links: [
+			{
+				label: '阅读 Astra Skills 与提示词指南',
+				href: '/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
+			},
+		],
+	},
+	{
+		date: '2026-09-11',
+		tag: '教程与栏目导航',
+		type: 'feature',
+		readingUpdates: ['/workbuddy-tutorials/workbuddy-feishu-workflow-guide/'],
+		title: '新增 WorkBuddy 飞书实战，统一栏目目录入口',
+		summary:
+			'WorkBuddy 教程新增飞书工作流实战；各栏目的目录统一到首页对应分区，减少内容重复、入口混淆的问题。',
+		highlights: [
+			'通过群消息总结与 Skills 收藏、截图记账与数据看板、项目周报三个案例，介绍 WorkBuddy 与飞书的配合方式',
+			'统一教程、精选阅读、Benchmarks 和 Vibe Coding 等栏目的目录入口，保留文章详情页地址',
+			'移除旧栏目目录和旧年份归档页，修复旧目录缓存仍显示重复内容的问题',
+		],
+		links: [
+			{
+				label: '阅读 WorkBuddy 飞书实战',
+				href: '/workbuddy-tutorials/workbuddy-feishu-workflow-guide/',
+			},
+			{ label: '浏览教程目录', href: '/#bc-tutorials' },
+		],
+	},
+	{
+		date: '2026-09-10',
+		tag: '界面术语与视觉优化',
+		type: 'polish',
+		readingUpdates: ['/vibe-coding/terms/date-picker/'],
+		title: '新增日期选择器图鉴，统一 Benchmarks 3D 封面',
+		summary:
+			'界面图鉴新增 Date Picker，介绍日期选择器的用途与常见形态；Benchmarks 换上与其他栏目一致的 3D 封面。',
+		highlights: [
+			'通过结构图、变体与辨认练习，说明日期选择器在界面中的用法',
+			'统一评测栏目封面的建模风格，修复从详情页返回时光影发生跳变的问题',
+		],
+		links: [
+			{ label: '了解 Date Picker', href: '/vibe-coding/terms/date-picker/' },
+			{ label: '浏览 Benchmarks', href: '/#bc-benchmarks' },
+		],
+	},
+	{
+		date: '2026-09-09',
+		tag: '模型评测与界面术语',
+		type: 'feature',
+		readingUpdates: ['/vibe-coding/terms/divider/'],
+		title: 'Benchmarks 栏目上线，新增分割线图鉴',
+		summary:
+			'新增模型评测栏目，把榜单成绩与评测解释放在一起，帮助读者理解每项测试在测什么、分数应该怎么看。',
+		highlights: [
+			'评测详情提供中英双语说明、模型成绩、数据来源与阅读提示，支持表格排序',
+			'接入首页栏目导航与知识搜索，阅读详情后可以返回对应栏目',
+			'界面图鉴新增 Divider，解释分割线如何组织内容层次，以及不同形式的使用场景',
+		],
+		links: [
+			{ label: '探索 Benchmarks', href: '/#bc-benchmarks' },
+			{ label: '了解 Divider', href: '/vibe-coding/terms/divider/' },
+		],
+	},
+	{
+		date: '2026-09-07',
+		tag: '首页与阅读体验',
+		type: 'feature',
+		title: 'BrainPod 首页上线，新增逐篇未读提示',
+		summary:
+			'首页改为可交互的 3D iPod 知识入口，配合栏目模型封面、滚动展开和屏幕内阅读，让浏览知识库多一种方式。',
+		highlights: [
+			'支持通过 iPod 菜单浏览栏目，滚动进入完整页面，并提供猫咪锁屏与本地时钟',
+			'栏目列表和 iPod 菜单增加逐篇未读圆点，打开文章后更新已读状态；首次访问显示近三天的内容更新',
+			'统一导航、正文排版与页脚，完善响应式图片，适配不同屏幕下的阅读',
+		],
+		links: [{ label: '体验 BrainPod 首页', href: '/' }],
+	},
+	{
 		date: '2026-09-06',
 		tag: '精选阅读',
 		type: 'content',

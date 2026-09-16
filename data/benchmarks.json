@@ -42,6 +42,29 @@
         "zh": "分数怎么读：解决率百分比，附 95% 置信区间；官方榜与厂商自报可能不同，不同时另加脚注。",
         "en": "How to read it: percentage of tasks solved with a 95% confidence interval; when the official leaderboard and a vendor’s own report differ, both are footnoted."
       }
+    },
+    {
+      "id": "deepswe",
+      "name": {
+        "zh": "DeepSWE v1.1",
+        "en": "DeepSWE v1.1"
+      },
+      "source": "Datacurve · DeepSWE",
+      "url": "https://deepswe.datacurve.ai/",
+      "checked_at": "2026-09-15",
+      "format": "percent",
+      "measures": {
+        "zh": "软件工程能力：在真实代码库中完成长流程、多文件的开发任务",
+        "en": "Software engineering: completing long-horizon, multi-file tasks in real repositories"
+      },
+      "explainer": {
+        "zh": "DeepSWE 是 Datacurve 发布的软件工程评测，考察编程 Agent 能否读懂已有项目、规划修改并完成可验收的开发工作。它包含 113 个原创任务，覆盖 91 个代码仓库，以及 TypeScript、JavaScript、Python、Go 和 Rust 五种语言。任务不仅是修 bug，也包括添加功能、扩展 API 和处理复杂行为；例如为命令行工具增加配置文件支持，或为 XML 库实现差异比较与补丁操作。题目由作者从头设计，而非直接改编已有提交或 PR，目的是降低模型见过参考答案的可能性，但这不等于代码仓库本身从未出现在训练数据中。官方榜单统一使用 mini-swe-agent，让模型在相同 Agent 框架下完成任务，并通过行为测试验收。v1.1 只提取 Agent 提交的代码补丁，在独立容器内运行验证；同时隐藏起点之后的 Git 历史，降低修改测试环境或寻找后续实现来绕过评测的风险。它适合参考模型处理复杂工程需求的能力；真实使用中的成绩仍会受 Agent 框架、推理档位和任务领域影响。",
+        "en": "DeepSWE is a software engineering benchmark from Datacurve that tests whether coding agents can understand an existing project, plan changes and deliver working software. Its 113 original tasks span 91 repositories and five languages: TypeScript, JavaScript, Python, Go and Rust. Tasks include bug fixes, new features, API extensions and complex behavior changes, such as adding configuration-file support to a CLI or implementing XML diff and patch operations. Authors design tasks from scratch rather than adapting existing commits or pull requests, aiming to reduce exposure to reference solutions; this does not mean the underlying repositories were never in training data. The official leaderboard uses mini-swe-agent throughout and grades solutions with behavioral tests. In v1.1, only the committed patch is evaluated in a separate container, and Git history after the starting commit is hidden to reduce opportunities to bypass evaluation. It is useful for comparing complex engineering ability, while real-world results still depend on the agent scaffold, reasoning effort and task domain."
+      },
+      "description": {
+        "zh": "分数怎么读：Pass@1 是单次尝试的任务通过率，越高越好；重复运行用来估计成绩波动，不表示允许多次尝试后取成功。本页收录官方 v1.1 默认 Best 视图中的 21 款模型，每款保留该视图下成绩最好的推理档位，档位写在模型名后。数值由官方数据换算为百分比并保留一位小数；± 为四轮整套评测之间波动估计的 95% 置信区间半宽，单位为百分点，并非任务抽样区间。部分配置的有效尝试数不足 452 次，成绩应按官方统计口径解读；小幅差距不代表稳定领先。此快照对应官方标注的 2026 年 9 月 3 日更新，不与 v1 分数混用。",
+        "en": "How to read it: Pass@1 is the task pass rate for a single attempt; higher is better. Repeated runs estimate variability, not success after multiple retries. This page includes the 21 models shown in the official v1.1 default Best view, retaining the best-scoring effort setting for each displayed model and naming that setting explicitly. Official values are converted to percentages and rounded to one decimal place. ± is the half-width of a 95% confidence interval estimated from variation across four whole-benchmark runs, in percentage points, rather than a task-sampling interval. Some configurations have fewer than 452 valid attempts, so use the official denominator convention and do not treat small gaps as stable leads. This snapshot follows the official September 3, 2026 update and does not mix v1 scores."
+      }
     }
   ],
   "models": [
@@ -82,7 +105,14 @@
       "id": "gpt-6-astra-xhigh",
       "name": "GPT-6 Astra (xhigh)",
       "creator": "OpenAI",
-      "scores": { "aa-index": { "value": 53 } }
+      "scores": {
+        "aa-index": { "value": 53 },
+        "deepswe": {
+          "value": 74.1,
+          "ci": 2.9,
+          "agent": "mini-swe-agent"
+        }
+      }
     },
     {
       "id": "claude-fable-5-1-high",
@@ -102,7 +132,12 @@
       "creator": "Anthropic",
       "scores": {
         "aa-index": { "value": 51 },
-        "tbench-4": { "value": 51.8, "ci": 3.4, "agent": "Claude Code" }
+        "tbench-4": { "value": 51.8, "ci": 3.4, "agent": "Claude Code" },
+        "deepswe": {
+          "value": 73.6,
+          "ci": 3.9,
+          "agent": "mini-swe-agent"
+        }
       }
     },
     {
@@ -158,7 +193,12 @@
       "creator": "OpenAI",
       "scores": {
         "aa-index": { "value": 47 },
-        "tbench-4": { "value": 37.3, "ci": 3.8, "agent": "Codex" }
+        "tbench-4": { "value": 37.3, "ci": 3.8, "agent": "Codex" },
+        "deepswe": {
+          "value": 72.7,
+          "ci": 2.8,
+          "agent": "mini-swe-agent"
+        }
       }
     },
     {
@@ -197,7 +237,221 @@
       "creator": "Z AI",
       "scores": {
         "aa-index": { "value": 45 },
-        "tbench-4": { "value": 41.8, "ci": 3.2, "agent": "Claude Code" }
+        "tbench-4": { "value": 41.8, "ci": 3.2, "agent": "Claude Code" },
+        "deepswe": {
+          "value": 69.0,
+          "ci": 3.0,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-8-flash-high",
+      "name": "Gemini 3.8 Flash (high)",
+      "creator": "Google",
+      "scores": {
+        "deepswe": {
+          "value": 73.8,
+          "ci": 1.4,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-xhigh",
+      "name": "Claude Fable 5 (xhigh)",
+      "creator": "Anthropic",
+      "scores": {
+        "deepswe": {
+          "value": 69.9,
+          "ci": 3.2,
+          "agent": "mini-swe-agent",
+          "note": {
+            "zh": "官方注明 Claude Fable 5 全部档位共 2,260 次试验中有 73 次因访问中断未完成，通过率按已完成试验计算。本页 xhigh 档位对应 452 次尝试；不要把全档位的缺失数当作此行的缺失数。",
+            "en": "The official note reports 73 incomplete trials out of 2,260 across all Claude Fable 5 effort settings due to interrupted access; pass rates use completed trials. The xhigh setting shown here has 452 attempts. The all-effort missing-trial count does not apply to this row alone."
+          },
+          "note_url": "https://deepswe.datacurve.ai/"
+        }
+      }
+    },
+    {
+      "id": "kimi-k3-max",
+      "name": "Kimi K3 (max)",
+      "creator": "Moonshot AI",
+      "scores": {
+        "deepswe": {
+          "value": 68.5,
+          "ci": 4.5,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-medium",
+      "name": "Grok 4.6 (medium)",
+      "creator": "xAI",
+      "scores": {
+        "deepswe": {
+          "value": 67.5,
+          "ci": 2.3,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-max",
+      "name": "GPT-5.6 Luna (max)",
+      "creator": "OpenAI",
+      "scores": {
+        "deepswe": {
+          "value": 67.2,
+          "ci": 4.0,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-xhigh",
+      "name": "GPT-5.5 (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "deepswe": {
+          "value": 67.0,
+          "ci": 6.5,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-7-flash-medium",
+      "name": "Gemini 3.7 Flash (medium)",
+      "creator": "Google",
+      "scores": {
+        "deepswe": {
+          "value": 65.5,
+          "ci": 3.1,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "glm-5-3-flash-max",
+      "name": "GLM-5.3 Flash (max)",
+      "creator": "Z AI",
+      "scores": {
+        "deepswe": {
+          "value": 63.4,
+          "ci": 4.4,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-max",
+      "name": "DeepSeek V4 Pro (max)",
+      "creator": "DeepSeek",
+      "scores": {
+        "deepswe": {
+          "value": 62.8,
+          "ci": 6.3,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-4-8-max",
+      "name": "Claude Opus 4.8 (max)",
+      "creator": "Anthropic",
+      "scores": {
+        "deepswe": {
+          "value": 59.0,
+          "ci": 1.8,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-max-xhigh",
+      "name": "Qwen3.8 Max (xhigh)",
+      "creator": "Alibaba",
+      "scores": {
+        "deepswe": {
+          "value": 57.5,
+          "ci": 2.7,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "muse-spark-1-2-xhigh",
+      "name": "Muse Spark 1.2 (xhigh)",
+      "creator": "Meta",
+      "scores": {
+        "deepswe": {
+          "value": 54.9,
+          "ci": 2.1,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-max",
+      "name": "Claude Sonnet 5 (max)",
+      "creator": "Anthropic",
+      "scores": {
+        "deepswe": {
+          "value": 53.8,
+          "ci": 4.2,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-max",
+      "name": "DeepSeek V4 Flash (max)",
+      "creator": "DeepSeek",
+      "scores": {
+        "deepswe": {
+          "value": 53.3,
+          "ci": 3.6,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-6-flash-high",
+      "name": "Gemini 3.6 Flash (high)",
+      "creator": "Google",
+      "scores": {
+        "deepswe": {
+          "value": 46.7,
+          "ci": 3.7,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "glm-5-2-max",
+      "name": "GLM-5.2 (max)",
+      "creator": "Z AI",
+      "scores": {
+        "deepswe": {
+          "value": 43.8,
+          "ci": 1.7,
+          "agent": "mini-swe-agent"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-5-flash-high",
+      "name": "Gemini 3.5 Flash (high)",
+      "creator": "Google",
+      "scores": {
+        "deepswe": {
+          "value": 36.1,
+          "ci": 4.0,
+          "agent": "mini-swe-agent"
+        }
       }
     }
   ]

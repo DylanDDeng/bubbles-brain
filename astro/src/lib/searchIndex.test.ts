@@ -92,13 +92,17 @@ describe('knowledge search index', () => {
 		expect(index.items.filter((item) => item.section === 'vibe-coding-design')).toHaveLength(
 			designBrands.length,
 		);
-		expect(index.items.filter((item) => item.section === 'benchmarks')).toEqual(
-			benchmarkLedger.benchmarks.map((benchmark) =>
-				expect.objectContaining({
-					href: `/benchmarks/${benchmark.id}/`,
-					title: benchmark.name.zh,
-					section_label: 'Benchmarks',
-				}),
+		const benchmarks = index.items.filter((item) => item.section === 'benchmarks');
+		expect(benchmarks).toHaveLength(benchmarkLedger.benchmarks.length);
+		expect(benchmarks).toEqual(
+			expect.arrayContaining(
+				benchmarkLedger.benchmarks.map((benchmark) =>
+					expect.objectContaining({
+						href: `/benchmarks/${benchmark.id}/`,
+						title: benchmark.name.zh,
+						section_label: 'Benchmarks',
+					}),
+				),
 			),
 		);
 		expect(index.items.every((item) => !item.href.startsWith('/daily/'))).toBe(true);

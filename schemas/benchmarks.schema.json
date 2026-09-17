@@ -68,7 +68,7 @@
       "additionalProperties": false,
       "required": ["value"],
       "properties": {
-        "value": { "type": "number", "minimum": 0 },
+        "value": { "type": "number" },
         "almost_resolved": { "type": "number", "minimum": 0, "maximum": 100 },
         "average_pass_rate": { "type": "number", "minimum": 0, "maximum": 100 },
         "all_pass": { "type": "number", "minimum": 0, "maximum": 100 },
@@ -91,7 +91,20 @@
           "type": "object",
           "minProperties": 1,
           "propertyNames": { "$ref": "#/definitions/slug" },
-          "additionalProperties": { "$ref": "#/definitions/score" }
+          "properties": {
+            "gdpval-aa": {
+              "allOf": [
+                { "$ref": "#/definitions/score" },
+                { "type": "object", "properties": { "value": { "type": "integer" } } }
+              ]
+            }
+          },
+          "additionalProperties": {
+            "allOf": [
+              { "$ref": "#/definitions/score" },
+              { "type": "object", "properties": { "value": { "type": "number", "minimum": 0 } } }
+            ]
+          }
         }
       }
     }

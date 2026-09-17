@@ -26,6 +26,44 @@
       }
     },
     {
+      "id": "gdpval-aa",
+      "category": "general",
+      "name": {
+        "zh": "GDPval-AA v2",
+        "en": "GDPval-AA v2"
+      },
+      "source": "Artificial Analysis",
+      "checked_at": "2026-09-17",
+      "url": "https://artificialanalysis.ai/evaluations/gdpval-aa",
+      "format": "integer",
+      "score_label": {
+        "zh": "Elo 评分",
+        "en": "Elo rating"
+      },
+      "measures": {
+        "zh": "真实职场任务：能否交付可用的文档、表格、幻灯片和图示",
+        "en": "Real-world knowledge work: producing usable documents, spreadsheets, slides and diagrams"
+      },
+      "explainer": {
+        "zh": "GDPval-AA v2 是 Artificial Analysis 基于 OpenAI GDPval 数据集进行的独立评测。它使用公开 gold 集中的 220 个任务，覆盖 9 个行业、44 种职业，要求模型提交实际工作成果，而不只是回答问题。比如，官方示例会让模型给一支巡演乐队制作一页舞台布置 PDF：把歌手、鼓手、音箱和话筒放对位置，再列清楚输入、输出线路。能说出“舞台图应该怎么画”还不够，模型需要真正做出文件，内容和排版都要满足需求。所有模型通过 Stirrup Agent 框架工作，可以使用命令行、文件处理、网页搜索与浏览等工具，每个任务最多执行 250 轮。评估时隐藏模型身份，把同一任务的两份成果交给从三模型评审团中抽取的 LLM 裁判比较，再将这些对比结果汇总成 Elo 评分。",
+        "en": "GDPval-AA v2 is an independent Artificial Analysis evaluation built on OpenAI’s GDPval dataset. It uses the 220-task public gold set across 44 occupations and nine industries, requiring actual work products rather than answers alone. For example, an official sample asks for a one-page stage-plot PDF for a touring band: place the singers, drummer, amplifiers and microphones correctly, then list the input and output connections. Explaining how to draw the diagram is not enough; the model must produce a file whose content and layout meet the brief. All models work through the Stirrup agent harness with shell access, file processing, web search and browsing, for up to 250 turns per task. Model identities are hidden and an LLM judge sampled from a three-model panel compares two submissions for the same task; these comparisons are aggregated into Elo ratings."
+      },
+      "description": {
+        "zh": "Elo 越高，表示交付成果在这套任务的两两比较中更受评审偏好；人类专家成果的基准设为 1,000 分。比如 A 得 1,500 分、B 得 1,200 分，只能说明 A 在这一评测中的相对表现更强，不表示 A 的正确率是 150%，也不表示效率高 25%。Elo 可以低于 0，表中的 ± 数值是官方公布的 95% 置信区间，分数接近时不要把名次差当成确定差距。本页保留 2026 年 9 月 17 日核对到的全部 247 条成绩和官方模型配置；标有 Fallback 的条目包含备用模型机制，不能当成单一模型独立完成的结果。榜单会随新增比较而变化，不能直接与 v1、模型发布时的旧快照或 OpenAI 自己公布的 GDPval 胜率混用；它也不是 AA Intelligence Index 的综合分。",
+        "en": "Higher Elo means the deliverables are preferred more often in pairwise comparisons on this task set; human expert deliverables anchor the scale at 1,000. For example, ratings of 1,500 for A and 1,200 for B indicate stronger relative performance for A, not 150% accuracy or 25% greater efficiency. Elo can be negative, and the ± values are the published 95% confidence intervals; small ranking gaps should not be treated as certain differences. This snapshot preserves all 247 results and official model configurations checked on September 17, 2026. Entries labeled Fallback include a backup-model mechanism and are not results from a single model working entirely alone. Ratings can change as new comparisons are added, and should not be mixed with v1, launch-day snapshots or OpenAI’s own GDPval win rates; they are also distinct from the overall AA Intelligence Index."
+      },
+      "related_reading": {
+        "title": {
+          "zh": "查看 GDPval-AA v2 官方评测方法",
+          "en": "Read the official GDPval-AA v2 methodology"
+        },
+        "href": {
+          "zh": "https://artificialanalysis.ai/methodology/intelligence-benchmarking#gdpval-aa",
+          "en": "https://artificialanalysis.ai/methodology/intelligence-benchmarking#gdpval-aa"
+        }
+      }
+    },
+    {
       "id": "vals-index",
       "category": "general",
       "name": {
@@ -246,6 +284,12 @@
             "en": "Vals AI reports 31 provider refusals across 1,257 task results (2.47%), scored as failures."
           },
           "note_url": "https://www.vals.ai/benchmarks/vals_index"
+        },
+        "gdpval-aa": {
+          "value": 1580,
+          "ci": 20,
+          "source_model": "GPT-6 Astra (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -261,6 +305,12 @@
           "value": 74.1,
           "ci": 2.9,
           "agent": "mini-swe-agent"
+        },
+        "gdpval-aa": {
+          "value": 1555,
+          "ci": 20,
+          "source_model": "GPT-6 Astra (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -281,6 +331,12 @@
       "scores": {
         "aa-index": {
           "value": 51
+        },
+        "gdpval-aa": {
+          "value": 1530,
+          "ci": 20,
+          "source_model": "GPT-6 Astra (high)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -350,6 +406,12 @@
       "scores": {
         "aa-index": {
           "value": 50
+        },
+        "gdpval-aa": {
+          "value": 1501,
+          "ci": 20,
+          "source_model": "GPT-6 Astra (medium)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -396,6 +458,12 @@
       "scores": {
         "aa-index": {
           "value": 48
+        },
+        "gdpval-aa": {
+          "value": 1703,
+          "ci": 19,
+          "source_model": "Muse Spark 1.3 (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -426,6 +494,12 @@
         "vals-index": {
           "value": 63.709,
           "source_model": "openai/gpt-5.6-sol"
+        },
+        "gdpval-aa": {
+          "value": 1624,
+          "ci": 14,
+          "source_model": "GPT-5.6 Sol (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -446,6 +520,12 @@
       "scores": {
         "aa-index": {
           "value": 46
+        },
+        "gdpval-aa": {
+          "value": 1419,
+          "ci": 20,
+          "source_model": "GPT-6 Astra (low)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -476,6 +556,12 @@
         "vals-index": {
           "value": 60.31,
           "source_model": "meta/muse_spark_1_3"
+        },
+        "gdpval-aa": {
+          "value": 1662,
+          "ci": 19,
+          "source_model": "Muse Spark 1.3 (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -516,6 +602,12 @@
         "vals-index": {
           "value": 56.97,
           "source_model": "zai/glm-5.3"
+        },
+        "gdpval-aa": {
+          "value": 1642,
+          "ci": 14,
+          "source_model": "GLM-5.3 (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -538,6 +630,12 @@
         "vals-index": {
           "value": 62.252,
           "source_model": "google/gemini-3.8-flash"
+        },
+        "gdpval-aa": {
+          "value": 1464,
+          "ci": 19,
+          "source_model": "Gemini 3.8 Flash (high)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -606,6 +704,12 @@
             "en": "Vals AI reports 1 provider refusals across 2,157 task results (0.05%), scored as failures."
           },
           "note_url": "https://www.vals.ai/benchmarks/vals_index"
+        },
+        "gdpval-aa": {
+          "value": 1460,
+          "ci": 13,
+          "source_model": "GPT-5.6 Luna (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -634,6 +738,12 @@
         "vals-index": {
           "value": 57.411,
           "source_model": "openai/gpt-5.5"
+        },
+        "gdpval-aa": {
+          "value": 1396,
+          "ci": 13,
+          "source_model": "GPT-5.5 (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -646,6 +756,12 @@
           "value": 65.5,
           "ci": 3.1,
           "agent": "mini-swe-agent"
+        },
+        "gdpval-aa": {
+          "value": 1407,
+          "ci": 16,
+          "source_model": "Gemini 3.7 Flash (medium)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -746,6 +862,12 @@
         "vals-index": {
           "value": 57.053,
           "source_model": "meta/muse_spark_1_2"
+        },
+        "gdpval-aa": {
+          "value": 1523,
+          "ci": 15,
+          "source_model": "Muse Spark 1.2 (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -802,6 +924,12 @@
         "vals-index": {
           "value": 55.354,
           "source_model": "google/gemini-3.6-flash"
+        },
+        "gdpval-aa": {
+          "value": 1331,
+          "ci": 15,
+          "source_model": "Gemini 3.6 Flash (high)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -814,6 +942,12 @@
           "value": 43.8,
           "ci": 1.7,
           "agent": "mini-swe-agent"
+        },
+        "gdpval-aa": {
+          "value": 1406,
+          "ci": 13,
+          "source_model": "GLM-5.2 (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -836,6 +970,12 @@
         "vals-index": {
           "value": 53.079,
           "source_model": "google/gemini-3.5-flash"
+        },
+        "gdpval-aa": {
+          "value": 1259,
+          "ci": 14,
+          "source_model": "Gemini 3.5 Flash (high)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -849,6 +989,12 @@
           "almost_resolved": 15.5,
           "average_pass_rate": 69.9,
           "agent": "mini-SWE-agent"
+        },
+        "gdpval-aa": {
+          "value": 1585,
+          "ci": 14,
+          "source_model": "GPT-5.6 Sol (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1127,6 +1273,12 @@
         "vals-index": {
           "value": 59.307,
           "source_model": "google/gemini-3.7-flash"
+        },
+        "gdpval-aa": {
+          "value": 1433,
+          "ci": 15,
+          "source_model": "Gemini 3.7 Flash (high)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1144,6 +1296,12 @@
         "vals-index": {
           "value": 54.754,
           "source_model": "meta/muse_spark_1_1"
+        },
+        "gdpval-aa": {
+          "value": 1294,
+          "ci": 16,
+          "source_model": "Muse Spark 1.1 (xhigh)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1188,6 +1346,12 @@
             "en": "Vals AI reports 31 provider refusals across 1,257 task results (2.47%), scored as failures."
           },
           "note_url": "https://www.vals.ai/benchmarks/vals_index"
+        },
+        "gdpval-aa": {
+          "value": 1477,
+          "ci": 14,
+          "source_model": "GPT-5.6 Terra (max)",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1375,6 +1539,12 @@
         "vals-index": {
           "value": 42.719,
           "source_model": "minimax/MiniMax-M3"
+        },
+        "gdpval-aa": {
+          "value": 1304,
+          "ci": 14,
+          "source_model": "MiniMax-M3",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1762,6 +1932,12 @@
         "vals-index": {
           "value": 24.556,
           "source_model": "minimax/MiniMax-M2.7"
+        },
+        "gdpval-aa": {
+          "value": 1087,
+          "ci": 14,
+          "source_model": "MiniMax-M2.7",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1809,6 +1985,12 @@
         "vals-index": {
           "value": 11.494,
           "source_model": "fireworks/nemotron-lightning-3p5-30b-a3b"
+        },
+        "gdpval-aa": {
+          "value": 767,
+          "ci": 19,
+          "source_model": "Nemotron 3.5 Lightning",
+          "agent": "Stirrup"
         }
       }
     },
@@ -1822,6 +2004,2905 @@
           "all_pass": 6.794,
           "source_model": "poolside/laguna-xs.2",
           "agent": "Vals Finance Agent v2"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-adaptive-reasoning-max-effort-default-fallback",
+      "name": "Claude Fable 5.1 (Adaptive Reasoning, Max Effort, Default Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1764,
+          "ci": 19,
+          "source_model": "Claude Fable 5.1 (Adaptive Reasoning, Max Effort, Default Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-adaptive-reasoning-xhigh-effort-default-fallback",
+      "name": "Claude Fable 5.1 (Adaptive Reasoning, Xhigh Effort, Default Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1745,
+          "ci": 19,
+          "source_model": "Claude Fable 5.1 (Adaptive Reasoning, Xhigh Effort, Default Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-adaptive-reasoning-max-effort",
+      "name": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1735,
+          "ci": 16,
+          "source_model": "Claude Opus 5 (Adaptive Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-adaptive-reasoning-xhigh-effort",
+      "name": "Claude Opus 5 (Adaptive Reasoning, Xhigh Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1708,
+          "ci": 15,
+          "source_model": "Claude Opus 5 (Adaptive Reasoning, Xhigh Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-max-0902",
+      "name": "Qwen3.8 Max (0902)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1689,
+          "ci": 21,
+          "source_model": "Qwen3.8 Max (0902)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-xhigh",
+      "name": "Grok 4.6 (xhigh)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1663,
+          "ci": 15,
+          "source_model": "Grok 4.6 (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "glm-5-3-flash",
+      "name": "GLM 5.3 Flash",
+      "creator": "Z AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1655,
+          "ci": 15,
+          "source_model": "GLM 5.3 Flash",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-adaptive-reasoning-high-effort-default-fallback",
+      "name": "Claude Fable 5.1 (Adaptive Reasoning, High Effort, Default Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1650,
+          "ci": 18,
+          "source_model": "Claude Fable 5.1 (Adaptive Reasoning, High Effort, Default Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-flash-next",
+      "name": "Qwen3.8-Flash-Next",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1647,
+          "ci": 17,
+          "source_model": "Qwen3.8-Flash-Next",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-high-gdpval-aa",
+      "name": "Grok 4.6 (high)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1643,
+          "ci": 14,
+          "source_model": "Grok 4.6 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-medium-gdpval-aa",
+      "name": "Grok 4.6 (medium)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1643,
+          "ci": 15,
+          "source_model": "Grok 4.6 (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-1-flash-reasoning-max-effort",
+      "name": "DeepSeek V4.1 Flash (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1632,
+          "ci": 21,
+          "source_model": "DeepSeek V4.1 Flash (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-adaptive-reasoning-max-effort-opus-4-8-fallback",
+      "name": "Claude Fable 5 (Adaptive Reasoning, Max Effort, Opus 4.8 Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1631,
+          "ci": 14,
+          "source_model": "Claude Fable 5 (Adaptive Reasoning, Max Effort, Opus 4.8 Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-max",
+      "name": "Qwen3.8 Max",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1630,
+          "ci": 14,
+          "source_model": "Qwen3.8 Max",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-adaptive-reasoning-high-effort",
+      "name": "Claude Opus 5 (Adaptive Reasoning, High Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1629,
+          "ci": 15,
+          "source_model": "Claude Opus 5 (Adaptive Reasoning, High Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-2-4t-a95b",
+      "name": "Qwen3.8 2.4T A95B",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1628,
+          "ci": 15,
+          "source_model": "Qwen3.8 2.4T A95B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-adaptive-reasoning-medium-effort-default-fallback",
+      "name": "Claude Fable 5.1 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1579,
+          "ci": 18,
+          "source_model": "Claude Fable 5.1 (Adaptive Reasoning, Medium Effort, Default Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0731-vision-reasoning-max-effort",
+      "name": "DeepSeek V4 Flash 0731 Vision (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1577,
+          "ci": 15,
+          "source_model": "DeepSeek V4 Flash 0731 Vision (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "agnes-3-0-flash",
+      "name": "Agnes 3.0 Flash",
+      "creator": "Sapiens AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1573,
+          "ci": 22,
+          "source_model": "Agnes 3.0 Flash",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kimi-k3-max-gdpval-aa",
+      "name": "Kimi K3 (max)",
+      "creator": "Kimi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1548,
+          "ci": 14,
+          "source_model": "Kimi K3 (max)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-adaptive-reasoning-medium-effort",
+      "name": "Claude Opus 5 (Adaptive Reasoning, Medium Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1525,
+          "ci": 15,
+          "source_model": "Claude Opus 5 (Adaptive Reasoning, Medium Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-sol-high",
+      "name": "GPT-5.6 Sol (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1524,
+          "ci": 14,
+          "source_model": "GPT-5.6 Sol (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-adaptive-reasoning-low-effort-default-fallback",
+      "name": "Claude Fable 5.1 (Adaptive Reasoning, Low Effort, Default Fallback)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1504,
+          "ci": 18,
+          "source_model": "Claude Fable 5.1 (Adaptive Reasoning, Low Effort, Default Fallback)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-adaptive-reasoning-max-effort",
+      "name": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1501,
+          "ci": 14,
+          "source_model": "Claude Sonnet 5 (Adaptive Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-0813-reasoning-max-effort",
+      "name": "DeepSeek V4 Pro 0813 (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1493,
+          "ci": 15,
+          "source_model": "DeepSeek V4 Pro 0813 (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-4-8-adaptive-reasoning-max-effort",
+      "name": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1489,
+          "ci": 13,
+          "source_model": "Claude Opus 4.8 (Adaptive Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-terra-xhigh",
+      "name": "GPT-5.6 Terra (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1479,
+          "ci": 14,
+          "source_model": "GPT-5.6 Terra (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-27b-xhigh",
+      "name": "Qwen3.8 27B (xhigh)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1463,
+          "ci": 16,
+          "source_model": "Qwen3.8 27B (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-low",
+      "name": "Grok 4.6 (low)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1461,
+          "ci": 15,
+          "source_model": "Grok 4.6 (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-8-flash-medium",
+      "name": "Gemini 3.8 Flash (medium)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1455,
+          "ci": 19,
+          "source_model": "Gemini 3.8 Flash (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0731-reasoning-max-effort",
+      "name": "DeepSeek V4 Flash 0731 (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1442,
+          "ci": 14,
+          "source_model": "DeepSeek V4 Flash 0731 (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-27b-medium",
+      "name": "Qwen3.8 27B (medium)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1430,
+          "ci": 16,
+          "source_model": "Qwen3.8 27B (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-5-high-gdpval-aa",
+      "name": "Grok 4.5 (high)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1430,
+          "ci": 15,
+          "source_model": "Grok 4.5 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-xhigh",
+      "name": "GPT-5.6 Luna (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1428,
+          "ci": 14,
+          "source_model": "GPT-5.6 Luna (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-sol-medium",
+      "name": "GPT-5.6 Sol (medium)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1427,
+          "ci": 13,
+          "source_model": "GPT-5.6 Sol (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-terra-high",
+      "name": "GPT-5.6 Terra (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1415,
+          "ci": 14,
+          "source_model": "GPT-5.6 Terra (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-27b-low",
+      "name": "Qwen3.8 27B (low)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1403,
+          "ci": 16,
+          "source_model": "Qwen3.8 27B (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-adaptive-reasoning-xhigh-effort",
+      "name": "Claude Sonnet 5 (Adaptive Reasoning, Xhigh Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1401,
+          "ci": 14,
+          "source_model": "Claude Sonnet 5 (Adaptive Reasoning, Xhigh Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-horizon-375b-a23b",
+      "name": "K2 Horizon 375B A23B",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1400,
+          "ci": 19,
+          "source_model": "K2 Horizon 375B A23B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-4-7-adaptive-reasoning-max-effort",
+      "name": "Claude Opus 4.7 (Adaptive Reasoning, Max Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1396,
+          "ci": 14,
+          "source_model": "Claude Opus 4.7 (Adaptive Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "agnes-2-5-pro-beta",
+      "name": "Agnes 2.5 Pro Beta",
+      "creator": "Sapiens AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1376,
+          "ci": 17,
+          "source_model": "Agnes 2.5 Pro Beta",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-high",
+      "name": "GPT-5.6 Luna (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1375,
+          "ci": 14,
+          "source_model": "GPT-5.6 Luna (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-adaptive-reasoning-low-effort",
+      "name": "Claude Opus 5 (Adaptive Reasoning, Low Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1372,
+          "ci": 15,
+          "source_model": "Claude Opus 5 (Adaptive Reasoning, Low Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-high-gdpval-aa",
+      "name": "GPT-5.5 (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1372,
+          "ci": 13,
+          "source_model": "GPT-5.5 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-8-flash-low",
+      "name": "Gemini 3.8 Flash (low)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1359,
+          "ci": 16,
+          "source_model": "Gemini 3.8 Flash (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-sol-low",
+      "name": "GPT-5.6 Sol (low)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1355,
+          "ci": 14,
+          "source_model": "GPT-5.6 Sol (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-7-flash-low",
+      "name": "Gemini 3.7 Flash (low)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1354,
+          "ci": 16,
+          "source_model": "Gemini 3.7 Flash (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-terra-medium",
+      "name": "GPT-5.6 Terra (medium)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1318,
+          "ci": 14,
+          "source_model": "GPT-5.6 Terra (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-adaptive-reasoning-high-effort",
+      "name": "Claude Sonnet 5 (Adaptive Reasoning, High Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1308,
+          "ci": 14,
+          "source_model": "Claude Sonnet 5 (Adaptive Reasoning, High Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-4-xhigh",
+      "name": "GPT-5.4 (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1307,
+          "ci": 14,
+          "source_model": "GPT-5.4 (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "glm-5-2-non-reasoning",
+      "name": "GLM-5.2 (Non-reasoning)",
+      "creator": "Z AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1306,
+          "ci": 16,
+          "source_model": "GLM-5.2 (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-4-6-adaptive-reasoning-max-effort",
+      "name": "Claude Sonnet 4.6 (Adaptive Reasoning, Max Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1295,
+          "ci": 14,
+          "source_model": "Claude Sonnet 4.6 (Adaptive Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-medium",
+      "name": "GPT-5.5 (medium)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1288,
+          "ci": 14,
+          "source_model": "GPT-5.5 (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-non-reasoning-high-effort",
+      "name": "Claude Sonnet 5 (Non-reasoning, High Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1283,
+          "ci": 15,
+          "source_model": "Claude Sonnet 5 (Non-reasoning, High Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-sol-non-reasoning",
+      "name": "GPT-5.6 Sol (Non-reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1273,
+          "ci": 14,
+          "source_model": "GPT-5.6 Sol (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "apodex-1-1",
+      "name": "Apodex 1.1",
+      "creator": "Apodex",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1273,
+          "ci": 17,
+          "source_model": "Apodex 1.1",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-horizon-mova-36b-a4b",
+      "name": "K2 Horizon MoVA 36B A4B",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1243,
+          "ci": 21,
+          "source_model": "K2 Horizon MoVA 36B A4B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "quasar-438b-max-based-on-glm-5-2",
+      "name": "Quasar 438B (max, based on GLM-5.2)",
+      "creator": "Multiverse Computing",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1239,
+          "ci": 19,
+          "source_model": "Quasar 438B (max, based on GLM-5.2)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ling-3-0-flash-vl",
+      "name": "Ling-3.0-flash-VL",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1225,
+          "ci": 21,
+          "source_model": "Ling-3.0-flash-VL",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-0424-reasoning-max-effort",
+      "name": "DeepSeek V4 Pro 0424 (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1223,
+          "ci": 14,
+          "source_model": "DeepSeek V4 Pro 0424 (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-adaptive-reasoning-medium-effort",
+      "name": "Claude Sonnet 5 (Adaptive Reasoning, Medium Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1223,
+          "ci": 14,
+          "source_model": "Claude Sonnet 5 (Adaptive Reasoning, Medium Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-pro-0424-reasoning-high-effort",
+      "name": "DeepSeek V4 Pro 0424 (Reasoning, High Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1219,
+          "ci": 17,
+          "source_model": "DeepSeek V4 Pro 0424 (Reasoning, High Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "motif-3",
+      "name": "Motif 3",
+      "creator": "Motif Technologies",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1199,
+          "ci": 17,
+          "source_model": "Motif 3",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "jt-4-1-flash-236b-a21b",
+      "name": "JT-4.1 Flash 236B A21B",
+      "creator": "China Mobile",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1193,
+          "ci": 16,
+          "source_model": "JT-4.1 Flash 236B A21B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "inkling-small",
+      "name": "Inkling Small",
+      "creator": "Thinking Machines",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1191,
+          "ci": 17,
+          "source_model": "Inkling Small",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-7-max",
+      "name": "Qwen3.7 Max",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1190,
+          "ci": 14,
+          "source_model": "Qwen3.7 Max",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "g9v3-39a5b",
+      "name": "G9v3-39A5B",
+      "creator": "AI9Stars",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1189,
+          "ci": 18,
+          "source_model": "G9v3-39A5B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mimo-v2-5-pro-gdpval-aa",
+      "name": "MiMo-V2.5-Pro",
+      "creator": "Xiaomi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1186,
+          "ci": 14,
+          "source_model": "MiMo-V2.5-Pro",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kimi-k3-low",
+      "name": "Kimi K3 (low)",
+      "creator": "Kimi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1185,
+          "ci": 17,
+          "source_model": "Kimi K3 (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "motif-3-beta",
+      "name": "Motif 3 (Beta)",
+      "creator": "Motif Technologies",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1183,
+          "ci": 17,
+          "source_model": "Motif 3 (Beta)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "glm-5-1-reasoning",
+      "name": "GLM-5.1 (Reasoning)",
+      "creator": "Z AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1180,
+          "ci": 14,
+          "source_model": "GLM-5.1 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-terra-low",
+      "name": "GPT-5.6 Terra (low)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1178,
+          "ci": 15,
+          "source_model": "GPT-5.6 Terra (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nex-n2-pro",
+      "name": "Nex-N2-Pro",
+      "creator": "Nex AGI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1175,
+          "ci": 15,
+          "source_model": "Nex-N2-Pro",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "solar-pro-4",
+      "name": "Solar Pro 4",
+      "creator": "Upstage",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1173,
+          "ci": 16,
+          "source_model": "Solar Pro 4",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ling-3-0-flash-fin",
+      "name": "Ling-3.0-flash-Fin",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1171,
+          "ci": 21,
+          "source_model": "Ling-3.0-flash-Fin",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-medium",
+      "name": "GPT-5.6 Luna (medium)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1169,
+          "ci": 14,
+          "source_model": "GPT-5.6 Luna (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "inkling-xhigh",
+      "name": "Inkling (xhigh)",
+      "creator": "Thinking Machines",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1165,
+          "ci": 17,
+          "source_model": "Inkling (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-terra-non-reasoning",
+      "name": "GPT-5.6 Terra (Non-reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1146,
+          "ci": 14,
+          "source_model": "GPT-5.6 Terra (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-sonnet-5-adaptive-reasoning-low-effort",
+      "name": "Claude Sonnet 5 (Adaptive Reasoning, Low Effort)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1145,
+          "ci": 15,
+          "source_model": "Claude Sonnet 5 (Adaptive Reasoning, Low Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-build-0-1-0616",
+      "name": "Grok Build 0.1 0616",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1138,
+          "ci": 14,
+          "source_model": "Grok Build 0.1 0616",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "hy3",
+      "name": "Hy3",
+      "creator": "Tencent",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1136,
+          "ci": 17,
+          "source_model": "Hy3",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0420-reasoning-max-effort",
+      "name": "DeepSeek V4 Flash 0420 (Reasoning, Max Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1116,
+          "ci": 14,
+          "source_model": "DeepSeek V4 Flash 0420 (Reasoning, Max Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kimi-k2-7-code",
+      "name": "Kimi K2.7 Code",
+      "creator": "Kimi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1114,
+          "ci": 14,
+          "source_model": "Kimi K2.7 Code",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-27b-non-reasoning",
+      "name": "Qwen3.8 27B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1113,
+          "ci": 17,
+          "source_model": "Qwen3.8 27B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-low",
+      "name": "GPT-5.5 (low)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1113,
+          "ci": 15,
+          "source_model": "GPT-5.5 (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kimi-k2-6-gdpval-aa",
+      "name": "Kimi K2.6",
+      "creator": "Kimi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1096,
+          "ci": 13,
+          "source_model": "Kimi K2.6",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "glm-4-7-reasoning",
+      "name": "GLM-4.7 (Reasoning)",
+      "creator": "Z AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1096,
+          "ci": 16,
+          "source_model": "GLM-4.7 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-4-mini-xhigh-gdpval-aa",
+      "name": "GPT-5.4 mini (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1095,
+          "ci": 14,
+          "source_model": "GPT-5.4 mini (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-horizon-7b",
+      "name": "K2 Horizon 7B",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1091,
+          "ci": 21,
+          "source_model": "K2 Horizon 7B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nemotron-3-ultra-550b-a55b-reasoning",
+      "name": "Nemotron 3 Ultra 550B A55B (Reasoning)",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1091,
+          "ci": 14,
+          "source_model": "Nemotron 3 Ultra 550B A55B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "agnes-2-5-pro-alpha",
+      "name": "Agnes 2.5 Pro Alpha",
+      "creator": "Sapiens AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1088,
+          "ci": 17,
+          "source_model": "Agnes 2.5 Pro Alpha",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-0420-reasoning-high-effort",
+      "name": "DeepSeek V4 Flash 0420 (Reasoning, High Effort)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1083,
+          "ci": 17,
+          "source_model": "DeepSeek V4 Flash 0420 (Reasoning, High Effort)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mimo-v2-5-gdpval-aa",
+      "name": "MiMo-V2.5",
+      "creator": "Xiaomi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1079,
+          "ci": 17,
+          "source_model": "MiMo-V2.5",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "muse-spark",
+      "name": "Muse Spark",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1076,
+          "ci": 14,
+          "source_model": "Muse Spark",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-low",
+      "name": "GPT-5.6 Luna (low)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1075,
+          "ci": 15,
+          "source_model": "GPT-5.6 Luna (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-6-27b-reasoning",
+      "name": "Qwen3.6 27B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1069,
+          "ci": 14,
+          "source_model": "Qwen3.6 27B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-6-plus",
+      "name": "Qwen3.6 Plus",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1066,
+          "ci": 14,
+          "source_model": "Qwen3.6 Plus",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-5-flash-lite",
+      "name": "Gemini 3.5 Flash-Lite",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1063,
+          "ci": 17,
+          "source_model": "Gemini 3.5 Flash-Lite",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-non-reasoning",
+      "name": "GPT-5.5 (Non-reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1054,
+          "ci": 14,
+          "source_model": "GPT-5.5 (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "solar-open2-250b",
+      "name": "Solar Open2 250B",
+      "creator": "Upstage",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1053,
+          "ci": 18,
+          "source_model": "Solar Open2 250B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "a-x-k2",
+      "name": "A.X-K2",
+      "creator": "SK Telecom",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1044,
+          "ci": 18,
+          "source_model": "A.X-K2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-6-27b-non-reasoning",
+      "name": "Qwen3.6 27B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1043,
+          "ci": 16,
+          "source_model": "Qwen3.6 27B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-4-nano-xhigh",
+      "name": "GPT-5.4 nano (xhigh)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1035,
+          "ci": 14,
+          "source_model": "GPT-5.4 nano (xhigh)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-3-non-reasoning",
+      "name": "Grok 4.3 (Non-reasoning)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1031,
+          "ci": 14,
+          "source_model": "Grok 4.3 (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "grok-4-3-high-gdpval-aa",
+      "name": "Grok 4.3 (high)",
+      "creator": "SpaceXAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1018,
+          "ci": 14,
+          "source_model": "Grok 4.3 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ling-3-0-flash-gdpval-aa",
+      "name": "Ling 3.0 Flash",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1017,
+          "ci": 17,
+          "source_model": "Ling 3.0 Flash",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-high",
+      "name": "GPT-5 (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 1015,
+          "ci": 16,
+          "source_model": "GPT-5 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-6-35b-a3b-reasoning",
+      "name": "Qwen3.6 35B A3B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 991,
+          "ci": 14,
+          "source_model": "Qwen3.6 35B A3B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-4-5-sonnet-reasoning",
+      "name": "Claude 4.5 Sonnet (Reasoning)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 989,
+          "ci": 16,
+          "source_model": "Claude 4.5 Sonnet (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-luna-non-reasoning",
+      "name": "GPT-5.6 Luna (Non-reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 987,
+          "ci": 15,
+          "source_model": "GPT-5.6 Luna (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "longcat-2-0",
+      "name": "LongCat 2.0",
+      "creator": "LongCat",
+      "scores": {
+        "gdpval-aa": {
+          "value": 965,
+          "ci": 16,
+          "source_model": "LongCat 2.0",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-horizon-3-7b",
+      "name": "K2 Horizon 3.7B",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": 962,
+          "ci": 21,
+          "source_model": "K2 Horizon 3.7B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "step-3-7-flash",
+      "name": "Step 3.7 Flash",
+      "creator": "StepFun",
+      "scores": {
+        "gdpval-aa": {
+          "value": 954,
+          "ci": 14,
+          "source_model": "Step 3.7 Flash",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-6-35b-a3b-non-reasoning",
+      "name": "Qwen3.6 35B A3B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 953,
+          "ci": 18,
+          "source_model": "Qwen3.6 35B A3B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kimi-k2-5-reasoning",
+      "name": "Kimi K2.5 (Reasoning)",
+      "creator": "Kimi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 936,
+          "ci": 17,
+          "source_model": "Kimi K2.5 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-1-high",
+      "name": "GPT-5.1 (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 930,
+          "ci": 17,
+          "source_model": "GPT-5.1 (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-122b-a10b-reasoning",
+      "name": "Qwen3.5 122B A10B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 925,
+          "ci": 15,
+          "source_model": "Qwen3.5 122B A10B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k-exaone-2-0-0803",
+      "name": "K-EXAONE 2.0 0803",
+      "creator": "LG AI Research",
+      "scores": {
+        "gdpval-aa": {
+          "value": 918,
+          "ci": 19,
+          "source_model": "K-EXAONE 2.0 0803",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-397b-a17b-reasoning",
+      "name": "Qwen3.5 397B A17B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 905,
+          "ci": 15,
+          "source_model": "Qwen3.5 397B A17B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-1-pro-preview",
+      "name": "Gemini 3.1 Pro Preview",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 904,
+          "ci": 15,
+          "source_model": "Gemini 3.1 Pro Preview",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "muse-glimmer-high",
+      "name": "Muse Glimmer (high)",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": 893,
+          "ci": 19,
+          "source_model": "Muse Glimmer (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-7-plus",
+      "name": "Qwen3.7 Plus",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 886,
+          "ci": 15,
+          "source_model": "Qwen3.7 Plus",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-mini-high",
+      "name": "GPT-5 mini (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 880,
+          "ci": 17,
+          "source_model": "GPT-5 mini (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-medium-3-5",
+      "name": "Mistral Medium 3.5",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 875,
+          "ci": 15,
+          "source_model": "Mistral Medium 3.5",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "glm-4-6-reasoning",
+      "name": "GLM-4.6 (Reasoning)",
+      "creator": "Z AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 874,
+          "ci": 17,
+          "source_model": "GLM-4.6 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ring-2-6-1t",
+      "name": "Ring-2.6-1T",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 864,
+          "ci": 15,
+          "source_model": "Ring-2.6-1T",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-4-5-haiku-reasoning",
+      "name": "Claude 4.5 Haiku (Reasoning)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 854,
+          "ci": 15,
+          "source_model": "Claude 4.5 Haiku (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kat-coder-pro-v1",
+      "name": "KAT-Coder-Pro V1",
+      "creator": "KwaiKAT",
+      "scores": {
+        "gdpval-aa": {
+          "value": 845,
+          "ci": 16,
+          "source_model": "KAT-Coder-Pro V1",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "kat-coder-pro-v2",
+      "name": "KAT Coder Pro V2",
+      "creator": "KwaiKAT",
+      "scores": {
+        "gdpval-aa": {
+          "value": 843,
+          "ci": 18,
+          "source_model": "KAT Coder Pro V2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-122b-a10b-non-reasoning",
+      "name": "Qwen3.5 122B A10B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 833,
+          "ci": 18,
+          "source_model": "Qwen3.5 122B A10B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "minicpm5-2b",
+      "name": "MiniCPM5-2B",
+      "creator": "OpenBMB",
+      "scores": {
+        "gdpval-aa": {
+          "value": 828,
+          "ci": 22,
+          "source_model": "MiniCPM5-2B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v3-1-terminus-reasoning",
+      "name": "DeepSeek V3.1 Terminus (Reasoning)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 826,
+          "ci": 18,
+          "source_model": "DeepSeek V3.1 Terminus (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-4-sonnet-reasoning",
+      "name": "Claude 4 Sonnet (Reasoning)",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 819,
+          "ci": 17,
+          "source_model": "Claude 4 Sonnet (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v3-2-reasoning",
+      "name": "DeepSeek V3.2 (Reasoning)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 810,
+          "ci": 19,
+          "source_model": "DeepSeek V3.2 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "g9v3-3b",
+      "name": "G9v3-3B",
+      "creator": "AI9Stars",
+      "scores": {
+        "gdpval-aa": {
+          "value": 807,
+          "ci": 26,
+          "source_model": "G9v3-3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mimo-v2-flash-non-reasoning",
+      "name": "MiMo-V2-Flash (Non-reasoning)",
+      "creator": "Xiaomi",
+      "scores": {
+        "gdpval-aa": {
+          "value": 788,
+          "ci": 19,
+          "source_model": "MiMo-V2-Flash (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-31b-reasoning",
+      "name": "Gemma 4 31B (Reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 755,
+          "ci": 16,
+          "source_model": "Gemma 4 31B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-oss-120b-high",
+      "name": "gpt-oss-120b (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 745,
+          "ci": 15,
+          "source_model": "gpt-oss-120b (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-35b-a3b-non-reasoning",
+      "name": "Qwen3.5 35B A3B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 740,
+          "ci": 20,
+          "source_model": "Qwen3.5 35B A3B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-4-mini-non-reasoning",
+      "name": "GPT-5.4 mini (Non-Reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 734,
+          "ci": 16,
+          "source_model": "GPT-5.4 mini (Non-Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "granite-4-2-30b",
+      "name": "Granite 4.2 30B",
+      "creator": "IBM",
+      "scores": {
+        "gdpval-aa": {
+          "value": 721,
+          "ci": 20,
+          "source_model": "Granite 4.2 30B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ling-3-0-tiny",
+      "name": "Ling 3.0 Tiny",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 716,
+          "ci": 20,
+          "source_model": "Ling 3.0 Tiny",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-26b-a4b-reasoning",
+      "name": "Gemma 4 26B A4B (Reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 693,
+          "ci": 15,
+          "source_model": "Gemma 4 26B A4B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-31b-non-reasoning",
+      "name": "Gemma 4 31B (Non-reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 691,
+          "ci": 18,
+          "source_model": "Gemma 4 31B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "devstral-2",
+      "name": "Devstral 2",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 689,
+          "ci": 17,
+          "source_model": "Devstral 2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-4-nano-non-reasoning",
+      "name": "GPT-5.4 nano (Non-Reasoning)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 681,
+          "ci": 21,
+          "source_model": "GPT-5.4 nano (Non-Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "devstral-small-2",
+      "name": "Devstral Small 2",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 680,
+          "ci": 16,
+          "source_model": "Devstral Small 2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-coder-next",
+      "name": "Qwen3 Coder Next",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 664,
+          "ci": 18,
+          "source_model": "Qwen3 Coder Next",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-5-instant-june-2026",
+      "name": "GPT-5.5 Instant (June 2026)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 662,
+          "ci": 17,
+          "source_model": "GPT-5.5 Instant (June 2026)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "command-a",
+      "name": "Command A+",
+      "creator": "Cohere",
+      "scores": {
+        "gdpval-aa": {
+          "value": 658,
+          "ci": 18,
+          "source_model": "Command A+",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mercury-2",
+      "name": "Mercury 2",
+      "creator": "Inception",
+      "scores": {
+        "gdpval-aa": {
+          "value": 646,
+          "ci": 19,
+          "source_model": "Mercury 2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "granite-4-2-8b",
+      "name": "Granite 4.2 8B",
+      "creator": "IBM",
+      "scores": {
+        "gdpval-aa": {
+          "value": 645,
+          "ci": 21,
+          "source_model": "Granite 4.2 8B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nemotron-3-super-120b-a12b-reasoning",
+      "name": "Nemotron 3 Super 120B A12B (Reasoning)",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 644,
+          "ci": 16,
+          "source_model": "Nemotron 3 Super 120B A12B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nova-2-0-pro-preview-medium",
+      "name": "Nova 2.0 Pro Preview (medium)",
+      "creator": "Amazon",
+      "scores": {
+        "gdpval-aa": {
+          "value": 630,
+          "ci": 16,
+          "source_model": "Nova 2.0 Pro Preview (medium)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "exaone-4-5-33b",
+      "name": "EXAONE 4.5 33B",
+      "creator": "LG AI Research",
+      "scores": {
+        "gdpval-aa": {
+          "value": 628,
+          "ci": 20,
+          "source_model": "EXAONE 4.5 33B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-2-5-pro",
+      "name": "Gemini 2.5 Pro",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 616,
+          "ci": 17,
+          "source_model": "Gemini 2.5 Pro",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "hypernova-60b-2605-high-based-on-gpt-oss-120b",
+      "name": "HyperNova 60B 2605 (high, based on gpt-oss-120b)",
+      "creator": "Multiverse Computing",
+      "scores": {
+        "gdpval-aa": {
+          "value": 604,
+          "ci": 19,
+          "source_model": "HyperNova 60B 2605 (high, based on gpt-oss-120b)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nova-2-0-pro-preview-low",
+      "name": "Nova 2.0 Pro Preview (low)",
+      "creator": "Amazon",
+      "scores": {
+        "gdpval-aa": {
+          "value": 601,
+          "ci": 16,
+          "source_model": "Nova 2.0 Pro Preview (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-1-flash-lite",
+      "name": "Gemini 3.1 Flash-Lite",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 596,
+          "ci": 16,
+          "source_model": "Gemini 3.1 Flash-Lite",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-12b-reasoning",
+      "name": "Gemma 4 12B (Reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 591,
+          "ci": 20,
+          "source_model": "Gemma 4 12B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-9b-reasoning",
+      "name": "Qwen3.5 9B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 588,
+          "ci": 18,
+          "source_model": "Qwen3.5 9B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-large-3",
+      "name": "Mistral Large 3",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 588,
+          "ci": 16,
+          "source_model": "Mistral Large 3",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-small-3-1",
+      "name": "Mistral Small 3.1",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 550,
+          "ci": 18,
+          "source_model": "Mistral Small 3.1",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k-exaone-reasoning",
+      "name": "K-EXAONE (Reasoning)",
+      "creator": "LG AI Research",
+      "scores": {
+        "gdpval-aa": {
+          "value": 540,
+          "ci": 20,
+          "source_model": "K-EXAONE (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-small-4-reasoning",
+      "name": "Mistral Small 4 (Reasoning)",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 537,
+          "ci": 19,
+          "source_model": "Mistral Small 4 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-medium-3-1",
+      "name": "Mistral Medium 3.1",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 536,
+          "ci": 17,
+          "source_model": "Mistral Medium 3.1",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nova-2-0-lite-high",
+      "name": "Nova 2.0 Lite (high)",
+      "creator": "Amazon",
+      "scores": {
+        "gdpval-aa": {
+          "value": 536,
+          "ci": 17,
+          "source_model": "Nova 2.0 Lite (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-oss-20b-high",
+      "name": "gpt-oss-20b (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 514,
+          "ci": 16,
+          "source_model": "gpt-oss-20b (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "trinity-large-thinking",
+      "name": "Trinity Large Thinking",
+      "creator": "Arcee AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 512,
+          "ci": 20,
+          "source_model": "Trinity Large Thinking",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nova-2-0-pro-preview-non-reasoning",
+      "name": "Nova 2.0 Pro Preview (Non-reasoning)",
+      "creator": "Amazon",
+      "scores": {
+        "gdpval-aa": {
+          "value": 509,
+          "ci": 16,
+          "source_model": "Nova 2.0 Pro Preview (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "diffusiongemma-26b-a4b",
+      "name": "DiffusionGemma 26B A4B",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 501,
+          "ci": 17,
+          "source_model": "DiffusionGemma 26B A4B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-235b-a22b-2507-reasoning",
+      "name": "Qwen3 235B A22B 2507 (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 495,
+          "ci": 19,
+          "source_model": "Qwen3 235B A22B 2507 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ling-2-6-flash",
+      "name": "Ling 2.6 Flash",
+      "creator": "InclusionAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 493,
+          "ci": 19,
+          "source_model": "Ling 2.6 Flash",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "celeris-1",
+      "name": "Celeris-1",
+      "creator": "Celeris",
+      "scores": {
+        "gdpval-aa": {
+          "value": 483,
+          "ci": 21,
+          "source_model": "Celeris-1",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-r1-jan-25",
+      "name": "DeepSeek R1 (Jan '25)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 479,
+          "ci": 18,
+          "source_model": "DeepSeek R1 (Jan '25)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "north-mini-code",
+      "name": "North Mini Code",
+      "creator": "Cohere",
+      "scores": {
+        "gdpval-aa": {
+          "value": 472,
+          "ci": 18,
+          "source_model": "North Mini Code",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-4-1-mini",
+      "name": "GPT-4.1 mini",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 453,
+          "ci": 18,
+          "source_model": "GPT-4.1 mini",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nemotron-cascade-2-30b-a3b",
+      "name": "Nemotron Cascade 2 30B A3B",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 447,
+          "ci": 21,
+          "source_model": "Nemotron Cascade 2 30B A3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "solar-pro-3",
+      "name": "Solar Pro 3",
+      "creator": "Upstage",
+      "scores": {
+        "gdpval-aa": {
+          "value": 447,
+          "ci": 16,
+          "source_model": "Solar Pro 3",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nvidia-nemotron-3-nano-30b-a3b-reasoning",
+      "name": "NVIDIA Nemotron 3 Nano 30B A3B (Reasoning)",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 438,
+          "ci": 17,
+          "source_model": "NVIDIA Nemotron 3 Nano 30B A3B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ministral-3-14b",
+      "name": "Ministral 3 14B",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 432,
+          "ci": 17,
+          "source_model": "Ministral 3 14B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "o3-mini-high",
+      "name": "o3-mini (high)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 421,
+          "ci": 19,
+          "source_model": "o3-mini (high)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nemotron-3-nano-omni-30b-a3b-reasoning",
+      "name": "Nemotron 3 Nano Omni 30B A3B Reasoning",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 416,
+          "ci": 21,
+          "source_model": "Nemotron 3 Nano Omni 30B A3B Reasoning",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "claude-3-5-haiku",
+      "name": "Claude 3.5 Haiku",
+      "creator": "Anthropic",
+      "scores": {
+        "gdpval-aa": {
+          "value": 408,
+          "ci": 18,
+          "source_model": "Claude 3.5 Haiku",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ministral-3-8b",
+      "name": "Ministral 3 8B",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 405,
+          "ci": 17,
+          "source_model": "Ministral 3 8B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "granite-4-2-3b",
+      "name": "Granite 4.2 3B",
+      "creator": "IBM",
+      "scores": {
+        "gdpval-aa": {
+          "value": 390,
+          "ci": 21,
+          "source_model": "Granite 4.2 3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "granite-4-1-30b",
+      "name": "Granite 4.1 30B",
+      "creator": "IBM",
+      "scores": {
+        "gdpval-aa": {
+          "value": 379,
+          "ci": 16,
+          "source_model": "Granite 4.1 30B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-oss-120b-low",
+      "name": "gpt-oss-120b (low)",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 364,
+          "ci": 21,
+          "source_model": "gpt-oss-120b (low)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "magistral-medium-1-2",
+      "name": "Magistral Medium 1.2",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 362,
+          "ci": 18,
+          "source_model": "Magistral Medium 1.2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-think-v2",
+      "name": "K2 Think V2",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": 328,
+          "ci": 18,
+          "source_model": "K2 Think V2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-next-80b-a3b-reasoning",
+      "name": "Qwen3 Next 80B A3B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 325,
+          "ci": 20,
+          "source_model": "Qwen3 Next 80B A3B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v3-0324",
+      "name": "DeepSeek V3 0324",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 275,
+          "ci": 19,
+          "source_model": "DeepSeek V3 0324",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-30b-a3b-2507-reasoning",
+      "name": "Qwen3 30B A3B 2507 (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 274,
+          "ci": 20,
+          "source_model": "Qwen3 30B A3B 2507 (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-32b-reasoning",
+      "name": "Qwen3 32B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 240,
+          "ci": 18,
+          "source_model": "Qwen3 32B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "ministral-3-3b",
+      "name": "Ministral 3 3B",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 234,
+          "ci": 18,
+          "source_model": "Ministral 3 3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "magistral-small-1-2",
+      "name": "Magistral Small 1.2",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 213,
+          "ci": 19,
+          "source_model": "Magistral Small 1.2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "lfm2-5-2-6b",
+      "name": "LFM2.5-2.6B",
+      "creator": "Liquid AI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 202,
+          "ci": 22,
+          "source_model": "LFM2.5-2.6B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-4",
+      "name": "GPT-4",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 189,
+          "ci": 18,
+          "source_model": "GPT-4",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "GPT-4o mini",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 188,
+          "ci": 19,
+          "source_model": "GPT-4o mini",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-14b-reasoning",
+      "name": "Qwen3 14B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 188,
+          "ci": 19,
+          "source_model": "Qwen3 14B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v3-dec-24",
+      "name": "DeepSeek V3 (Dec '24)",
+      "creator": "DeepSeek",
+      "scores": {
+        "gdpval-aa": {
+          "value": 183,
+          "ci": 19,
+          "source_model": "DeepSeek V3 (Dec '24)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-e4b-reasoning",
+      "name": "Gemma 4 E4B (Reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 177,
+          "ci": 22,
+          "source_model": "Gemma 4 E4B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-2b-reasoning",
+      "name": "Qwen3.5 2B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 166,
+          "ci": 21,
+          "source_model": "Qwen3.5 2B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8b-reasoning",
+      "name": "Qwen3 8B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": 165,
+          "ci": 19,
+          "source_model": "Qwen3 8B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nvidia-nemotron-3-nano-4b",
+      "name": "NVIDIA Nemotron 3 Nano 4B",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": 159,
+          "ci": 21,
+          "source_model": "NVIDIA Nemotron 3 Nano 4B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "granite-4-1-3b",
+      "name": "Granite 4.1 3B",
+      "creator": "IBM",
+      "scores": {
+        "gdpval-aa": {
+          "value": 74,
+          "ci": 20,
+          "source_model": "Granite 4.1 3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "llama-4-scout",
+      "name": "Llama 4 Scout",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": 60,
+          "ci": 17,
+          "source_model": "Llama 4 Scout",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "llama-3-3-instruct-70b",
+      "name": "Llama 3.3 Instruct 70B",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": 50,
+          "ci": 19,
+          "source_model": "Llama 3.3 Instruct 70B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-4-e2b-reasoning",
+      "name": "Gemma 4 E2B (Reasoning)",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": 36,
+          "ci": 21,
+          "source_model": "Gemma 4 E2B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "mistral-small-3-2",
+      "name": "Mistral Small 3.2",
+      "creator": "Mistral",
+      "scores": {
+        "gdpval-aa": {
+          "value": 29,
+          "ci": 19,
+          "source_model": "Mistral Small 3.2",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gpt-4-1-nano",
+      "name": "GPT-4.1 nano",
+      "creator": "OpenAI",
+      "scores": {
+        "gdpval-aa": {
+          "value": 13,
+          "ci": 19,
+          "source_model": "GPT-4.1 nano",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "llama-4-maverick",
+      "name": "Llama 4 Maverick",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": -45,
+          "ci": 17,
+          "source_model": "Llama 4 Maverick",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nvidia-nemotron-3-nano-30b-a3b-non-reasoning",
+      "name": "NVIDIA Nemotron 3 Nano 30B A3B (Non-reasoning)",
+      "creator": "NVIDIA",
+      "scores": {
+        "gdpval-aa": {
+          "value": -122,
+          "ci": 17,
+          "source_model": "NVIDIA Nemotron 3 Nano 30B A3B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-2b-non-reasoning",
+      "name": "Qwen3.5 2B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": -130,
+          "ci": 18,
+          "source_model": "Qwen3.5 2B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-0-8b-non-reasoning",
+      "name": "Qwen3.5 0.8B (Non-reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": -133,
+          "ci": 18,
+          "source_model": "Qwen3.5 0.8B (Non-reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "minicpm-v-4-6-1-3b",
+      "name": "MiniCPM-V 4.6 1.3B",
+      "creator": "OpenBMB",
+      "scores": {
+        "gdpval-aa": {
+          "value": -134,
+          "ci": 17,
+          "source_model": "MiniCPM-V 4.6 1.3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "llama-3-1-instruct-8b",
+      "name": "Llama 3.1 Instruct 8B",
+      "creator": "Meta",
+      "scores": {
+        "gdpval-aa": {
+          "value": -151,
+          "ci": 17,
+          "source_model": "Llama 3.1 Instruct 8B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "qwen3-5-0-8b-reasoning",
+      "name": "Qwen3.5 0.8B (Reasoning)",
+      "creator": "Alibaba",
+      "scores": {
+        "gdpval-aa": {
+          "value": -152,
+          "ci": 17,
+          "source_model": "Qwen3.5 0.8B (Reasoning)",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "nanbeige4-1-3b",
+      "name": "Nanbeige4.1-3B",
+      "creator": "Nanbeige",
+      "scores": {
+        "gdpval-aa": {
+          "value": -166,
+          "ci": 17,
+          "source_model": "Nanbeige4.1-3B",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-3-12b-instruct",
+      "name": "Gemma 3 12B Instruct",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": -170,
+          "ci": 17,
+          "source_model": "Gemma 3 12B Instruct",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "gemma-3-27b-instruct",
+      "name": "Gemma 3 27B Instruct",
+      "creator": "Google",
+      "scores": {
+        "gdpval-aa": {
+          "value": -171,
+          "ci": 16,
+          "source_model": "Gemma 3 27B Instruct",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "phi-4-mini-instruct",
+      "name": "Phi-4 Mini Instruct",
+      "creator": "Microsoft",
+      "scores": {
+        "gdpval-aa": {
+          "value": -171,
+          "ci": 17,
+          "source_model": "Phi-4 Mini Instruct",
+          "agent": "Stirrup"
+        }
+      }
+    },
+    {
+      "id": "k2-horizon-0-9b",
+      "name": "K2 Horizon 0.9B",
+      "creator": "MBZUAI Institute of Foundation Models",
+      "scores": {
+        "gdpval-aa": {
+          "value": -174,
+          "ci": 17,
+          "source_model": "K2 Horizon 0.9B",
+          "agent": "Stirrup"
         }
       }
     }

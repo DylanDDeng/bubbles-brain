@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
+import { benchmarkIcons } from './benchmarkIcons';
 
 import {
 	benchmarkLedger,
@@ -34,7 +35,7 @@ describe('benchmark ledger', () => {
 		expect(
 			groups.map((group) => [group.id, group.benchmarks.map((benchmark) => benchmark.id)]),
 		).toEqual([
-			['general', ['aa-index', 'vals-index']],
+			['general', ['aa-index', 'gdpval-aa', 'vals-index']],
 			['coding', ['tbench-4', 'deepswe', 'programbench']],
 			['finance', ['finance-agent']],
 		]);
@@ -91,6 +92,53 @@ describe('benchmark ledger', () => {
 	it('builds locale-specific benchmark routes', () => {
 		expect(benchmarkRoute('tbench-4', 'zh-CN')).toBe('/benchmarks/tbench-4/');
 		expect(benchmarkRoute('tbench-4', 'en')).toBe('/en/benchmarks/tbench-4/');
+	});
+
+	it('preserves the full GDPval-AA v2 Elo scale and explicit evaluation configurations', () => {
+		const rows = rankedScores('gdpval-aa');
+		expect(rows).toHaveLength(247);
+		expect(rows[0]).toMatchObject({
+			model: { name: 'Claude Fable 5.1 (Adaptive Reasoning, Max Effort, Default Fallback)' },
+			score: { value: 1764, ci: 19, agent: 'Stirrup' },
+		});
+		expect(rows.at(-1)).toMatchObject({
+			model: { name: 'K2 Horizon 0.9B' },
+			score: { value: -174, ci: 17 },
+		});
+		expect(rows.filter(({ score }) => score.value < 0)).toHaveLength(12);
+		for (const { model, score } of rows) {
+			expect(score.source_model).toBe(model.name);
+			expect(benchmarkIcons[model.creator]).toBeTruthy();
+			expect(score.ci).toBeGreaterThan(0);
+			expect(formatScore(score, 'integer')).not.toContain('%');
+		}
+		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'gdpval-aa')!;
+		expect(benchmark).toMatchObject({
+			category: 'general',
+			checked_at: '2026-09-17',
+			url: 'https://artificialanalysis.ai/evaluations/gdpval-aa',
+			format: 'integer',
+			score_label: { zh: 'Elo 评分', en: 'Elo rating' },
+		});
+	});
+
+	it('allows signed integer Elo without allowing negative values on other benchmarks', async () => {
+		const schema = JSON.parse(
+			await readFile(resolve(process.cwd(), '../schemas/benchmarks.schema.json'), 'utf8'),
+		);
+		const validate = new Ajv({ allErrors: true, strict: true }).compile(schema);
+		const sample = structuredClone(benchmarkLedger);
+		sample.models = [{ id: 'sample', name: 'Sample', creator: 'OpenAI', scores: {} }];
+		for (const value of [-174, 0, 1764]) {
+			sample.models[0]!.scores = { 'gdpval-aa': { value } };
+			expect(validate(sample)).toBe(true);
+		}
+		sample.models[0]!.scores = { 'gdpval-aa': { value: 1.5 } };
+		expect(validate(sample)).toBe(false);
+		for (const benchmark of benchmarkLedger.benchmarks.filter(({ id }) => id !== 'gdpval-aa')) {
+			sample.models[0]!.scores = { [benchmark.id]: { value: -1 } };
+			expect(validate(sample)).toBe(false);
+		}
 	});
 
 	it('keeps the DeepSWE v1.1 snapshot separate from older benchmark checks', () => {

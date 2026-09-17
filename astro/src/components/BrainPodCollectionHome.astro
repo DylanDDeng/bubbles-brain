@@ -111,6 +111,8 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 						<div class="bc-panel-content">
 							{collection.id === 'vibe-coding-terms' ? (
 								<BrainPodTermsDirectory />
+							) : collection.id === 'benchmarks' ? (
+								<BenchmarkDirectory locale="zh-CN" embedded />
 							) : (
 								<>
 									<header class="bc-panel-heading">
@@ -118,11 +120,7 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 											{collection.title}
 										</h2>
 									</header>
-									{collection.id === 'benchmarks' ? (
-										<BenchmarkDirectory locale="zh-CN" embedded />
-									) : (
-										<BrainPodCollectionList collection={collection} />
-									)}
+									<BrainPodCollectionList collection={collection} />
 								</>
 							)}
 						</div>

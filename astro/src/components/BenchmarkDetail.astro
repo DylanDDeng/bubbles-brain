@@ -2,6 +2,7 @@
 import { benchmarkIcons } from '../lib/benchmarkIcons';
 import {
 	benchmarkLedger,
+	benchmarkDirectoryRoute,
 	benchmarkCategories,
 	benchmarkParagraphs,
 	collectNotes,
@@ -31,6 +32,23 @@ const dateLabel = new Intl.DateTimeFormat(locale, {
 	timeZone: 'Asia/Shanghai',
 }).format(new Date(`${checkedAt}T00:00:00+08:00`));
 const showAgent = rows.some(({ score }) => score.agent);
+const showAlmost = rows.some(({ score }) => score.almost_resolved !== undefined);
+const showAllPass = rows.some(({ score }) => score.all_pass !== undefined);
+const showSecondary = showAlmost || showAllPass;
+const secondaryLabel = showAllPass
+	? isEnglish
+		? 'All-Pass'
+		: '全部通过'
+	: isEnglish
+		? 'Almost'
+		: '接近解决';
+const secondaryTooltip = showAllPass
+	? isEnglish
+		? 'Share of questions passing every check'
+		: '所有评分检查均通过的题目比例'
+	: isEnglish
+		? 'Tasks passing at least 95% of tests; includes resolved tasks'
+		: '至少通过 95% 测试的任务比例，包含完全解决的任务';
 const paragraphs = benchmarkParagraphs(pick(benchmark.explainer, locale), locale);
 const scoreReading = pick(benchmark.description, locale).replace(
 	/^(?:分数怎么读：|How to read it:\s*)/,
@@ -40,7 +58,7 @@ const scoreReading = pick(benchmark.description, locale).replace(
 
 <section class="page-shell bench-shell bench-detail">
 	<header class="bench-header">
-		<a class="collection-back" href={isEnglish ? '/en/benchmarks/' : '/#bc-benchmarks'}>
+		<a class="collection-back" href={benchmarkDirectoryRoute(benchmark, locale)}>
 			<i class="ph ph-arrow-left" aria-hidden="true"></i>
 			Benchmarks
 		</a>
@@ -70,6 +88,16 @@ const scoreReading = pick(benchmark.description, locale).replace(
 				<i class="ph ph-arrow-up-right" aria-hidden="true"></i>
 			</a>
 		</p>
+		{
+			benchmark.related_reading && (
+				<p class="bench-guide-source">
+					<a href={pick(benchmark.related_reading.href, locale)}>
+						{pick(benchmark.related_reading.title, locale)}
+						<i class="ph ph-arrow-up-right" aria-hidden="true" />
+					</a>
+				</p>
+			)
+		}
 	</section>
 
 	<section class="bench-results" aria-labelledby="scores">
@@ -85,7 +113,10 @@ const scoreReading = pick(benchmark.description, locale).replace(
 		</header>
 
 		<div class="bench-table-wrap">
-			<table class="bench-table" data-bench-table>
+			<table
+				class:list={['bench-table', { 'bench-table--with-almost': showSecondary }]}
+				data-bench-table
+			>
 				<caption class="sr-only">
 					{pick(benchmark.name, locale)} — {
 						isEnglish
@@ -110,27 +141,49 @@ const scoreReading = pick(benchmark.description, locale).replace(
 						<th scope="col" class="bench-col-score" aria-sort="descending">
 							<button type="button" data-sort="score" data-numeric>
 								{
-									benchmark.format === 'percent'
-										? isEnglish
-											? 'Resolved'
-											: '解决率'
-										: isEnglish
-											? 'Index'
-											: '指数'
+									benchmark.score_label
+										? pick(benchmark.score_label, locale)
+										: showAlmost
+											? isEnglish
+												? 'Resolved'
+												: '完全解决'
+											: benchmark.format === 'percent'
+												? isEnglish
+													? 'Resolved'
+													: '解决率'
+												: isEnglish
+													? 'Index'
+													: '指数'
 								}
 							</button>
 						</th>
+						{
+							showSecondary && (
+								<th scope="col" class="bench-col-score">
+									<button
+										type="button"
+										data-sort={showAllPass ? 'all-pass' : 'almost'}
+										data-numeric
+										title={secondaryTooltip}
+									>
+										{secondaryLabel}
+									</button>
+								</th>
+							)
+						}
 					</tr>
 				</thead>
 				<tbody>
 					{
-						rows.map(({ model, score }) => {
+						rows.map(({ model, score }, rank) => {
 							const noteNumber = noteIndex.get(model.id);
+							const secondaryValue = showAllPass ? score.all_pass : score.almost_resolved;
 							return (
 								<tr
 									data-name={model.name}
 									data-creator={model.creator}
 									data-agent={score.agent ?? ''}
+									data-rank={rank}
 								>
 									<th scope="row">
 										<div class="bench-model-identity">
@@ -185,6 +238,13 @@ const scoreReading = pick(benchmark.description, locale).replace(
 											</span>
 										)}
 									</td>
+									{showSecondary && (
+										<td class="bench-score" data-value={secondaryValue}>
+											<span class="bench-value">
+												{secondaryValue === undefined ? '—' : `${secondaryValue.toFixed(1)}%`}
+											</span>
+										</td>
+									)}
 								</tr>
 							);
 						})

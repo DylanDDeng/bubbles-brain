@@ -1,5 +1,6 @@
 ---
 import { benchmarkRoute, groupedBenchmarks, pick, type BenchmarkLocale } from '../lib/benchmarks';
+import '../styles/brainpodCollection.css';
 import '../styles/benchmarks.css';
 
 interface Props {
@@ -7,18 +8,58 @@ interface Props {
 	embedded?: boolean;
 }
 const { locale, embedded = false } = Astro.props;
-const Heading = embedded ? 'h3' : 'h2';
+const groups = groupedBenchmarks();
 ---
 
-<div class="bench-directory">
+<div
+	class:list={['bench-directory', { 'bench-standalone-directory': !embedded }]}
+	data-benchmark-standalone={!embedded || undefined}
+>
+	<div
+		id={embedded ? undefined : 'bc-benchmarks'}
+		data-room-subview={embedded ? 'benchmarks' : undefined}
+		data-benchmark-view="benchmarks"
+	>
+		{
+			embedded && (
+				<header class="bc-panel-heading">
+					<h2 id="bc-title-benchmarks" tabindex="-1">
+						Benchmarks
+					</h2>
+				</header>
+			)
+		}
+		<ul class="bc-tracks bc-subsections">
+			{
+				groups.map((group) => (
+					<li>
+						<a href={`#bc-benchmarks-${group.id}`} data-room-pick={`benchmarks-${group.id}`}>
+							<span>{pick(group.name, locale)}</span>
+							<i class="ph ph-arrow-right" aria-hidden="true" />
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
 	{
-		groupedBenchmarks().map((group) => (
-			<section class="bench-directory-group" aria-labelledby={`bench-group-${group.id}`}>
-				<Heading class="bench-domain" id={`bench-group-${group.id}`}>
-					{pick(group.name, locale)}
-				</Heading>
-				<p class="bench-domain-description">{pick(group.description, locale)}</p>
-				<ul class="bench-directory-list">
+		groups.map((group) => (
+			<section
+				id={`bc-benchmarks-${group.id}`}
+				data-room-subview={embedded ? `benchmarks-${group.id}` : undefined}
+				data-benchmark-view={`benchmarks-${group.id}`}
+				aria-labelledby={`bc-title-benchmarks-${group.id}`}
+			>
+				<a class="bc-parent-link" href="#bc-benchmarks" data-room-pick="benchmarks">
+					<i class="ph ph-arrow-left" aria-hidden="true" />
+					Benchmarks
+				</a>
+				<header class="bc-panel-heading">
+					<h2 id={`bc-title-benchmarks-${group.id}`} tabindex="-1">
+						{pick(group.name, locale)}
+					</h2>
+				</header>
+				<ul class="bc-tracks">
 					{group.benchmarks.map((benchmark) => (
 						<li>
 							<a href={benchmarkRoute(benchmark.id, locale)}>
@@ -41,3 +82,7 @@ const Heading = embedded ? 'h3' : 'h2';
 		))
 	}
 </div>
+
+<script>
+	import '../scripts/benchmarkDirectory';
+</script>

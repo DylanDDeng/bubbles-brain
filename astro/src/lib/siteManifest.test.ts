@@ -61,11 +61,17 @@ describe('site feeds', () => {
 		);
 	});
 
-	it('publishes DeepSWE in both languages with reciprocal alternate routes', async () => {
+	it('publishes new benchmarks with reciprocal alternate routes', async () => {
 		const records = await loadSiteManifest();
 		for (const [route, alternateRoute] of [
 			['/benchmarks/deepswe/', '/en/benchmarks/deepswe/'],
 			['/en/benchmarks/deepswe/', '/benchmarks/deepswe/'],
+			['/benchmarks/programbench/', '/en/benchmarks/programbench/'],
+			['/en/benchmarks/programbench/', '/benchmarks/programbench/'],
+			['/benchmarks/finance-agent/', '/en/benchmarks/finance-agent/'],
+			['/benchmarks/vals-index/', '/en/benchmarks/vals-index/'],
+			['/en/benchmarks/vals-index/', '/benchmarks/vals-index/'],
+			['/en/benchmarks/finance-agent/', '/benchmarks/finance-agent/'],
 		]) {
 			expect(records).toContainEqual(
 				expect.objectContaining({ route, alternateRoute, section: 'benchmarks' }),

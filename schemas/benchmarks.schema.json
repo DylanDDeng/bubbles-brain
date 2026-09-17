@@ -33,12 +33,13 @@
       ],
       "properties": {
         "id": { "$ref": "#/definitions/slug" },
-        "category": { "enum": ["general", "coding", "agent"] },
+        "category": { "enum": ["general", "coding", "finance"] },
         "name": { "$ref": "#/definitions/bilingual" },
         "source": { "type": "string", "minLength": 1 },
         "checked_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
         "url": { "type": "string", "pattern": "^https://" },
         "format": { "enum": ["integer", "percent"] },
+        "score_label": { "$ref": "#/definitions/bilingual" },
         "measures": {
           "description": "One line: which capability this benchmark tests.",
           "$ref": "#/definitions/bilingual"
@@ -50,6 +51,15 @@
         "description": {
           "description": "How to read the number.",
           "$ref": "#/definitions/bilingual"
+        },
+        "related_reading": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title", "href"],
+          "properties": {
+            "title": { "$ref": "#/definitions/bilingual" },
+            "href": { "$ref": "#/definitions/bilingual" }
+          }
         }
       }
     },
@@ -59,6 +69,10 @@
       "required": ["value"],
       "properties": {
         "value": { "type": "number", "minimum": 0 },
+        "almost_resolved": { "type": "number", "minimum": 0, "maximum": 100 },
+        "average_pass_rate": { "type": "number", "minimum": 0, "maximum": 100 },
+        "all_pass": { "type": "number", "minimum": 0, "maximum": 100 },
+        "source_model": { "type": "string", "minLength": 1 },
         "ci": { "type": "number", "exclusiveMinimum": 0 },
         "agent": { "type": "string", "minLength": 1 },
         "note": { "$ref": "#/definitions/bilingual" },

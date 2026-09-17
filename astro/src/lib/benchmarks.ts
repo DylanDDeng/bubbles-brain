@@ -8,30 +8,9 @@ interface Bilingual {
 }
 
 export const benchmarkCategories = [
-	{
-		id: 'general',
-		name: { zh: '综合能力', en: 'General intelligence' },
-		description: {
-			zh: '看知识、推理、数学与编程的总体表现。',
-			en: 'Overall performance across knowledge, reasoning, math and coding.',
-		},
-	},
-	{
-		id: 'coding',
-		name: { zh: 'Coding · 软件工程', en: 'Coding · Software engineering' },
-		description: {
-			zh: '看能否读懂代码库、修复问题并完成开发需求。',
-			en: 'Understanding repositories, fixing bugs and delivering working changes.',
-		},
-	},
-	{
-		id: 'agent',
-		name: { zh: 'Agent · 终端任务', en: 'Agents · Terminal tasks' },
-		description: {
-			zh: '看能否使用工具，完成编程、数据处理和环境配置等任务。',
-			en: 'Using tools to complete coding, data processing and environment setup tasks.',
-		},
-	},
+	{ id: 'general', name: { zh: '综合能力', en: 'General intelligence' } },
+	{ id: 'coding', name: { zh: 'Coding', en: 'Coding' } },
+	{ id: 'finance', name: { zh: '金融', en: 'Finance' } },
 ] as const;
 
 export type BenchmarkCategory = (typeof benchmarkCategories)[number]['id'];
@@ -44,13 +23,19 @@ export interface BenchmarkDefinition {
 	checked_at?: string;
 	url: string;
 	format: 'integer' | 'percent';
+	score_label?: Bilingual;
 	measures: Bilingual;
 	explainer: Bilingual;
 	description: Bilingual;
+	related_reading?: { title: Bilingual; href: Bilingual };
 }
 
 export interface BenchmarkScore {
 	value: number;
+	almost_resolved?: number;
+	average_pass_rate?: number;
+	all_pass?: number;
+	source_model?: string;
 	ci?: number;
 	agent?: string;
 	note?: Bilingual;
@@ -61,7 +46,7 @@ export interface BenchmarkModel {
 	id: string;
 	name: string;
 	creator: string;
-	scores: Record<string, BenchmarkScore>;
+	scores: Partial<Record<string, BenchmarkScore>>;
 }
 
 export interface BenchmarkLedger {
@@ -111,6 +96,14 @@ export function benchmarkRoute(benchmarkId: string, locale: BenchmarkLocale): st
 	return `${locale === 'en' ? '/en' : ''}/benchmarks/${benchmarkId}/`;
 }
 
+/** Return to the category containing this benchmark, in the existing directory. */
+export function benchmarkDirectoryRoute(
+	benchmark: BenchmarkDefinition,
+	locale: BenchmarkLocale,
+): string {
+	return `${locale === 'en' ? '/en/benchmarks/' : '/'}#bc-benchmarks-${benchmark.category}`;
+}
+
 export interface RankedScore {
 	model: BenchmarkModel;
 	score: BenchmarkScore;
@@ -129,7 +122,13 @@ export function rankedScores(
 			const score = model.scores[benchmarkId];
 			return score ? [{ model, score, index }] : [];
 		})
-		.sort((left, right) => right.score.value - left.score.value || left.index - right.index)
+		.sort(
+			(left, right) =>
+				right.score.value - left.score.value ||
+				(right.score.almost_resolved ?? 0) - (left.score.almost_resolved ?? 0) ||
+				(right.score.average_pass_rate ?? 0) - (left.score.average_pass_rate ?? 0) ||
+				left.index - right.index,
+		)
 		.map(({ model, score }) => ({ model, score }));
 }
 

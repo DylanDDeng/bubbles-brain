@@ -36,7 +36,7 @@ function setupBenchmarkSort() {
 				// Numeric columns start high→low; text columns start A→Z.
 				const descending = current ? current !== 'descending' : numeric;
 				const sorted = rows()
-					.map((row, index) => ({ row, index }))
+					.map((row, index) => ({ row, index: Number(row.dataset.rank ?? index) }))
 					.sort((left, right) => {
 						const a = cellValue(left.row, column, numeric);
 						const b = cellValue(right.row, column, numeric);

@@ -34,6 +34,10 @@ const dateLabel = new Intl.DateTimeFormat(locale, {
 const showAgent = rows.some(({ score }) => score.agent);
 const showAlmost = rows.some(({ score }) => score.almost_resolved !== undefined);
 const showAllPass = rows.some(({ score }) => score.all_pass !== undefined);
+const showCost = rows.some(({ score }) => score.average_cost_usd !== undefined);
+const showDuration = rows.some(({ score }) => score.average_duration_seconds !== undefined);
+const showResources = showCost || showDuration;
+const costFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const showSecondary = showAlmost || showAllPass;
 const secondaryLabel = showAllPass
 	? isEnglish
@@ -112,9 +116,21 @@ const scoreReading = pick(benchmark.description, locale).replace(
 			</p>
 		</header>
 
-		<div class="bench-table-wrap">
+		<div
+			class:list={['bench-table-wrap', { 'bench-table-wrap--resources': showResources }]}
+			tabindex={showResources ? 0 : undefined}
+			role={showResources ? 'region' : undefined}
+			aria-label={showResources
+				? isEnglish
+					? 'Model performance, horizontally scrollable'
+					: '模型表现表格，可横向滚动'
+				: undefined}
+		>
 			<table
-				class:list={['bench-table', { 'bench-table--with-almost': showSecondary }]}
+				class:list={[
+					'bench-table',
+					{ 'bench-table--with-almost': showSecondary, 'bench-table--resources': showResources },
+				]}
 				data-bench-table
 			>
 				<caption class="sr-only">
@@ -167,6 +183,36 @@ const scoreReading = pick(benchmark.description, locale).replace(
 										title={secondaryTooltip}
 									>
 										{secondaryLabel}
+									</button>
+								</th>
+							)
+						}
+						{
+							showCost && (
+								<th scope="col" class="bench-col-resource">
+									<button
+										type="button"
+										data-sort="cost"
+										data-numeric
+										title={isEnglish ? 'Average cost per trial in USD' : '每次试验的平均费用，美元'}
+									>
+										{isEnglish ? 'Cost / trial' : '单次费用'}
+									</button>
+								</th>
+							)
+						}
+						{
+							showDuration && (
+								<th scope="col" class="bench-col-resource">
+									<button
+										type="button"
+										data-sort="duration"
+										data-numeric
+										title={
+											isEnglish ? 'Average time per trial in hours' : '每次试验的平均耗时，小时'
+										}
+									>
+										{isEnglish ? 'Time / trial' : '单次耗时'}
 									</button>
 								</th>
 							)
@@ -237,12 +283,44 @@ const scoreReading = pick(benchmark.description, locale).replace(
 												± {score.ci}
 											</span>
 										)}
+										{score.worst_at_5 !== undefined && score.best_at_5 !== undefined && (
+											<span
+												class="bench-trial-range"
+												title={
+													isEnglish
+														? 'Worst@5–best@5; not a confidence interval'
+														: 'Worst@5–best@5；不是置信区间'
+												}
+											>
+												<span>
+													{score.worst_at_5.toFixed(1)}–{score.best_at_5.toFixed(1)}%
+												</span>
+												<span>worst–best@5</span>
+											</span>
+										)}
 									</td>
 									{showSecondary && (
 										<td class="bench-score" data-value={secondaryValue}>
 											<span class="bench-value">
 												{secondaryValue === undefined ? '—' : `${secondaryValue.toFixed(1)}%`}
 											</span>
+										</td>
+									)}
+									{showCost && (
+										<td class="bench-score bench-resource" data-value={score.average_cost_usd}>
+											{score.average_cost_usd === undefined
+												? '—'
+												: costFormat.format(score.average_cost_usd)}
+										</td>
+									)}
+									{showDuration && (
+										<td
+											class="bench-score bench-resource"
+											data-value={score.average_duration_seconds}
+										>
+											{score.average_duration_seconds === undefined
+												? '—'
+												: `${(score.average_duration_seconds / 3600).toFixed(1)} ${isEnglish ? 'h' : '小时'}`}
 										</td>
 									)}
 								</tr>

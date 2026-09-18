@@ -368,3 +368,42 @@
 		padding-right: 0;
 	}
 }
+
+/* Resource-heavy evaluations retain all columns in a scrollable mobile table. */
+.bench-table-wrap--resources {
+	overflow-x: auto;
+}
+
+.bench-table--resources {
+	min-width: 720px;
+}
+
+.bench-table--resources .bench-col-agent {
+	width: 120px;
+}
+
+.bench-table .bench-col-resource {
+	width: 128px;
+	text-align: right;
+}
+
+.bench-resource {
+	font-size: 15px;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.bench-trial-range {
+	display: grid;
+	margin-top: 4px;
+	color: var(--ink-soft);
+	font-size: 12px;
+	font-weight: 400;
+	white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+	.bench-table--resources {
+		min-width: 560px;
+	}
+}

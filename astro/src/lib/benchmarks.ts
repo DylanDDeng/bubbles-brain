@@ -35,6 +35,10 @@ export interface BenchmarkScore {
 	almost_resolved?: number;
 	average_pass_rate?: number;
 	all_pass?: number;
+	worst_at_5?: number;
+	best_at_5?: number;
+	average_cost_usd?: number;
+	average_duration_seconds?: number;
 	source_model?: string;
 	ci?: number;
 	agent?: string;

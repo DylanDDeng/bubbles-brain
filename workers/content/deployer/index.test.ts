@@ -647,7 +647,7 @@ describe("automatic code release boundary", () => {
             status: "modified",
           },
           {
-            filename: "scripts/daily-localization-contract.mjs",
+            filename: "scripts/preview-media-types.mjs",
             status: "added",
           },
           {
@@ -856,6 +856,57 @@ describe("automatic code release boundary", () => {
         },
       ),
     ).not.toThrow();
+  });
+
+  it.each([
+    "scripts/daily-localization-contract.mjs",
+    "scripts/pull-daily-content.sh",
+    "scripts/verify-complete-report-day.mjs",
+  ])("only allows removal of retired daily script %s", (filename) => {
+    expect(
+      validateCodeReleaseChangeSet(
+        comparison([{ filename, status: "removed" }]),
+        { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+      ),
+    ).toHaveLength(1);
+
+    for (const status of ["added", "modified", "renamed", "copied"]) {
+      expect(() =>
+        validateCodeReleaseChangeSet(
+          comparison([{ filename, status }]),
+          { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+        ),
+      ).toThrow(`Code release may only remove retired daily script: ${filename}`);
+    }
+  });
+
+  it("accepts the retired daily tooling cleanup change set", () => {
+    const files = [
+      ...[
+        "scripts/daily-localization-contract.mjs",
+        "scripts/pull-daily-content.sh",
+        "scripts/verify-complete-report-day.mjs",
+        "tests/worker/dailyLocalizationContract.test.js",
+        "tests/worker/completeReportDay.test.js",
+        "docs/archive/README.md",
+        "docs/archive/hugo.toml.bak",
+      ].map((filename) => ({ filename, status: "removed" })),
+      ...[
+        "start.sh",
+        "package.json",
+        "README.md",
+        "README.zh-CN.md",
+        "workers/content/deployer/index.ts",
+        "workers/content/deployer/index.test.ts",
+      ].map((filename) => ({ filename, status: "modified" })),
+    ];
+    expect(
+      validateCodeReleaseChangeSet(comparison(files), {
+        baseCodeSha,
+        targetCodeSha,
+        structuredCutoverDate: "2026-07-16",
+      }),
+    ).toHaveLength(files.length);
   });
 
   it.each(["unknown/release-input.json"])(

@@ -145,6 +145,44 @@
       }
     },
     {
+      "id": "frontierswe",
+      "category": "coding",
+      "name": {
+        "zh": "FrontierSWE v2",
+        "en": "FrontierSWE v2"
+      },
+      "source": "Proximal Labs · FrontierSWE",
+      "checked_at": "2026-09-17",
+      "url": "https://www.frontierswe.com/",
+      "format": "percent",
+      "score_label": {
+        "zh": "平均得分",
+        "en": "Mean@5"
+      },
+      "measures": {
+        "zh": "长时间工程能力：在 20 小时内完成高难度软件、科研与视觉任务",
+        "en": "Long-horizon engineering: difficult software, research and visual tasks within 20 hours"
+      },
+      "explainer": {
+        "zh": "FrontierSWE v2 由 Proximal Labs 推出，考察编程 Agent 能否长时间自主推进复杂项目。它包含 34 个任务，覆盖系统实现、性能优化、科学计算、视觉推理和 AI 研究，每项任务运行 5 次，每次最多 20 小时。你可以把它理解成一场持续一整天的工程挑战：不是回答“怎么写”，而是实际写出程序、测试、发现问题并反复改进。例如，用 Zig 重新实现 Git，在 SQLite 上构建兼容 PostgreSQL 的服务，使用 Remotion 复刻一段视频，或训练仅凭摄像头画面驾驶赛车的机器人。官方使用 Proximus 框架，为模型提供 Linux 环境，部分任务配有 GPU；框架支持查看图片、压缩上下文和保存候选提交，鼓励模型在剩余时间内继续优化。成绩由自动验证器根据最终成果计算，因此反映的是模型与这套 Agent 框架组合的表现，不等同于它在 Codex 或 Claude Code 中的表现。",
+        "en": "FrontierSWE v2, developed by Proximal Labs, tests whether coding agents can sustain autonomous work on complex projects. Its 34 tasks cover system implementation, performance optimisation, scientific computing, visual reasoning and AI research, with five trials per task and up to 20 hours per trial. Think of it as a day-long engineering challenge: the agent must build, test, diagnose problems and iterate, rather than merely explain how to write the code. Examples include reimplementing Git in Zig, building a PostgreSQL-compatible service on SQLite, recreating a video in Remotion, and training a racing bot that drives from camera images alone. Models use the Proximus harness in Linux environments, sometimes with GPUs. The harness supports image viewing, context compaction and saved candidate submissions to encourage further improvements within the remaining time. Automated verifiers grade the final work, so these are model-plus-harness results, not measurements of the same model in Codex or Claude Code."
+      },
+      "description": {
+        "zh": "分数怎么读：每项任务先得到 0–1 的分数，再将五次试验的平均成绩跨任务汇总为 mean@5，以百分比显示；65% 不代表完整解决了 65% 的任务。分数下方的 worst@5–best@5 是每项任务五次试验中最差与最好成绩汇总后的范围，不是 95% 置信区间。费用以美元计，耗时以小时计，均为单次试验的平均值，不是跑完整套评测的总开销。本页收录官网主榜 All 视图的全部 14 个模型，统一使用主榜的得分、费用和耗时口径；分析图与主榜的汇总值有细微差异，未混用。v2 新增 21 项任务、移除 4 项旧任务，且改变了评分方式，不能与 v1 的排名直接比较。官方仓库已公开任务，但独立运行器与公共预构建镜像仍标为待发布。",
+        "en": "How to read it: each task earns a score from 0 to 1; scores are averaged over five trials and aggregated across tasks as mean@5, displayed as a percentage. A score of 65% does not mean 65% of tasks were fully solved. The worst@5–best@5 range aggregates each task’s worst and best trial scores; it is not a 95% confidence interval. Cost in USD and time in hours are per-trial averages, not the cost of a full benchmark evaluation. This page includes all 14 models from the official leaderboard’s All view, consistently using its scores, costs and times. Its analysis charts contain slightly different aggregates, which are not mixed here. V2 adds 21 tasks, retires four older tasks and changes scoring, so results are not directly comparable with v1 rankings. Task content is public, but the standalone runner and public prebuilt images are still marked as forthcoming."
+      },
+      "related_reading": {
+        "title": {
+          "zh": "官方方法说明与任务示例",
+          "en": "Official methodology and task examples"
+        },
+        "href": {
+          "zh": "https://www.frontierswe.com/blog/v2",
+          "en": "https://www.frontierswe.com/blog/v2"
+        }
+      }
+    },
+    {
       "id": "finance-agent",
       "category": "finance",
       "name": {
@@ -1822,6 +1860,221 @@
           "all_pass": 6.794,
           "source_model": "poolside/laguna-xs.2",
           "agent": "Vals Finance Agent v2"
+        }
+      }
+    },
+    {
+      "id": "gpt-6-astra-frontierswe",
+      "name": "GPT-6 Astra",
+      "creator": "OpenAI",
+      "scores": {
+        "frontierswe": {
+          "value": 65.50757455882352,
+          "worst_at_5": 55.11057647058822,
+          "best_at_5": 73.00460588235295,
+          "average_cost_usd": 1029.6467589260362,
+          "average_duration_seconds": 43562.769230769234,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-1-frontierswe",
+      "name": "Claude Fable 5.1",
+      "creator": "Anthropic",
+      "scores": {
+        "frontierswe": {
+          "value": 56.29078999999999,
+          "worst_at_5": 44.46506969696971,
+          "best_at_5": 66.65389696969699,
+          "average_cost_usd": 138.54701197575758,
+          "average_duration_seconds": 41827.854545454546,
+          "agent": "Proximus",
+          "note": {
+            "zh": "官方 v2 报告说明：Fable 5.1 在被内容过滤器阻断的任务上使用 Opus 5 回退。因此该条成绩不应理解为所有任务均仅由 Fable 5.1 完成。",
+            "en": "The official v2 report states that Fable 5.1 uses Opus 5 as a fallback on tasks blocked by content filters. This result should not be read as every task being completed exclusively by Fable 5.1."
+          },
+          "note_url": "https://www.frontierswe.com/blog/v2"
+        }
+      }
+    },
+    {
+      "id": "claude-opus-5-frontierswe",
+      "name": "Claude Opus 5",
+      "creator": "Anthropic",
+      "scores": {
+        "frontierswe": {
+          "value": 52.01176764705882,
+          "worst_at_5": 39.12135000000001,
+          "best_at_5": 60.6518411764706,
+          "average_cost_usd": 196.71287089705874,
+          "average_duration_seconds": 57847.341176470596,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "claude-fable-5-frontierswe",
+      "name": "Claude Fable 5",
+      "creator": "Anthropic",
+      "scores": {
+        "frontierswe": {
+          "value": 46.96449352941177,
+          "worst_at_5": 33.90016060606061,
+          "best_at_5": 61.77205454545454,
+          "average_cost_usd": 301.27823945454537,
+          "average_duration_seconds": 56966.39999999996,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "gpt-5-6-frontierswe",
+      "name": "GPT-5.6",
+      "creator": "OpenAI",
+      "scores": {
+        "frontierswe": {
+          "value": 32.20246705882353,
+          "worst_at_5": 22.200797058823532,
+          "best_at_5": 44.173785294117664,
+          "average_cost_usd": 179.6399347197058,
+          "average_duration_seconds": 30950.258823529402,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "glm-5-3-frontierswe",
+      "name": "GLM-5.3",
+      "creator": "Z AI",
+      "scores": {
+        "frontierswe": {
+          "value": 30.181864117647052,
+          "worst_at_5": 17.71634705882353,
+          "best_at_5": 40.64430294117648,
+          "average_cost_usd": 97.223322573647,
+          "average_duration_seconds": 61327.38461538457,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "kimi-k3-frontierswe",
+      "name": "Kimi K3",
+      "creator": "Moonshot AI",
+      "scores": {
+        "frontierswe": {
+          "value": 25.865032058823534,
+          "worst_at_5": 13.86589117647059,
+          "best_at_5": 37.55069705882354,
+          "average_cost_usd": 109.71047320181815,
+          "average_duration_seconds": 66246.4203821656,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "grok-4-6-frontierswe",
+      "name": "Grok 4.6",
+      "creator": "xAI",
+      "scores": {
+        "frontierswe": {
+          "value": 25.286195882352946,
+          "worst_at_5": 12.863511764705882,
+          "best_at_5": 37.290673529411755,
+          "average_cost_usd": 243.42982475294116,
+          "average_duration_seconds": 49668.49704142011,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-7-flash-frontierswe",
+      "name": "Gemini 3.7 Flash",
+      "creator": "Google",
+      "scores": {
+        "frontierswe": {
+          "value": 20.260590588235296,
+          "worst_at_5": 10.284932352941176,
+          "best_at_5": 31.231191176470592,
+          "average_cost_usd": 34.137221393382376,
+          "average_duration_seconds": 28337.53846153846,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "gemini-3-8-flash-frontierswe",
+      "name": "Gemini 3.8 Flash",
+      "creator": "Google",
+      "scores": {
+        "frontierswe": {
+          "value": 19.626902941176464,
+          "worst_at_5": 9.514232352941177,
+          "best_at_5": 31.642826470588243,
+          "average_cost_usd": 38.754468494558836,
+          "average_duration_seconds": 25854.776470588233,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "qwen3-8-max-frontierswe",
+      "name": "Qwen3.8-Max",
+      "creator": "Alibaba",
+      "scores": {
+        "frontierswe": {
+          "value": 15.809350588235294,
+          "worst_at_5": 8.701588235294118,
+          "best_at_5": 24.265188235294115,
+          "average_cost_usd": 55.14091911470589,
+          "average_duration_seconds": 66532.05,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "deepseek-v4-flash-vision-exp-frontierswe",
+      "name": "DeepSeek V4 Flash Vision Exp",
+      "creator": "DeepSeek",
+      "scores": {
+        "frontierswe": {
+          "value": 14.831252647058824,
+          "worst_at_5": 7.0131411764705875,
+          "best_at_5": 26.48615,
+          "average_cost_usd": 8.569284093940116,
+          "average_duration_seconds": 53395.760479041914,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "muse-spark-1-2-frontierswe",
+      "name": "Muse Spark 1.2",
+      "creator": "Meta",
+      "scores": {
+        "frontierswe": {
+          "value": 11.970256470588238,
+          "worst_at_5": 6.8378176470588246,
+          "best_at_5": 18.359058823529413,
+          "average_cost_usd": 27.80795590911764,
+          "average_duration_seconds": 16517.435294117648,
+          "agent": "Proximus"
+        }
+      }
+    },
+    {
+      "id": "inkling-frontierswe",
+      "name": "Inkling",
+      "creator": "Thinking Machines",
+      "scores": {
+        "frontierswe": {
+          "value": 4.118886470588236,
+          "worst_at_5": 0.12631764705882353,
+          "best_at_5": 10.78985588235294,
+          "average_cost_usd": 9.148095738529413,
+          "average_duration_seconds": 4185.741176470586,
+          "agent": "Proximus"
         }
       }
     }

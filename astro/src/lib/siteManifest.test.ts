@@ -67,6 +67,8 @@ describe('site feeds', () => {
 			['/benchmarks/deepswe/', '/en/benchmarks/deepswe/'],
 			['/en/benchmarks/deepswe/', '/benchmarks/deepswe/'],
 			['/benchmarks/programbench/', '/en/benchmarks/programbench/'],
+			['/benchmarks/frontierswe/', '/en/benchmarks/frontierswe/'],
+			['/en/benchmarks/frontierswe/', '/benchmarks/frontierswe/'],
 			['/en/benchmarks/programbench/', '/benchmarks/programbench/'],
 			['/benchmarks/finance-agent/', '/en/benchmarks/finance-agent/'],
 			['/benchmarks/vals-index/', '/en/benchmarks/vals-index/'],

@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { legacyEntryIsRoutable, loadLegacyContent, type LegacyContentEntry } from './legacyContent';
 
 const expectedArticleRoutes = [
+	'/highlights/2026-09-17-measuring-pace-of-ai-development/',
+	'/en/highlights/2026-09-17-measuring-pace-of-ai-development/',
 	'/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
 	'/en/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
 	'/highlights/2025-11-10-best-practices-prompt-engineering/',
@@ -68,6 +70,56 @@ function highlightRecords(entries: LegacyContentEntry[]) {
 }
 
 describe('unified highlights content', () => {
+	it('preserves the AI development measurements, appendix, and footnotes in both languages', async () => {
+		const records = highlightRecords(await loadLegacyContent()).filter(
+			(entry) => entry.frontmatter.externalId === 'measuring-pace-of-ai-development',
+		);
+
+		expect(records.map((entry) => entry.locale).sort()).toEqual(['en', 'zh-CN']);
+		for (const entry of records) {
+			expect(entry.frontmatter.sourceUrl).toBe(
+				'https://www.anthropic.com/institute/measuring-pace-of-ai-development',
+			);
+			expect(entry.frontmatter.kind).toBe('article');
+			expect(entry.frontmatter.draft).toBe(false);
+			expect(entry.body.match(/^## /gm)).toHaveLength(6);
+			expect(entry.body.match(/^### /gm)).toHaveLength(3);
+			expect(entry.body.match(/^\| /gm)).toHaveLength(6);
+			expect(entry.body.match(/^```text$/gm)).toHaveLength(1);
+			expect(entry.body.match(/^\[\^\d\]:/gm)).toHaveLength(2);
+			for (const evidence of [
+				'26%',
+				'90%',
+				'30,000',
+				'100,000',
+				'0.002%',
+				'47,000',
+				'6%',
+				'12%',
+				'15,000',
+				'542',
+				'378',
+				'59%',
+				'35%',
+				'97%',
+				'14%',
+				'AL3',
+				'AL4',
+				'AL5',
+				'Marina Favaro',
+				'Peter Wildeford',
+				'https://epochai.substack.com/p/toward-an-onet-for-ai-r-and-d',
+				'https://www-cdn.anthropic.com/images/4zrzovbb/website/31704b297a9350f392f143ea078561f36cd14908-1920x1230.png',
+			]) {
+				expect(entry.body).toContain(evidence);
+			}
+			for (const anchor of ['measurement-rd', 'measurement-oversight', 'measurement-compute']) {
+				expect(entry.body).toContain(`](#${anchor})`);
+				expect(entry.body).toContain(`id="${anchor}"`);
+			}
+		}
+	});
+
 	it('preserves the Astra skills guide and every instruction example in both languages', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
 			(entry) => entry.frontmatter.externalId === 'rethinking-skills-and-prompts-for-gpt-6-astra',

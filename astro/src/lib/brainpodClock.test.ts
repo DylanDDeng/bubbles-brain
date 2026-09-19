@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { formatBrainPodClock } from './brainpodClock';
 
 describe('BrainPod local clock', () => {
@@ -19,6 +19,21 @@ describe('BrainPod local clock', () => {
 		expect(formatBrainPodClock(now, 'Etc/GMT+5')).toMatchObject({ time: '05:30', region: 'GMT-5' });
 		expect(formatBrainPodClock(now, 'UTC').region).toBe('GMT');
 	});
+
+	it.each(['GMT', 'GMT+0', 'GMT-0', 'GMT+0:00'])(
+		'normalizes the ICU zero-offset label %s without changing nonzero offsets',
+		(label) => {
+			const parts = vi.spyOn(Intl.DateTimeFormat.prototype, 'formatToParts');
+			try {
+				parts.mockReturnValue([{ type: 'timeZoneName', value: label }]);
+				expect(formatBrainPodClock(new Date('2026-09-06T10:30:00Z'), 'UTC').region).toBe('GMT');
+				parts.mockReturnValue([{ type: 'timeZoneName', value: 'GMT+0:30' }]);
+				expect(formatBrainPodClock(new Date('2026-09-06T10:30:00Z'), 'UTC').region).toBe('GMT+0:30');
+			} finally {
+				parts.mockRestore();
+			}
+		},
+	);
 
 	it('follows daylight saving transitions instead of a fixed UTC offset', () => {
 		expect(formatBrainPodClock(new Date('2026-03-08T06:59:00Z'), 'America/New_York').time).toBe(

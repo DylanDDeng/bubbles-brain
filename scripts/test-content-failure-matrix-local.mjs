@@ -989,6 +989,18 @@ try {
 		)
 	`,
   );
+  // A release can have multiple dispatches; compare the callback's exact tuple.
+  const terminalCallbackState = await admin`
+    select status, last_error from private.content_outbox
+    where site_release_id = ${releaseA.site_release_id}::uuid
+      and dispatch_id = ${releaseA.dispatchId}::uuid
+  `;
+  assert(
+    terminalCallbackState.length === 1 &&
+      terminalCallbackState[0].status === "deployed" &&
+      terminalCallbackState[0].last_error === null,
+    "Expected exactly one deployed, error-free callback target before late events",
+  );
   for (const staleEvent of ["building", "preview_verified", "failed"]) {
     await asRole(
       "content_deployer",
@@ -1003,7 +1015,12 @@ try {
   const callbackState = await admin`
 		select status, last_error from private.content_outbox
 		where site_release_id = ${releaseA.site_release_id}::uuid
+      and dispatch_id = ${releaseA.dispatchId}::uuid
 	`;
+  assert(
+    callbackState.length === 1,
+    "Expected exactly one outbox row for the deployment callback tuple",
+  );
   assert(
     callbackState[0].status === "deployed",
     "Late callback regressed deployed outbox state",

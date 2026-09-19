@@ -39,7 +39,7 @@ content/   Markdown content source — the single source of site content
 static/    Site-wide static assets (referenced as the Astro publicDir)
 workers/   Content publishing pipeline Workers, working with GitHub Actions
 scripts/   Validation scripts (verify-site.mjs and friends, reused by astro verify)
-docs/      Design docs and runbooks; docs/archive/ holds archives from the daily-news era
+docs/      Design docs and runbooks
 ```
 
 ## Local development

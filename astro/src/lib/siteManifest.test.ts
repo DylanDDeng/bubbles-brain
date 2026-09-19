@@ -64,6 +64,8 @@ describe('site feeds', () => {
 	it('publishes new benchmarks with reciprocal alternate routes', async () => {
 		const records = await loadSiteManifest();
 		for (const [route, alternateRoute] of [
+			['/benchmarks/gdpval-aa/', '/en/benchmarks/gdpval-aa/'],
+			['/en/benchmarks/gdpval-aa/', '/benchmarks/gdpval-aa/'],
 			['/benchmarks/deepswe/', '/en/benchmarks/deepswe/'],
 			['/en/benchmarks/deepswe/', '/benchmarks/deepswe/'],
 			['/benchmarks/programbench/', '/en/benchmarks/programbench/'],

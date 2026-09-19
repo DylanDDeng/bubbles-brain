@@ -402,6 +402,9 @@ from the repository root. It verifies the schema, identities, all four batches, 
 membership, and exact regeneration of the canonical JSON plus both Markdown compatibility
 artifacts:
 
+> Historical command: `verify:report-day` was removed with the retired daily tooling.
+> This records the original release procedure, not a command supported by the current repository.
+
 ```bash
 REPORT_DATE=2026-07-17 npm run verify:report-day
 ```

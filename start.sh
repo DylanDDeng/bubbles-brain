@@ -10,12 +10,11 @@ echo ""
 echo "请选择操作："
 echo "1) 启动 CloudFlare Worker (抓取新闻)"
 echo "2) 启动 Astro 本地预览"
-echo "3) 从远程仓库拉取历史内容"
-echo "4) 构建 Astro 站点"
+echo "3) 构建 Astro 站点"
 echo "0) 退出"
 echo ""
 
-read -p "请输入选项 [0-4]: " choice
+read -p "请输入选项 [0-3]: " choice
 
 case $choice in
     1)
@@ -29,10 +28,6 @@ case $choice in
         npm run dev --prefix astro
         ;;
     3)
-        echo "📥 从远程仓库拉取内容..."
-        bash scripts/pull-daily-content.sh
-        ;;
-    4)
         echo "🏗️  构建 Astro 站点..."
         npm run build --prefix astro
         echo "✅ 构建完成！输出目录：astro/dist/"

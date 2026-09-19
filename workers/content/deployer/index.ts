@@ -262,13 +262,11 @@ const INERT_ROOT_SCRIPTS = new Set([
   "scripts/cleanup-dns-for-pages.sh",
   "scripts/content-route-build-contract.mjs",
   "scripts/create-content-addressed-artifact.mjs",
-  "scripts/daily-localization-contract.mjs",
   "scripts/diagnose-ssl-issue.sh",
   "scripts/fix-dns.sh",
   "scripts/html-local-references.mjs",
   "scripts/materialize-content-addressed-artifact.mjs",
   "scripts/preview-media-types.mjs",
-  "scripts/pull-daily-content.sh",
   "scripts/r2-object-store.mjs",
   "scripts/request-code-release.mjs",
   "scripts/request-content-release-plan.mjs",
@@ -313,6 +311,12 @@ const RETIRED_DAILY_PATHS = new Set([
   "data/daily/.gitkeep",
 ]);
 const RETIRED_DAILY_PREFIXES = ["content/daily/", "daily/"];
+// Keep deletion-only entries so cleanup releases remain classifiable.
+const RETIRED_DAILY_SCRIPTS = new Set([
+  "scripts/daily-localization-contract.mjs",
+  "scripts/pull-daily-content.sh",
+  "scripts/verify-complete-report-day.mjs",
+]);
 
 function assertGitHubComparePath(path: string): void {
   if (
@@ -352,6 +356,11 @@ function classifyCodeReleasePath(
   ) {
     if (status === "removed") return "inert";
     throw new Error(`Code release may only remove retired Hugo path: ${path}`);
+  }
+
+  if (RETIRED_DAILY_SCRIPTS.has(path)) {
+    if (status === "removed") return "inert";
+    throw new Error(`Code release may only remove retired daily script: ${path}`);
   }
 
   if (RETIRED_HIGHLIGHT_INDEXES.has(path)) {

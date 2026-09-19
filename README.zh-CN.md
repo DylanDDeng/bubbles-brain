@@ -39,7 +39,7 @@ content/   Markdown 内容源，站点内容的唯一来源
 static/    全站静态资源（作为 Astro publicDir 引用）
 workers/   内容发布管线 Worker，配合 GitHub Actions 完成发布
 scripts/   校验脚本（verify-site.mjs 等被 astro verify 复用）
-docs/      设计文档与 runbook；docs/archive/ 存放旧日报时代归档文档
+docs/      设计文档与 runbook
 ```
 
 ## 本地开发

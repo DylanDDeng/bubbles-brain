@@ -17,6 +17,52 @@ import {
 } from './benchmarks';
 
 describe('benchmark ledger', () => {
+	it('preserves FrontierSWE v2 results, resource metrics, and trial-range semantics', () => {
+		const rows = rankedScores('frontierswe');
+		expect(
+			rows.map(({ model, score }) => [
+				model.name,
+				Number(score.value.toFixed(1)),
+				Number(score.average_cost_usd!.toFixed(2)),
+			]),
+		).toEqual([
+			['GPT-6 Astra', 65.5, 1029.65],
+			['Claude Fable 5.1', 56.3, 138.55],
+			['Claude Opus 5', 52.0, 196.71],
+			['Claude Fable 5', 47.0, 301.28],
+			['GPT-5.6', 32.2, 179.64],
+			['GLM-5.3', 30.2, 97.22],
+			['Kimi K3', 25.9, 109.71],
+			['Grok 4.6', 25.3, 243.43],
+			['Gemini 3.7 Flash', 20.3, 34.14],
+			['Gemini 3.8 Flash', 19.6, 38.75],
+			['Qwen3.8-Max', 15.8, 55.14],
+			['DeepSeek V4 Flash Vision Exp', 14.8, 8.57],
+			['Muse Spark 1.2', 12.0, 27.81],
+			['Inkling', 4.1, 9.15],
+		]);
+		for (const { model, score } of rows) {
+			expect(benchmarkIcons[model.creator]).toBeTruthy();
+			expect(score.agent).toBe('Proximus');
+			expect(score.ci).toBeUndefined();
+			expect(score.worst_at_5).toBeGreaterThanOrEqual(0);
+			expect(score.worst_at_5!).toBeLessThanOrEqual(score.value);
+			expect(score.best_at_5!).toBeGreaterThanOrEqual(score.value);
+			expect(score.best_at_5!).toBeLessThanOrEqual(100);
+			expect(score.average_duration_seconds).toBeGreaterThan(0);
+		}
+		const benchmark = benchmarkLedger.benchmarks.find(({ id }) => id === 'frontierswe')!;
+		expect(benchmark.category).toBe('coding');
+		expect(benchmark.url).toBe('https://www.frontierswe.com/');
+		expect(benchmark.score_label?.en).toBe('Mean@5');
+		expect(benchmark.description.en).toContain('not a 95% confidence interval');
+		expect(benchmarkDirectoryRoute(benchmark, 'zh-CN')).toBe('/#bc-benchmarks-coding');
+		expect(benchmarkDirectoryRoute(benchmark, 'en')).toBe('/en/benchmarks/#bc-benchmarks-coding');
+		const fallback = rows.find(({ model }) => model.name === 'Claude Fable 5.1')!.score;
+		expect(fallback.note?.en).toContain('Opus 5');
+		expect(fallback.note_url).toBe('https://www.frontierswe.com/blog/v2');
+	});
+
 	it('matches the published schema', async () => {
 		const schema = JSON.parse(
 			await readFile(resolve(process.cwd(), '../schemas/benchmarks.schema.json'), 'utf8'),
@@ -36,7 +82,7 @@ describe('benchmark ledger', () => {
 			groups.map((group) => [group.id, group.benchmarks.map((benchmark) => benchmark.id)]),
 		).toEqual([
 			['general', ['aa-index', 'gdpval-aa', 'vals-index']],
-			['coding', ['tbench-4', 'deepswe', 'programbench']],
+			['coding', ['tbench-4', 'deepswe', 'programbench', 'frontierswe']],
 			['finance', ['finance-agent']],
 		]);
 		const ids = groups.flatMap((group) => group.benchmarks.map((benchmark) => benchmark.id));

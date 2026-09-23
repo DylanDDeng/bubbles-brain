@@ -1,0 +1,15 @@
+---
+import EvalCaseGallery from '../../../components/EvalCaseGallery.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { EVAL_CASES_ROUTE } from '../../../lib/evalCases';
+---
+
+<BaseLayout
+	title="模型实测案例 · Benchmarks · Bubble's Brain"
+	description="同一道题交给不同模型：直接运行它们交出的体素场景、SVG 动画、小游戏和网页，按评测年份、题型和模型浏览。"
+	canonicalPath={EVAL_CASES_ROUTE}
+	alternateHref={null}
+	section="benchmarks"
+>
+	<EvalCaseGallery />
+</BaseLayout>

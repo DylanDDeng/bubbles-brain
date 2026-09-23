@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>体素悉尼歌剧院</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&display=swap">
+<style>
+  :root {
+    --ink: #f4efe4;
+    --ink-dim: rgba(244, 239, 228, 0.66);
+    --panel: rgba(8, 24, 40, 0.56);
+    --line: rgba(244, 239, 228, 0.14);
+    --sand: #e3ad68;
+    --sand-ink: #22160a;
+    --deep: #0a1b2b;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; margin: 0; overflow: hidden; background: var(--deep); }
+  body {
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    color: var(--ink);
+  }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+
+  .card {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    left: 16px;
+    max-width: min(320px, calc(100% - 32px));
+    padding: 16px 18px 14px;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .eyebrow {
+    margin: 0;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sand);
+    font-variant-numeric: tabular-nums;
+  }
+  h1 {
+    margin: 6px 0 4px;
+    font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: 0.06em;
+    text-wrap: balance;
+  }
+  .sub { margin: 0; color: var(--ink-dim); font-size: 13px; }
+  .facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 14px;
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .facts dt { color: var(--ink-dim); }
+  .facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .dock {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    max-width: calc(100% - 32px);
+  }
+  .seg {
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .dock button {
+    font: inherit;
+    font-size: 13px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    padding: 7px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .2s, color .2s;
+  }
+  .dock button:hover { background: rgba(244, 239, 228, 0.1); }
+  .dock button[aria-pressed="true"] { background: var(--sand); color: var(--sand-ink); font-weight: 600; }
+  .dock button:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+
+  .hint {
+    position: fixed;
+    right: 16px;
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--ink-dim);
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+
+  #loading {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--deep);
+    color: var(--ink-dim);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    transition: opacity .7s ease;
+  }
+  #loading.done { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 640px) {
+    .card { padding: 12px 14px; }
+    h1 { font-size: 22px; }
+    .facts, .hint { display: none; }
+    .dock button { padding: 7px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #loading, .dock button { transition: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="scene" tabindex="0" aria-label="可旋转的悉尼歌剧院体素模型"></canvas>
+
+<div class="card">
+  <p class="eyebrow">Bennelong Point · 33.857°S 151.215°E</p>
+  <h1>悉尼歌剧院</h1>
+  <p class="sub">体素微缩模型 · 贝壳屋顶、滨水台地与港湾</p>
+  <dl class="facts">
+    <dt>设计</dt><dd>Jørn Utzon</dd>
+    <dt>启用</dt><dd>1973 年</dd>
+    <dt>比例</dt><dd>1 体素 ≈ 2 米</dd>
+  </dl>
+</div>
+
+<p class="hint">拖动旋转 · 滚轮缩放 · 右键平移</p>
+
+<div class="dock">
+  <div class="seg" role="group" aria-label="时段">
+    <button type="button" id="t-day" data-preset="day" aria-pressed="true">白昼</button>
+    <button type="button" id="t-dusk" data-preset="dusk" aria-pressed="false">黄昏</button>
+    <button type="button" id="t-night" data-preset="night" aria-pressed="false">夜晚</button>
+  </div>
+  <div class="seg">
+    <button type="button" id="t-orbit" aria-pressed="true">环绕</button>
+  </div>
+</div>
+
+<div id="loading">正在堆砌体素…</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+  const loadingEl = document.getElementById('loading');
+  if (!window.THREE || !THREE.OrbitControls) {
+    loadingEl.textContent = '三维库加载失败，请检查网络后刷新';
+    return;
+  }
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 随机数（固定种子，每次生成同一座城） ---------- */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  const rand = mulberry32(1973);
+  const pick = arr => arr[Math.floor(rand() * arr.length)];
+  function jit(hex, a) {
+    const f = 1 + (rand() * 2 - 1) * a;
+    const r = Math.min(255, Math.max(0, (((hex >> 16) & 255) * f) | 0));
+    const g = Math.min(255, Math.max(0, (((hex >> 8) & 255) * f) | 0));
+    const b = Math.min(255, Math.max(0, ((hex & 255) * f) | 0));
+    return (r << 16) | (g << 8) | b;
+  }
+
+  /* ---------- 体素仓库 ---------- */
+  const VOX = new Map();
+  const K = (x, y, z) => ((x + 512) * 1024 + (y + 128)) * 1024 + (z + 512);
+  function put(x, y, z, c, m) {
+    m = m || 'solid';
+    const k = K(x, y, z);
+    const e = VOX.get(k);
+    if (e) {
+      if (m === 'glass') return;                     // 玻璃不覆盖任何东西
+      if (e[4] === 'shell' && m !== 'shell') return;  // 壳体只让位给壳体
+    }
+    VOX.set(k, [x, y, z, c, m]);
+  }
+  const has = (x, y, z) => VOX.has(K(x, y, z));
+  const getV = (x, y, z) => VOX.get(K(x, y, z));
+  function topAt(x, z, from) {
+    for (let y = from || 60; y >= 0; y--) if (has(x, y, z)) return y;
+    return -1;
+  }
+
+  /* ---------- 地形：便利朗角、南岸、东岸植物园、北岸 ---------- */
+  const X0 = -125, X1 = 90, Z0 = -100, Z1 = 88;
+  function penHalf(z) {
+    if (z < -64 || z > 38) return -1;
+    if (z <= 24) return 40;
+    const t = (z - 24) / 14;
+    return 40 * Math.sqrt(Math.max(0, 1 - t * t));
+  }
+  const inPen = (x, z) => Math.abs(x) <= penHalf(z);
+  const inCove = (x, z) => x >= -72 && x <= -44 && z > -86 && z <= -64;       // 悉尼湾 / 环形码头
+  const inSouth = (x, z) => z <= -64 && !inCove(x, z);
+  function inEast(x, z) {                                                     // 麦考利夫人角
+    if (z > 12) return false;
+    return x >= (z > -10 ? 62 + (z + 10) * 0.8 : 62);
+  }
+  const inNorth = (x, z) => x <= -60 && z >= 64 + Math.max(0, x + 70) * 0.5; // 北岸
+  const isLand = (x, z) => inPen(x, z) || inSouth(x, z) || inEast(x, z) || inNorth(x, z);
+  const bridgeCorridor = x => x >= -106 && x <= -78;
+
+  const grassCells = [];
+  for (let x = X0; x <= X1; x++) {
+    for (let z = Z0; z <= Z1; z++) {
+      if (!isLand(x, z)) continue;
+      let top;
+      if (inPen(x, z) && z > -68) {
+        top = jit((x % 4 === 0 || z % 4 === 0) ? 0xcbb591 : 0xd8c4a0, 0.035);
+      } else if (inEast(x, z) || inNorth(x, z) || (inSouth(x, z) && x > 22)) {
+        const path = inSouth(x, z) && (Math.abs(-82 + Math.sin(x * 0.09) * 7 - z) < 1.3 || Math.abs(x - 36 - Math.sin(z * 0.1) * 5) < 1.2);
+        if (path) top = jit(0xdac9a6, 0.03);
+        else { top = jit(pick([0x6aa04a, 0x5f9443, 0x74a852]), 0.05); grassCells.push([x, z]); }
+      } else if (x > -44) {
+        top = jit(0xcfc3ac, 0.04);
+      } else {
+        top = jit(0xaaa399, 0.05);
+      }
+      put(x, 2, z, top);
+      put(x, 1, z, jit(0xb39a73, 0.06));
+      put(x, 0, z, jit(0x9d855f, 0.06));
+    }
+  }
+
+  /* ---------- 花岗岩台基 ---------- */
+  function podHalf(z) {
+    if (z < -38 || z > 28) return -1;
+    if (z <= 18) return 33;
+    const t = (z - 18) / 10;
+    return 33 * Math.sqrt(Math.max(0, 1 - t * t));
+  }
+  for (let z = -38; z <= 28; z++) {
+    const h = podHalf(z);
+    for (let x = -33; x <= 33; x++) {
+      if (Math.abs(x) > h) continue;
+      for (let y = 3; y <= 9; y++) {
+        let c;
+        if (y === 9) c = jit((x % 6 === 0 || z % 6 === 0) ? 0xc9ad85 : 0xdcc39c, 0.03);
+        else if (y === 8) c = jit(0x8c5343, 0.04);
+        else {
+          const sideWall = Math.abs(x) >= h - 1.5;
+          const rib = sideWall ? (z % 4 === 0) : (x % 4 === 0);
+          c = jit(rib ? 0x985b47 : 0xb2705a, 0.05);
+        }
+        put(x, y, z, c);
+      }
+    }
+  }
+
+  /* ---------- 纪念台阶（南侧主入口） ---------- */
+  for (let z = -52; z <= -39; z++) {
+    const k = Math.floor((z + 52) / 2);
+    const level = 3 + k;
+    for (let x = -26; x <= 26; x++) {
+      for (let y = 3; y <= level; y++) {
+        put(x, y, z, y === level ? jit(k % 2 ? 0xd8c099 : 0xe9d6b1, 0.025) : jit(0xc7ad86, 0.03));
+      }
+    }
+    for (const x of [-27, 27]) {
+      for (let y = 3; y <= Math.min(10, level + 1); y++) put(x, y, z, jit(0x9e604b, 0.05));
+    }
+  }
+
+  /* ---------- 便利朗餐厅的小台基 ---------- */
+  for (let x = -38; x <= -29; x++) for (let z = -57; z <= -41; z++) for (let y = 3; y <= 6; y++) {
+    put(x, y, z, y === 6 ? jit(0xdcc39c, 0.03) : jit(y === 5 ? 0x8c5343 : 0xb2705a, 0.05));
+  }
+
+  /* ---------- 贝壳屋顶：尖拱截面沿纵轴缩放的壳体 ---------- */
+  function shellTile(z, ly, u) {
+    if (u < 1.2) return jit(0xfbfaf4, 0.015);
+    return jit(((Math.floor(z / 2) + Math.floor(ly / 2)) & 1) ? 0xf2efe6 : 0xe2dccb, 0.02);
+  }
+  function buildShell(o) {
+    const { cx, zf, dir, L, H, W, lean } = o;
+    const base = o.base == null ? 10 : o.base;
+    const th = 0.75;
+    const xmin = Math.floor(cx - W - 2), xmax = Math.ceil(cx + W + 2);
+    const za = zf - dir * L, zb = zf + dir * (lean + 1);
+    const zmin = Math.floor(Math.min(za, zb)) - 1, zmax = Math.ceil(Math.max(za, zb)) + 1;
+    for (let z = zmin; z <= zmax; z++) {
+      for (let x = xmin; x <= xmax; x++) {
+        const ax = Math.abs(x - cx);
+        for (let ly = 0; ly <= H + 1; ly++) {
+          let hit = false, inside = false, cap = false, uHit = 99;
+          for (let s = -0.375; s <= 0.38; s += 0.25) {
+            const u = (zf - (z + s)) * dir;
+            if (u > L) continue;
+            let t;
+            if (u < 0) {
+              if (u < -lean || ly < H * (-u / lean)) continue;   // 壳尖前倾
+              t = 1;
+            } else t = 1 - u / L;
+            const Ws = W * (0.6 + 0.4 * t);
+            const Hs = Math.max(H * (0.28 + 0.72 * Math.sin(t * Math.PI / 2)), Ws * 1.15);
+            const c = (Hs * Hs - Ws * Ws) / (2 * Ws);
+            const r = Ws + c;
+            const d = Math.hypot(ax + c, ly);
+            if (ly <= Hs + 0.5 && Math.abs(d - r) <= th) { hit = true; uHit = Math.min(uHit, u); }
+            else if (d < r - th && u >= 0) {
+              if (u >= 0.6 && u < 1.6) inside = true;
+              if (u > L - 1) cap = true;
+            }
+          }
+          const y = base + ly;
+          if (hit) put(x, y, z, shellTile(z, ly, uHit), 'shell');
+          else if (inside) {
+            const mullion = Math.round(x - cx) % 3 === 0 || ly % 4 === 0;
+            if (mullion) { if (!has(x, y, z)) put(x, y, z, jit(0x5d4d3b, 0.05), 'solid'); }
+            else put(x, y, z, jit(0x22384b, 0.08), 'glass');
+          } else if (cap) put(x, y, z, shellTile(z, ly, 9), 'shell');
+        }
+      }
+    }
+  }
+  [
+    // 音乐厅（西）
+    { cx: -14, zf: -30, dir: -1, L: 14, H: 17, W: 9, lean: 3 },
+    { cx: -14, zf: -6, dir: 1, L: 16, H: 24, W: 10, lean: 3 },
+    { cx: -14, zf: 8, dir: 1, L: 18, H: 31, W: 11, lean: 4 },
+    { cx: -14, zf: 20, dir: 1, L: 14, H: 25, W: 10.5, lean: 4 },
+    // 琼·萨瑟兰剧院（东）
+    { cx: 13, zf: -32, dir: -1, L: 14, H: 15, W: 8, lean: 3 },
+    { cx: 13, zf: -9, dir: 1, L: 16, H: 21, W: 9, lean: 3 },
+    { cx: 13, zf: 5, dir: 1, L: 17, H: 28, W: 10, lean: 4 },
+    { cx: 13, zf: 16, dir: 1, L: 13, H: 22, W: 9.5, lean: 4 },
+    // 便利朗餐厅
+    { cx: -33.5, zf: -55, dir: -1, L: 7, H: 10, W: 4.2, lean: 2, base: 7 },
+    { cx: -33.5, zf: -44, dir: 1, L: 8, H: 12, W: 4.6, lean: 2, base: 7 }
+  ].forEach(buildShell);
+
+  /* ---------- 海港大桥 ---------- */
+  const topY = z => 17 + 31 * (1 - (z / 56) * (z / 56));
+  const botY = z => 2 + 38 * (1 - (z / 54) * (z / 54));
+  const STEEL = 0x76858c, STEEL2 = 0x66747b, GRANITE = 0xc8b08a;
+  function column(x, z, y0, y1, c, m) {
+    const a = Math.round(Math.min(y0, y1)), b = Math.round(Math.max(y0, y1));
+    for (let y = a; y <= b; y++) put(x, y, z, jit(c, 0.04), m);
+  }
+  // 桥面
+  for (let z = -100; z <= 88; z++) {
+    for (let x = -98; x <= -86; x++) {
+      put(x, 13, z, jit(STEEL2, 0.04));
+      const road = x >= -95 && x <= -89;
+      let c = road ? 0x3a3e44 : 0x8f9294;
+      if (x === -92 && (z & 3) < 2) c = 0xd9d2ae;
+      put(x, 14, z, jit(c, 0.04));
+    }
+    put(-98, 15, z, jit(STEEL, 0.03));
+    put(-86, 15, z, jit(STEEL, 0.03));
+    if (z % 6 === 0) { put(-98, 16, z, 0xe8e0c8, 'lamp'); put(-86, 16, z, 0xe8e0c8, 'lamp'); }
+  }
+  // 拱桁架
+  for (const tx of [-97, -88]) {
+    for (let z = -56; z <= 56; z++) {
+      const zn = z < 56 ? z + 1 : z;
+      for (const x of [tx, tx + 1]) {
+        column(x, z, topY(z), topY(zn), STEEL);
+        put(x, Math.round(topY(z)) - 1, z, jit(STEEL, 0.04));
+        if (Math.abs(z) <= 54) column(x, z, botY(z), botY(Math.abs(zn) <= 54 ? zn : z), STEEL);
+      }
+      if (z % 5 === 0 && tx === -97) put(tx, Math.round(topY(z)) + 1, z, 0xe8e0c8, 'lamp');
+    }
+    for (let z = -52; z <= 52; z += 4) {
+      column(tx, z, botY(z), topY(z), STEEL2);
+      if (botY(z) > 15) column(tx + (tx < -92 ? 0 : 1), z, 15, botY(z), STEEL2);
+      if (z < 52) {                                           // 斜腹杆
+        const za = z, zb = z + 4, up = ((z / 4) & 1) === 0;
+        for (let s = 0; s <= 1; s += 1 / 14) {
+          const zz = za + (zb - za) * s;
+          const y = up ? botY(zz) + (topY(zz) - botY(zz)) * s : topY(zz) - (topY(zz) - botY(zz)) * s;
+          put(tx, Math.round(y), Math.round(zz), jit(STEEL2, 0.04));
+        }
+      }
+    }
+  }
+  for (let z = -48; z <= 48; z += 8) for (let x = -96; x <= -89; x++) put(x, Math.round(topY(z)), z, jit(STEEL2, 0.04));
+  // 桥塔
+  for (const zc of [-60, 60]) {
+    for (const [xa, xb] of [[-105, -99], [-85, -79]]) {
+      for (let x = xa; x <= xb; x++) for (let z = zc - 4; z <= zc + 4; z++) for (let y = 0; y <= 30; y++) {
+        const inset = y >= 27 ? 1 : 0;
+        if (x < xa + inset || x > xb - inset || z < zc - 4 + inset || z > zc + 4 - inset) continue;
+        put(x, y, z, jit(y % 3 === 0 ? 0xb49c78 : GRANITE, 0.04));
+      }
+    }
+    for (let x = -99; x <= -85; x++) for (let z = zc - 6 * Math.sign(zc); Math.abs(z) <= Math.abs(zc) - 2; z += Math.sign(zc)) {
+      for (let y = 0; y <= 3; y++) put(x, y, z, jit(GRANITE, 0.04));
+    }
+  }
+  // 引桥桥墩
+  for (const z of [-96, -88, -80, -72, 70, 78, 86]) {
+    for (const x of [-97, -87]) column(x, z, 3, 12, 0xa89779);
+  }
+
+  /* ---------- 环形码头的栈桥 ---------- */
+  for (const px of [-67, -59, -51]) {
+    for (let x = px; x <= px + 2; x++) for (let z = -85; z <= -74; z++) {
+      put(x, 1, z, jit(0x7e6d58, 0.05));
+      put(x, 2, z, jit(0xb9aa93, 0.04));
+    }
+    for (let x = px; x <= px + 2; x++) for (let z = -80; z <= -76; z++) put(x, 5, z, jit(0x2f6b4a, 0.04));
+    for (const [x, z] of [[px, -80], [px + 2, -80], [px, -76], [px + 2, -76]]) column(x, z, 3, 4, 0xd8d2c2);
+  }
+
+  /* ---------- 城市与低层建筑 ---------- */
+  const winDay = [], winNight = [];
+  const occupied = [];
+  const free = (x0, z0, w, d) => occupied.every(r => x0 + w + 1 < r[0] || r[0] + r[2] + 1 < x0 || z0 + d + 1 < r[1] || r[1] + r[3] + 1 < z0);
+  function building(x0, z0, w, d, h, col) {
+    occupied.push([x0, z0, w, d]);
+    const yTop = 3 + h - 1;
+    for (let x = x0; x < x0 + w; x++) for (let z = z0; z < z0 + d; z++) for (let y = 3; y <= yTop; y++) {
+      const wall = x === x0 || x === x0 + w - 1 || z === z0 || z === z0 + d - 1;
+      const corner = (x === x0 || x === x0 + w - 1) && (z === z0 || z === z0 + d - 1);
+      if (wall && !corner && y > 3 && y < yTop && y % 2 === 0 && ((x + z) & 1) === 0) put(x, y, z, 0, 'win');
+      else put(x, y, z, jit(col, 0.04));
+    }
+    if (h > 10 && rand() < 0.6) {
+      const cx = x0 + 1 + Math.floor(rand() * (w - 3)), cz = z0 + 1 + Math.floor(rand() * (d - 3));
+      for (let x = cx; x <= cx + 1; x++) for (let z = cz; z <= cz + 1; z++) put(x, yTop + 1, z, jit(0x8b9196, 0.05));
+    }
+  }
+  let bCount = 0;
+  for (let i = 0; i < 900 && bCount < 38; i++) {
+    const w = 6 + Math.floor(rand() * 6), d = 6 + Math.floor(rand() * 6);
+    const x0 = Math.floor(X0 + 1 + rand() * (22 - X0 - w));
+    const z0 = Math.floor(Z0 + 1 + rand() * 32);
+    if (z0 + d - 1 > -69) continue;
+    if (x0 + w - 1 >= -106 && x0 <= -78) continue;
+    let ok = true;
+    for (let x = x0; x < x0 + w && ok; x++) for (let z = z0; z < z0 + d; z++) if (!inSouth(x, z) || inPen(x, z) && z > -68) { ok = false; break; }
+    if (!ok || !free(x0, z0, w, d)) continue;
+    const city = x0 < -44;
+    const h = city ? 14 + Math.floor(rand() * 30) : 5 + Math.floor(rand() * 7);
+    const col = city ? pick([0x6f8ea6, 0x9aa3a8, 0x56636f, 0xcdb48a, 0xe2dfd8, 0x7a8f9a]) : pick([0xd4bb91, 0xe6e0d4, 0xc9a77c]);
+    building(x0, z0, w, d, h, col);
+    bCount++;
+  }
+
+  /* ---------- 树木 ---------- */
+  function tree(x, z) {
+    const base = topAt(x, z, 4);
+    if (base !== 2) return false;
+    for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) if (topAt(x + dx, z + dz, 20) > 2) return false;
+    const h = 2 + Math.floor(rand() * 3);
+    for (let y = 3; y < 3 + h; y++) put(x, y, z, jit(0x6b4a2f, 0.08));
+    const r = 2 + (rand() < 0.45 ? 1 : 0);
+    const cy = 3 + h + 1;
+    const greens = [0x4f8a3a, 0x5f9c45, 0x3f7532, 0x6aa84c];
+    for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) for (let dz = -r; dz <= r; dz++) {
+      if (dx * dx + dy * dy * 1.4 + dz * dz <= r * r + 0.6 && rand() > 0.06) put(x + dx, cy + dy, z + dz, jit(pick(greens), 0.06));
+    }
+    return true;
+  }
+  let tCount = 0;
+  for (let i = 0; i < 600 && tCount < 85; i++) {
+    const [x, z] = pick(grassCells);
+    if (bridgeCorridor(x)) continue;
+    if (tree(x, z)) tCount++;
+  }
+
+  /* ---------- 海堤地灯 ---------- */
+  for (let x = -40; x <= 40; x++) for (let z = -64; z <= 38; z++) {
+    if (!inPen(x, z) || topAt(x, z, 3) !== 2) continue;
+    const edge = !isLand(x + 1, z) || !isLand(x - 1, z) || !isLand(x, z + 1) || !isLand(x, z - 1);
+    if (edge && (x * 7 + z * 3) % 9 === 0) put(x, 3, z, 0xe8e0c8, 'lamp');
+  }
+
+  /* ---------- 剔除被完全包住的体素，生成实例网格 ---------- */
+  const scene = new THREE.Scene();
+  const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+  const buckets = { solid: [], shell: [], glass: [], lamp: [], win: [] };
+  for (const v of VOX.values()) {
+    const [x, y, z] = v;
+    const covered = (y === 0 || has(x, y - 1, z)) && has(x, y + 1, z) &&
+      has(x + 1, y, z) && has(x - 1, y, z) && has(x, y, z + 1) && has(x, y, z - 1);
+    if (!covered) buckets[v[4]].push(v);
+  }
+  const tmpM = new THREE.Matrix4(), tmpC = new THREE.Color();
+  function instanced(list, mat, cast, receive, colorOf) {
+    const mesh = new THREE.InstancedMesh(boxGeo, mat, list.length);
+    list.forEach((v, i) => {
+      tmpM.makeTranslation(v[0], v[1], v[2]);
+      mesh.setMatrixAt(i, tmpM);
+      tmpC.setHex(colorOf ? colorOf(v, i) : v[3]);
+      mesh.setColorAt(i, tmpC);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    mesh.castShadow = cast; mesh.receiveShadow = receive;
+    mesh.frustumCulled = false;
+    scene.add(mesh);
+    return mesh;
+  }
+
+  const solidMat = new THREE.MeshLambertMaterial();
+  const shellMat = new THREE.MeshLambertMaterial({ emissive: 0x000000 });
+  const glassMat = new THREE.MeshPhongMaterial({ shininess: 90, specular: 0x9db4c8, emissive: 0xffb35c, emissiveIntensity: 0 });
+  const lampMat = new THREE.MeshLambertMaterial({ emissive: 0xffcf7a, emissiveIntensity: 0 });
+  const winMatDay = new THREE.MeshLambertMaterial();
+  const winMatNight = new THREE.MeshBasicMaterial();
+
+  instanced(buckets.solid, solidMat, true, true);
+  instanced(buckets.shell, shellMat, true, true);
+  instanced(buckets.glass, glassMat, true, true);
+  instanced(buckets.lamp, lampMat, false, false);
+  buckets.win.forEach(() => {
+    winDay.push(jit(0x6d8aa5, 0.12));
+    const r = rand();
+    winNight.push(r < 0.5 ? jit(0xffd58a, 0.1) : r < 0.68 ? jit(0xfff0c8, 0.05) : r < 0.8 ? jit(0xcfe4ff, 0.05) : jit(0x1c2430, 0.1));
+  });
+  const winMesh = instanced(buckets.win, winMatDay, true, true, (v, i) => winDay[i]);
+  let windowsLit = false;
+  function setWindows(lit) {
+    if (lit === windowsLit) return;
+    windowsLit = lit;
+    winMesh.material = lit ? winMatNight : winMatDay;
+    const src = lit ? winNight : winDay;
+    for (let i = 0; i < src.length; i++) winMesh.setColorAt(i, tmpC.setHex(src[i]));
+    winMesh.instanceColor.needsUpdate = true;
+  }
+
+  /* ---------- 港湾水面（顶点着色器里起伏） ---------- */
+  const waterUniforms = { uTime: { value: 0 } };
+  const waterMat = new THREE.MeshPhongMaterial({ shininess: 60, specular: 0x4a6a80 });
+  waterMat.onBeforeCompile = shader => {
+    shader.uniforms.uTime = waterUniforms.uTime;
+    shader.vertexShader = 'uniform float uTime;\n' + shader.vertexShader.replace(
+      '#include <begin_vertex>',
+      `#include <begin_vertex>
+       vec3 ip = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+       float wv = sin(ip.x * 0.35 + uTime * 1.2) * 0.5 + sin(ip.z * 0.27 - uTime * 0.9) * 0.5 + sin((ip.x + ip.z) * 0.15 + uTime * 0.6) * 0.4;
+       transformed.y += wv * 0.16;`
+    );
+  };
+  const water = [];
+  for (let x = X0; x <= X1; x++) for (let z = Z0; z <= Z1; z++) {
+    if (has(x, 0, z)) continue;
+    let near = false;
+    for (let dx = -2; dx <= 2 && !near; dx++) for (let dz = -2; dz <= 2; dz++) if (has(x + dx, 0, z + dz)) { near = true; break; }
+    water.push([x, -0.35, z, near ? jit(0x3a9bb4, 0.05) : jit(0x1d6a92, 0.07)]);
+  }
+  instanced(water, waterMat, false, true);
+  const farWaterMat = new THREE.MeshLambertMaterial({ color: 0x1d6a92 });
+  const farWater = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), farWaterMat);
+  farWater.rotation.x = -Math.PI / 2;
+  farWater.position.y = -0.5;
+  farWater.receiveShadow = true;
+  scene.add(farWater);
+
+  /* ---------- 行人 ---------- */
+  const people = [];
+  for (let i = 0; i < 900 && people.length < 240; i++) {
+    const zone = rand();
+    let x, z;
+    if (zone < 0.25) { x = -40 + Math.floor(rand() * 81); z = -63 + Math.floor(rand() * 11); }
+    else if (zone < 0.5) { x = -25 + Math.floor(rand() * 51); z = -52 + Math.floor(rand() * 14); }
+    else if (zone < 0.78) { x = -32 + Math.floor(rand() * 65); z = -37 + Math.floor(rand() * 65); }
+    else { x = -40 + Math.floor(rand() * 81); z = -64 + Math.floor(rand() * 103); if (!inPen(x, z)) continue; }
+    const y = topAt(x, z, 50);
+    const v = getV(x, y, z);
+    if (!v || v[4] !== 'solid' || y > 9) continue;
+    people.push([x + (rand() - 0.5) * 0.6, y, z + (rand() - 0.5) * 0.6]);
+  }
+  const bodyMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.42, 0.8, 0.42), new THREE.MeshLambertMaterial(), people.length);
+  const headMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), new THREE.MeshLambertMaterial(), people.length);
+  const clothes = [0xd64545, 0x2f6fb3, 0xf2c14e, 0x333333, 0xf4f4f4, 0x7c4dbd, 0x2a9d8f, 0xe07a3f];
+  const skins = [0xf1c9a5, 0xd9a47a, 0x9c6b48, 0x6e4a32];
+  people.forEach((p, i) => {
+    tmpM.makeTranslation(p[0], p[1] + 0.9, p[2]); bodyMesh.setMatrixAt(i, tmpM); bodyMesh.setColorAt(i, tmpC.setHex(pick(clothes)));
+    tmpM.makeTranslation(p[0], p[1] + 1.45, p[2]); headMesh.setMatrixAt(i, tmpM); headMesh.setColorAt(i, tmpC.setHex(pick(skins)));
+  });
+  [bodyMesh, headMesh].forEach(m => { m.castShadow = true; m.frustumCulled = false; scene.add(m); });
+
+  /* ---------- 渡轮与帆船 ---------- */
+  const boatMat = new THREE.MeshLambertMaterial();
+  function model(vox, scale) {
+    const mesh = new THREE.InstancedMesh(boxGeo, boatMat, vox.length);
+    vox.forEach((v, i) => { tmpM.makeTranslation(v[0], v[1], v[2]); mesh.setMatrixAt(i, tmpM); mesh.setColorAt(i, tmpC.setHex(jit(v[3], 0.03))); });
+    mesh.castShadow = true; mesh.frustumCulled = false;
+    const inner = new THREE.Group(); inner.add(mesh); inner.scale.setScalar(scale);
+    const outer = new THREE.Group(); outer.add(inner);
+    scene.add(outer);
+    return { outer, inner };
+  }
+  function ferryVox() {                        // 绿船身、奶黄舱体的悉尼渡轮
+    const v = [], G = 0x1f5a3a, G2 = 0x2c7048, C = 0xf3e6b8, Y = 0xf2c53d, W = 0x24344a;
+    for (let x = -7; x <= 7; x++) {
+      const w = Math.abs(x) >= 6 ? 1 : 2;
+      for (let z = -w; z <= w; z++) { v.push([x, 0, z, G]); v.push([x, 1, z, G2]); }
+    }
+    for (let x = -5; x <= 5; x++) for (let z = -2; z <= 2; z++) {
+      if (Math.abs(z) === 2) v.push([x, 2, z, (x & 1) ? W : C]);
+      else if (Math.abs(x) === 5) v.push([x, 2, z, C]);
+      v.push([x, 3, z, (Math.abs(z) === 2 || Math.abs(x) === 5) ? G : C]);
+    }
+    for (let x = -4; x <= 4; x++) for (let z = -1; z <= 1; z++) {
+      if (Math.abs(z) === 1 || Math.abs(x) === 4) v.push([x, 4, z, (Math.abs(z) === 1 && (x & 1)) ? W : Y]);
+      v.push([x, 5, z, G]);
+    }
+    v.push([0, 6, 0, Y], [0, 7, 0, G]);
+    return v;
+  }
+  function sailVox(hull) {
+    const v = [];
+    for (let x = -4; x <= 4; x++) {
+      if (x === 4) { v.push([x, 0, 0, hull]); continue; }
+      for (let z = -1; z <= 1; z++) v.push([x, 0, z, z === 0 ? 0xf5f3ee : hull]);
+    }
+    for (let x = -3; x <= 2; x++) v.push([x, 1, 0, 0xb58a5a]);
+    for (let y = 1; y <= 11; y++) v.push([0, y, 0, 0xd9d9d9]);
+    for (let y = 2; y <= 10; y++) { const len = Math.floor((11 - y) * 0.55); for (let x = -len; x <= -1; x++) v.push([x, y, 0, 0xfbfaf6]); }
+    for (let y = 2; y <= 8; y++) { const len = Math.floor((9 - y) * 0.5); for (let x = 1; x <= len; x++) v.push([x, y, 0, 0xfbfaf6]); }
+    return v;
+  }
+  const boats = [
+    { m: model(ferryVox(), 0.7), cx: -4, cz: 58, rx: 48, rz: 10, speed: 0.05, ph: 0, roll: 0 },
+    { m: model(ferryVox(), 0.7), cx: -56, cz: -12, rx: 6, rz: 58, speed: -0.045, ph: 1.3, roll: 0 },
+    { m: model(sailVox(0x1f4e8c), 0.55), cx: 51, cz: -22, rx: 5, rz: 28, speed: 0.06, ph: 2, roll: 0.14 },
+    { m: model(sailVox(0xc0392b), 0.55), cx: 12, cz: 78, rx: 52, rz: 6, speed: -0.04, ph: 4, roll: -0.12 },
+    { m: model(sailVox(0x2b2b2b), 0.55), cx: 64, cz: 45, rx: 12, rz: 12, speed: 0.08, ph: 0.5, roll: 0.16 }
+  ];
+
+  /* ---------- 大桥上的车流 ---------- */
+  const lanes = [[-94.5, -1], [-93, -1], [-91, 1], [-89.5, 1]];
+  const carColors = [0xd23b3b, 0xf4f4f4, 0x2d5fa8, 0x222222, 0xf0b429, 0x9aa3a8, 0x3a8f5c];
+  const cars = [];
+  for (let i = 0; i < 18; i++) {
+    const [x, dir] = lanes[i % 4];
+    cars.push({ x, dir, z: -100 + rand() * 188, v: 7 + rand() * 5 });
+  }
+  const carMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.7, 1.9), new THREE.MeshLambertMaterial(), cars.length);
+  cars.forEach((c, i) => carMesh.setColorAt(i, tmpC.setHex(pick(carColors))));
+  carMesh.castShadow = true; carMesh.frustumCulled = false;
+  scene.add(carMesh);
+
+  /* ---------- 云 ---------- */
+  const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, emissive: 0x333333 });
+  const clouds = [];
+  for (let i = 0; i < 7; i++) {
+    const cells = new Set(), list = [];
+    const blobs = 3 + Math.floor(rand() * 3);
+    for (let b = 0; b < blobs; b++) {
+      const bx = rand() * 10 - 5, bz = rand() * 6 - 3, br = 1.8 + rand() * 1.8;
+      for (let x = Math.floor(bx - br); x <= Math.ceil(bx + br); x++)
+        for (let y = 0; y <= Math.ceil(br * 0.6); y++)
+          for (let z = Math.floor(bz - br); z <= Math.ceil(bz + br); z++) {
+            if ((x - bx) ** 2 + (y * 1.7) ** 2 + (z - bz) ** 2 <= br * br) {
+              const key = x + ',' + y + ',' + z;
+              if (!cells.has(key)) { cells.add(key); list.push([x, y, z]); }
+            }
+          }
+    }
+    const mesh = new THREE.InstancedMesh(boxGeo, cloudMat, list.length);
+    list.forEach((p, j) => { tmpM.makeTranslation(p[0], p[1], p[2]); mesh.setMatrixAt(j, tmpM); });
+    mesh.castShadow = true; mesh.frustumCulled = false;
+    mesh.scale.setScalar(3);
+    mesh.position.set(-170 + rand() * 330, 72 + rand() * 22, -130 + rand() * 250);
+    scene.add(mesh);
+    clouds.push({ mesh, v: 1.2 + rand() * 1.6 });
+  }
+
+  /* ---------- 天空与星星 ---------- */
+  const skyMat = new THREE.ShaderMaterial({
+    uniforms: { top: { value: new THREE.Color() }, bottom: { value: new THREE.Color() } },
+    vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform vec3 top; uniform vec3 bottom; varying vec3 vP; void main(){ float h = clamp(vP.y * 1.8 + 0.04, 0.0, 1.0); gl_FragColor = vec4(mix(bottom, top, pow(h, 0.75)), 1.0); }',
+    side: THREE.BackSide, depthWrite: false, fog: false
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(1400, 32, 16), skyMat);
+  scene.add(sky);
+  const starPos = [];
+  for (let i = 0; i < 800; i++) {
+    const th = rand() * Math.PI * 2, y = 0.08 + rand() * 0.92, r = Math.sqrt(1 - y * y);
+    starPos.push(Math.cos(th) * r * 1300, y * 1300, Math.sin(th) * r * 1300);
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.6, sizeAttenuation: false, transparent: true, opacity: 0, fog: false, depthWrite: false });
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
+
+  /* ---------- 灯光 ---------- */
+  scene.fog = new THREE.Fog(0xd4ecf7, 200, 700);
+  const hemi = new THREE.HemisphereLight(0xdff1ff, 0x8a7a62, 0.6);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffffff, 1);
+  const sunTarget = new THREE.Vector3(-25, 0, -5);
+  sun.target.position.copy(sunTarget);
+  scene.add(sun.target);
+  sun.castShadow = true;
+
+  const canvas = document.getElementById('scene');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const sm = renderer.capabilities.maxTextureSize >= 4096 ? 4096 : 2048;
+  sun.shadow.mapSize.set(sm, sm);
+  Object.assign(sun.shadow.camera, { left: -190, right: 190, top: 190, bottom: -190, near: 10, far: 800 });
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.04;
+  scene.add(sun);
+
+  /* ---------- 时段预设 ---------- */
+  const PRESETS = {
+    day:   { skyTop: 0x3d8ed8, skyBot: 0xd6edf8, sun: 0xfff1dc, sunI: 1.02, sunPos: [100, 125, -30], hemiS: 0xdff1ff, hemiG: 0x8a7a62, hemiI: 0.62, glass: 0, shell: 0x000000, lamp: 0, water: 0xffffff, stars: 0, cloud: 0xffffff, lit: false },
+    dusk:  { skyTop: 0x2c3f7c, skyBot: 0xf4a064, sun: 0xffa56a, sunI: 0.95, sunPos: [-140, 30, 20], hemiS: 0xf7c7a5, hemiG: 0x3b3350, hemiI: 0.52, glass: 0.6, shell: 0x1c1510, lamp: 0.85, water: 0xd9b6ad, stars: 0.12, cloud: 0xf6b08c, lit: true },
+    night: { skyTop: 0x030716, skyBot: 0x172849, sun: 0x9fb6ff, sunI: 0.28, sunPos: [-60, 110, 90], hemiS: 0x4a5a8a, hemiG: 0x0b0f1c, hemiI: 0.36, glass: 1.0, shell: 0x4a4d66, lamp: 1.0, water: 0x4a6190, stars: 1, cloud: 0x333d60, lit: true }
+  };
+  const CK = ['skyTop', 'skyBot', 'sun', 'hemiS', 'hemiG', 'shell', 'water', 'cloud'];
+  const NK = ['sunI', 'hemiI', 'glass', 'lamp', 'stars'];
+  function snap(p) {
+    const s = {};
+    CK.forEach(k => { s[k] = new THREE.Color(p[k]); });
+    NK.forEach(k => { s[k] = p[k]; });
+    s.dir = new THREE.Vector3().fromArray(p.sunPos).normalize();
+    s.lit = p.lit;
+    return s;
+  }
+  function mix(a, b, t) {
+    const s = {};
+    CK.forEach(k => { s[k] = a[k].clone().lerp(b[k], t); });
+    NK.forEach(k => { s[k] = a[k] + (b[k] - a[k]) * t; });
+    s.dir = a.dir.clone().lerp(b.dir, t).normalize();
+    return s;
+  }
+  const farBase = new THREE.Color(0x1d6a92);
+  let now;
+  function apply(s) {
+    skyMat.uniforms.top.value.copy(s.skyTop);
+    skyMat.uniforms.bottom.value.copy(s.skyBot);
+    scene.fog.color.copy(s.skyBot);
+    sun.color.copy(s.sun); sun.intensity = s.sunI;
+    sun.position.copy(sunTarget).addScaledVector(s.dir, 330);
+    hemi.color.copy(s.hemiS); hemi.groundColor.copy(s.hemiG); hemi.intensity = s.hemiI;
+    glassMat.emissiveIntensity = s.glass;
+    shellMat.emissive.copy(s.shell);
+    lampMat.emissiveIntensity = s.lamp;
+    waterMat.color.copy(s.water);
+    farWaterMat.color.copy(farBase).multiply(s.water);
+    cloudMat.color.copy(s.cloud);
+    cloudMat.emissive.copy(s.cloud).multiplyScalar(0.25);
+    starMat.opacity = s.stars;
+    now = s;
+  }
+  let from, to, tt = 1, targetLit = false;
+  apply(snap(PRESETS.day));
+  function setPreset(name) {
+    from = now; to = snap(PRESETS[name]); tt = reduced ? 1 : 0; targetLit = PRESETS[name].lit;
+    if (reduced) { apply(to); setWindows(targetLit); }
+    document.querySelectorAll('[data-preset]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.preset === name)));
+  }
+  document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => setPreset(b.dataset.preset)));
+
+  /* ---------- 相机与控制 ---------- */
+  const camera = new THREE.PerspectiveCamera(42, 1, 1, 3200);
+  const controls = new THREE.OrbitControls(camera, canvas);
+  controls.target.set(-18, 14, -4);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.minDistance = 40;
+  controls.maxDistance = 380;
+  controls.maxPolarAngle = Math.PI * 0.47;
+  controls.autoRotate = !reduced;
+  controls.autoRotateSpeed = 0.35;
+  const orbitBtn = document.getElementById('t-orbit');
+  orbitBtn.setAttribute('aria-pressed', String(controls.autoRotate));
+  orbitBtn.addEventListener('click', () => {
+    controls.autoRotate = !controls.autoRotate;
+    orbitBtn.setAttribute('aria-pressed', String(controls.autoRotate));
+  });
+
+  function resize() {
+    const w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  const far = camera.aspect < 1 ? 1.75 : 1;
+  camera.position.set(-18 + 112 * far, 14 + 50 * far, -4 - 118 * far);
+  controls.update();
+  window.addEventListener('resize', resize);
+
+  /* ---------- 动画循环 ---------- */
+  const clock = new THREE.Clock();
+  const obj = new THREE.Object3D();
+  const ease = t => t * t * (3 - 2 * t);
+  function frame() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+    waterUniforms.uTime.value = reduced ? 0 : t;
+
+    if (tt < 1) {
+      tt = Math.min(1, tt + dt / 1.6);
+      apply(mix(from, to, ease(tt)));
+      if (tt >= 0.5) setWindows(targetLit);
+    }
+
+    const m = reduced ? 0.3 : 1;
+    boats.forEach(b => {
+      const a = b.ph + t * b.speed * m;
+      const sg = Math.sign(b.speed);
+      const dx = -b.rx * Math.sin(a) * sg, dz = b.rz * Math.cos(a) * sg;
+      b.m.outer.position.set(b.cx + b.rx * Math.cos(a), 0.22 + Math.sin(t * 1.7 + b.ph) * 0.06, b.cz + b.rz * Math.sin(a));
+      b.m.outer.rotation.y = Math.atan2(-dz, dx);
+      b.m.inner.rotation.x = b.roll + Math.sin(t * 1.3 + b.ph) * 0.03;
+    });
+
+    cars.forEach((c, i) => {
+      c.z += c.dir * c.v * dt * m;
+      if (c.z > 88) c.z = -100; else if (c.z < -100) c.z = 88;
+      obj.position.set(c.x, 14.85, c.z);
+      obj.updateMatrix();
+      carMesh.setMatrixAt(i, obj.matrix);
+    });
+    carMesh.instanceMatrix.needsUpdate = true;
+
+    clouds.forEach(c => {
+      c.mesh.position.x += c.v * dt * m;
+      if (c.mesh.position.x > 190) c.mesh.position.x = -200;
+    });
+
+    sky.position.copy(camera.position);
+    stars.position.copy(camera.position);
+    controls.update();
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(() => {
+    frame();
+    loadingEl.classList.add('done');
+    setTimeout(() => loadingEl.remove(), 800);
+  });
+})();
+</script>
+</body>
+</html>

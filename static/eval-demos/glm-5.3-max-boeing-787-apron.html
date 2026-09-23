@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GATE 12 · Boeing 787 停机坪 — Procedural Three.js</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b0e13; }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgba(0,0,0,0) 52%, rgba(4,8,14,.45) 100%),
+      linear-gradient(to bottom, rgba(4,8,14,.38), transparent 16%, transparent 84%, rgba(4,8,14,.48));
+  }
+  .hud {
+    position: fixed; left: 30px; top: 26px; color: #edf1f5; pointer-events: none;
+    font-family: -apple-system, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+    text-shadow: 0 1px 14px rgba(0,0,0,.6);
+  }
+  .hud .t1 { font-size: 20px; font-weight: 600; letter-spacing: .42em; }
+  .hud .t2 { margin-top: 7px; font-size: 10.5px; font-weight: 400; letter-spacing: .32em; color: #a9b5c2; }
+  .hint {
+    position: fixed; right: 26px; bottom: 20px; color: #93a4b4; font-size: 11px;
+    letter-spacing: .2em; pointer-events: none;
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    text-shadow: 0 1px 8px rgba(0,0,0,.65);
+  }
+  #loading {
+    position: fixed; inset: 0; background: #0b0e13; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    color: #7e8c9c; font: 500 12px/1 -apple-system, "PingFang SC", sans-serif;
+    letter-spacing: .55em; transition: opacity 1.1s ease .25s;
+  }
+  #loading.done { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="vignette"></div>
+<div class="hud">
+  <div class="t1">GATE 12 · B787-8</div>
+  <div class="t2">PROCEDURAL AIRPORT — THREE.JS</div>
+</div>
+<div class="hint">左键拖拽旋转 · 滚轮缩放 · 右键平移</div>
+<div id="loading">LOADING&nbsp;SCENE</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ============================================================
+   全局状态与工具
+============================================================ */
+let scene, camera, renderer, controls, clock, maxAniso = 4;
+
+const state = {
+  fans: [],            // 发动机风扇组
+  lampMats: [],        // 停机坪高杆灯材质（闪烁）
+  runwayLightMat: null,// 跑道边灯材质
+  strobeMat: null,     // 白色频闪灯
+  beaconMat: null,     // 机身红色防撞灯
+  towerBeaconMat: null,// 塔台红灯
+  clouds: [],          // 云
+  fusMat: null,        // 机身材质（反光呼吸）
+  glint: null,         // 缓慢扫过机身的镜面光
+  windsock: null,
+  firstFrame: true
+};
+
+// 几何体缓存 —— 复用几何体，控制面数
+const geoCache = new Map();
+function gBox(w, h, d) {
+  const k = 'b' + w + '_' + h + '_' + d;
+  if (!geoCache.has(k)) geoCache.set(k, new THREE.BoxGeometry(w, h, d));
+  return geoCache.get(k);
+}
+function gCyl(rt, rb, h, s) {
+  const k = 'c' + rt + '_' + rb + '_' + h + '_' + s;
+  if (!geoCache.has(k)) geoCache.set(k, new THREE.CylinderGeometry(rt, rb, h, s));
+  return geoCache.get(k);
+}
+function box(w, h, d, mat, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
+  const m = new THREE.Mesh(gBox(w, h, d), mat);
+  m.position.set(x, y, z); m.rotation.set(rx, ry, rz);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+function cyl(rt, rb, h, seg, mat, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
+  const m = new THREE.Mesh(gCyl(rt, rb, h, seg), mat);
+  m.position.set(x, y, z); m.rotation.set(rx, ry, rz);
+  m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+// 两点之间立一根杆（起落架支柱 / 撑杆）
+const _up = new THREE.Vector3(0, 1, 0);
+function tube(a, b, r, mat) {
+  const dir = new THREE.Vector3().subVectors(b, a);
+  const len = dir.length();
+  const m = new THREE.Mesh(gCyl(r, r, len, 12), mat);
+  m.position.copy(a).addScaledVector(dir, 0.5);
+  m.quaternion.setFromUnitVectors(_up, dir.normalize());
+  m.castShadow = true;
+  return m;
+}
+function makeCanvasTexture(w, h, draw) {
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  draw(cv.getContext('2d'), w, h);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = maxAniso;
+  return tex;
+}
+
+/* ============================================================
+   共享材质库
+============================================================ */
+const MAT = {
+  fus:      new THREE.MeshStandardMaterial({ color: 0xf3f5f7, metalness: 0.32, roughness: 0.33, envMapIntensity: 0.9 }),
+  fairing:  new THREE.MeshStandardMaterial({ color: 0xb7bcc2, metalness: 0.5, roughness: 0.42, envMapIntensity: 0.7 }),
+  wing:     new THREE.MeshStandardMaterial({ color: 0x9ea6ad, metalness: 0.85, roughness: 0.38, side: THREE.DoubleSide, envMapIntensity: 0.8 }),
+  stab:     new THREE.MeshStandardMaterial({ color: 0xa8afb6, metalness: 0.8, roughness: 0.4, side: THREE.DoubleSide, envMapIntensity: 0.8 }),
+  cockpit:  new THREE.MeshStandardMaterial({ color: 0x0c141d, metalness: 0.6, roughness: 0.06, envMapIntensity: 1.9, side: THREE.DoubleSide }),
+  win:      new THREE.MeshStandardMaterial({ color: 0x10161d, metalness: 0.5, roughness: 0.15, envMapIntensity: 1.4 }),
+  navy:     new THREE.MeshStandardMaterial({ color: 0x16355c, metalness: 0.3, roughness: 0.5, side: THREE.DoubleSide }),
+  door:     new THREE.MeshStandardMaterial({ color: 0xe9edef, metalness: 0.3, roughness: 0.38 }),
+  metal:    new THREE.MeshStandardMaterial({ color: 0xd9dde2, metalness: 1.0, roughness: 0.18 }),
+  titanium: new THREE.MeshStandardMaterial({ color: 0x41454c, metalness: 0.95, roughness: 0.4 }),
+  darkIn:   new THREE.MeshStandardMaterial({ color: 0x14171b, metalness: 0.4, roughness: 0.7, side: THREE.DoubleSide }),
+  blade:    new THREE.MeshStandardMaterial({ color: 0x2c3036, metalness: 0.9, roughness: 0.35 }),
+  tire:     new THREE.MeshStandardMaterial({ color: 0x17191c, metalness: 0.0, roughness: 0.95 }),
+  hub:      new THREE.MeshStandardMaterial({ color: 0xcfd4d9, metalness: 0.9, roughness: 0.25 }),
+  strut:    new THREE.MeshStandardMaterial({ color: 0xd3d8dd, metalness: 0.8, roughness: 0.32 }),
+  chrome:   new THREE.MeshStandardMaterial({ color: 0xeef1f4, metalness: 1.0, roughness: 0.12 }),
+  bldg:     new THREE.MeshStandardMaterial({ color: 0xadb3b9, metalness: 0.05, roughness: 0.82 }),
+  bldgDark: new THREE.MeshStandardMaterial({ color: 0x8d949b, metalness: 0.05, roughness: 0.85 }),
+  bldgGlass:new THREE.MeshStandardMaterial({ color: 0x1a2e42, metalness: 0.6, roughness: 0.16, emissive: 0x0c1c2e, emissiveIntensity: 0.7, envMapIntensity: 1.2 }),
+  roof:     new THREE.MeshStandardMaterial({ color: 0x767d84, metalness: 0.15, roughness: 0.75 }),
+  vWhite:   new THREE.MeshStandardMaterial({ color: 0xe8eaec, metalness: 0.2, roughness: 0.45 }),
+  vYellow:  new THREE.MeshStandardMaterial({ color: 0xd2a93c, metalness: 0.3, roughness: 0.5 }),
+  vDark:    new THREE.MeshStandardMaterial({ color: 0x2a2e33, metalness: 0.3, roughness: 0.6 }),
+  vGlass:   new THREE.MeshStandardMaterial({ color: 0x121c26, metalness: 0.5, roughness: 0.12 }),
+  cone:     new THREE.MeshStandardMaterial({ color: 0xe6721f, emissive: 0xa33c05, emissiveIntensity: 0.35, roughness: 0.6 }),
+  grass:    new THREE.MeshStandardMaterial({ color: 0x59634f, roughness: 1.0 }),
+  asphalt:  new THREE.MeshStandardMaterial({ color: 0x5c6065, roughness: 0.95 }),
+  lineY:    new THREE.MeshStandardMaterial({ color: 0xd8bc35, roughness: 0.85 }),
+  lineW:    new THREE.MeshStandardMaterial({ color: 0xdfe3e6, roughness: 0.85 }),
+  pole:     new THREE.MeshStandardMaterial({ color: 0x6b7178, metalness: 0.6, roughness: 0.5 }),
+  redL:     new THREE.MeshStandardMaterial({ color: 0x220404, emissive: 0xff2214, emissiveIntensity: 3 }),
+  greenL:   new THREE.MeshStandardMaterial({ color: 0x042204, emissive: 0x22ff55, emissiveIntensity: 3 }),
+  whiteL:   new THREE.MeshStandardMaterial({ color: 0x222222, emissive: 0xffffff, emissiveIntensity: 2 })
+};
+
+/* ============================================================
+   createScene —— 场景 / 相机 / 渲染器 / 控制器
+============================================================ */
+function createScene(container) {
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0xd8ccb8, 320, 1500);
+
+  camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.5, 4200);
+  camera.position.set(55, 15, 68);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  container.appendChild(renderer.domElement);
+  maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+  pmrem.dispose();
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 6, 2);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.minDistance = 16;
+  controls.maxDistance = 380;
+  controls.maxPolarAngle = Math.PI * 0.495;
+
+  clock = new THREE.Clock();
+}
+
+/* ============================================================
+   createLights —— 环境光 / 方向光 / 点光源
+============================================================ */
+function createLights() {
+  scene.add(new THREE.HemisphereLight(0xbdd2e8, 0x5a5f52, 0.5));
+
+  const sun = new THREE.DirectionalLight(0xffe6c0, 2.3);
+  sun.position.set(-140, 170, 230);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.left = -110; sun.shadow.camera.right = 110;
+  sun.shadow.camera.top = 110; sun.shadow.camera.bottom = -110;
+  sun.shadow.camera.near = 60; sun.shadow.camera.far = 720;
+  sun.shadow.bias = -0.0004;
+  sun.shadow.normalBias = 0.04;
+  scene.add(sun);
+
+  const fill = new THREE.DirectionalLight(0x9db8d8, 0.5);
+  fill.position.set(160, 60, -180);
+  scene.add(fill);
+
+  // 缓慢扫过机身的暖色镜面光（动态反光）
+  state.glint = new THREE.DirectionalLight(0xfff0d8, 0.55);
+  state.glint.position.set(60, 40, 60);
+  scene.add(state.glint);
+
+  // 停机坪高杆灯（真实点光源 × 2）
+  const f1 = new THREE.PointLight(0xdfeaff, 1.0, 130, 1.6); f1.position.set(-56, 20.5, -46);
+  const f2 = new THREE.PointLight(0xdfeaff, 1.0, 130, 1.6); f2.position.set(56, 20.5, -46);
+  scene.add(f1, f2);
+}
+
+/* ============================================================
+   程序化几何 —— 机身 / 机翼 loft
+============================================================ */
+// 机身半径与中心线插值查找表
+let fusSamples = [];
+function radiusAt(z) {
+  const s = fusSamples;
+  for (let i = 1; i < s.length; i++) {
+    if (s[i].z <= z) {
+      const a = s[i - 1], b = s[i];
+      const t = (z - a.z) / (b.z - a.z || 1e-6);
+      return { r: a.r + (b.r - a.r) * t, y: a.y + (b.y - a.y) * t };
+    }
+  }
+  return { r: s[s.length - 1].r, y: s[s.length - 1].y };
+}
+
+function fuselageGeometry() {
+  // 控制点: [z, 半径, 中心线上抬]
+  const ctrl = [
+    [26.6, 0.02, 0.15], [25.8, 0.5, -0.02], [24.6, 0.95, -0.04], [23.2, 1.42, -0.02],
+    [21.6, 1.85, 0.02], [19.8, 2.2, 0.05], [17.8, 2.5, 0.05], [15.6, 2.72, 0.02],
+    [13.0, 2.84, 0.0], [6.0, 2.9, 0.0], [-2.0, 2.9, 0.0], [-9.0, 2.85, 0.08],
+    [-14.5, 2.74, 0.22], [-18.5, 2.56, 0.5], [-22.5, 2.2, 1.02], [-26.0, 1.68, 1.7],
+    [-28.6, 1.1, 2.3], [-30.4, 0.5, 2.75], [-31.3, 0.05, 2.98]
+  ];
+  const curve = new THREE.CatmullRomCurve3(ctrl.map(p => new THREE.Vector3(p[0], p[1], p[2])));
+  const pts = curve.getSpacedPoints(72);
+  fusSamples = pts.map(p => ({ z: p.x, r: Math.max(p.y, 0.02), y: p.z }));
+
+  const RING = 40, pos = [], idx = [];
+  fusSamples.forEach(s => {
+    for (let i = 0; i <= RING; i++) {
+      const th = i / RING * Math.PI * 2;
+      pos.push(s.r * Math.cos(th), s.y + s.r * Math.sin(th), s.z);
+    }
+  });
+  for (let si = 0; si < fusSamples.length - 1; si++) {
+    for (let i = 0; i < RING; i++) {
+      const a = si * (RING + 1) + i, b = a + 1, c = a + RING + 1, d = c + 1;
+      idx.push(a, d, b, a, c, d);
+    }
+  }
+  // 首尾封盖
+  const nC = pos.length / 3;
+  pos.push(0, fusSamples[0].y, fusSamples[0].z);
+  for (let i = 0; i < RING; i++) idx.push(nC, i, i + 1);
+  const tC = pos.length / 3;
+  const last = (fusSamples.length - 1) * (RING + 1);
+  pos.push(0, fusSamples[fusSamples.length - 1].y, fusSamples[fusSamples.length - 1].z);
+  for (let i = 0; i < RING; i++) idx.push(tC, last + i + 1, last + i);
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+
+// 机翼/尾翼 loft：sections = [展向x, 前缘z, 弦长, 高度y, 厚度系数]
+function buildWing(sections, sub = 4, P = 18) {
+  const sts = [];
+  for (let i = 0; i < sections.length - 1; i++) {
+    const a = sections[i], b = sections[i + 1];
+    for (let s = 0; s < sub; s++) {
+      const u = s / sub;
+      sts.push({
+        x: a[0] + (b[0] - a[0]) * u, z: a[1] + (b[1] - a[1]) * u, c: a[2] + (b[2] - a[2]) * u,
+        y: a[3] + (b[3] - a[3]) * u, t: a[4] + (b[4] - a[4]) * u
+      });
+    }
+  }
+  const e = sections[sections.length - 1];
+  sts.push({ x: e[0], z: e[1], c: e[2], y: e[3], t: e[4] });
+
+  // 翼型环（前缘加密，上/下对称）
+  const ring = [];
+  for (let k = 0; k <= P; k++) {
+    let pa, s;
+    if (k <= P / 2) { pa = 0.5 * (1 - Math.cos(Math.PI * (k / (P / 2)))); s = 1; }
+    else { pa = 0.5 * (1 - Math.cos(Math.PI * ((P - k) / (P / 2)))); s = -1; }
+    ring.push([pa, s]);
+  }
+  const pos = [], idx = [];
+  sts.forEach(st => {
+    ring.forEach(([pa, s]) => {
+      const pb = s * 1.7 * Math.sqrt(pa) * (1 - pa) * st.t; // 半厚度(弦长比例)
+      pos.push(st.x, st.y + pb * st.c, st.z - pa * st.c);
+    });
+  });
+  const W = P + 1;
+  for (let si = 0; si < sts.length - 1; si++) {
+    for (let k = 0; k < P; k++) {
+      const a = si * W + k, b = a + 1, c = a + W, d = c + 1;
+      idx.push(a, b, d, a, d, c);
+    }
+  }
+  // 翼根/翼尖封盖（扇形）
+  const r0 = 0, r1 = (sts.length - 1) * W;
+  const c0 = pos.length / 3; pos.push(sts[0].x, sts[0].y, sts[0].z - sts[0].c * 0.4);
+  for (let k = 0; k < P; k++) idx.push(c0, r0 + k, r0 + k + 1);
+  const c1 = pos.length / 3; pos.push(sts[sts.length - 1].x, sts[sts.length - 1].y, sts[sts.length - 1].z - sts[sts.length - 1].c * 0.4);
+  for (let k = 0; k < P; k++) idx.push(c1, r1 + k + 1, r1 + k);
+
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+
+// 左右镜像（翻转绕序）
+function mirroredX(g) {
+  const m = g.clone();
+  m.scale(-1, 1, 1);
+  const idx = m.index.array;
+  for (let i = 0; i < idx.length; i += 3) { const t = idx[i + 1]; idx[i + 1] = idx[i + 2]; idx[i + 2] = t; }
+  m.computeVertexNormals();
+  return m;
+}
+
+// 沿机身表面的条带（驾驶舱玻璃 / 装饰线）
+function makeBand(zA, zB, phi1, phi2, rScale, mat, rows = 7, cols = 14) {
+  const pos = [], idx = [];
+  for (let i = 0; i <= rows; i++) {
+    const z = zA + (zB - zA) * (i / rows);
+    const { r, y } = radiusAt(z);
+    for (let j = 0; j <= cols; j++) {
+      const ph = (phi1 + (phi2 - phi1) * (j / cols)) * Math.PI / 180;
+      pos.push(r * rScale * Math.cos(ph), y + r * rScale * Math.sin(ph), z);
+    }
+  }
+  const W = cols + 1;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      const a = i * W + j, b = a + 1, c = a + W, d = c + 1;
+      idx.push(a, b, d, a, d, c);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+}
+
+/* ============================================================
+   createAirplane —— 波音宽体客机
+============================================================ */
+function buildEngine() {
+  const g = new THREE.Group();
+  const lathe = (pts, mat) => {
+    const geo = new THREE.LatheGeometry(pts.map(p => new THREE.Vector2(p[0], p[1])), 40);
+    geo.rotateX(Math.PI / 2);
+    const m = new THREE.Mesh(geo, mat);
+    m.castShadow = true; m.receiveShadow = true;
+    return m;
+  };
+  // 外涵短舱
+  g.add(lathe([[1.03, 0], [1.16, -0.12], [1.3, -0.55], [1.36, -1.3], [1.34, -2.4], [1.25, -3.55], [1.08, -4.45], [0.86, -5.05], [0.62, -5.3]], MAT.fus));
+  // 进气口金属唇口
+  g.add(lathe([[1.03, 0.01], [1.17, -0.13], [1.2, -0.24]], MAT.metal));
+  // 进气道内壁
+  g.add(lathe([[0.98, -0.02], [0.92, -0.5], [0.66, -1.6]], MAT.darkIn));
+  // 中心锥 + 尾喷
+  g.add(lathe([[0.72, -4.6], [0.68, -5.2], [0.5, -6.0], [0.2, -6.6], [0.03, -6.85]], MAT.titanium));
+  g.add(lathe([[0.55, -5.4], [0.5, -6.1], [0.16, -6.7]], MAT.darkIn));
+
+  // 风扇（缓慢旋转）
+  const fan = new THREE.Group();
+  const spinner = new THREE.Mesh(gCyl(0.05, 0.34, 0.55, 16), MAT.titanium);
+  spinner.rotation.x = Math.PI / 2;
+  spinner.position.z = -0.35;
+  spinner.castShadow = true;
+  fan.add(spinner);
+  const bladeGeo = gBox(0.05, 0.78, 0.3);
+  const blades = new THREE.InstancedMesh(bladeGeo, MAT.blade, 18);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), one = new THREE.Vector3(1, 1, 1);
+  const qz = new THREE.Quaternion(), qp = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), 0.5);
+  const zAxis = new THREE.Vector3(0, 0, 1);
+  for (let i = 0; i < 18; i++) {
+    qz.setFromAxisAngle(zAxis, i / 18 * Math.PI * 2);
+    q.copy(qz).multiply(qp); // 先桨距、后绕轮盘旋转
+    m4.compose(new THREE.Vector3(0, 0, -0.55), q, one);
+    blades.setMatrixAt(i, m4);
+  }
+  fan.add(blades);
+  fan.position.z = 0;
+  g.add(fan);
+  state.fans.push(fan);
+  return g;
+}
+
+function buildWheel(r, w) {
+  const g = new THREE.Group();
+  const tire = new THREE.Mesh(gCyl(r, r, w, 20), MAT.tire);
+  tire.rotation.z = Math.PI / 2; tire.castShadow = true;
+  const hub = new THREE.Mesh(gCyl(r * 0.45, r * 0.45, w + 0.03, 14), MAT.hub);
+  hub.rotation.z = Math.PI / 2;
+  g.add(tire, hub);
+  return g;
+}
+
+function createAirplane() {
+  const plane = new THREE.Group();
+  const CY = 4.8; // 机身中心线高度
+
+  // ---- 机身 ----
+  const fus = new THREE.Mesh(fuselageGeometry(), MAT.fus);
+  fus.position.y = CY;
+  fus.castShadow = true; fus.receiveShadow = true;
+  plane.add(fus);
+  state.fusMat = MAT.fus;
+
+  // ---- 驾驶舱玻璃（后掠式整体风挡）----
+  plane.add(makeBand(22.6, 19.0, -76, 76, 1.012, MAT.cockpit, 6, 16));
+  for (const ph of [-44, -15, 15, 44]) {
+    const { r, y } = radiusAt(20.8);
+    const p = box(0.09, 0.12, 3.7, MAT.fus,
+      r * 1.02 * Math.cos(ph * Math.PI / 180), CY + y + r * 1.02 * Math.sin(ph * Math.PI / 180), 20.8,
+      -0.2, 0, ph * Math.PI / 180);
+    plane.add(p);
+  }
+
+  // ---- 舷窗（实例化）----
+  const winGeo = gBox(0.12, 0.42, 0.3);
+  const zs = [];
+  for (let z = 12; z >= -12; z -= 0.85) if (Math.abs(z + 1.5) > 0.95) zs.push(z);
+  const wins = new THREE.InstancedMesh(winGeo, MAT.win, zs.length * 2);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), one = new THREE.Vector3(1, 1, 1);
+  let wi = 0;
+  for (const side of [1, -1]) {
+    for (const z of zs) {
+      e.set(0, 0, side * 0.47); q.setFromEuler(e);
+      m4.compose(new THREE.Vector3(side * 2.55, CY + 1.3, z), q, one);
+      wins.setMatrixAt(wi++, m4);
+    }
+  }
+  plane.add(wins);
+
+  // ---- 舱门 ----
+  for (const side of [1, -1]) {
+    for (const z of [16, -1.5, -15.5]) {
+      plane.add(box(0.1, 1.9, 0.95, MAT.door, side * 2.72, CY + 0.95, z, 0, 0, side * 0.35));
+    }
+  }
+
+  // ---- 机身装饰线 ----
+  plane.add(makeBand(23.5, -21, 8, 18, 1.006, MAT.navy, 8, 6));
+  plane.add(makeBand(23.5, -21, -18, -8, 1.006, MAT.navy, 8, 6));
+
+  // ---- 机翼（含后掠 + 上反 + 斜削翼尖）----
+  const wingSections = [
+    [2.0, -2.6, 13.8, -1.15, 0.125], [5.5, -4.9, 12.3, -0.72, 0.118], [11.0, -8.6, 10.3, 0.02, 0.11],
+    [16.5, -12.0, 8.5, 0.75, 0.103], [22.0, -15.4, 6.7, 1.42, 0.096], [26.5, -18.0, 5.1, 1.92, 0.091],
+    [29.8, -20.0, 3.5, 2.22, 0.088], [32.0, -21.7, 2.3, 2.42, 0.085], [33.7, -23.1, 1.05, 2.6, 0.082]
+  ];
+  const wingGeo = buildWing(wingSections);
+  const wingL = new THREE.Mesh(wingGeo, MAT.wing);
+  const wingR = new THREE.Mesh(mirroredX(wingGeo), MAT.wing);
+  wingL.position.y = wingR.position.y = CY;
+  wingL.castShadow = wingR.castShadow = true;
+  wingL.receiveShadow = wingR.receiveShadow = true;
+  plane.add(wingL, wingR);
+
+  // 翼身整流罩
+  const fair = new THREE.Mesh(new THREE.SphereGeometry(1, 26, 18), MAT.fairing);
+  fair.scale.set(3.3, 1.5, 8.5);
+  fair.position.set(0, CY - 1.35, -7.5);
+  fair.castShadow = true; fair.receiveShadow = true;
+  plane.add(fair);
+
+  // ---- 发动机（双侧吊舱 + 挂架）----
+  for (const side of [1, -1]) {
+    const eng = buildEngine();
+    eng.position.set(side * 10.6, CY - 2.35, -4.0);
+    plane.add(eng);
+    plane.add(box(0.5, 1.7, 4.6, MAT.fairing, side * 10.6, CY - 1.5, -7.6));
+  }
+
+  // ---- 垂直尾翼 / 水平尾翼 ----
+  const vStab = new THREE.Mesh(buildWing([
+    [0.0, -21.0, 9.4, 0, 0.13], [2.4, -22.5, 7.7, 0, 0.12], [5.2, -24.2, 5.9, 0, 0.11],
+    [7.8, -25.9, 4.3, 0, 0.1], [10.0, -27.5, 2.9, 0, 0.09]
+  ]), MAT.stab);
+  vStab.rotation.z = Math.PI / 2;
+  vStab.position.y = CY + 2.45;
+  vStab.castShadow = true; vStab.receiveShadow = true;
+  plane.add(vStab);
+
+  const hSections = [
+    [0.5, -24.0, 7.2, 0.3, 0.1], [3.2, -25.5, 5.6, 0.55, 0.095],
+    [6.4, -27.2, 3.9, 0.83, 0.09], [9.6, -29.0, 2.2, 1.1, 0.085]
+  ];
+  const hGeo = buildWing(hSections);
+  const hL = new THREE.Mesh(hGeo, MAT.stab);
+  const hR = new THREE.Mesh(mirroredX(hGeo), MAT.stab);
+  hL.position.y = hR.position.y = CY;
+  hL.castShadow = hR.castShadow = true;
+  plane.add(hL, hR);
+
+  // ---- 起落架 ----
+  // 主起落架（两侧四轮小车式）
+  for (const side of [1, -1]) {
+    plane.add(tube(new THREE.Vector3(side * 3.55, 3.2, -5.0), new THREE.Vector3(side * 3.55, 0.78, -5.0), 0.2, MAT.strut));
+    plane.add(tube(new THREE.Vector3(side * 3.55, 1.6, -5.0), new THREE.Vector3(side * 3.55, 0.72, -5.0), 0.12, MAT.chrome));
+    plane.add(tube(new THREE.Vector3(side * 5.0, 2.8, -4.4), new THREE.Vector3(side * 3.7, 1.1, -5.2), 0.09, MAT.strut));
+    plane.add(box(0.36, 0.28, 3.4, MAT.strut, side * 3.55, 0.74, -5.0));
+    for (const az of [-3.9, -6.1]) {
+      for (const ax of [0.66, -0.66]) {
+        const w = buildWheel(0.62, 0.44);
+        w.position.set(side * 3.55 + ax, 0.62, az);
+        plane.add(w);
+      }
+    }
+    // 舱门（打开）
+    plane.add(box(1.1, 0.07, 3.0, MAT.fairing, side * 4.35, 2.5, -5.0, 0, 0, -side * 1.05));
+    // 轮挡
+    plane.add(box(0.5, 0.16, 0.24, MAT.cone, side * 3.55, 0.1, -2.9));
+    plane.add(box(0.5, 0.16, 0.24, MAT.cone, side * 3.55, 0.1, -7.1));
+  }
+  // 前起落架
+  plane.add(tube(new THREE.Vector3(0, 2.4, 17.3), new THREE.Vector3(0, 0.58, 17.3), 0.15, MAT.strut));
+  plane.add(tube(new THREE.Vector3(0, 1.4, 17.3), new THREE.Vector3(0, 0.52, 17.3), 0.09, MAT.chrome));
+  plane.add(tube(new THREE.Vector3(0.7, 2.2, 17.9), new THREE.Vector3(0.08, 1.0, 17.35), 0.07, MAT.strut));
+  for (const side of [1, -1]) {
+    const w = buildWheel(0.5, 0.32);
+    w.position.set(side * 0.42, 0.5, 17.3);
+    plane.add(w);
+    plane.add(box(0.5, 0.06, 1.6, MAT.fairing, side * 0.62, 1.0, 17.3, 0, 0, side * 1.25));
+  }
+  // 前起落架滑行灯
+  plane.add(box(0.22, 0.18, 0.1, new THREE.MeshStandardMaterial({ color: 0x202020, emissive: 0xfff6d8, emissiveIntensity: 2.5 }), 0, 1.7, 17.05));
+
+  // ---- 航行灯 / 防撞灯 / 频闪 ----
+  const mk = (mat, x, y, z, r = 0.1) => {
+    const s = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), mat);
+    s.position.set(x, y, z);
+    plane.add(s);
+  };
+  mk(MAT.redL, 33.8, CY + 2.6, -23.4);      // 左翼尖红（机头朝 +z，左为 +x）
+  mk(MAT.greenL, -33.8, CY + 2.6, -23.4);   // 右翼尖绿
+  state.beaconMat = new THREE.MeshStandardMaterial({ color: 0x220404, emissive: 0xff2214, emissiveIntensity: 3 });
+  mk(state.beaconMat, 0, CY + 2.92, -9, 0.09);
+  mk(state.beaconMat, 0, CY - 2.9, -7, 0.09);
+  state.strobeMat = new THREE.MeshStandardMaterial({ color: 0x222222, emissive: 0xffffff, emissiveIntensity: 2 });
+  mk(state.strobeMat, 33.4, CY + 2.58, -23.9);
+  mk(state.strobeMat, -33.4, CY + 2.58, -23.9);
+  mk(state.strobeMat, 0, CY + 3.0, -31.4, 0.08);
+
+  // ---- APU 尾喷 / 天线 ----
+  const apu = cyl(0.24, 0.28, 0.5, 12, MAT.darkIn, 0, CY + 2.95, -31.3, Math.PI / 2);
+  plane.add(apu);
+  for (const z of [18, 6, -8]) plane.add(box(0.06, 0.42, 0.6, MAT.fairing, 0, CY + 2.82, z));
+  plane.add(box(0.06, 0.36, 0.5, MAT.fairing, 0, CY - 2.82, 10));
+
+  scene.add(plane);
+  return plane;
+}
+
+/* ============================================================
+   createAirportGround —— 停机坪 / 跑道 / 标线 / 灯光
+============================================================ */
+function apronTexture() {
+  return makeCanvasTexture(2048, 1536, (ctx, W, H) => {
+    const px = wx => (wx + 100) / 200 * W;
+    const py = wz => (wz + 75) / 150 * H;
+    // 混凝土底色 + 噪点
+    ctx.fillStyle = '#95989c'; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 9000; i++) {
+      ctx.fillStyle = (Math.random() < 0.5 ? 'rgba(22,24,27,' : 'rgba(236,238,240,') + (Math.random() * 0.055).toFixed(3) + ')';
+      const s = 1 + Math.random() * 3;
+      ctx.fillRect(Math.random() * W, Math.random() * H, s, s);
+    }
+    // 混凝土分缝
+    ctx.strokeStyle = 'rgba(72,75,80,.8)'; ctx.lineWidth = 2;
+    for (let x = -96; x <= 96; x += 12) { ctx.beginPath(); ctx.moveTo(px(x), 0); ctx.lineTo(px(x), H); ctx.stroke(); }
+    for (let z = -72; z <= 72; z += 12) { ctx.beginPath(); ctx.moveTo(0, py(z)); ctx.lineTo(W, py(z)); ctx.stroke(); }
+    // 服务车道
+    ctx.fillStyle = '#6b6f74'; ctx.fillRect(0, py(-62), W, py(-50) - py(-62));
+    ctx.strokeStyle = '#d8c25a'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(0, py(-62)); ctx.lineTo(W, py(-62)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, py(-50)); ctx.lineTo(W, py(-50)); ctx.stroke();
+    ctx.setLineDash([26, 20]);
+    ctx.beginPath(); ctx.moveTo(0, py(-56)); ctx.lineTo(W, py(-56)); ctx.stroke();
+    ctx.setLineDash([]);
+    // 轮胎痕 / 油污
+    for (let i = 0; i < 60; i++) {
+      ctx.strokeStyle = 'rgba(28,30,33,' + (0.04 + Math.random() * 0.08).toFixed(3) + ')';
+      ctx.lineWidth = 5 + Math.random() * 12;
+      const x = px(-8 + Math.random() * 16), y = py(-34 + Math.random() * 60);
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (Math.random() - 0.5) * 20, y + 50 + Math.random() * 130); ctx.stroke();
+    }
+    for (let i = 0; i < 8; i++) {
+      ctx.fillStyle = 'rgba(25,27,30,.07)';
+      ctx.beginPath();
+      ctx.ellipse(px(-70 + Math.random() * 140), py(-30 + Math.random() * 55), 12 + Math.random() * 26, 6 + Math.random() * 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // 黄色入位引导线 + 停止线
+    ctx.fillStyle = '#e3c233';
+    ctx.fillRect(px(-0.4), py(16.5), px(0.4) - px(-0.4), py(75) - py(16.5));
+    ctx.fillRect(px(-5), py(16.1), px(5) - px(-5), 8);
+    ctx.fillRect(px(-0.4), py(75) - 30, px(0.4) - px(-0.4), 30);
+    // 机位编号
+    ctx.font = '900 150px "Arial Black", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('12', px(-8), py(27));
+    // 设备安全区（红）
+    ctx.strokeStyle = 'rgba(186,58,48,.9)'; ctx.lineWidth = 5;
+    ctx.setLineDash([30, 20]);
+    ctx.strokeRect(px(-36), py(-34), px(36) - px(-36), py(30) - py(-34));
+    ctx.setLineDash([]);
+    // 站位边线（白）
+    ctx.strokeStyle = 'rgba(240,244,246,.7)'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(px(-80), 0); ctx.lineTo(px(-80), H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px(80), 0); ctx.lineTo(px(80), H); ctx.stroke();
+  });
+}
+
+function runwayTexture() {
+  return makeCanvasTexture(2048, 128, (ctx, W, H) => {
+    const px = wx => (wx + 450) / 900 * W;
+    const py = wz => (wz + 23) / 46 * H;
+    ctx.fillStyle = '#404347'; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 3500; i++) {
+      ctx.fillStyle = (Math.random() < 0.5 ? 'rgba(15,16,18,' : 'rgba(200,204,208,') + (Math.random() * 0.06).toFixed(3) + ')';
+      ctx.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+    }
+    ctx.fillStyle = '#d8dcdf';
+    // 边线
+    ctx.fillRect(0, py(20) - 2, W, 4);
+    ctx.fillRect(0, py(-20) - 2, W, 4);
+    // 中线虚线
+    for (let x = -390; x < 390; x += 50) ctx.fillRect(px(x), py(0) - 3, px(x + 30) - px(x), 6);
+    // 两端跑道号码 + 端头条纹
+    for (let i = 0; i < 8; i++) {
+      ctx.fillRect(px(-448), py(-16.4 + i * 4.2), px(-418) - px(-448), 4);
+      ctx.fillRect(px(418), py(-16.4 + i * 4.2), px(448) - px(418), 4);
+    }
+    ctx.save();
+    ctx.translate(px(-380), py(0)); ctx.rotate(Math.PI / 2);
+    ctx.font = '900 58px "Arial Black", Arial'; ctx.textAlign = 'center';
+    ctx.fillText('27', 0, 20);
+    ctx.restore();
+    ctx.save();
+    ctx.translate(px(380), py(0)); ctx.rotate(-Math.PI / 2);
+    ctx.font = '900 58px "Arial Black", Arial'; ctx.textAlign = 'center';
+    ctx.fillText('09', 0, 20);
+    ctx.restore();
+    // 接地带标志
+    ctx.fillRect(px(-330), py(8), px(-285) - px(-330), 8);
+    ctx.fillRect(px(-330), py(-10), px(-285) - px(-330), 8);
+    ctx.fillRect(px(285), py(8), px(330) - px(285), 8);
+    ctx.fillRect(px(285), py(-10), px(330) - px(285), 8);
+  });
+}
+
+function createAirportGround() {
+  // 草地基底
+  const grass = new THREE.Mesh(new THREE.PlaneGeometry(3600, 3600), MAT.grass);
+  grass.rotation.x = -Math.PI / 2;
+  grass.position.y = -0.02;
+  grass.receiveShadow = true;
+  scene.add(grass);
+
+  // 停机坪（程序化 Canvas 纹理标线）
+  const apron = new THREE.Mesh(new THREE.PlaneGeometry(200, 150),
+    new THREE.MeshStandardMaterial({ map: apronTexture(), roughness: 0.92, metalness: 0.02 }));
+  apron.rotation.x = -Math.PI / 2;
+  apron.position.y = 0.01;
+  apron.receiveShadow = true;
+  scene.add(apron);
+
+  // 滑行道 → 跑道
+  const taxi = new THREE.Mesh(new THREE.PlaneGeometry(26, 68), MAT.asphalt);
+  taxi.rotation.x = -Math.PI / 2;
+  taxi.position.set(48, 0.02, -109);
+  taxi.receiveShadow = true;
+  scene.add(taxi);
+  for (const x of [-12.5, 12.5]) {
+    const l = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 68), MAT.lineW);
+    l.rotation.x = -Math.PI / 2; l.position.set(48 + x, 0.03, -109);
+    scene.add(l);
+  }
+  const cl = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 68), MAT.lineY);
+  cl.rotation.x = -Math.PI / 2; cl.position.set(48, 0.03, -109);
+  scene.add(cl);
+
+  // 跑道
+  const rwy = new THREE.Mesh(new THREE.PlaneGeometry(900, 46),
+    new THREE.MeshStandardMaterial({ map: runwayTexture(), roughness: 0.9, metalness: 0.02 }));
+  rwy.rotation.x = -Math.PI / 2;
+  rwy.position.set(0, 0.04, -165);
+  rwy.receiveShadow = true;
+  scene.add(rwy);
+
+  // 跑道边灯（实例化：白边灯 + 绿入口 + 红末端）
+  const lightGeo = new THREE.SphereGeometry(0.17, 10, 8);
+  state.runwayLightMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, emissive: 0xffe6b0, emissiveIntensity: 2 });
+  const white = new THREE.InstancedMesh(lightGeo, state.runwayLightMat, 90);
+  const m4 = new THREE.Matrix4();
+  let i = 0;
+  for (let x = -440; x <= 440; x += 22) {
+    m4.makeTranslation(x, 0.18, -165 + 21); white.setMatrixAt(i++, m4);
+    m4.makeTranslation(x, 0.18, -165 - 21); white.setMatrixAt(i++, m4);
+  }
+  for (let z = -139; z >= -131; z -= 2.2) { m4.makeTranslation(0, 0.18, z); white.setMatrixAt(i++, m4); } // 进近灯串
+  white.count = i;
+  scene.add(white);
+
+  const green = new THREE.InstancedMesh(lightGeo,
+    new THREE.MeshStandardMaterial({ color: 0x042204, emissive: 0x22ff66, emissiveIntensity: 2.2 }), 11);
+  const red = new THREE.InstancedMesh(lightGeo,
+    new THREE.MeshStandardMaterial({ color: 0x220404, emissive: 0xff3324, emissiveIntensity: 2.2 }), 11);
+  for (let k = 0; k < 11; k++) {
+    m4.makeTranslation(-40 + k * 8, 0.18, -142.4); green.setMatrixAt(k, m4);
+    m4.makeTranslation(-40 + k * 8, 0.18, -187.6); red.setMatrixAt(k, m4);
+  }
+  scene.add(green, red);
+
+  // 停机坪高杆灯（4 座，前 2 座带真实点光源）
+  for (const [x, z] of [[-56, -46], [56, -46], [-56, 40], [56, 40]]) {
+    const g = new THREE.Group();
+    g.add(cyl(0.16, 0.22, 20, 10, MAT.pole, 0, 10, 0));
+    g.add(box(3.2, 0.24, 0.24, MAT.pole, 0, 20, 0));
+    const lampMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, emissive: 0xe8f2ff, emissiveIntensity: 2.4 });
+    state.lampMats.push(lampMat);
+    g.add(box(0.9, 0.42, 0.5, lampMat, -1.0, 19.75, 0));
+    g.add(box(0.9, 0.42, 0.5, lampMat, 1.0, 19.75, 0));
+    g.position.set(x, 0, z);
+    scene.add(g);
+  }
+
+  // 风向袋
+  const wsGroup = new THREE.Group();
+  wsGroup.add(cyl(0.05, 0.07, 6, 8, MAT.pole, 0, 3, 0));
+  const sock = new THREE.Mesh(new THREE.ConeGeometry(0.34, 2.2, 10), MAT.cone);
+  sock.rotation.z = Math.PI / 2 - 0.1;
+  sock.position.set(-1.15, 5.95, 0);
+  sock.castShadow = true;
+  wsGroup.add(sock);
+  wsGroup.position.set(-52, 0, -58);
+  state.windsock = sock;
+  scene.add(wsGroup);
+}
+
+/* ============================================================
+   createEnvironment —— 航站楼 / 廊桥 / 塔台 / 车辆 / 天空云层
+============================================================ */
+function skyDome() {
+  const mat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: {
+      top: { value: new THREE.Color(0x3d6fa8) },
+      horizon: { value: new THREE.Color(0xdccdb2) },
+      sunDir: { value: new THREE.Vector3(-140, 170, 230).normalize() },
+      sunCol: { value: new THREE.Color(0xffdfae) }
+    },
+    vertexShader: 'varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader: [
+      'varying vec3 vDir; uniform vec3 top, horizon, sunDir, sunCol;',
+      'void main(){',
+      '  float h = clamp(vDir.y, 0.0, 1.0);',
+      '  vec3 col = mix(horizon, top, pow(h, 0.55));',
+      '  float sd = max(dot(vDir, sunDir), 0.0);',
+      '  col += sunCol * (pow(sd, 600.0) * 1.1 + pow(sd, 14.0) * 0.14);',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n')
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(2300, 32, 16), mat);
+  return sky;
+}
+
+function cloudTexture() {
+  return makeCanvasTexture(256, 128, (ctx, W, H) => {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < 9; i++) {
+      const x = 30 + Math.random() * (W - 60), y = 35 + Math.random() * (H - 70);
+      const r = 18 + Math.random() * 30;
+      const gr = ctx.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(255,255,255,0.85)');
+      gr.addColorStop(0.6, 'rgba(250,252,255,0.35)');
+      gr.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gr;
+      ctx.fillRect(0, 0, W, H);
+    }
+  });
+}
+
+function createClouds() {
+  const tex = cloudTexture();
+  for (let i = 0; i < 14; i++) {
+    const mat = new THREE.SpriteMaterial({
+      map: tex, transparent: true, depthWrite: false,
+      opacity: 0.3 + Math.random() * 0.35
+    });
+    const sp = new THREE.Sprite(mat);
+    sp.scale.set(90 + Math.random() * 140, 30 + Math.random() * 45, 1);
+    sp.position.set(-650 + Math.random() * 1300, 150 + Math.random() * 130, -380 + Math.random() * 640);
+    sp.userData.speed = 0.7 + Math.random() * 1.3;
+    state.clouds.push(sp);
+    scene.add(sp);
+  }
+}
+
+function createTerminal() {
+  // 主航站楼
+  scene.add(box(170, 21, 26, MAT.bldg, -8, 10.5, 91));
+  scene.add(box(168, 15, 0.7, MAT.bldgGlass, -8, 10.3, 77.9));
+  const mul = new THREE.InstancedMesh(gBox(0.3, 15, 0.5), MAT.bldgDark, 40);
+  const m4 = new THREE.Matrix4();
+  for (let i = 0; i < 40; i++) { m4.makeTranslation(-90 + i * 4.4, 10.3, 78.35); mul.setMatrixAt(i, m4); }
+  scene.add(mul);
+  scene.add(box(176, 1.5, 30, MAT.roof, -8, 21.8, 91));
+  scene.add(box(70, 0.9, 7, MAT.roof, -8, 8, 74));
+  scene.add(box(130, 17, 22, MAT.bldgDark, -20, 8.5, 108));
+  scene.add(box(134, 1.2, 25, MAT.roof, -20, 17.6, 108));
+
+  // 塔台
+  scene.add(cyl(2.3, 3.0, 38, 14, MAT.bldg, 74, 19, 86));
+  scene.add(cyl(4.4, 3.4, 4.4, 12, MAT.bldgGlass, 74, 39.6, 86));
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(4.6, 2.4, 12), MAT.roof);
+  cone.position.set(74, 42.9, 86); cone.castShadow = true;
+  scene.add(cone);
+  state.towerBeaconMat = new THREE.MeshStandardMaterial({ color: 0x220404, emissive: 0xff2214, emissiveIntensity: 3 });
+  const tb = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 8), state.towerBeaconMat);
+  tb.position.set(74, 44.4, 86);
+  scene.add(tb);
+}
+
+function createJetBridge() {
+  const g = new THREE.Group();
+  g.add(box(3.0, 3.0, 20, MAT.vWhite, -6.0, 5.3, 46, 0, 0.1, 0));
+  g.add(box(2.7, 2.8, 15, MAT.vWhite, -5.2, 5.15, 29, 0, 0.06, 0));
+  g.add(box(3.1, 0.7, 20.5, MAT.roof, -6.0, 6.95, 46, 0, 0.1, 0));
+  g.add(box(2.8, 0.7, 15.5, MAT.roof, -5.2, 6.8, 29, 0, 0.06, 0));
+  g.add(box(3.05, 0.8, 19.6, MAT.vGlass, -6.0, 5.0, 46, 0, 0.1, 0));
+  g.add(box(2.75, 0.7, 14.6, MAT.vGlass, -5.2, 4.9, 29, 0, 0.06, 0));
+  // 登机口舱段
+  g.add(box(3.4, 3.3, 3.6, MAT.vWhite, -4.6, 4.9, 17.4, 0, -0.15, 0));
+  g.add(box(3.5, 0.9, 3.7, MAT.vGlass, -4.6, 4.4, 17.4, 0, -0.15, 0));
+  // 支撑立柱与轮架
+  g.add(cyl(0.45, 0.5, 4.4, 10, MAT.pole, -6.6, 2.2, 52));
+  g.add(box(3, 0.8, 2, MAT.vDark, -6.6, 0.45, 52));
+  g.add(cyl(0.45, 0.5, 4.4, 10, MAT.pole, -5.6, 2.2, 34));
+  g.add(box(3, 0.8, 2, MAT.vDark, -5.6, 0.45, 34));
+  scene.add(g);
+}
+
+function createHangars() {
+  scene.add(box(56, 18, 44, MAT.bldg, -158, 9, 20));
+  scene.add(box(58, 1.2, 46, MAT.roof, -158, 18.6, 20));
+  scene.add(box(0.6, 12, 34, MAT.vDark, -129.9, 6.5, 20));
+  scene.add(box(46, 15, 36, MAT.bldgDark, -150, 7.5, -40));
+  scene.add(box(0.6, 10, 26, MAT.vDark, -126.9, 5.5, -40));
+  scene.add(box(26, 12, 18, MAT.bldg, -118, 6, -78));
+  scene.add(cyl(0.12, 0.12, 24, 6, MAT.pole, -118, 24, -78));
+  // 远处货运箱与城市剪影
+  const cols = [0x7d8b96, 0x8a939b, 0x6f7d88, 0x95918a];
+  for (let i = 0; i < 6; i++) {
+    scene.add(box(6, 3, 2.6, new THREE.MeshStandardMaterial({ color: cols[i % 4], roughness: 0.8 }),
+      132 + (i % 3) * 8, 1.5, -66 + Math.floor(i / 3) * 5));
+  }
+  for (let i = 0; i < 6; i++) {
+    const h = 18 + Math.random() * 26;
+    scene.add(box(14 + Math.random() * 14, h, 14, MAT.bldgDark,
+      -320 + i * 90 + Math.random() * 30, h / 2, -300 - Math.random() * 80));
+  }
+}
+
+function smallWheel(r, w) { return buildWheel(r, w); }
+
+function createVehicles() {
+  // ---- 推机拖车（机头前）----
+  const tug = new THREE.Group();
+  tug.add(box(1.6, 0.55, 3.4, MAT.vYellow, 0, 0.55, 0));
+  tug.add(box(1.4, 0.85, 1.3, MAT.vWhite, 0, 1.25, -0.55));
+  tug.add(box(1.42, 0.3, 0.7, MAT.vGlass, 0, 1.5, -0.1));
+  tug.add(box(0.7, 0.25, 0.9, MAT.vDark, 0, 0.9, 1.55));
+  for (const [x, z] of [[-0.75, 1.1], [0.75, 1.1], [-0.75, -1.1], [0.75, -1.1]]) {
+    const w = smallWheel(0.34, 0.26); w.position.set(x, 0.34, z); tug.add(w);
+  }
+  tug.position.set(2.6, 0, 31); tug.rotation.y = Math.PI;
+  scene.add(tug);
+
+  // ---- 行李牵引车 + 拖车（右前）----
+  const bag = new THREE.Group();
+  bag.add(box(1.3, 0.8, 2.3, MAT.vYellow, 0, 0.75, 4.2));
+  bag.add(box(1.2, 0.8, 1.1, MAT.vWhite, 0, 1.5, 4.6));
+  bag.add(box(1.22, 0.3, 0.5, MAT.vGlass, 0, 1.7, 4.15));
+  for (const cz of [0.6, -2.8]) {
+    bag.add(box(1.7, 0.25, 2.6, MAT.vDark, 0, 0.7, cz));
+    bag.add(box(1.6, 0.5, 0.12, MAT.pole, 0, 0.9, cz + 1.25));
+    bag.add(box(1.6, 0.5, 0.12, MAT.pole, 0, 0.9, cz - 1.25));
+    bag.add(box(0.9, 0.5, 0.8, MAT.vWhite, -0.2, 1.05, cz + 0.3));
+    bag.add(box(0.7, 0.4, 0.6, new THREE.MeshStandardMaterial({ color: 0x7a4f9e, roughness: 0.8 }), 0.15, 1.0, cz - 0.6));
+    for (const [x, z] of [[-0.8, cz + 1.0], [0.8, cz + 1.0], [-0.8, cz - 1.0], [0.8, cz - 1.0]]) {
+      const w = smallWheel(0.3, 0.22); w.position.set(x, 0.3, z); bag.add(w);
+    }
+  }
+  for (const [x, z] of [[-0.55, 4.8], [0.55, 4.8], [-0.55, 3.6], [0.55, 3.6]]) {
+    const w = smallWheel(0.32, 0.24); w.position.set(x, 0.32, z); bag.add(w);
+  }
+  bag.position.set(9.5, 0, 12); bag.rotation.y = -Math.PI / 2;
+  scene.add(bag);
+
+  // ---- 升降传送带车（右后货舱门）----
+  const belt = new THREE.Group();
+  belt.add(box(1.7, 0.5, 3.2, MAT.vWhite, 0, 0.75, 0.4));
+  belt.add(box(1.5, 0.5, 1.0, MAT.vYellow, 0, 1.2, -1.0));
+  const conv = new THREE.Group();
+  conv.add(box(0.85, 0.1, 6.0, MAT.vDark, 0, 0, 0));
+  conv.add(box(0.08, 0.35, 6.0, MAT.pole, -0.5, 0.18, 0));
+  conv.add(box(0.08, 0.35, 6.0, MAT.pole, 0.5, 0.18, 0));
+  conv.position.set(0, 1.35, 0.4);
+  conv.rotation.x = -0.42;
+  belt.add(conv);
+  for (const [x, z] of [[-0.85, 1.3], [0.85, 1.3], [-0.85, -0.9], [0.85, -0.9]]) {
+    const w = smallWheel(0.32, 0.24); w.position.set(x, 0.32, z); belt.add(w);
+  }
+  belt.position.set(5.2, 0, -12.5); belt.rotation.y = -Math.PI / 2;
+  scene.add(belt);
+
+  // ---- 加油车（右翼下）----
+  const fuel = new THREE.Group();
+  fuel.add(box(2.2, 0.7, 8.2, MAT.vDark, 0, 0.85, 0));
+  fuel.add(box(2.2, 1.5, 2.1, MAT.vWhite, 0, 1.85, 3.2));
+  fuel.add(box(2.22, 0.55, 0.6, MAT.vGlass, 0, 2.25, 4.05));
+  const tank = cyl(1.05, 1.05, 4.8, 18, MAT.vWhite, 0, 1.85, -0.9, Math.PI / 2);
+  fuel.add(tank);
+  fuel.add(cyl(0.45, 0.45, 0.8, 10, MAT.vDark, -0.8, 1.1, -3.2, 0, 0, Math.PI / 2));
+  for (const [x, z] of [[-1.05, 3.0], [1.05, 3.0], [-1.05, -2.4], [1.05, -2.4], [-1.05, -3.2], [1.05, -3.2]]) {
+    const w = smallWheel(0.45, 0.32); w.position.set(x, 0.45, z); fuel.add(w);
+  }
+  fuel.position.set(15.5, 0, -5); fuel.rotation.y = -Math.PI / 2;
+  scene.add(fuel);
+
+  // ---- 地面电源车（机头左前）----
+  const gpu = new THREE.Group();
+  gpu.add(box(1.6, 1.1, 2.6, MAT.vYellow, 0, 0.85, 0));
+  gpu.add(box(1.2, 0.5, 0.9, MAT.vDark, 0, 1.15, 0.6));
+  gpu.add(box(1.62, 0.3, 0.7, MAT.vDark, 0, 1.05, -0.9));
+  for (const [x, z] of [[-0.75, 0.9], [0.75, 0.9], [-0.75, -0.9], [0.75, -0.9]]) {
+    const w = smallWheel(0.3, 0.22); w.position.set(x, 0.3, z); gpu.add(w);
+  }
+  gpu.position.set(-5.5, 0, 26.5); gpu.rotation.y = 2.2;
+  scene.add(gpu);
+
+  // ---- 安全锥（实例化）----
+  const cones = new THREE.InstancedMesh(new THREE.ConeGeometry(0.26, 0.6, 10), MAT.cone, 8);
+  const m4 = new THREE.Matrix4();
+  const cp = [[0, 30], [2.2, 27.5], [-2.2, 27.5], [35.8, -23.4], [-35.8, -23.4], [2.5, -33.8], [-2.5, -33.8], [13.2, -3.6]];
+  cp.forEach((p, i) => { m4.makeTranslation(p[0], 0.3, p[1]); cones.setMatrixAt(i, m4); });
+  cones.castShadow = true;
+  scene.add(cones);
+}
+
+function createEnvironment() {
+  scene.add(skyDome());
+  createClouds();
+  createTerminal();
+  createJetBridge();
+  createHangars();
+  createVehicles();
+}
+
+/* ============================================================
+   animate —— 动画循环
+============================================================ */
+const camOffset = new THREE.Vector3();
+function animate() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+
+  // 发动机风扇缓慢旋转
+  state.fans.forEach((f, i) => { f.rotation.z += dt * (2.0 + i * 0.12); });
+
+  // 机身反光呼吸 + 扫过的镜面高光
+  if (state.fusMat) state.fusMat.envMapIntensity = 0.9 + 0.16 * Math.sin(t * 0.35) + 0.05 * Math.sin(t * 1.7);
+  if (state.glint) {
+    const a = t * 0.07;
+    state.glint.position.set(Math.cos(a) * 90, 35 + Math.sin(t * 0.2) * 8, Math.sin(a) * 90);
+  }
+
+  // 停机坪灯光微闪
+  state.lampMats.forEach((m, i) => {
+    m.emissiveIntensity = 2.4 + 0.22 * Math.sin(t * 7 + i * 2.1) + 0.12 * Math.sin(t * 17 + i);
+  });
+  if (state.runwayLightMat) state.runwayLightMat.emissiveIntensity = 2.0 + 0.22 * Math.sin(t * 2.6) + 0.1 * Math.sin(t * 9.1);
+
+  // 防撞灯（红，脉冲）
+  if (state.beaconMat) state.beaconMat.emissiveIntensity = (t % 0.9 < 0.1) ? 4.5 : 0.25;
+  // 频闪灯（白，双闪）
+  if (state.strobeMat) {
+    const p = t % 1.5;
+    state.strobeMat.emissiveIntensity = (p < 0.05 || (p > 0.14 && p < 0.19)) ? 5 : 0.05;
+  }
+  // 塔台信标
+  if (state.towerBeaconMat) state.towerBeaconMat.emissiveIntensity = (t % 1.4 < 0.12) ? 4 : 0.3;
+
+  // 云层缓慢漂移
+  for (const c of state.clouds) {
+    c.position.x += c.userData.speed * dt;
+    if (c.position.x > 720) {
+      c.position.x = -720;
+      c.position.y = 150 + Math.random() * 130;
+      c.position.z = -380 + Math.random() * 640;
+    }
+  }
+  // 风向袋轻摆
+  if (state.windsock) state.windsock.rotation.y = Math.sin(t * 0.8) * 0.18;
+
+  controls.update();
+
+  // 相机轻微漂浮（渲染前偏移、渲染后还原，不污染控制器状态）
+  camOffset.set(Math.sin(t * 0.11) * 0.35, Math.sin(t * 0.16) * 0.22, Math.cos(t * 0.09) * 0.35);
+  camera.position.add(camOffset);
+  renderer.render(scene, camera);
+  camera.position.sub(camOffset);
+
+  if (state.firstFrame) {
+    state.firstFrame = false;
+    setTimeout(() => document.getElementById('loading').classList.add('done'), 250);
+  }
+}
+
+/* ============================================================
+   启动
+============================================================ */
+function init() {
+  createScene(document.getElementById('app'));
+  createLights();
+  createAirportGround();
+  createAirplane();
+  createEnvironment();
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  renderer.setAnimationLoop(animate);
+}
+
+try {
+  init();
+} catch (err) {
+  const el = document.getElementById('loading');
+  el.textContent = '渲染初始化失败: ' + err.message;
+  console.error(err);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+---
+import {
+	evalCategory,
+	evalLedger,
+	evalModel,
+	evalTaskRoute,
+	evalThumb,
+	evalYearGroups,
+} from '../lib/evalCases';
+import '../styles/eval-cases.css';
+
+const groups = evalYearGroups();
+const { tasks, cases, categories } = evalLedger;
+const usedModels = [...new Set(cases.map((item) => item.model))]
+	.map(evalModel)
+	.sort((a, b) => a.vendor.localeCompare(b.vendor) || a.name.localeCompare(b.name));
+const usedCategories = categories.filter((category) =>
+	tasks.some((task) => task.category === category.id),
+);
+---
+
+<section class="page-shell eval-shell" data-eval-gallery>
+	<header class="eval-header">
+		<a class="collection-back" href="/#bc-benchmarks">
+			<i class="ph ph-arrow-left" aria-hidden="true"></i>
+			Benchmarks
+		</a>
+		<h1>模型实测案例</h1>
+		<p class="eval-lede">
+			排行榜上的分数之外，把同一道题交给不同模型，直接运行它们交出的网页、SVG 和动画。
+		</p>
+		<p class="eval-stats">
+			<span>{tasks.length} 道题</span>
+			<span>{cases.length} 个作品</span>
+			<span>{usedModels.length} 个模型</span>
+			<span>{groups.map((group) => group.year).join(' / ')}</span>
+		</p>
+	</header>
+
+	<div class="eval-filters" data-eval-filters hidden>
+		<div class="eval-filter-row" role="group" aria-label="评测年份">
+			<span class="eval-filter-label" aria-hidden="true">年份</span>
+			<button type="button" class="eval-chip" data-filter-year="" aria-pressed="true">
+				全部 <span>{cases.length}</span>
+			</button>
+			{
+				groups.map((group) => (
+					<button
+						type="button"
+						class="eval-chip"
+						data-filter-year={group.year}
+						aria-pressed="false"
+					>
+						{group.year} <span>{group.caseCount}</span>
+					</button>
+				))
+			}
+		</div>
+		<div class="eval-filter-row" role="group" aria-label="题目类型">
+			<span class="eval-filter-label" aria-hidden="true">类型</span>
+			<button type="button" class="eval-chip" data-filter-category="" aria-pressed="true">
+				全部
+			</button>
+			{
+				usedCategories.map((category) => (
+					<button
+						type="button"
+						class="eval-chip"
+						data-filter-category={category.id}
+						aria-pressed="false"
+					>
+						{category.name.zh}
+					</button>
+				))
+			}
+		</div>
+		<div class="eval-filter-row">
+			<label class="eval-filter-label" for="eval-model-filter">模型</label>
+			<select id="eval-model-filter" class="eval-select" data-filter-model>
+				<option value="">全部模型</option>
+				{
+					usedModels.map((model) => (
+						<option value={model.id}>
+							{model.name} · {model.vendor}
+						</option>
+					))
+				}
+			</select>
+		</div>
+	</div>
+
+	{
+		groups.map((group) => (
+			<section
+				class="eval-year"
+				data-eval-year={group.year}
+				aria-labelledby={`eval-year-${group.year}`}
+			>
+				<header class="eval-year-heading">
+					<h2 id={`eval-year-${group.year}`}>{group.year}</h2>
+					<p data-year-summary>
+						{group.cards.length} 道题 · {group.caseCount} 个作品
+					</p>
+				</header>
+				<ul class="eval-grid">
+					{group.cards.map((card) => {
+						const cover = card.cases[0];
+						const names = card.cases.map((item) => evalModel(item.model).name);
+						return (
+							<li
+								class="eval-card"
+								data-category={card.task.category}
+								data-models={card.cases.map((item) => item.model).join(' ')}
+							>
+								<a href={`${evalTaskRoute(card.task.id)}#y${group.year}`}>
+									<span class="eval-thumb">
+										<img
+											src={evalThumb(cover.id)}
+											alt=""
+											width="640"
+											height="400"
+											loading="lazy"
+											decoding="async"
+										/>
+										<span class="eval-count">
+											{card.cases.length > 1 ? `${card.cases.length} 个模型` : '单模型'}
+										</span>
+									</span>
+									<span class="eval-card-body">
+										<span class="eval-card-kicker">{evalCategory(card.task.category).name.zh}</span>
+										<span class="eval-card-title">{card.task.title.zh}</span>
+										<span class="eval-card-models">
+											{names.slice(0, 4).join(' · ')}
+											{names.length > 4 && ` 等 ${names.length} 个`}
+										</span>
+										{card.otherYears.length > 0 && (
+											<span class="eval-card-note">
+												{card.otherYears
+													.map((other) => `${other.year} 年另有 ${other.count} 个`)
+													.join('，')}
+											</span>
+										)}
+									</span>
+								</a>
+							</li>
+						);
+					})}
+				</ul>
+			</section>
+		))
+	}
+
+	<p class="eval-empty" data-eval-empty hidden>没有符合筛选条件的案例。</p>
+</section>
+
+<script>
+	import '../scripts/evalCases';
+</script>

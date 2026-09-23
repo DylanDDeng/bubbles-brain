@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>魔都幻境 · 上海体素风景</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #070b1e; }
+  canvas { display: block; }
+  #app { position: fixed; inset: 0; }
+  .ui { position: fixed; z-index: 10; font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; user-select: none; }
+  #title { top: 22px; left: 26px; pointer-events: none; }
+  #title h1 {
+    font-size: 30px; font-weight: 800; letter-spacing: 6px; color: #fff;
+    text-shadow: 0 0 18px rgba(255, 84, 164, .8), 0 2px 8px rgba(0,0,0,.6);
+  }
+  #title h1 span { color: #ff5aa8; }
+  #title p {
+    margin-top: 6px; font-size: 12.5px; letter-spacing: 3px;
+    color: rgba(255,255,255,.82); text-shadow: 0 1px 4px rgba(0,0,0,.7);
+  }
+  #panel { top: 22px; right: 26px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+  .btn {
+    pointer-events: auto; cursor: pointer; border: 1px solid rgba(255,255,255,.28);
+    background: rgba(14, 18, 46, .55); backdrop-filter: blur(8px);
+    color: #f2f5ff; font-size: 13.5px; letter-spacing: 2px;
+    padding: 9px 16px; border-radius: 999px; transition: all .25s ease;
+    box-shadow: 0 4px 18px rgba(0,0,0,.35);
+  }
+  .btn:hover { background: rgba(255, 84, 164, .35); border-color: rgba(255,140,200,.8); transform: translateY(-1px); }
+  .btn.on { background: rgba(255, 84, 164, .5); border-color: #ff9ecd; }
+  #hint {
+    bottom: 20px; left: 26px; font-size: 12px; letter-spacing: 2px;
+    color: rgba(255,255,255,.75); text-shadow: 0 1px 4px rgba(0,0,0,.8); pointer-events: none;
+    line-height: 1.9;
+  }
+  #hint b { color: #ffd27f; font-weight: 600; }
+  #fps {
+    bottom: 20px; right: 26px; font-size: 11.5px; letter-spacing: 1.5px;
+    color: rgba(255,255,255,.6); font-family: "SF Mono", Menlo, monospace; pointer-events: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,.8);
+  }
+  #loading {
+    position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px;
+    background: radial-gradient(ellipse at 50% 40%, #17204d 0%, #070b1e 70%);
+    color: #ffd27f; letter-spacing: 4px; font-size: 15px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    transition: opacity .8s ease; 
+  }
+  #loading .orb {
+    width: 54px; height: 54px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #ffd0e6, #ff5aa8 60%, #b0256e);
+    box-shadow: 0 0 34px rgba(255, 84, 164, .85);
+    animation: pulse 1.3s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.18); opacity: 1; } }
+  #loading.hide { opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="loading" class="ui"><div class="orb"></div><div>体素上海 · 生成中…</div></div>
+
+<div id="title" class="ui">
+  <h1>魔都幻境<span>·</span>VOXEL SHANGHAI</h1>
+  <p>东方明珠 · 陆家嘴三件套 · 外滩万国建筑 · 豫园飞檐 · 黄浦江</p>
+</div>
+
+<div id="panel" class="ui">
+  <div class="btn" id="btnDay">☀️ 切换白天</div>
+  <div class="btn on" id="btnSpin">🎡 自动环绕</div>
+  <div class="btn" id="btnFire">🎆 放烟花</div>
+</div>
+
+<div id="hint" class="ui">
+  <b>拖拽</b> 旋转视角 &nbsp;·&nbsp; <b>滚轮</b> 缩放 &nbsp;·&nbsp; <b>右键拖拽</b> 平移<br>
+  全场景纯程序化体素生成，无任何外部模型 / 贴图
+</div>
+<div id="fps" class="ui">-- FPS</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+'use strict';
+
+// ============================================================
+//  0. 基础工具 · 确定性随机 · 体素收集器
+// ============================================================
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+var rnd = mulberry32(20260923);
+function rand(a, b) { return a + (b - a) * rnd(); }
+function pick(arr) { return arr[Math.floor(rnd() * arr.length) % arr.length]; }
+
+// 体素收集器：所有几何先登记为 {x,y,z,sx,sy,sz,color,rx,ry,rz}，
+// 最后合并成 2 个 InstancedMesh（实体 / 发光），保证 draw call 极少。
+var SOLID = [];   // 受光实体体素
+var GLOW  = [];   // 自发光体素（窗灯 / 霓虹 / 灯笼 / 明珠光环）
+
+function box(list, x, y, z, sx, sy, sz, color, ry, rx, rz) {
+  list.push({ x: x, y: y, z: z, sx: sx, sy: sy, sz: sz, color: color,
+              rx: rx || 0, ry: ry || 0, rz: rz || 0 });
+}
+function vox(list, x, y, z, color) { box(list, x, y, z, 1, 1, 1, color); }
+
+// 实心 / 空心球（逐体素）
+function ball(list, cx, cy, cz, r, color, hollow) {
+  var r2 = r * r;
+  var ri = hollow ? (r - 1.8) * (r - 1.8) : -1;
+  for (var x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++)
+    for (var y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++)
+      for (var z = Math.floor(cz - r); z <= Math.ceil(cz + r); z++) {
+        var d = (x - cx) * (x - cx) + (y - cy) * (y - cy) + (z - cz) * (z - cz);
+        if (d <= r2 && d >= ri) vox(list, x, y, z, color);
+      }
+}
+// 半球（穹顶）
+function dome(list, cx, baseY, cz, r, color) {
+  var r2 = r * r;
+  for (var x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++)
+    for (var y = 0; y <= Math.ceil(r); y++)
+      for (var z = Math.floor(cz - r); z <= Math.ceil(cz + r); z++) {
+        var d = (x - cx) * (x - cx) + y * y + (z - cz) * (z - cz);
+        if (d <= r2) vox(list, x, baseY + y, z, color);
+      }
+}
+// 圆柱（逐层填圆）
+function column(list, cx, cz, y0, y1, r, color) {
+  var r2 = r * r;
+  for (var y = y0; y < y1; y++)
+    for (var x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++)
+      for (var z = Math.floor(cz - r); z <= Math.ceil(cz + r); z++) {
+        var d = (x - cx) * (x - cx) + (z - cz) * (z - cz);
+        if (d <= r2) vox(list, x, y, z, color);
+      }
+}
+// 楼体窗格：±x / ±z 四面生成薄片窗灯
+function windows(list, cx, cy, cz, sx, sy, sz, color, skipFace) {
+  var y0 = cy - sy / 2 + 2.5, y1 = cy + sy / 2 - 1.5;
+  var hx = sx / 2 + 0.08, hz = sz / 2 + 0.08;
+  for (var y = y0; y < y1; y += 3) {
+    // 前后面 (z)
+    if (skipFace !== 'z') {
+      for (var x = cx - sx / 2 + 1.6; x < cx + sx / 2 - 0.8; x += 2.6) {
+        box(list, x, y, cz + hz, 1.5, 1.7, 0.16, color);
+        box(list, x, y, cz - hz, 1.5, 1.7, 0.16, color);
+      }
+    }
+    // 左右面 (x)
+    if (skipFace !== 'x') {
+      for (var z = cz - sz / 2 + 1.6; z < cz + sz / 2 - 0.8; z += 2.6) {
+        box(list, cx + hx, y, z, 0.16, 1.7, 1.5, color);
+        box(list, cx - hx, y, z, 0.16, 1.7, 1.5, color);
+      }
+    }
+  }
+}
+// 随机点亮的窗（部分楼层熄灭，更真实）
+function windowsSparse(list, cx, cy, cz, sx, sy, sz, color) {
+  var y0 = cy - sy / 2 + 2.5, y1 = cy + sy / 2 - 1.5;
+  for (var y = y0; y < y1; y += 3) {
+    for (var x = cx - sx / 2 + 1.6; x < cx + sx / 2 - 0.8; x += 2.6) {
+      if (rnd() < 0.62) box(list, x, y, cz + sz / 2 + 0.08, 1.5, 1.7, 0.16, color);
+      if (rnd() < 0.62) box(list, x, y, cz - sz / 2 - 0.08, 1.5, 1.7, 0.16, color);
+    }
+    for (var z = cz - sz / 2 + 1.6; z < cz + sz / 2 - 0.8; z += 2.6) {
+      if (rnd() < 0.62) box(list, cx + sx / 2 + 0.08, y, z, 0.16, 1.7, 1.5, color);
+      if (rnd() < 0.62) box(list, cx - sx / 2 - 0.08, y, z, 0.16, 1.7, 1.5, color);
+    }
+  }
+}
+
+// ============================================================
+//  1. 色板（丰富的体素配色）
+// ============================================================
+var C = {
+  plaza:      0xb8b3aa, plazaDark: 0x8f8a80, curb: 0x6f6a62,
+  grass:      0x6faf5e, grassDark: 0x54904a,
+  road:       0x3d4148, roadLine: 0xe8e2c8,
+  water:      0x1f6fb0, waterDeep: 0x144e80, riverbed: 0x123a5e,
+  stone:      0xcbb98f, stone2: 0xd9caa6, stone3: 0xbfae86, stoneDark: 0x9b8a64,
+  roofSlate:  0x4a5560,
+  cream:      0xf3ead6, creamDark: 0xd8ccb0,
+  pearlPink:  0xff5aa8, pearlPink2: 0xff8fc4,
+  pearlGlow:  0xff6fb8,
+  gold:       0xffd253, goldDark: 0xd8a52c,
+  red:        0xd9412e, redDark: 0xa32a1d, lantern: 0xff5236,
+  jade:       0x2f8f83, jadeLight: 0x5cbfb0, jadeDark: 0x1f6a62,
+  glassBlue:  0x3f74ad, glassBlue2: 0x5b93cf, glassTeal: 0x3aa0a8,
+  towerLight: 0xa9dcda, towerLight2: 0xc7ece6, towerGlow: 0x9fe8ff,
+  sakura:     0xffb7d5, sakuraLight: 0xffd3e4, leaf: 0x4f9e4a, leafDark: 0x3a7c38,
+  trunk:      0x7a5230,
+  lampGlow:   0xffd9a0, neonA: 0xff4fa3, neonB: 0x4fd8ff, neonC: 0xffe14f,
+  neonD: 0x8cff66, neonE: 0xff8b4f, neonF: 0xc77dff,
+  winWarm:    0xffd27f, winCool: 0xaee3ff, winPink: 0xffc4dd,
+  carA: 0xe8483c, carB: 0x4f9fe8, carC: 0xffc93c, carD: 0xf2f2f2, carE: 0x59c77a,
+  hull: 0x5a3a22, sail: 0xf0e3c8, sailRed: 0xd9412e, white: 0xf5f5f2
+};
+
+// ============================================================
+//  2. 地面 · 黄浦江 · 道路
+// ============================================================
+var RIVER_Z0 = -18, RIVER_Z1 = 18;          // 江面横跨 z
+var PUDONG_Z = (RIVER_Z0 - 96) / 2 + RIVER_Z0 / 2; // 仅注释用
+function buildGround() {
+  // 浦东大平台 (z: -96 .. -18)
+  box(SOLID, 0, -1, -57, 224, 2, 78, C.grass);
+  box(SOLID, 0, -0.4, -24, 224, 1.2, 12, C.plaza);      // 亲水平台
+  box(SOLID, 0, -0.4, -34, 224, 1.2, 8, C.plazaDark);
+  // 浦西大平台 (z: 18 .. 96)
+  box(SOLID, 0, -1, 57, 224, 2, 78, C.grass);
+  box(SOLID, 0, -0.4, 25, 224, 1.2, 14, C.plaza);        // 外滩滨江步道
+  box(SOLID, 0, -0.4, 38, 224, 1.2, 12, C.plazaDark);
+
+  // 江岸挡墙
+  box(SOLID, 0, 0.4, RIVER_Z0 + 0.6, 224, 2.4, 1.6, C.stoneDark);
+  box(SOLID, 0, 0.4, RIVER_Z1 - 0.6, 224, 2.4, 1.6, C.stoneDark);
+  // 石栏杆
+  for (var x = -108; x <= 108; x += 4) {
+    box(SOLID, x, 2.2, RIVER_Z0 + 1.4, 0.8, 1.6, 0.8, C.stone2);
+    box(SOLID, x, 2.2, RIVER_Z1 - 1.4, 0.8, 1.6, 0.8, C.stone2);
+  }
+  box(SOLID, 0, 3.0, RIVER_Z0 + 1.4, 224, 0.5, 0.9, C.stone2);
+  box(SOLID, 0, 3.0, RIVER_Z1 - 1.4, 224, 0.5, 0.9, C.stone2);
+
+  // 江底
+  box(SOLID, 0, -4, 0, 224, 2, 36, C.riverbed);
+
+  // 道路：浦西中山东一路 / 浦东世纪大道
+  box(SOLID, 0, 0.05, 50, 224, 0.5, 10, C.road);
+  box(SOLID, 0, 0.05, -32, 224, 0.5, 10, C.road);
+  // 斑马线式车道线
+  for (var x2 = -110; x2 <= 110; x2 += 6) {
+    box(SOLID, x2, 0.35, 50, 3, 0.14, 0.5, C.roadLine);
+    box(SOLID, x2, 0.35, -32, 3, 0.14, 0.5, C.roadLine);
+  }
+  // 纵向支路
+  box(SOLID, -44, 0.05, 70, 8, 0.5, 44, C.road);
+  box(SOLID, 40, 0.05, 70, 8, 0.5, 44, C.road);
+  box(SOLID, 8, 0.05, -60, 8, 0.5, 52, C.road);
+}
+
+// ============================================================
+//  3. 东方明珠广播电视塔 (x=-30, z=-46)
+// ============================================================
+function buildOrientalPearl() {
+  var cx = -30, cz = -46;
+  // 基座
+  column(SOLID, cx, cz, 0, 2, 13, C.plaza);
+  column(SOLID, cx, cz, 2, 3.5, 10, C.stone2);
+  // 三条斜撑腿
+  for (var i = 0; i < 3; i++) {
+    var a = (i / 3) * Math.PI * 2 + Math.PI / 6;
+    for (var t = 0; t <= 1.0001; t += 0.055) {
+      var r = 10.5 * (1 - t) + 1.5 * t;
+      var y = 2 + t * 32;
+      box(SOLID, cx + Math.cos(a) * r, y, cz + Math.sin(a) * r, 3.2, 2.6, 3.2, C.cream);
+    }
+  }
+  // 下球体以下立柱
+  column(SOLID, cx, cz, 2, 30, 2.6, C.cream);
+  // 下球体 (r=8)
+  ball(SOLID, cx, 38, cz, 8, C.pearlPink);
+  ball(GLOW, cx, 38, cz, 8.4, C.pearlGlow, true);          // 发光外壳环
+  windows(GLOW, cx, 38, cz, 15.5, 12, 15.5, C.winWarm);    // 球体观光层窗带
+  column(SOLID, cx, cz, 30, 34, 3.6, C.creamDark);         // 观光层底
+  column(SOLID, cx, cz, 42, 44, 3.6, C.creamDark);
+  // 上球体以下立柱
+  column(SOLID, cx, cz, 45, 62, 1.8, C.cream);
+  // 上球体 (r=5)
+  ball(SOLID, cx, 66, cz, 5, C.pearlPink2);
+  windows(GLOW, cx, 66, cz, 9.6, 8, 9.6, C.winPink);
+  // 太空舱立柱 + 小球
+  column(SOLID, cx, cz, 71, 92, 1.3, C.cream);
+  ball(SOLID, cx, 94, cz, 2.6, C.pearlPink);
+  box(GLOW, cx, 94, cz, 6.4, 0.8, 6.4, C.pearlGlow);
+  // 天线桅杆
+  box(SOLID, cx, 105, cz, 1.6, 22, 1.6, C.cream);
+  box(SOLID, cx, 118, cz, 0.9, 6, 0.9, C.red);
+  box(GLOW, cx, 121.5, cz, 1.4, 1.4, 1.4, C.lantern);      // 航空障碍灯
+}
+
+// ============================================================
+//  4. 金茂大厦 (x=26, z=-56) —— 阶梯式宝塔造型
+// ============================================================
+function buildJinMao() {
+  var cx = 26, cz = -56;
+  column(SOLID, cx, cz, 0, 2, 15, C.plazaDark);
+  var tiers = [
+    { h: 26, w: 21 }, { h: 14, w: 18 }, { h: 12, w: 15.5 },
+    { h: 10, w: 13 },  { h: 8,  w: 10.5 }, { h: 7,  w: 8.5 },
+    { h: 6,  w: 6.5 },  { h: 5,  w: 4.8 }
+  ];
+  var y = 2;
+  for (var i = 0; i < tiers.length; i++) {
+    var t = tiers[i];
+    box(SOLID, cx, y + t.h / 2, cz, t.w, t.h, t.w, i % 2 ? C.glassTeal : C.jade);
+    box(SOLID, cx, y + t.h, cz, t.w + 1.6, 1.2, t.w + 1.6, C.stone2); // 出檐
+    windows(GLOW, cx, y + t.h / 2, cz, t.w, t.h, t.w, i % 2 ? C.winCool : C.winWarm, i > 3 ? 'z' : null);
+    y += t.h + 1.2;
+  }
+  // 塔尖
+  box(SOLID, cx, y + 5, cz, 2.6, 10, 2.6, C.gold);
+  box(SOLID, cx, y + 13, cz, 1.2, 6, 1.2, C.goldDark);
+  box(GLOW, cx, y + 16.5, cz, 1.6, 1.6, 1.6, C.lantern);
+}
+
+// ============================================================
+//  5. 上海环球金融中心 (x=48, z=-58) —— 顶部"开瓶器"风洞
+// ============================================================
+function buildSWFC() {
+  var cx = 48, cz = -58;
+  column(SOLID, cx, cz, 0, 2, 12, C.plazaDark);
+  // 塔身两段（微收分）
+  box(SOLID, cx, 21, cz, 19, 40, 14, C.glassBlue);
+  box(SOLID, cx, 59, cz, 17, 36, 13, C.glassBlue2);
+  windows(GLOW, cx, 34, cz, 18, 62, 13, C.winCool);
+  // 风洞两侧墩身 78 → 100
+  box(SOLID, cx - 6.2, 89, cz, 5, 22, 13, C.glassBlue2);
+  box(SOLID, cx + 6.2, 89, cz, 5, 22, 13, C.glassBlue2);
+  // 顶部横梁 100 → 105
+  box(SOLID, cx, 102.5, cz, 17.5, 5, 13, C.glassBlue);
+  box(GLOW, cx, 105.6, cz, 18, 0.8, 13.4, C.towerGlow);
+  box(GLOW, cx - 6.2, 100.2, cz, 5.4, 0.8, 13.4, C.towerGlow);
+  box(GLOW, cx + 6.2, 100.2, cz, 5.4, 0.8, 13.4, C.towerGlow);
+}
+
+// ============================================================
+//  6. 上海中心大厦 (x=70, z=-56) —— 旋转上升的螺旋体
+// ============================================================
+function buildShanghaiTower() {
+  var cx = 70, cz = -56;
+  column(SOLID, cx, cz, 0, 2, 16, C.plazaDark);
+  var N = 62, H = 1.92;
+  for (var i = 0; i < N; i++) {
+    var t = i / (N - 1);
+    var y = 2 + i * H;
+    var s = 25 * (1 - 0.42 * t);
+    var ry = t * Math.PI * 0.85;                 // 总扭转约 153°
+    box(SOLID, cx, y + H / 2, cz, s, H * 1.02, s, (i % 2) ? C.towerLight : C.towerLight2, ry);
+    if (i % 3 === 1) box(GLOW, cx, y + H / 2, cz, s + 0.3, 0.7, s + 0.3, C.towerGlow, ry);
+    if (i % 5 === 2) windows(GLOW, cx, y + H / 2, cz, s, H, s, C.winCool, (i % 2) ? 'x' : 'z');
+  }
+  var topY = 2 + N * H;
+  // 冠部 + 漏斗状塔冠
+  box(SOLID, cx, topY + 2, cz, 10, 4, 10, C.towerLight, Math.PI * 0.85);
+  box(SOLID, cx, topY + 6, cz, 6, 4, 6, C.towerLight2, Math.PI * 0.9);
+  box(GLOW, cx, topY + 8.6, cz, 7, 1, 7, C.towerGlow);
+  box(SOLID, cx, topY + 12, cz, 1.2, 6, 1.2, C.creamDark);
+  box(GLOW, cx, topY + 15.5, cz, 1.6, 1.6, 1.6, C.lantern);
+}
+
+// ============================================================
+//  7. 外滩万国建筑群 (z≈32，面向江)
+// ============================================================
+function bundBuilding(def) {
+  var x = def.x, z = def.z || 33, w = def.w, d = def.d, h = def.h, c = def.c;
+  // 主体 + 基座 + 檐口
+  box(SOLID, x, 2 + h / 2, z, w, h, d, c);
+  box(SOLID, x, 1, z, w + 2, 2, d + 2, C.stoneDark);
+  box(SOLID, x, 2 + h, z, w + 1.8, 1.6, d + 1.8, C.stone2);
+  box(SOLID, x, 2 + h + 1.6, z, w + 0.6, 1.4, d + 0.6, C.roofSlate);
+  // 正面（朝江）立柱廊
+  for (var px = x - w / 2 + 1.6; px < x + w / 2 - 0.8; px += 3.4) {
+    box(SOLID, px, 2 + h * 0.45, z - d / 2 - 0.5, 1.3, h * 0.8, 1.3, C.stone2);
+  }
+  // 窗格
+  windowsSparse(GLOW, x, 2 + h / 2, z, w, h, d, def.win || C.winWarm);
+
+  if (def.dome) {
+    // 穹顶
+    dome(SOLID, x, 2 + h + 3, z, 7, C.stone2);
+    dome(SOLID, x, 2 + h + 3, z, 7.6, C.stone3);
+    box(SOLID, x, 2 + h + 11, z, 1.4, 4, 1.4, C.gold);
+    box(GLOW, x, 2 + h + 13.4, z, 1.8, 1.8, 1.8, C.gold);
+  }
+  if (def.clock) {
+    // 海关大楼式钟楼
+    var ty = 2 + h;
+    box(SOLID, x, ty + 9, z, 7, 18, 7, C.stone3);
+    box(SOLID, x, ty + 18.8, z, 8, 1.6, 8, C.stone2);
+    // 四面钟盘
+    for (var f = 0; f < 4; f++) {
+      var a = f * Math.PI / 2;
+      var ox = Math.cos(a) * 3.7, oz = Math.sin(a) * 3.7;
+      for (var yy = ty + 11; yy <= ty + 15; yy++)
+        for (var xx = -2; xx <= 2; xx++) {
+          if (Math.abs(xx) <= 2 - Math.abs((yy - (ty + 13)) * 0.7)) {
+            var wx = x + (f % 2 === 0 ? ox : xx), wz = z + (f % 2 === 0 ? xx : oz);
+            box(GLOW, wx, yy, wz, f % 2 === 0 ? 0.3 : 1, 1, f % 2 === 0 ? 1 : 0.3, 0xfff6d8);
+          }
+        }
+    }
+    // 楼顶金字塔尖
+    box(SOLID, x, ty + 21, z, 6, 2.5, 6, C.roofSlate);
+    box(SOLID, x, ty + 23, z, 3.5, 2, 3.5, C.roofSlate);
+    box(GLOW, x, ty + 25, z, 1.4, 1.4, 1.4, C.lantern);
+  }
+}
+
+function buildBund() {
+  var defs = [
+    { x: -84, w: 18, d: 15, h: 24, c: C.stone,  win: C.winWarm },
+    { x: -60, w: 17, d: 15, h: 21, c: C.stone2, dome: true },
+    { x: -36, w: 15, d: 14, h: 26, c: C.stone3, clock: true },
+    { x: -15, w: 17, d: 14, h: 19, c: C.stone2, win: C.winCool },
+    { x:  12, w: 19, d: 15, h: 27, c: C.stone,  sign: true },
+    { x:  37, w: 16, d: 14, h: 21, c: C.stone2 },
+    { x:  58, w: 18, d: 15, h: 25, c: C.stone3, win: C.winCool },
+    { x:  84, w: 17, d: 14, h: 19, c: C.stone2 }
+  ];
+  for (var i = 0; i < defs.length; i++) bundBuilding(defs[i]);
+
+  // 背衬城市街区（浦西腹地）
+  var palette = [0x9aa7b5, 0xb0a89a, 0x8f9fb2, 0xc2b49c, 0x7f8fa5, 0xa8b3a0];
+  for (var gx = -100; gx <= 100; gx += 22) {
+    for (var gz = 62; gz <= 88; gz += 16) {
+      if (Math.abs(gx + 44) < 7 || Math.abs(gx - 40) < 7) continue; // 让开支路
+      var w = rand(10, 16), d = rand(9, 13), h = rand(10, 30);
+      var cc = pick(palette);
+      box(SOLID, gx + rand(-2, 2), h / 2, gz + rand(-2, 2), w, h, d, cc);
+      windowsSparse(GLOW, gx, h / 2, gz, w, h, d, rnd() < 0.5 ? C.winWarm : C.winCool);
+    }
+  }
+  // 浦东腹地少量高楼
+  for (var px = -100; px <= 100; px += 20) {
+    if (px > -50 && px < 95) continue;      // 留给陆家嘴地标
+    var w2 = rand(9, 13), h2 = rand(12, 34);
+    box(SOLID, px, h2 / 2, -70 + rand(-6, 6), w2, h2, rand(9, 13), pick(palette));
+  }
+}
+
+// ============================================================
+//  8. 霓虹地标牌 "SHANGHAI"（滨江巨型霓虹，5x7 点阵字模）
+// ============================================================
+var FONT = {
+  S: ['01110','10000','10000','01110','00001','00001','11110'],
+  H: ['10001','10001','10001','11111','10001','10001','10001'],
+  A: ['01110','10001','10001','11111','10001','10001','10001'],
+  N: ['10001','11001','11001','10101','10011','10011','10001'],
+  G: ['01110','10001','10000','10111','10001','10001','01110'],
+  I: ['11111','00100','00100','00100','00100','00100','11111']
+};
+function buildNeonSign() {
+  var word = 'SHANGHAI';
+  var cols = [C.neonA, C.neonB, C.neonC, C.neonD, C.neonE, C.neonF, C.neonA, C.neonB];
+  var s = 1.15;                       // 点阵缩放
+  var x0 = -26, y0 = 9, z = 23.4;
+  // 钢架牌匾
+  box(SOLID, x0 + 20, y0 - 2, z + 0.8, 48, 1.6, 1.6, C.roofSlate);
+  box(SOLID, x0 + 20, y0 + 8.5, z + 0.8, 48, 1.2, 1.4, C.roofSlate);
+  box(SOLID, x0 - 3, 4.5, z + 0.8, 1.4, 9, 1.4, C.roofSlate);
+  box(SOLID, x0 + 43, 4.5, z + 0.8, 1.4, 9, 1.4, C.roofSlate);
+  for (var i = 0; i < word.length; i++) {
+    var g = FONT[word[i]];
+    var gx = x0 + i * 6.2 * s;
+    for (var r = 0; r < 7; r++)
+      for (var c2 = 0; c2 < 5; c2++) {
+        if (g[r][c2] === '1') {
+          box(GLOW, gx + c2 * s, y0 + (6 - r) * s, z, s * 0.86, s * 0.86, 0.7, cols[i]);
+        }
+      }
+  }
+}
+
+// ============================================================
+//  9. 豫园 / 城隍庙：飞檐红柱亭台与宝塔 (x≈-72, z≈74)
+// ============================================================
+function pavilionRoof(cx, baseY, cz, half, color, ridge) {
+  // 三层收分屋面
+  box(SOLID, cx, baseY, cz, half * 2 + 5, 1, half * 2 + 5, color);
+  box(SOLID, cx, baseY + 1.1, cz, half * 2 + 2, 1.2, half * 2 + 2, color);
+  box(SOLID, cx, baseY + 2.2, cz, half * 2 - 2, 1.2, half * 2 - 2, ridge || C.gold);
+  // 四角飞檐起翘
+  var dirs = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+  for (var i = 0; i < 4; i++) {
+    var sx = dirs[i][0], sz = dirs[i][1];
+    box(SOLID, cx + sx * (half + 3.2), baseY + 0.4, cz + sz * (half + 3.2), 4, 0.9, 4, color,
+        0, -sz * 0.42, sx * 0.42);
+    box(GLOW, cx + sx * (half + 4.4), baseY + 2.4, cz + sz * (half + 4.4), 1, 1, 1, C.lantern);
+  }
+  // 正脊
+  box(SOLID, cx, baseY + 3, cz, half * 2 - 2, 0.8, 1, ridge || C.gold);
+}
+
+function buildYuGarden() {
+  // 大假山石基 + 月台
+  box(SOLID, -72, 0.6, 74, 40, 1.2, 32, C.plaza);
+  box(SOLID, -72, 1.4, 74, 30, 0.8, 24, C.stone2);
+
+  // 主厅：红柱两重檐
+  var cx = -76, cz = 74;
+  for (var i = -1; i <= 1; i++)
+    for (var j = -1; j <= 1; j++) {
+      if (i === 0 && j === 0) continue;
+      box(SOLID, cx + i * 6, 5, cz + j * 6, 1.4, 8, 1.4, C.red);
+    }
+  box(SOLID, cx, 1.8, cz, 17, 1.6, 17, C.redDark);
+  box(SOLID, cx, 9, cz, 15, 1, 15, C.red);
+  pavilionRoof(cx, 10, cz, 6.5, C.jadeDark, C.gold);
+  // 上层小亭
+  for (var i2 = -1; i2 <= 1; i2 += 2)
+    for (var j2 = -1; j2 <= 1; j2 += 2)
+      box(SOLID, cx + i2 * 3, 14, cz + j2 * 3, 1, 5, 1, C.red);
+  pavilionRoof(cx, 16.5, cz, 3.6, C.jade, C.gold);
+  box(SOLID, cx, 20.5, cz, 0.9, 3, 0.9, C.gold);
+  box(GLOW, cx, 22.4, cz, 1.4, 1.4, 1.4, C.gold);
+  // 檐下灯笼
+  for (var i3 = -1; i3 <= 1; i3 += 2)
+    for (var j3 = -1; j3 <= 1; j3 += 2) {
+      box(GLOW, cx + i3 * 6, 8.4, cz + j3 * 6, 1.6, 2.2, 1.6, C.lantern);
+      box(GLOW, cx + i3 * 6, 7.1, cz + j3 * 6, 0.7, 0.7, 0.7, C.gold);
+    }
+
+  // 三层宝塔
+  var tx = -56, tz = 80;
+  box(SOLID, tx, 1, tz, 14, 2, 14, C.stone2);
+  var y = 2;
+  for (var lv = 0; lv < 3; lv++) {
+    var half = 5.4 - lv * 1.2;
+    box(SOLID, tx, y + 3, tz, half * 2, 6, half * 2, C.red);
+    windows(GLOW, tx, y + 3, tz, half * 2, 6, half * 2, C.winWarm);
+    pavilionRoof(tx, y + 6, tz, half + 0.6, lv % 2 ? C.jade : C.jadeDark, C.gold);
+    y += 9;
+  }
+  box(SOLID, tx, y + 2, tz, 1, 4, 1, C.gold);
+  box(GLOW, tx, y + 4.5, tz, 1.5, 1.5, 1.5, C.gold);
+
+  // 院墙 + 月洞门
+  box(SOLID, -72, 3, 62, 42, 4, 1.4, C.cream);
+  box(SOLID, -72, 5.3, 62, 43, 0.8, 2.2, C.roofSlate);
+  for (var lx = -92; lx <= -52; lx += 3)
+    vox(SOLID, lx, 2.5, 62, lx % 6 === 0 ? C.stone2 : C.cream);
+
+  // 后院绿树
+  tree(-92, 84, C.leaf, 3.4);
+  tree(-64, 88, C.leafDark, 3);
+  tree(-84, 66, C.sakura, 2.8);
+}
+
+// ============================================================
+// 10. 树木 / 路灯 / 栏杆灯
+// ============================================================
+function tree(x, z, leafC, r) {
+  box(SOLID, x, 2.5, z, 1.4, 5, 1.4, C.trunk);
+  ball(SOLID, x, 5 + r * 0.7, z, r, leafC);
+  ball(SOLID, x - r * 0.5, 5 + r * 1.1, z + r * 0.4, r * 0.55, leafC === C.leaf ? C.leafDark : C.sakuraLight);
+}
+function lamp(x, z, h) {
+  box(SOLID, x, h / 2, z, 0.7, h, 0.7, 0x3a3f48);
+  box(SOLID, x + 1, h - 0.4, z, 2.4, 0.5, 0.5, 0x3a3f48);
+  box(GLOW, x + 2, h - 1, z, 1.2, 1.2, 1.2, C.lampGlow);
+}
+function buildStreetFurniture() {
+  // 外滩步道树 + 灯
+  for (var x = -104; x <= 104; x += 14) {
+    if (x > -34 && x < 16) continue;           // 让开霓虹牌
+    tree(x + 2, 27, rnd() < 0.4 ? C.sakura : C.leaf, rand(2.4, 3.2));
+  }
+  for (var x2 = -105; x2 <= 105; x2 += 18) lamp(x2, 21.5, 6.5);
+  for (var x3 = -105; x3 <= 105; x3 += 18) lamp(x3, -21.5, 6.5);
+  // 浦东滨江樱花
+  for (var x4 = -100; x4 <= 100; x4 += 16) {
+    if (x4 > -50 && x4 < 88) continue;
+    tree(x4, -27, C.sakura, rand(2.4, 3));
+  }
+  // 陆家嘴中心绿地的树
+  tree(-8, -44, C.leaf, 3); tree(0, -50, C.sakura, 3.2); tree(10, -42, C.leafDark, 2.6);
+  tree(-58, -60, C.leaf, 3); tree(-70, -52, C.sakura, 2.8); tree(-84, -66, C.leafDark, 3.1);
+}
+
+// ============================================================
+// 11. 外白渡桥式钢桁架桥 (x≈-104)
+// ============================================================
+function buildBridge() {
+  var bx = -104;
+  box(SOLID, bx, 5, 0, 8, 1.2, 42, C.road);
+  box(SOLID, bx, 5.7, 0, 8, 0.3, 42, C.roadLine);
+  for (var z = -19; z <= 19; z += 4) {
+    // 两侧桁架斜杆
+    box(SOLID, bx - 3.6, 8, z, 0.8, 6, 0.8, C.jadeDark);
+    box(SOLID, bx + 3.6, 8, z, 0.8, 6, 0.8, C.jadeDark);
+    box(SOLID, bx - 3.6, 10.6, z + 2, 0.7, 0.7, 5, C.jade, 0, 0.7, 0);
+    box(SOLID, bx + 3.6, 10.6, z + 2, 0.7, 0.7, 5, C.jade, 0, 0.7, 0);
+  }
+  box(SOLID, bx - 3.6, 11.4, 0, 0.8, 0.8, 42, C.jadeDark);
+  box(SOLID, bx + 3.6, 11.4, 0, 0.8, 0.8, 42, C.jadeDark);
+  for (var z2 = -18; z2 <= 18; z2 += 9) {
+    box(GLOW, bx - 3.6, 12.6, z2, 1, 1, 1, C.lampGlow);
+    box(GLOW, bx + 3.6, 12.6, z2, 1, 1, 1, C.lampGlow);
+  }
+  // 桥墩
+  box(SOLID, bx, 1.5, -12, 5, 7, 5, C.stoneDark);
+  box(SOLID, bx, 1.5, 12, 5, 7, 5, C.stoneDark);
+}
+
+// ============================================================
+// 12. 动态对象：车流 / 游船 / 云 / 烟花 / 星空 / 日月
+// ============================================================
+var traffic = [], boats = [], clouds = [], fireworks = [];
+var dynGroup, skyGroup, cloudGroup;
+
+function makeCar(color) {
+  var g = new THREE.Group();
+  var mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.5, metalness: 0.2 });
+  var body = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.1, 1.7), mat);
+  body.position.y = 0.85;
+  var cab = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 1.5),
+    new THREE.MeshStandardMaterial({ color: 0x2a3440, roughness: 0.2, metalness: 0.5 }));
+  cab.position.set(-0.2, 1.8, 0);
+  var light = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.4, 1.2),
+    new THREE.MeshBasicMaterial({ color: 0xfff2c0 }));
+  light.position.set(1.75, 0.9, 0);
+  body.castShadow = true;
+  g.add(body, cab, light);
+  return g;
+}
+function makeBoat(kind) {
+  var g = new THREE.Group();
+  if (kind === 'junk') {
+    var hull = new THREE.Mesh(new THREE.BoxGeometry(11, 2, 3.6),
+      new THREE.MeshStandardMaterial({ color: C.hull, roughness: 0.8 }));
+    hull.position.y = 0.9; hull.castShadow = true;
+    g.add(hull);
+    var mast = new THREE.Mesh(new THREE.BoxGeometry(0.5, 9, 0.5),
+      new THREE.MeshStandardMaterial({ color: 0x4a3018 }));
+    mast.position.y = 5;
+    g.add(mast);
+    // 扇形硬帆（逐条帆板）
+    for (var i = 0; i < 5; i++) {
+      var w = 5.2 - i * 0.7;
+      var sailM = new THREE.Mesh(new THREE.BoxGeometry(w, 0.55, 0.3),
+        new THREE.MeshStandardMaterial({ color: i % 2 ? C.sailRed : C.sail, roughness: 0.9 }));
+      sailM.position.set(0.4, 2.4 + i * 1.15, 0);
+      sailM.rotation.z = 0.08 * i;
+      g.add(sailM);
+    }
+    var lantern = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9),
+      new THREE.MeshBasicMaterial({ color: C.lantern }));
+    lantern.position.set(-4.6, 2.6, 0);
+    g.add(lantern);
+  } else {
+    var hull2 = new THREE.Mesh(new THREE.BoxGeometry(17, 2.6, 5),
+      new THREE.MeshStandardMaterial({ color: C.white, roughness: 0.5 }));
+    hull2.position.y = 1.2; hull2.castShadow = true;
+    var deck = new THREE.Mesh(new THREE.BoxGeometry(12, 2.2, 4.2),
+      new THREE.MeshStandardMaterial({ color: 0xe4e8ee, roughness: 0.5 }));
+    deck.position.set(-1, 3.4, 0);
+    var top = new THREE.Mesh(new THREE.BoxGeometry(7, 1.6, 3.4),
+      new THREE.MeshStandardMaterial({ color: 0xd0d8e2, roughness: 0.5 }));
+    top.position.set(-1.5, 5.2, 0);
+    var stripe = new THREE.Mesh(new THREE.BoxGeometry(17.1, 0.5, 5.1),
+      new THREE.MeshBasicMaterial({ color: C.neonB }));
+    stripe.position.y = 2;
+    var glowBand = new THREE.Mesh(new THREE.BoxGeometry(12.1, 0.6, 4.3),
+      new THREE.MeshBasicMaterial({ color: C.winWarm }));
+    glowBand.position.set(-1, 3.4, 0);
+    g.add(hull2, deck, top, stripe, glowBand);
+  }
+  return g;
+}
+function makeCloud() {
+  var g = new THREE.Group();
+  var mat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 });
+  for (var i = 0; i < 5; i++) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(rand(8, 16), rand(2.5, 4.5), rand(6, 11)), mat);
+    m.position.set(rand(-9, 9), rand(-1.5, 1.5), rand(-5, 5));
+    g.add(m);
+  }
+  return g;
+}
+
+function FireworkLauncher() {
+  this.pool = [];
+  for (var i = 0; i < 7; i++) {
+    var n = 110;
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    var pts = new THREE.Points(geo, new THREE.PointsMaterial({
+      size: 1.9, transparent: true, opacity: 1,
+      blending: THREE.AdditiveBlending, depthWrite: false
+    }));
+    pts.visible = false;
+    scene.add(pts);
+    this.pool.push({ pts: pts, n: n, vel: new Float32Array(n * 3), state: 'idle', life: 0, max: 2.4, rocket: null });
+  }
+}
+FireworkLauncher.prototype.launch = function () {
+  var f = null;
+  for (var i = 0; i < this.pool.length; i++) if (this.pool[i].state === 'idle') { f = this.pool[i]; break; }
+  if (!f) return;
+  var x = rand(-70, 90), z = rand(-66, -30), ty = rand(65, 125);
+  f.color = new THREE.Color(pick([0xff4fa3, 0x4fd8ff, 0xffe14f, 0x8cff66, 0xff8b4f, 0xc77dff]));
+  f.target = { x: x, y: ty, z: z };
+  f.state = 'rise';
+  if (!f.rocket) {
+    f.rocket = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.8, 0.9),
+      new THREE.MeshBasicMaterial({ color: 0xffe9a0 }));
+    scene.add(f.rocket);
+  }
+  f.rocket.visible = true;
+  f.rocket.position.set(x, 4, z);
+  f.pts.material.color = f.color;
+};
+FireworkLauncher.prototype.burst = function (f) {
+  var pos = f.pts.geometry.attributes.position.array;
+  for (var i = 0; i < f.n; i++) {
+    pos[i * 3] = f.target.x; pos[i * 3 + 1] = f.target.y; pos[i * 3 + 2] = f.target.z;
+    var th = rand(0, Math.PI * 2), ph = Math.acos(rand(-1, 1)), sp = rand(7, 22);
+    f.vel[i * 3]     = Math.sin(ph) * Math.cos(th) * sp;
+    f.vel[i * 3 + 1] = Math.cos(ph) * sp;
+    f.vel[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * sp;
+  }
+  f.pts.geometry.attributes.position.needsUpdate = true;
+  f.pts.visible = true;
+  f.state = 'burst'; f.life = f.max;
+};
+FireworkLauncher.prototype.update = function (dt) {
+  for (var i = 0; i < this.pool.length; i++) {
+    var f = this.pool[i];
+    if (f.state === 'rise') {
+      f.rocket.position.y += 62 * dt;
+      if (f.rocket.position.y >= f.target.y) {
+        f.rocket.visible = false;
+        this.burst(f);
+      }
+    } else if (f.state === 'burst') {
+      f.life -= dt;
+      var pos = f.pts.geometry.attributes.position.array;
+      for (var j = 0; j < f.n; j++) {
+        f.vel[j * 3 + 1] -= 15 * dt;
+        pos[j * 3]     += f.vel[j * 3] * dt;
+        pos[j * 3 + 1] += f.vel[j * 3 + 1] * dt;
+        pos[j * 3 + 2] += f.vel[j * 3 + 2] * dt;
+      }
+      f.pts.geometry.attributes.position.needsUpdate = true;
+      f.pts.material.opacity = Math.max(0, f.life / f.max);
+      f.pts.material.size = 1.2 + 1.2 * (f.life / f.max);
+      if (f.life <= 0) { f.state = 'idle'; f.pts.visible = false; }
+    }
+  }
+};
+
+function buildDynamic() {
+  dynGroup = new THREE.Group(); scene.add(dynGroup);
+  // 车流
+  var carColors = [C.carA, C.carB, C.carC, C.carD, C.carE, 0x9b59b6, 0xe67e22, 0x1abc9c];
+  for (var i = 0; i < 12; i++) {
+    var car = makeCar(pick(carColors));
+    var onBund = i % 2 === 0;
+    var lane = onBund ? (i % 4 < 2 ? 47.6 : 52.4) : (i % 4 < 2 ? -29.6 : -34.4);
+    car.position.set(rand(-110, 110), 0.4, lane);
+    if (lane > (onBund ? 50 : -32)) car.rotation.y = Math.PI;
+    dynGroup.add(car);
+    traffic.push({ g: car, speed: rand(14, 26) * (lane > (onBund ? 50 : -32) ? -1 : 1) });
+  }
+  // 游船
+  var b1 = makeBoat('junk');  b1.position.set(-40, 0, -6);  dynGroup.add(b1);
+  boats.push({ g: b1, speed: 7, phase: rand(0, 9) });
+  var b2 = makeBoat('cruise'); b2.position.set(50, 0, 7); b2.rotation.y = Math.PI; dynGroup.add(b2);
+  boats.push({ g: b2, speed: -9, phase: rand(0, 9) });
+  var b3 = makeBoat('junk');  b3.scale.setScalar(0.7); b3.position.set(95, 0, 2); dynGroup.add(b3);
+  boats.push({ g: b3, speed: 5, phase: rand(0, 9) });
+
+  // 云
+  cloudGroup = new THREE.Group(); scene.add(cloudGroup);
+  for (var c = 0; c < 8; c++) {
+    var cl = makeCloud();
+    cl.position.set(rand(-160, 160), rand(95, 150), rand(-120, 60));
+    cloudGroup.add(cl);
+    clouds.push({ g: cl, speed: rand(1.5, 4) });
+  }
+
+  fireworks = new FireworkLauncher();
+}
+
+// ============================================================
+// 13. 天空：星空 / 日月
+// ============================================================
+var stars, sun, moon;
+function buildSky() {
+  skyGroup = new THREE.Group(); scene.add(skyGroup);
+  // 星空
+  var n = 700, pos = new Float32Array(n * 3);
+  for (var i = 0; i < n; i++) {
+    var th = rand(0, Math.PI * 2), ph = rand(0.05, Math.PI * 0.46), R = 620;
+    pos[i * 3]     = Math.sin(ph) * Math.cos(th) * R;
+    pos[i * 3 + 1] = Math.cos(ph) * R * 0.75 + 40;
+    pos[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * R;
+  }
+  var g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  stars = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xcfe0ff, size: 1.8, transparent: true, opacity: 0.9 }));
+  skyGroup.add(stars);
+
+  sun = new THREE.Mesh(new THREE.SphereGeometry(16, 20, 16), new THREE.MeshBasicMaterial({ color: 0xfff3b0 }));
+  sun.position.set(-260, 220, -300); sun.visible = false;
+  skyGroup.add(sun);
+
+  moon = new THREE.Mesh(new THREE.SphereGeometry(11, 20, 16), new THREE.MeshBasicMaterial({ color: 0xe8eeff }));
+  moon.position.set(230, 230, -260);
+  skyGroup.add(moon);
+}
+
+// ============================================================
+// 14. 场景 / 灯光 / 水面
+// ============================================================
+var scene, camera, renderer, controls, clock;
+var hemiLight, dirLight, ambient, water, waterPos, waterBase;
+var FW;
+
+function createScene() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0e2a);
+  scene.fog = new THREE.Fog(0x0a0e2a, 320, 880);
+
+  camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.5, 1600);
+  camera.position.set(175, 120, 205);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  document.getElementById('app').appendChild(renderer.domElement);
+
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 42, -8);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.maxPolarAngle = Math.PI * 0.49;
+  controls.minDistance = 40;
+  controls.maxDistance = 560;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.45;
+
+  clock = new THREE.Clock();
+}
+
+function createLights() {
+  ambient = new THREE.AmbientLight(0x40507a, 0.7);
+  hemiLight = new THREE.HemisphereLight(0x8fb4ff, 0x2a2f3a, 0.55);
+  dirLight = new THREE.DirectionalLight(0xbfd4ff, 0.85);
+  dirLight.position.set(140, 220, 90);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.set(2048, 2048);
+  var s = dirLight.shadow.camera;
+  s.left = -180; s.right = 180; s.top = 180; s.bottom = -180; s.near = 20; s.far = 620;
+  dirLight.shadow.bias = -0.0006;
+  scene.add(ambient, hemiLight, dirLight);
+  // 江面对岸的城市反光（夜间补光）
+  var city = new THREE.PointLight(0xff8fc4, 0.9, 400, 2);
+  city.position.set(0, 60, -30);
+  scene.add(city);
+}
+
+function createWater() {
+  var geo = new THREE.PlaneGeometry(224, 36, 88, 14);
+  geo.rotateX(-Math.PI / 2);
+  waterPos = geo.attributes.position;
+  waterBase = new Float32Array(waterPos.array.slice());
+  var mat = new THREE.MeshStandardMaterial({
+    color: C.water, roughness: 0.22, metalness: 0.55,
+    transparent: true, opacity: 0.92
+  });
+  water = new THREE.Mesh(geo, mat);
+  water.position.y = 0.5;
+  water.receiveShadow = true;
+  scene.add(water);
+}
+
+// 把收集器里的体素烘焙成 2 个 InstancedMesh
+function bakeVoxels() {
+  function bake(list, material, shadows) {
+    var mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), material, list.length);
+    var m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler();
+    var p = new THREE.Vector3(), sV = new THREE.Vector3(), col = new THREE.Color();
+    for (var i = 0; i < list.length; i++) {
+      var v = list[i];
+      e.set(v.rx, v.ry, v.rz); q.setFromEuler(e);
+      p.set(v.x, v.y, v.z); sV.set(v.sx, v.sy, v.sz);
+      m.compose(p, q, sV);
+      mesh.setMatrixAt(i, m);
+      col.setHex(v.color); mesh.setColorAt(i, col);
+    }
+    mesh.castShadow = shadows; mesh.receiveShadow = shadows;
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    scene.add(mesh);
+    return mesh;
+  }
+  var solidMat = new THREE.MeshStandardMaterial({ roughness: 0.72, metalness: 0.06 });
+  var glowMat  = new THREE.MeshBasicMaterial({ toneMapped: false });
+  FW = {
+    solid: bake(SOLID, solidMat, true),
+    glow:  bake(GLOW, glowMat, false),
+    glowMat: glowMat
+  };
+}
+
+// ============================================================
+// 15. 昼夜切换
+// ============================================================
+var night = true;
+function applyDayNight() {
+  if (night) {
+    scene.background.setHex(0x0a0e2a);
+    scene.fog.color.setHex(0x0a0e2a);
+    scene.fog.near = 320; scene.fog.far = 880;
+    ambient.intensity = 0.7; ambient.color.setHex(0x40507a);
+    hemiLight.intensity = 0.55; dirLight.intensity = 0.85;
+    dirLight.color.setHex(0xbfd4ff); dirLight.position.set(140, 220, 90);
+    FW.glowMat.color.setHex(0xffffff);
+    water.material.color.setHex(C.water);
+    water.material.metalness = 0.55;
+    stars.visible = true; moon.visible = true; sun.visible = false;
+    renderer.toneMappingExposure = 1.12;
+  } else {
+    scene.background.setHex(0x7fc3ea);
+    scene.fog.color.setHex(0xa5d6f2);
+    scene.fog.near = 520; scene.fog.far = 1350;
+    ambient.intensity = 0.5; ambient.color.setHex(0x8fb2d8);
+    hemiLight.intensity = 0.6; dirLight.intensity = 1.15;
+    dirLight.color.setHex(0xfff2d8); dirLight.position.set(-180, 240, 140);
+    FW.glowMat.color.setHex(0x66778a);      // 白天把灯"压暗"
+    water.material.color.setHex(0x2f8fc8);
+    water.material.metalness = 0.3;
+    stars.visible = false; moon.visible = false; sun.visible = true;
+    renderer.toneMappingExposure = 0.92;
+  }
+}
+
+// ============================================================
+// 16. 主循环
+// ============================================================
+var fpsEl, frames = 0, fpsTimer = 0, fireTimer = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  var dt = Math.min(clock.getDelta(), 0.05);
+  var t = clock.elapsedTime;
+
+  // 水面波动
+  for (var i = 0; i < waterPos.count; i++) {
+    var bx = waterBase[i * 3], bz = waterBase[i * 3 + 2];
+    waterPos.array[i * 3 + 1] =
+      Math.sin(bx * 0.18 + t * 1.6) * 0.45 +
+      Math.cos(bz * 0.42 + t * 1.15) * 0.35 +
+      Math.sin((bx + bz) * 0.07 + t * 0.8) * 0.3;
+  }
+  waterPos.needsUpdate = true;
+  water.geometry.computeVertexNormals();
+
+  // 车流
+  for (var c = 0; c < traffic.length; c++) {
+    var car = traffic[c];
+    car.g.position.x += car.speed * dt;
+    if (car.g.position.x > 118) car.g.position.x = -118;
+    if (car.g.position.x < -118) car.g.position.x = 118;
+  }
+  // 船
+  for (var b = 0; b < boats.length; b++) {
+    var bo = boats[b];
+    bo.g.position.x += bo.speed * dt;
+    bo.g.position.y = 0.35 + Math.sin(t * 1.4 + bo.phase) * 0.28;
+    bo.g.rotation.z = Math.sin(t * 1.1 + bo.phase) * 0.03;
+    if (bo.g.position.x > 125) bo.g.position.x = -125;
+    if (bo.g.position.x < -125) bo.g.position.x = 125;
+  }
+  // 云
+  for (var k = 0; k < clouds.length; k++) {
+    clouds[k].g.position.x += clouds[k].speed * dt;
+    if (clouds[k].g.position.x > 190) clouds[k].g.position.x = -190;
+  }
+  // 烟花（夜景自动放）
+  if (night) {
+    fireTimer -= dt;
+    if (fireTimer <= 0) { fireworks.launch(); fireTimer = rand(0.7, 1.8); }
+  }
+  fireworks.update(dt);
+
+  controls.update();
+  renderer.render(scene, camera);
+
+  frames++; fpsTimer += dt;
+  if (fpsTimer >= 0.5) {
+    if (fpsEl) fpsEl.textContent = Math.round(frames / fpsTimer) + ' FPS · ' +
+      renderer.info.render.calls + ' calls · ' + (renderer.info.render.triangles / 1000).toFixed(0) + 'k tris';
+    frames = 0; fpsTimer = 0;
+  }
+}
+
+// ============================================================
+// 17. UI 绑定
+// ============================================================
+function bindUI() {
+  fpsEl = document.getElementById('fps');
+  var btnDay = document.getElementById('btnDay');
+  var btnSpin = document.getElementById('btnSpin');
+  var btnFire = document.getElementById('btnFire');
+  btnDay.onclick = function () {
+    night = !night; applyDayNight();
+    btnDay.textContent = night ? '☀️ 切换白天' : '🌙 切换夜景';
+  };
+  btnSpin.onclick = function () {
+    controls.autoRotate = !controls.autoRotate;
+    btnSpin.className = 'btn' + (controls.autoRotate ? ' on' : '');
+  };
+  btnFire.onclick = function () {
+    for (var i = 0; i < 4; i++) (function (i2) { setTimeout(function () { fireworks.launch(); }, i2 * 260); })(i);
+    if (!night) { night = true; applyDayNight(); btnDay.textContent = '☀️ 切换白天'; }
+  };
+  addEventListener('resize', function () {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+}
+
+// ============================================================
+// 18. 启动
+// ============================================================
+function init() {
+  if (typeof THREE === 'undefined') {
+    document.getElementById('loading').innerHTML =
+      '<div style="color:#ff8f8f;font-size:14px;letter-spacing:2px">Three.js CDN 加载失败，请联网后刷新</div>';
+    return;
+  }
+  createScene();
+  createLights();
+  createWater();
+
+  buildGround();
+  buildOrientalPearl();
+  buildJinMao();
+  buildSWFC();
+  buildShanghaiTower();
+  buildBund();
+  buildNeonSign();
+  buildYuGarden();
+  buildStreetFurniture();
+  buildBridge();
+  buildSky();
+  bakeVoxels();
+  buildDynamic();
+
+  applyDayNight();
+  bindUI();
+  animate();
+
+  window.__stats = { solid: SOLID.length, glow: GLOW.length, ok: true };
+  setTimeout(function () { document.getElementById('loading').classList.add('hide'); }, 350);
+}
+init();
+})();
+</script>
+</body>
+</html>

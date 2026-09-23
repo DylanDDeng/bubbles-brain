@@ -1,0 +1,541 @@
+.eval-shell {
+	--eval-radius: 10px;
+}
+
+.eval-shell :is(a, button, summary):focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+.eval-shell [hidden] {
+	display: none !important;
+}
+
+/* Header */
+.eval-header h1 {
+	margin: 0;
+	font-size: clamp(30px, 3.4vw, 38px);
+	font-weight: 500;
+	line-height: 1.35;
+	letter-spacing: 0;
+	text-wrap: pretty;
+}
+
+.eval-kicker {
+	margin: 0 0 12px;
+	color: var(--blue-strong);
+	font-size: var(--type-meta);
+	font-weight: 500;
+	line-height: 1.6;
+}
+
+.eval-lede {
+	max-width: 620px;
+	margin: 20px 0 0;
+	color: var(--ink-soft);
+	font-size: 16px;
+	line-height: 1.75;
+	text-wrap: pretty;
+}
+
+.eval-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+	margin: 16px 0 0;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.7;
+}
+
+/* Filters */
+.eval-filters {
+	display: grid;
+	gap: 12px;
+	margin: 48px 0 0;
+	padding: 20px 0;
+	border-block: 1px solid var(--rule);
+}
+
+.eval-filter-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.eval-filter-label {
+	width: 44px;
+	flex: none;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+}
+
+.eval-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 36px;
+	padding: 0 14px;
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	background: var(--paper);
+	color: var(--ink-soft);
+	font: 400 var(--type-ui) / 1 var(--sans);
+	cursor: pointer;
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease,
+		color 0.15s ease;
+}
+
+.eval-chip span {
+	color: var(--ink-faint);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+
+.eval-chip:hover {
+	border-color: var(--ink-faint);
+	color: var(--ink);
+}
+
+.eval-chip[aria-pressed='true'] {
+	border-color: var(--ink);
+	background: var(--ink);
+	color: var(--paper);
+}
+
+.eval-chip[aria-pressed='true'] span {
+	color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+.eval-select {
+	min-height: 36px;
+	max-width: 100%;
+	padding: 0 32px 0 14px;
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	background: var(--paper)
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23737a84' stroke-width='1.5'/%3E%3C/svg%3E")
+		no-repeat right 14px center;
+	color: var(--ink);
+	font: 400 var(--type-ui) / 1 var(--sans);
+	appearance: none;
+	cursor: pointer;
+}
+
+/* Chrome keeps :focus-visible on a select after a mouse pick; show focus with the border only. */
+.eval-shell .eval-select:focus,
+.eval-shell .eval-select:focus-visible {
+	outline: none;
+	border-color: var(--ink-faint);
+}
+
+/* Year sections */
+.eval-year,
+.eval-runs {
+	margin-top: 56px;
+	scroll-margin-top: 24px;
+}
+
+.eval-year-heading {
+	display: flex;
+	align-items: baseline;
+	gap: 16px;
+	margin-bottom: 20px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--rule);
+}
+
+.eval-year-heading h2 {
+	margin: 0;
+	font-size: 26px;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.2;
+	letter-spacing: 0;
+}
+
+.eval-year-heading p {
+	margin: 0;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+}
+
+/* Gallery grid */
+.eval-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 36px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.eval-card a {
+	display: block;
+	color: inherit;
+	text-decoration: none;
+}
+
+.eval-thumb {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 16 / 10;
+	border: 1px solid var(--rule);
+	border-radius: var(--eval-radius);
+	background: var(--paper-muted);
+}
+
+.eval-thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.35s ease;
+}
+
+.eval-card a:hover .eval-thumb img {
+	transform: scale(1.03);
+}
+
+.eval-count {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 4px 9px;
+	border-radius: 999px;
+	background: rgb(20 22 26 / 72%);
+	color: #fff;
+	font-size: 12px;
+	line-height: 1.4;
+	backdrop-filter: blur(6px);
+}
+
+.eval-card-body {
+	display: grid;
+	gap: 4px;
+	padding-top: 14px;
+}
+
+.eval-card-kicker {
+	color: var(--ink-faint);
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.eval-card-title {
+	color: var(--ink);
+	font-size: 17px;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.eval-card a:hover .eval-card-title {
+	color: var(--blue-strong);
+}
+
+.eval-card-models {
+	color: var(--ink-soft);
+	font-size: var(--type-meta);
+	line-height: 1.6;
+}
+
+.eval-card-note {
+	color: var(--ink-faint);
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.eval-empty {
+	margin: 48px 0 0;
+	color: var(--ink-soft);
+}
+
+/* Task detail */
+.eval-section-title {
+	margin: 0 0 12px;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: 0;
+}
+
+.eval-prompt {
+	max-width: 760px;
+	margin-top: 48px;
+}
+
+.eval-prompt blockquote {
+	margin: 0;
+	padding: 18px 20px;
+	border-left: 3px solid var(--blue);
+	border-radius: 0 var(--eval-radius) var(--eval-radius) 0;
+	background: var(--paper-muted);
+	color: var(--ink);
+	font-size: 15px;
+	line-height: 1.8;
+	white-space: pre-line;
+}
+
+.eval-prompt details {
+	margin-top: 12px;
+	color: var(--ink-soft);
+	font-size: var(--type-ui);
+}
+
+.eval-prompt summary {
+	min-height: 32px;
+	cursor: pointer;
+}
+
+.eval-prompt details p {
+	margin: 4px 0 0;
+	line-height: 1.75;
+	white-space: pre-line;
+}
+
+.eval-reference {
+	margin: 20px 0 0;
+}
+
+.eval-reference video {
+	display: block;
+	width: 100%;
+	max-height: 420px;
+	border-radius: var(--eval-radius);
+	background: #000;
+}
+
+.eval-reference figcaption {
+	margin-top: 8px;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+}
+
+.eval-run-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 40px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.eval-run-grid--single {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.eval-run {
+	container-type: inline-size;
+	scroll-margin-top: 24px;
+}
+
+.eval-stage {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 16 / 10;
+	border: 1px solid var(--rule);
+	border-radius: var(--eval-radius);
+	background: var(--paper-muted);
+}
+
+/* Rendered at a 1280×800 desktop viewport, scaled to the card by evalCases.ts. */
+.eval-stage iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1280px;
+	max-width: none;
+	height: 800px;
+	border: 0;
+	background: #fff;
+	transform: scale(var(--eval-scale, 1));
+	transform-origin: 0 0;
+}
+
+/* Screenshot works: show the whole picture, letterboxed, and open the original on click. */
+.eval-stage--image a {
+	position: absolute;
+	inset: 0;
+	display: block;
+	cursor: zoom-in;
+}
+
+.eval-stage--image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.eval-stage[data-running] .eval-poster {
+	display: none;
+}
+
+.eval-poster {
+	position: absolute;
+	inset: 0;
+	display: block;
+	color: #fff;
+	text-decoration: none;
+}
+
+.eval-poster img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.eval-play {
+	position: absolute;
+	inset: auto auto 14px 14px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 40px;
+	padding: 0 16px 0 12px;
+	border-radius: 999px;
+	background: rgb(20 22 26 / 78%);
+	/* Pinned: the global a:hover colour would otherwise paint the label into the blue pill. */
+	color: #fff;
+	font-size: var(--type-ui);
+	backdrop-filter: blur(6px);
+	transition: background-color 0.15s ease;
+}
+
+.eval-play i {
+	font-size: 18px;
+}
+
+.eval-poster:hover .eval-play {
+	background: var(--blue-strong);
+}
+
+.eval-run-meta {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 2px 16px;
+	padding-top: 14px;
+}
+
+.eval-run-meta h3 {
+	margin: 0;
+	font-size: 17px;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.eval-run-sub {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 12px;
+	margin: 0;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+	font-variant-numeric: tabular-nums;
+	line-height: 1.6;
+}
+
+.eval-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	grid-column: 1;
+	margin: 8px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.eval-tags li {
+	padding: 2px 8px;
+	border-radius: 4px;
+	background: var(--paper-muted);
+	color: var(--ink-soft);
+	font: 12px/1.5 var(--mono);
+}
+
+.eval-run-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: flex-end;
+	gap: 4px 14px;
+	grid-column: 2;
+	grid-row: 1 / span 3;
+}
+
+.eval-run-actions :is(a, button) {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	min-height: 32px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--blue-strong);
+	font: 400 var(--type-meta) / 1.5 var(--sans);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.eval-run-actions :is(a, button):hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.eval-footnote {
+	max-width: 680px;
+	margin: 64px 0 0;
+	color: var(--ink-faint);
+	font-size: var(--type-meta);
+	line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+	.eval-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.eval-grid,
+	.eval-run-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.eval-filter-label {
+		width: 100%;
+	}
+}
+
+/* A narrow card (two columns in a small window, or a phone) stacks the actions under the model. */
+@container (max-width: 480px) {
+	.eval-run-meta {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.eval-run-actions {
+		grid-column: 1;
+		grid-row: auto;
+		justify-content: flex-start;
+		margin-top: 6px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.eval-thumb img,
+	.eval-chip,
+	.eval-play {
+		transition: none;
+	}
+
+	.eval-card a:hover .eval-thumb img {
+		transform: none;
+	}
+}

@@ -19,7 +19,8 @@
   Cache-Control: no-store
 
 /eval-demos/*
-  Content-Security-Policy: sandbox allow-scripts allow-downloads allow-pointer-lock; default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https:; style-src 'unsafe-inline' https:; img-src data: blob: https:; font-src data: https:; connect-src https:; media-src data: blob: https:; worker-src blob:; child-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'
+  ! Content-Security-Policy
+  Content-Security-Policy: sandbox allow-scripts allow-downloads allow-pointer-lock; default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' https:; style-src 'unsafe-inline' https:; img-src data: blob: https:; font-src data: https:; connect-src https:; media-src data: blob: https:; worker-src blob:; child-src blob:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'
   X-Robots-Tag: noindex, nofollow
   Referrer-Policy: no-referrer
   Cross-Origin-Resource-Policy: same-origin

@@ -1,0 +1,169 @@
+---
+import {
+	casesForTask,
+	difficultyLabel,
+	EVAL_CASES_ROUTE,
+	evalCategory,
+	evalModel,
+	evalThumb,
+	evalYears,
+	formatBytes,
+	isImageCase,
+	type EvalTask,
+} from '../lib/evalCases';
+import '../styles/eval-cases.css';
+
+interface Props {
+	task: EvalTask;
+}
+
+const { task } = Astro.props;
+const cases = casesForTask(task.id);
+const years = evalYears(cases);
+const single = cases.length === 1;
+const hasDemo = cases.some((item) => !isImageCase(item));
+const modelCount = new Set(cases.map((item) => item.model)).size;
+const yearSpan = years.length > 1 ? `${years.at(-1)}–${years[0]}` : `${years[0]}`;
+---
+
+<article class="page-shell eval-shell eval-task" data-eval-task>
+	<header class="eval-header">
+		<a class="collection-back" href={EVAL_CASES_ROUTE}>
+			<i class="ph ph-arrow-left" aria-hidden="true"></i>
+			模型实测案例
+		</a>
+		<p class="eval-kicker">
+			{evalCategory(task.category).name.zh} · {difficultyLabel[task.difficulty]}
+		</p>
+		<h1>{task.title.zh}</h1>
+		<p class="eval-stats">
+			<span>{single ? '单模型作品' : `${modelCount} 个模型`}</span>
+			<span>{yearSpan}</span>
+		</p>
+	</header>
+
+	<section class="eval-prompt" aria-labelledby="eval-prompt-title">
+		<h2 id="eval-prompt-title" class="eval-section-title">题目</h2>
+		<blockquote>{task.prompt.zh}</blockquote>
+		{
+			task.prompt.en && task.prompt.en !== task.prompt.zh && (
+				<details>
+					<summary>English prompt</summary>
+					<p lang="en">{task.prompt.en}</p>
+				</details>
+			)
+		}
+		{
+			task.reference_video && (
+				<figure class="eval-reference">
+					<video src={task.reference_video} controls muted playsinline preload="metadata" />
+					<figcaption>题目附带的参考视频</figcaption>
+				</figure>
+			)
+		}
+	</section>
+
+	{
+		years.map((year) => {
+			const yearCases = cases.filter((item) => item.year === year);
+			return (
+				<section class="eval-runs" id={`y${year}`} aria-labelledby={`eval-runs-${year}`}>
+					<header class="eval-year-heading">
+						<h2 id={`eval-runs-${year}`}>{year}</h2>
+						<p>{yearCases.length} 个作品</p>
+					</header>
+					<ol class:list={['eval-run-grid', { 'eval-run-grid--single': single }]}>
+						{yearCases.map((item) => {
+							const model = evalModel(item.model);
+							const label = `${model.name}：${task.title.zh}`;
+							const image = isImageCase(item);
+							return (
+								<li class="eval-run" id={item.id}>
+									{image ? (
+										<div class="eval-stage eval-stage--image">
+											<a href={item.file} target="_blank" rel="noopener">
+												<img src={item.file} alt={label} loading="lazy" decoding="async" />
+											</a>
+										</div>
+									) : (
+										<div
+											class="eval-stage"
+											data-eval-stage
+											data-src={item.file}
+											data-title={label}
+											data-autorun={single || undefined}
+										>
+											<a
+												class="eval-poster"
+												href={item.file}
+												target="_blank"
+												rel="noopener"
+												data-astro-prefetch="false"
+											>
+												<img
+													src={evalThumb(item.id)}
+													alt=""
+													width="640"
+													height="400"
+													loading="lazy"
+													decoding="async"
+												/>
+												<span class="eval-play">
+													<i class="ph ph-play" aria-hidden="true" />
+													<span data-play-label>新窗口运行</span>
+												</span>
+											</a>
+										</div>
+									)}
+									<div class="eval-run-meta">
+										<h3>{model.name}</h3>
+										<p class="eval-run-sub">
+											<span>{model.vendor}</span>
+											<time datetime={item.date}>{item.date}</time>
+										</p>
+										<ul class="eval-tags" aria-label="实现方式">
+											{item.stack.map((tag) => (
+												<li>{tag}</li>
+											))}
+											{!image && <li>{formatBytes(item.bytes)}</li>}
+										</ul>
+										<div class="eval-run-actions">
+											{!image && (
+												<button type="button" data-eval-reload hidden>
+													<i class="ph ph-arrow-clockwise" aria-hidden="true" />
+													重新运行
+												</button>
+											)}
+											<a
+												href={item.file}
+												target="_blank"
+												rel="noopener"
+												data-astro-prefetch="false"
+											>
+												{image ? '查看原图' : '新窗口打开'}
+												<i class="ph ph-arrow-up-right" aria-hidden="true" />
+											</a>
+										</div>
+									</div>
+								</li>
+							);
+						})}
+					</ol>
+				</section>
+			);
+		})
+	}
+
+	{
+		hasDemo && (
+			<p class="eval-footnote">
+				作品是模型交出的 HTML 文件，原样运行在隔离的沙箱里，无法读取本站的登录状态。部分作品依赖外部
+				CDN，网络不佳时可能加载较慢；游戏类作品需要先点击画面获得键盘焦点。
+			</p>
+		)
+	}
+</article>
+
+<script>
+	import '../scripts/evalCases';
+</script>

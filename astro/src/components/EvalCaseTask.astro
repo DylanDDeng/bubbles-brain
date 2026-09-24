@@ -7,12 +7,10 @@ import {
 	evalCategory,
 	evalModel,
 	evalThumb,
-	formatBytes,
 	isHtmlCase,
 	isImageCase,
 	isVideoCase,
 	modelCount,
-	shortDate,
 	vendorMark,
 	type EvalTask,
 } from '../lib/evalCases';
@@ -50,12 +48,7 @@ const runs = cases.map((item) => {
 		vendor: model.vendor,
 		logo: mark.logo,
 		initial: mark.initial,
-		sub: [
-			model.vendor,
-			shortDate(item.date),
-			...item.stack,
-			...(image ? [] : [formatBytes(item.bytes)]),
-		].join(' · '),
+		sub: model.vendor,
 	};
 });
 const runsJson = JSON.stringify(runs).replace(/</g, '\\u003c');

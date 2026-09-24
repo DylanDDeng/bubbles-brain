@@ -2006,6 +2006,19 @@
         "ffmpeg"
       ],
       "bytes": 7308808
+    },
+    {
+      "id": "mimo-2.6-pro-js-video-midline-theorem",
+      "task": "js-video-midline-theorem",
+      "model": "mimo-2.6-pro",
+      "kind": "video",
+      "file": "/media/eval-cases/mimo-2.6-pro-js-video-midline-theorem.mp4",
+      "date": "2026-09-24",
+      "page_title": "三角形中位线定理 · 动画视频",
+      "stack": [
+        "canvas"
+      ],
+      "bytes": 819750
     }
   ],
   "excluded_files": [

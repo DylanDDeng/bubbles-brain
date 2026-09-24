@@ -553,6 +553,19 @@
       "prompt": {
         "zh": "只用 JS 制作一个视频，讲述三角形中位线定理"
       }
+    },
+    {
+      "id": "claude-growth-montage",
+      "title": {
+        "zh": "代码动画：Claude 成长蒙太奇",
+        "en": "Code Animation: Claude Growth Montage"
+      },
+      "category": "video",
+      "difficulty": "hard",
+      "prompt": {
+        "zh": "完全用代码制作一段 30 秒的动画：一段成长蒙太奇，灵感来自《功夫熊猫》的训练片段，以 Claude 吉祥物为主角（如果你不认识它，请去官网下载），展示它自首次发布以来在各项技能上越来越强，比如搜索互联网、写代码、创建 3D 模型，以及解决人类最难的问题，并配上打动人心的音乐。",
+        "en": "Create a 30 second animation entirely in code featuring a growth montage, inspired by Kung Fu Panda's training sequence, with the Claude mascot as the main character(if you don't know it, please go to the website download it) , showcasing it getting more capable since its initial release across its skillset, such as searching the internet, writing code, creating 3D models, and solving humanity's hardest problems, with emotionally impactful music."
+      }
     }
   ],
   "cases": [
@@ -2019,6 +2032,32 @@
         "canvas"
       ],
       "bytes": 819750
+    },
+    {
+      "id": "gpt-6-astra-js-video-midline-theorem",
+      "task": "js-video-midline-theorem",
+      "model": "gpt-6-astra",
+      "kind": "video",
+      "file": "/media/eval-cases/gpt-6-astra-js-video-midline-theorem.mp4",
+      "date": "2026-09-24",
+      "page_title": null,
+      "stack": [
+        "ffmpeg"
+      ],
+      "bytes": 4053546
+    },
+    {
+      "id": "claude-opus-5.5-claude-growth-montage",
+      "task": "claude-growth-montage",
+      "model": "claude-opus-5.5",
+      "kind": "video",
+      "file": "/media/eval-cases/claude-opus-5.5-claude-growth-montage.mp4",
+      "date": "2026-09-24",
+      "page_title": null,
+      "stack": [
+        "ffmpeg"
+      ],
+      "bytes": 9416793
     }
   ],
   "excluded_files": [

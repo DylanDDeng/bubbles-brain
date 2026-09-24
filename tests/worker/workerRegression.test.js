@@ -380,7 +380,10 @@ describe('worker regression guards', () => {
         expect(config).toContain('GITHUB_BRANCH = "main"');
         expect(config).toContain('GITHUB_PUBLISH_STRATEGY = "pull_request"');
         expect(config).toContain('GITHUB_PUBLISH_BRANCH_PREFIX = "automation/daily"');
-        expect(config).not.toMatch(/^\s*crons\s*=/m);
+        // An explicit empty list is required: omitting [triggers] would leave
+        // the previously deployed cron running.
+        expect(config).toMatch(/^crons = \[\]$/m);
+        expect(config).not.toMatch(/^\s*crons\s*=\s*\[\s*["']/m);
         expect(config).toContain('DAILY_PUBLISH_MODE = "structured"');
         expect(config).toContain('EXTERNAL_WRITES_ENABLED = "false"');
         expect(config).toContain('DAILY_STRUCTURED_WRITES_ENABLED = "false"');

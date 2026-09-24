@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boeing 787 Style Airliner — Apron · Three.js</title>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0b1017; }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+  #hud {
+    position: fixed; left: 18px; top: 16px; z-index: 10;
+    color: #dfe7ee; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    pointer-events: none; user-select: none; text-shadow: 0 1px 4px rgba(0,0,0,.7);
+  }
+  #hud h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .28em; }
+  #hud p  { margin: 4px 0 0; font-size: 11.5px; letter-spacing: .12em; color: #9fb0bf; }
+  #hint {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 10;
+    color: #8ea0b0; font-size: 12px; letter-spacing: .16em;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    pointer-events: none; user-select: none; text-shadow: 0 1px 4px rgba(0,0,0,.7);
+  }
+  #loading {
+    position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center;
+    background: #0b1017; color: #7f93a5; letter-spacing: .3em; font-size: 13px;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    transition: opacity .6s ease;
+  }
+  #loading.done { opacity: 0; pointer-events: none; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div id="hud">
+  <h1>BOEING 787 · APRON STAND B7</h1>
+  <p>PROGRAMMATIC 3D · THREE.JS</p>
+</div>
+<div id="hint">拖拽旋转 · 滚轮缩放 · 右键平移</div>
+<div id="loading">LOADING SCENE…</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ============================================================
+   全局状态
+============================================================ */
+let scene, camera, renderer, controls, clock;
+const fans     = [];   // 引擎风扇
+const blinkers = [];   // 闪烁灯光 {mat, phase, speed, base}
+const clouds   = [];   // 云层
+const movers   = [];   // 移动的地服车辆
+
+/* 复用几何体 / 材质（性能） */
+const GEO = {};
+const MAT = {};
+
+function initSharedAssets() {
+  // ---- 几何体 ----
+  GEO.wheel   = new THREE.CylinderGeometry(0.85, 0.85, 0.45, 18);
+  GEO.hub     = new THREE.CylinderGeometry(0.32, 0.32, 0.5, 12);
+  GEO.wheelSm = new THREE.CylinderGeometry(0.5, 0.5, 0.35, 14);
+  GEO.box     = new THREE.BoxGeometry(1, 1, 1);
+  GEO.cone    = new THREE.ConeGeometry(0.18, 0.55, 8);
+  GEO.sphere  = new THREE.SphereGeometry(1, 16, 12);
+  GEO.cyl     = new THREE.CylinderGeometry(1, 1, 1, 16);
+  GEO.blade   = new THREE.BoxGeometry(0.13, 1.5, 0.05);
+
+  // ---- 材质 ----
+  MAT.fuselage = new THREE.MeshStandardMaterial({ color: 0xf3f4f6, roughness: 0.26, metalness: 0.14, envMapIntensity: 1.0 });
+  MAT.wing     = new THREE.MeshStandardMaterial({ color: 0xc9ced5, roughness: 0.34, metalness: 0.72, side: THREE.DoubleSide });
+  MAT.metal    = new THREE.MeshStandardMaterial({ color: 0xb8bec5, roughness: 0.3,  metalness: 0.85 });
+  MAT.darkMetal= new THREE.MeshStandardMaterial({ color: 0x3a3f45, roughness: 0.42, metalness: 0.8,  side: THREE.DoubleSide });
+  MAT.glass    = new THREE.MeshStandardMaterial({ color: 0x0d151d, roughness: 0.08, metalness: 0.65, envMapIntensity: 1.4 });
+  MAT.rubber   = new THREE.MeshStandardMaterial({ color: 0x131416, roughness: 0.92, metalness: 0.0 });
+  MAT.trim     = new THREE.MeshStandardMaterial({ color: 0x232a33, roughness: 0.5,  metalness: 0.4 });
+  MAT.tailBlue = new THREE.MeshStandardMaterial({ color: 0x1c3f75, roughness: 0.3,  metalness: 0.3, side: THREE.DoubleSide });
+  MAT.tailWhite= new THREE.MeshStandardMaterial({ color: 0xeef1f4, roughness: 0.3,  metalness: 0.2, side: THREE.DoubleSide });
+  MAT.tarmac   = new THREE.MeshStandardMaterial({ color: 0x3c4147, roughness: 0.95, metalness: 0.0 });
+  MAT.concrete = new THREE.MeshStandardMaterial({ color: 0x585d61, roughness: 0.9,  metalness: 0.0 });
+  MAT.lineWhite= new THREE.MeshBasicMaterial({ color: 0xd8d8d2 });
+  MAT.lineYellow = new THREE.MeshBasicMaterial({ color: 0xd8a72a });
+  MAT.lineRed  = new THREE.MeshBasicMaterial({ color: 0xb03028 });
+  MAT.building = new THREE.MeshStandardMaterial({ color: 0x8a929b, roughness: 0.7,  metalness: 0.15 });
+  MAT.buildingDark = new THREE.MeshStandardMaterial({ color: 0x565e68, roughness: 0.7, metalness: 0.2 });
+  MAT.winStrip = new THREE.MeshStandardMaterial({ color: 0x2a3a4a, roughness: 0.2, metalness: 0.4,
+                                                  emissive: 0xffd9a0, emissiveIntensity: 0.55 });
+  MAT.vehicleWhite = new THREE.MeshStandardMaterial({ color: 0xe6e8ea, roughness: 0.5, metalness: 0.2 });
+  MAT.vehicleYellow= new THREE.MeshStandardMaterial({ color: 0xd9a323, roughness: 0.55, metalness: 0.15 });
+  MAT.vehicleOrange= new THREE.MeshStandardMaterial({ color: 0xd85a1a, roughness: 0.6, metalness: 0.1 });
+  MAT.cloud    = new THREE.MeshStandardMaterial({ color: 0xf2f3f0, roughness: 1.0, metalness: 0.0,
+                                                  transparent: true, opacity: 0.92 });
+}
+
+/* ============================================================
+   createScene — 场景 / 相机 / 渲染器 / 天空
+============================================================ */
+function createScene() {
+  scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x9db0c2, 180, 680);
+
+  camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.5, 2400);
+  camera.position.set(58, 24, 76);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.28;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  document.getElementById('app').appendChild(renderer.domElement);
+
+  // 环境反射（程序化，无贴图）→ 机身轻微反光
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+
+  // 渐变天空穹顶（Shader，无外部贴图）
+  const skyGeo = new THREE.SphereGeometry(1100, 24, 14);
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    depthWrite: false,
+    uniforms: {
+      top:     { value: new THREE.Color(0x36578f) },
+      horizon: { value: new THREE.Color(0xe2ba8a) },
+      bottom:  { value: new THREE.Color(0x6d7580) }
+    },
+    vertexShader: `
+      varying vec3 vPos;
+      void main() {
+        vPos = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }`,
+    fragmentShader: `
+      uniform vec3 top; uniform vec3 horizon; uniform vec3 bottom;
+      varying vec3 vPos;
+      void main() {
+        float h = normalize(vPos).y;
+        vec3 c = h > 0.0
+          ? mix(horizon, top, pow(min(h * 1.6, 1.0), 0.75))
+          : mix(horizon, bottom, min(-h * 3.0, 1.0));
+        gl_FragColor = vec4(c, 1.0);
+      }`
+  });
+  scene.add(new THREE.Mesh(skyGeo, skyMat));
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.target.set(0, 5.5, 0);
+  controls.minDistance = 18;
+  controls.maxDistance = 260;
+  controls.maxPolarAngle = Math.PI / 2 - 0.03;
+
+  clock = new THREE.Clock();
+}
+
+/* ============================================================
+   createLights — 环境光 / 方向光（阴影）/ 辅助点光源
+============================================================ */
+function createLights() {
+  scene.add(new THREE.HemisphereLight(0xbcd2e8, 0x4c4840, 0.72));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+
+  const sun = new THREE.DirectionalLight(0xffe3c0, 3.1);
+  sun.position.set(130, 95, 70);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.near = 20;
+  sun.shadow.camera.far = 420;
+  sun.shadow.camera.left = -95;
+  sun.shadow.camera.right = 95;
+  sun.shadow.camera.top = 95;
+  sun.shadow.camera.bottom = -95;
+  sun.shadow.bias = -0.0006;
+  sun.shadow.normalBias = 0.02;
+  scene.add(sun);
+  scene.add(sun.target);
+
+  // 停机坪高杆灯（点光源辅助）
+  const apronA = new THREE.PointLight(0xffd9a2, 220, 150, 2);
+  apronA.position.set(48, 17, 40);
+  scene.add(apronA);
+
+  const apronB = new THREE.PointLight(0xffd9a2, 180, 140, 2);
+  apronB.position.set(-52, 17, -26);
+  scene.add(apronB);
+
+  const ramp = new THREE.PointLight(0xcfe2ff, 90, 80, 2);   // 机腹工作灯
+  ramp.position.set(0, 3, 6);
+  scene.add(ramp);
+}
+
+/* ============================================================
+   createAirplane — 程序化宽体客机（787/777 风格）
+============================================================ */
+function createAirplane() {
+  const plane = new THREE.Group();
+
+  /* ---------- 机身（Lathe 旋转体） ---------- */
+  const profile = [
+    [0.06, 30.5], [0.9, 29.2], [1.9, 27.6], [2.65, 25.4], [3.05, 22.4],
+    [3.22, 18.0], [3.25, 10.0], [3.25, -10.0], [3.1, -14.5], [2.6, -18.5],
+    [1.95, -22.5], [1.15, -26.5], [0.5, -29.5], [0.1, -31.0]
+  ].map(p => new THREE.Vector2(p[0], p[1]));
+  const fuselageGeo = new THREE.LatheGeometry(profile, 40);
+  const fuselage = new THREE.Mesh(fuselageGeo, MAT.fuselage);
+  fuselage.rotation.x = Math.PI / 2;          // 机头朝 +Z
+  fuselage.position.y = 5.4;
+  plane.add(fuselage);
+
+  // 机腹整流条（777 特征）
+  const belly = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.5, 34, 12, 1, false), MAT.fuselage);
+  belly.rotation.x = Math.PI / 2;
+  belly.scale.set(1.2, 1, 0.5);
+  belly.position.set(0, 2.55, -4);
+  plane.add(belly);
+
+  /* ---------- 驾驶舱玻璃（环绕深色玻璃带） ---------- */
+  const cockpitGeo = new THREE.CylinderGeometry(2.72, 2.72, 2.5, 18, 1, true, Math.PI * 0.68, Math.PI * 0.64);
+  const cockpit = new THREE.Mesh(cockpitGeo, MAT.glass);
+  cockpit.rotation.x = Math.PI / 2;
+  cockpit.position.set(0, 5.5, 25.1);
+  plane.add(cockpit);
+
+  /* ---------- 舷窗（InstancedMesh，两排） ---------- */
+  const winGeo = new THREE.BoxGeometry(0.09, 0.4, 0.52);
+  const rows = [];
+  for (let z = 17.5; z > -13.5; z -= 1.15) { rows.push(z); }
+  const windows = new THREE.InstancedMesh(winGeo, MAT.glass, rows.length * 2);
+  const dummy = new THREE.Object3D();
+  let i = 0;
+  for (const side of [1, -1]) {
+    for (const z of rows) {
+      const a = 0.18;                                 // 略高于中线
+      dummy.position.set(side * 3.2 * Math.cos(a), 5.4 + 3.2 * Math.sin(a), z);
+      dummy.rotation.set(0, 0, side > 0 ? -a : a);
+      dummy.updateMatrix();
+      windows.setMatrixAt(i++, dummy.matrix);
+    }
+  }
+  windows.instanceMatrix.needsUpdate = true;
+  plane.add(windows);
+
+  /* ---------- 舱门 ---------- */
+  const doorGeo = new THREE.BoxGeometry(0.1, 1.9, 1.05);
+  for (const side of [1, -1]) {
+    for (const z of [20.5, 1.5, -11.5]) {
+      const door = new THREE.Mesh(doorGeo, MAT.trim);
+      door.position.set(side * 3.16, 5.5, z);
+      door.rotation.z = side > 0 ? -0.05 : 0.05;
+      plane.add(door);
+    }
+  }
+
+  /* ---------- 机翼（后掠 + 上反角 + 翼梢小翼） ---------- */
+  const wingShape = new THREE.Shape();
+  wingShape.moveTo(1.5, 6.8);
+  wingShape.lineTo(33.0, -12.5);
+  wingShape.quadraticCurveTo(36.0, -15.4, 34.6, -17.0);
+  wingShape.lineTo(31.6, -17.8);
+  wingShape.lineTo(1.5, -8.6);
+  wingShape.closePath();
+  const wingGeo = new THREE.ExtrudeGeometry(wingShape, {
+    depth: 0.5, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.22, bevelSegments: 2, steps: 1
+  });
+
+  const wingR = new THREE.Mesh(wingGeo, MAT.wing);
+  wingR.rotation.x = Math.PI / 2;
+  wingR.rotation.z = 0.09;                    // 上反角
+  wingR.position.y = 4.5;
+  plane.add(wingR);
+
+  const wingL = new THREE.Mesh(wingGeo, MAT.wing);
+  wingL.scale.set(-1, 1, 1);
+  wingL.rotation.x = Math.PI / 2;
+  wingL.rotation.z = 0.09;
+  wingL.position.y = 4.5;
+  plane.add(wingL);
+
+  // 翼尖小翼（融合式斜切）
+  const wingletGeo = new THREE.BoxGeometry(0.24, 2.4, 2.6);
+  for (const side of [1, -1]) {
+    const wl = new THREE.Mesh(wingletGeo, MAT.wing);
+    wl.position.set(side * 34.2, 5.6, -16.2);
+    wl.rotation.set(0.5, side * 0.35, side * -0.5);
+    plane.add(wl);
+  }
+
+  /* ---------- 发动机吊舱 ×2（含旋转风扇） ---------- */
+  function buildEngine(side) {
+    const g = new THREE.Group();
+
+    const nacelle = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 1.75, 6.8, 26, 1, true), MAT.fuselage);
+    nacelle.rotation.x = Math.PI / 2;
+    nacelle.position.z = 3.2;
+    g.add(nacelle);
+
+    const lip = new THREE.Mesh(new THREE.TorusGeometry(1.82, 0.2, 10, 26), MAT.metal);
+    lip.position.z = 6.55;
+    g.add(lip);
+
+    const duct = new THREE.Mesh(new THREE.CylinderGeometry(1.62, 1.5, 5.6, 20, 1, true), MAT.darkMetal);
+    duct.rotation.x = Math.PI / 2;
+    duct.position.z = 3.4;
+    g.add(duct);
+
+    // 风扇
+    const fan = new THREE.Group();
+    const spinner = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.1, 14), MAT.metal);
+    spinner.rotation.x = Math.PI / 2;
+    spinner.position.z = 0.4;
+    fan.add(spinner);
+    for (let b = 0; b < 22; b++) {
+      const blade = new THREE.Mesh(GEO.blade, MAT.darkMetal);
+      const ang = (b / 22) * Math.PI * 2;
+      blade.position.set(Math.cos(ang) * 0.9, Math.sin(ang) * 0.9, 0.15);
+      blade.rotation.z = ang + 0.45;
+      blade.rotation.y = 0.3;
+      fan.add(blade);
+    }
+    fan.position.z = 5.9;
+    g.add(fan);
+    fans.push(fan);
+
+    // 尾喷管 + 整流锥
+    const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 0.72, 2.4, 20, 1, true), MAT.darkMetal);
+    nozzle.rotation.x = Math.PI / 2;
+    nozzle.position.z = -1.6;
+    g.add(nozzle);
+    const plug = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.8, 16), MAT.metal);
+    plug.rotation.x = -Math.PI / 2;
+    plug.position.z = -2.9;
+    g.add(plug);
+
+    // 吊挂
+    const pylon = new THREE.Mesh(GEO.box, MAT.fuselage);
+    pylon.scale.set(0.5, 1.6, 3.6);
+    pylon.position.set(0, 1.8, 1.6);
+    pylon.rotation.x = 0.12;
+    g.add(pylon);
+
+    g.position.set(side * 10.5, 2.3, 3.3);
+    g.traverse(o => { o.castShadow = true; });
+    return g;
+  }
+  plane.add(buildEngine(1));
+  plane.add(buildEngine(-1));
+
+  /* ---------- 垂尾 ---------- */
+  const vtShape = new THREE.Shape();
+  vtShape.moveTo(-21.5, 7.4);
+  vtShape.lineTo(-37.5, 20.6);
+  vtShape.lineTo(-41.0, 20.6);
+  vtShape.lineTo(-34.6, 7.0);
+  vtShape.closePath();
+  const vtGeo = new THREE.ExtrudeGeometry(vtShape, {
+    depth: 0.5, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.15, bevelSegments: 2, steps: 1
+  });
+  const vtail = new THREE.Mesh(vtGeo, MAT.tailBlue);
+  vtail.rotation.y = -Math.PI / 2;
+  vtail.position.x = 0.3;
+  plane.add(vtail);
+
+  // 尾翼白色饰条
+  const finStripe = new THREE.Mesh(GEO.box, MAT.tailWhite);
+  finStripe.scale.set(0.62, 1.1, 9.5);
+  finStripe.position.set(0.3, 12.5, -31.5);
+  finStripe.rotation.x = -0.62;
+  plane.add(finStripe);
+
+  /* ---------- 平尾 ---------- */
+  const htShape = new THREE.Shape();
+  htShape.moveTo(0.8, -27.5);
+  htShape.lineTo(10.8, -35.4);
+  htShape.lineTo(11.6, -37.2);
+  htShape.lineTo(9.6, -37.8);
+  htShape.lineTo(0.8, -33.2);
+  htShape.closePath();
+  const htGeo = new THREE.ExtrudeGeometry(htShape, {
+    depth: 0.36, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.14, bevelSegments: 2, steps: 1
+  });
+  const htR = new THREE.Mesh(htGeo, MAT.wing);
+  htR.rotation.x = Math.PI / 2;
+  htR.rotation.z = 0.06;
+  htR.position.y = 6.0;
+  plane.add(htR);
+  const htL = new THREE.Mesh(htGeo, MAT.wing);
+  htL.scale.set(-1, 1, 1);
+  htL.rotation.x = Math.PI / 2;
+  htL.rotation.z = 0.06;
+  htL.position.y = 6.0;
+  plane.add(htL);
+
+  /* ---------- 起落架 ---------- */
+  function addWheel(parent, x, y, z, small = false) {
+    const tire = new THREE.Mesh(small ? GEO.wheelSm : GEO.wheel, MAT.rubber);
+    tire.rotation.z = Math.PI / 2;
+    tire.position.set(x, y, z);
+    tire.castShadow = true;
+    parent.add(tire);
+    const hub = new THREE.Mesh(GEO.hub, MAT.metal);
+    hub.rotation.z = Math.PI / 2;
+    hub.position.set(x, y, z);
+    parent.add(hub);
+  }
+
+  // 主起落架（每侧 4 轮小车架，787/777 风格）
+  for (const side of [1, -1]) {
+    const gear = new THREE.Group();
+    const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.3, 3.4, 12), MAT.metal);
+    strut.position.set(side * 5.2, 2.5, -2.0);
+    gear.add(strut);
+    const bogie = new THREE.Mesh(GEO.box, MAT.metal);
+    bogie.scale.set(1.5, 0.34, 3.4);
+    bogie.position.set(side * 5.2, 1.05, -2.0);
+    gear.add(bogie);
+    for (const dz of [-1.15, 1.15]) {
+      addWheel(gear, side * 5.2 - 0.5, 0.85, -2.0 + dz);
+      addWheel(gear, side * 5.2 + 0.5, 0.85, -2.0 + dz);
+    }
+    plane.add(gear);
+  }
+
+  // 前起落架
+  const noseGear = new THREE.Group();
+  const nStrut = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.24, 2.6, 12), MAT.metal);
+  nStrut.position.set(0, 1.8, 23.0);
+  noseGear.add(nStrut);
+  addWheel(noseGear, -0.5, 0.5, 23.0, true);
+  addWheel(noseGear, 0.5, 0.5, 23.0, true);
+  plane.add(noseGear);
+
+  // 整机阴影
+  plane.traverse(o => {
+    if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
+  });
+
+  scene.add(plane);
+  return plane;
+}
+
+/* ============================================================
+   createAirportGround — 停机坪 / 标线 / 机场灯光
+============================================================ */
+function createAirportGround() {
+  const ground = new THREE.Group();
+
+  // 大面沥青
+  const tarmac = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400), MAT.tarmac);
+  tarmac.rotation.x = -Math.PI / 2;
+  tarmac.receiveShadow = true;
+  ground.add(tarmac);
+
+  // 机位混凝土区域
+  const apron = new THREE.Mesh(new THREE.PlaneGeometry(240, 260), MAT.concrete);
+  apron.rotation.x = -Math.PI / 2;
+  apron.position.set(0, 0.005, -20);
+  apron.receiveShadow = true;
+  ground.add(apron);
+
+  /* ---- 标线 ---- */
+  function stripe(x, z, w, l, mat, rotY = 0) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), mat);
+    m.rotation.x = -Math.PI / 2;
+    m.rotation.z = rotY;
+    m.position.set(x, 0.02, z);
+    ground.add(m);
+    return m;
+  }
+
+  // 滑行道中线（远处虚线黄线）
+  for (let z = -80; z > -420; z -= 10) stripe(-70, z, 0.5, 6, MAT.lineYellow);
+  // 引导线（机头进入线，虚线 + 实线）
+  for (let z = 92; z > 34; z -= 8) stripe(0, z, 0.45, 5, MAT.lineYellow);
+  stripe(0, 4, 0.45, 56, MAT.lineYellow);
+  // 停止线（红）
+  stripe(0, 23.6, 5.5, 0.8, MAT.lineRed);
+  // 机位安全框（黄）
+  stripe(-20, -2, 0.4, 78, MAT.lineYellow);
+  stripe(20, -2, 0.4, 78, MAT.lineYellow);
+  stripe(0, 37, 40.4, 0.4, MAT.lineYellow);
+  stripe(0, -41, 40.4, 0.4, MAT.lineYellow);
+  // 机位轮廓（白）
+  stripe(-24, -2, 0.35, 84, MAT.lineWhite);
+  stripe(24, -2, 0.35, 84, MAT.lineWhite);
+  stripe(0, 41, 48.3, 0.35, MAT.lineWhite);
+  // 服务车道（黄虚线）
+  for (let z = 80; z > -80; z -= 12) {
+    stripe(34, z, 0.4, 7, MAT.lineYellow);
+    stripe(-34, z, 0.4, 7, MAT.lineYellow);
+  }
+
+  /* ---- 机场灯光 ---- */
+  function addBlinker(color, x, y, z, size = 0.28, base = 1.6, speed = 1.2) {
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0x101010, emissive: new THREE.Color(color), emissiveIntensity: base, roughness: 0.4
+    });
+    const m = new THREE.Mesh(GEO.sphere, mat);
+    m.scale.setScalar(size);
+    m.position.set(x, y, z);
+    ground.add(m);
+    blinkers.push({ mat, phase: Math.random() * Math.PI * 2, speed, base });
+    return m;
+  }
+
+  // 滑行道蓝色边灯
+  for (let z = -70; z > -420; z -= 24) {
+    addBlinker(0x2f6fff, -72.5, 0.3, z, 0.26, 1.4, 0.7);
+    addBlinker(0x2f6fff, -67.5, 0.3, z, 0.26, 1.4, 0.7);
+  }
+  // 机位引导灯（绿/红边界）
+  for (let z = 34; z > -36; z -= 12) {
+    addBlinker(0x2fd06a, -24.5, 0.3, z, 0.24, 1.3, 0.5);
+    addBlinker(0x2fd06a, 24.5, 0.3, z, 0.24, 1.3, 0.5);
+  }
+  addBlinker(0xd03028, -24.5, 0.3, -44, 0.26, 1.5, 0.9);
+  addBlinker(0xd03028, 24.5, 0.3, -44, 0.26, 1.5, 0.9);
+  // 远处跑道边灯（白，微微闪烁）
+  for (let x = -200; x <= 200; x += 28) {
+    addBlinker(0xfff0cf, x, 0.35, -330, 0.3, 1.8, 0.45);
+    addBlinker(0xfff0cf, x, 0.35, -360, 0.3, 1.8, 0.45);
+  }
+
+  // 高杆灯（灯杆 + 灯盘）
+  function floodPole(x, z) {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 18, 10), MAT.buildingDark);
+    pole.position.set(x, 9, z);
+    pole.castShadow = true;
+    ground.add(pole);
+    const head = new THREE.Mesh(GEO.box, MAT.buildingDark);
+    head.scale.set(3.4, 0.7, 1.2);
+    head.position.set(x, 18.2, z);
+    ground.add(head);
+    const lampMat = new THREE.MeshStandardMaterial({
+      color: 0x111111, emissive: 0xffd9a2, emissiveIntensity: 1.7, roughness: 0.4
+    });
+    const lamp = new THREE.Mesh(GEO.box, lampMat);
+    lamp.scale.set(3.0, 0.25, 1.0);
+    lamp.position.set(x, 17.8, z + 0.15);
+    ground.add(lamp);
+    blinkers.push({ mat: lampMat, phase: Math.random() * 6, speed: 0.35, base: 1.7 });
+  }
+  floodPole(52, 44);
+  floodPole(-56, 18);
+  floodPole(52, -44);
+  floodPole(-56, -70);
+
+  scene.add(ground);
+  return ground;
+}
+
+/* ============================================================
+   createEnvironment — 航站楼 / 塔台 / 云层 / 地服车辆
+============================================================ */
+function createEnvironment() {
+  const env = new THREE.Group();
+
+  /* ---------- 航站楼 ---------- */
+  const terminal = new THREE.Mesh(GEO.box, MAT.building);
+  terminal.scale.set(230, 17, 36);
+  terminal.position.set(-25, 8.5, -128);
+  terminal.castShadow = true; terminal.receiveShadow = true;
+  env.add(terminal);
+
+  const terminalBand = new THREE.Mesh(GEO.box, MAT.winStrip);
+  terminalBand.scale.set(224, 5.5, 0.6);
+  terminalBand.position.set(-25, 8.5, -109.7);
+  env.add(terminalBand);
+
+  const terminalRoof = new THREE.Mesh(GEO.box, MAT.buildingDark);
+  terminalRoof.scale.set(236, 1.6, 40);
+  terminalRoof.position.set(-25, 17.8, -128);
+  env.add(terminalRoof);
+
+  const pier = new THREE.Mesh(GEO.box, MAT.building);
+  pier.scale.set(36, 11, 26);
+  pier.position.set(132, 5.5, -136);
+  pier.castShadow = true;
+  env.add(pier);
+  const pierBand = new THREE.Mesh(GEO.box, MAT.winStrip);
+  pierBand.scale.set(34, 3.5, 0.5);
+  pierBand.position.set(132, 6, -122.8);
+  env.add(pierBand);
+
+  // 登机廊桥（收起状态）
+  const bridge = new THREE.Mesh(GEO.box, MAT.buildingDark);
+  bridge.scale.set(4, 3.4, 22);
+  bridge.position.set(-84, 8.2, -102);
+  bridge.rotation.y = 0.25;
+  bridge.castShadow = true;
+  env.add(bridge);
+  const bridgeCab = new THREE.Mesh(GEO.box, MAT.building);
+  bridgeCab.scale.set(5, 4, 5);
+  bridgeCab.position.set(-78, 8.0, -90);
+  env.add(bridgeCab);
+  const bridgeLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 6, 8), MAT.buildingDark);
+  bridgeLeg.position.set(-80, 3, -95);
+  env.add(bridgeLeg);
+
+  /* ---------- 塔台 ---------- */
+  const towerShaft = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 3.4, 34, 12), MAT.building);
+  towerShaft.position.set(118, 17, -172);
+  towerShaft.castShadow = true;
+  env.add(towerShaft);
+  const towerHead = new THREE.Mesh(GEO.box, MAT.winStrip);
+  towerHead.scale.set(12, 5, 12);
+  towerHead.position.set(118, 36, -172);
+  env.add(towerHead);
+  const towerRoof = new THREE.Mesh(GEO.box, MAT.buildingDark);
+  towerRoof.scale.set(14, 1, 14);
+  towerRoof.position.set(118, 39, -172);
+  env.add(towerRoof);
+  addEnvBlinker(env, 0xd03028, 118, 40.5, -172, 0.35, 1.2);
+  addEnvBlinker(env, 0xd03028, -110, 19.5, -128, 0.3, 1.1);
+  addEnvBlinker(env, 0xd03028, 85, 19.5, -128, 0.3, 1.1);
+
+  /* ---------- 远景建筑体块 ---------- */
+  for (let k = 0; k < 9; k++) {
+    const w = 20 + (k * 13) % 30;
+    const h = 12 + (k * 29) % 34;
+    const b = new THREE.Mesh(GEO.box, MAT.buildingDark);
+    b.scale.set(w, h, 16);
+    b.position.set(-340 + k * 82, h / 2, -300 - (k % 3) * 45);
+    env.add(b);
+  }
+
+  /* ---------- 云层（球体组合，缓慢漂移） ---------- */
+  for (let c = 0; c < 7; c++) {
+    const cloud = new THREE.Group();
+    const puffs = 3 + (c % 3);
+    for (let p = 0; p < puffs; p++) {
+      const s = 7 + ((c * 7 + p * 5) % 9);
+      const puff = new THREE.Mesh(GEO.sphere, MAT.cloud);
+      puff.scale.set(s * 1.5, s * 0.55, s);
+      puff.position.set(p * s * 1.3, (p % 2) * 1.6, (p % 3) * 2.2);
+      cloud.add(puff);
+    }
+    cloud.position.set(-320 + c * 110, 70 + (c % 3) * 26, -180 - (c % 4) * 90);
+    env.add(cloud);
+    clouds.push({ group: cloud, speed: 0.9 + (c % 3) * 0.5 });
+  }
+
+  /* ---------- 地服车辆 ---------- */
+  env.add(createTug(6, 32, 0x1c3f75));
+  env.add(createFuelTruck(15, -6));
+  env.add(createStairs(-6.5, -14));
+  env.add(createCones());
+  const train = createBaggageTrain(-16, 14);
+  env.add(train);
+  movers.push({ group: train, axis: 'z', speed: 1.6, min: -46, max: 46 });
+
+  scene.add(env);
+  return env;
+}
+
+function addEnvBlinker(parent, color, x, y, z, size, speed) {
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x101010, emissive: new THREE.Color(color), emissiveIntensity: 1.8, roughness: 0.4
+  });
+  const m = new THREE.Mesh(GEO.sphere, mat);
+  m.scale.setScalar(size);
+  m.position.set(x, y, z);
+  parent.add(m);
+  blinkers.push({ mat, phase: Math.random() * 6, speed, base: 1.8 });
+}
+
+function truckWheel(parent, x, z, small = false) {
+  const t = new THREE.Mesh(small ? GEO.wheelSm : GEO.wheel, MAT.rubber);
+  t.rotation.z = Math.PI / 2;
+  t.scale.setScalar(small ? 0.9 : 0.55);
+  t.position.set(x, small ? 0.45 : 0.48, z);
+  parent.add(t);
+}
+
+function createTug(x, z, color = 0xd9a323) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(GEO.box, MAT.vehicleYellow);
+  body.scale.set(2.4, 0.9, 3.6);
+  body.position.y = 0.85;
+  body.castShadow = true;
+  g.add(body);
+  const cab = new THREE.Mesh(GEO.box, MAT.vehicleWhite);
+  cab.scale.set(2.0, 1.0, 1.6);
+  cab.position.set(0, 1.8, 0.8);
+  g.add(cab);
+  truckWheel(g, -1.1, -1.2, true); truckWheel(g, 1.1, -1.2, true);
+  truckWheel(g, -1.1, 1.3, true);  truckWheel(g, 1.1, 1.3, true);
+  g.position.set(x, 0, z);
+  return g;
+}
+
+function createBaggageTrain(x, z) {
+  const g = new THREE.Group();
+  g.add(createTug(0, 0, 0xd9a323));
+  for (let i = 1; i <= 3; i++) {
+    const cart = new THREE.Mesh(GEO.box, MAT.vehicleWhite);
+    cart.scale.set(2.0, 1.1, 2.6);
+    cart.position.set(0, 1.0, -i * 3.6);
+    cart.castShadow = true;
+    g.add(cart);
+    const rail = new THREE.Mesh(GEO.box, MAT.buildingDark);
+    rail.scale.set(2.1, 0.5, 2.7);
+    rail.position.set(0, 1.8, -i * 3.6);
+    g.add(rail);
+    truckWheel(g, -0.95, -i * 3.6 - 0.9, true);
+    truckWheel(g, 0.95, -i * 3.6 - 0.9, true);
+    truckWheel(g, -0.95, -i * 3.6 + 0.9, true);
+    truckWheel(g, 0.95, -i * 3.6 + 0.9, true);
+  }
+  g.position.set(x, 0, z);
+  return g;
+}
+
+function createFuelTruck(x, z) {
+  const g = new THREE.Group();
+  const chassis = new THREE.Mesh(GEO.box, MAT.vehicleWhite);
+  chassis.scale.set(2.3, 0.8, 7.0);
+  chassis.position.y = 0.9;
+  chassis.castShadow = true;
+  g.add(chassis);
+  const tank = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 5.0, 16), MAT.metal);
+  tank.rotation.x = Math.PI / 2;
+  tank.position.set(0, 2.0, -1.0);
+  g.add(tank);
+  const cab = new THREE.Mesh(GEO.box, MAT.vehicleWhite);
+  cab.scale.set(2.2, 1.5, 1.8);
+  cab.position.set(0, 1.9, 2.6);
+  g.add(cab);
+  const stripe = new THREE.Mesh(GEO.box, MAT.vehicleOrange);
+  stripe.scale.set(2.35, 0.25, 6.6);
+  stripe.position.set(0, 1.35, 0);
+  g.add(stripe);
+  truckWheel(g, -1.1, 2.4, true); truckWheel(g, 1.1, 2.4, true);
+  truckWheel(g, -1.1, -2.4, true); truckWheel(g, 1.1, -2.4, true);
+  g.position.set(x, 0, z);
+  g.rotation.y = 0.5;
+  return g;
+}
+
+function createStairs(x, z) {
+  const g = new THREE.Group();
+  const platform = new THREE.Mesh(GEO.box, MAT.vehicleYellow);
+  platform.scale.set(2.2, 0.3, 2.4);
+  platform.position.set(0, 2.5, 0);
+  platform.castShadow = true;
+  g.add(platform);
+  const ramp = new THREE.Mesh(GEO.box, MAT.vehicleYellow);
+  ramp.scale.set(1.8, 0.25, 5.4);
+  ramp.position.set(0, 1.3, 2.6);
+  ramp.rotation.x = 0.42;
+  g.add(ramp);
+  for (let i = 0; i < 5; i++) {
+    const rail = new THREE.Mesh(GEO.box, MAT.buildingDark);
+    rail.scale.set(0.08, 0.9, 0.08);
+    rail.position.set(i % 2 === 0 ? -1.0 : 1.0, 1.4 + i * 0.45, 0.6 + i * 0.9);
+    g.add(rail);
+  }
+  truckWheel(g, -1.0, 1.4, true); truckWheel(g, 1.0, 1.4, true);
+  g.position.set(x, 0, z);
+  g.rotation.y = -0.1;
+  return g;
+}
+
+function createCones() {
+  const g = new THREE.Group();
+  const spots = [[-13.5, 7.5], [13.5, 7.5], [-13.5, -3.5], [13.5, -3.5], [-4, 12], [4, 12]];
+  for (const [x, z] of spots) {
+    const cone = new THREE.Mesh(GEO.cone, MAT.vehicleOrange);
+    cone.position.set(x, 0.28, z);
+    cone.scale.setScalar(1.1);
+    g.add(cone);
+  }
+  return g;
+}
+
+/* ============================================================
+   animate — 主循环：风扇 / 灯光闪烁 / 云 / 车辆 / 相机漂浮
+============================================================ */
+const camFloat = { y: 0, x: 0 };
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+
+  // 引擎风扇
+  for (const f of fans) f.rotation.z += dt * 4.5;
+
+  // 灯光微微闪烁
+  for (const b of blinkers) {
+    b.mat.emissiveIntensity = b.base * (0.72 + 0.28 * (0.5 + 0.5 * Math.sin(t * b.speed + b.phase)));
+  }
+
+  // 云层缓慢移动
+  for (const c of clouds) {
+    c.group.position.x += c.speed * dt;
+    if (c.group.position.x > 480) c.group.position.x = -480;
+  }
+
+  // 地服车辆缓慢移动
+  for (const m of movers) {
+    m.group.position[m.axis] += m.speed * dt;
+    if (m.group.position[m.axis] > m.max) m.group.position[m.axis] = m.min;
+  }
+
+  // 相机轻微漂浮（同步偏移 target，避免与 OrbitControls 冲突）
+  const fy = Math.sin(t * 0.45) * 0.22;
+  const fx = Math.sin(t * 0.3 + 1.3) * 0.16;
+  camera.position.y += fy - camFloat.y;
+  camera.position.x += fx - camFloat.x;
+  controls.target.y += fy - camFloat.y;
+  controls.target.x += fx - camFloat.x;
+  camFloat.y = fy; camFloat.x = fx;
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+/* ============================================================
+   启动 / 自适应
+============================================================ */
+function onResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function init() {
+  initSharedAssets();
+  createScene();
+  createLights();
+  createAirportGround();
+  createEnvironment();
+  createAirplane();
+  window.addEventListener('resize', onResize);
+  animate();
+  requestAnimationFrame(() => {
+    const el = document.getElementById('loading');
+    el.classList.add('done');
+    setTimeout(() => el.remove(), 700);
+  });
+}
+
+init();
+</script>
+</body>
+</html>

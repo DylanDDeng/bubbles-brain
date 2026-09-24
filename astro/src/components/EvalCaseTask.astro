@@ -1,0 +1,305 @@
+---
+import {
+	cardVendors,
+	casesForTask,
+	difficultyLabel,
+	EVAL_CASES_ROUTE,
+	evalCategory,
+	evalModel,
+	evalThumb,
+	formatBytes,
+	isImageCase,
+	modelCount,
+	shortDate,
+	vendorMark,
+	type EvalTask,
+} from '../lib/evalCases';
+import EvalVendorAvatar from './EvalVendorAvatar.astro';
+import EvalVendorPile from './EvalVendorPile.astro';
+import '../styles/eval-cases.css';
+
+interface Props {
+	task: EvalTask;
+}
+
+const { task } = Astro.props;
+const cases = casesForTask(task.id);
+const hasDemo = cases.some((item) => !isImageCase(item));
+const models = modelCount(cases);
+const multi = cases.length > 1;
+const latest = cases[0].date;
+const earliest = cases.reduce((min, item) => (item.date < min ? item.date : min), latest);
+
+// Everything the stage needs to switch between runs without a round trip.
+const runs = cases.map((item) => {
+	const model = evalModel(item.model);
+	const mark = vendorMark(model.vendor);
+	const image = isImageCase(item);
+	return {
+		id: item.id,
+		kind: image ? 'image' : 'html',
+		file: item.file,
+		thumb: image ? item.file : evalThumb(item.id),
+		railThumb: evalThumb(item.id),
+		name: model.name,
+		title: `${model.name}：${task.title.zh}`,
+		vendor: model.vendor,
+		logo: mark.logo,
+		initial: mark.initial,
+		sub: [
+			model.vendor,
+			shortDate(item.date),
+			...item.stack,
+			...(image ? [] : [formatBytes(item.bytes)]),
+		].join(' · '),
+	};
+});
+const runsJson = JSON.stringify(runs).replace(/</g, '\\u003c');
+const first = runs[0];
+const second = runs[1] ?? runs[0];
+---
+
+<article class="page-shell eval-shell eval-task" data-eval-task>
+	<div class="eval-task-layout">
+		<div class="eval-task-main">
+			<header class="eval-task-head">
+				<a class="collection-back" href={EVAL_CASES_ROUTE}>
+					<i class="ph ph-arrow-left" aria-hidden="true"></i>
+					模型实测案例
+				</a>
+				<div class="eval-task-title-row">
+					<h1>{task.title.zh}</h1>
+					{
+						multi && (
+							<div class="eval-theater-bar" data-theater-bar hidden>
+								<div class="eval-stepper">
+									<button type="button" data-step="-1" aria-label="上一个模型">
+										<i class="ph ph-caret-left" aria-hidden="true" />
+									</button>
+									<span class="eval-counter" data-counter aria-live="polite">
+										1 / {runs.length}
+									</span>
+									<button type="button" data-step="1" aria-label="下一个模型">
+										<i class="ph ph-caret-right" aria-hidden="true" />
+									</button>
+								</div>
+								<button
+									type="button"
+									class="eval-bar-button"
+									data-compare-toggle
+									aria-pressed="false"
+								>
+									<i class="ph ph-columns" aria-hidden="true" />
+									对比
+									<kbd>C</kbd>
+								</button>
+							</div>
+						)
+					}
+				</div>
+			</header>
+
+			<div
+				class="eval-theater"
+				data-eval-theater
+				data-compare="false"
+				data-autorun={!multi || undefined}
+			>
+				{
+					[{ key: 'a', run: first }, ...(multi ? [{ key: 'b', run: second }] : [])].map(
+						({ key, run }) => (
+							<figure class="eval-slot" data-slot={key} hidden={key === 'b'}>
+								<div
+									class:list={['eval-stage', { 'is-image': run.kind === 'image' }]}
+									data-eval-stage
+									data-src={run.file}
+									data-title={run.title}
+								>
+									<a
+										class="eval-poster"
+										href={run.file}
+										target="_blank"
+										rel="noopener"
+										data-astro-prefetch="false"
+										data-slot-poster
+									>
+										<img src={run.thumb} alt={run.title} width="640" height="400" data-slot-thumb />
+										<span class="eval-play" data-slot-play hidden={run.kind === 'image'}>
+											<i class="ph ph-play" aria-hidden="true" />
+											<span data-play-label>新窗口运行</span>
+										</span>
+									</a>
+								</div>
+								<figcaption class="eval-slot-meta">
+									<EvalVendorAvatar vendor={run.vendor} data-slot-avatar />
+									<span class="eval-slot-text">
+										<strong data-slot-name>{run.name}</strong>
+										<span data-slot-sub>{run.sub}</span>
+									</span>
+									<span class="eval-slot-actions">
+										<button type="button" data-eval-reload hidden>
+											<i class="ph ph-arrow-clockwise" aria-hidden="true" />
+											重新运行
+										</button>
+										<a
+											href={run.file}
+											target="_blank"
+											rel="noopener"
+											data-astro-prefetch="false"
+											data-slot-open
+										>
+											<span data-slot-open-label>
+												{run.kind === 'image' ? '查看原图' : '新窗口打开'}
+											</span>
+											<i class="ph ph-arrow-up-right" aria-hidden="true" />
+										</a>
+									</span>
+								</figcaption>
+							</figure>
+						),
+					)
+				}
+			</div>
+
+			{
+				multi && (
+					<ol class="eval-rail" data-eval-rail aria-label="参赛模型">
+						{runs.map((run, index) => (
+							<li>
+								<a
+									class="eval-rail-item"
+									href={run.file}
+									target="_blank"
+									rel="noopener"
+									data-astro-prefetch="false"
+									data-run={run.id}
+									aria-current={index === 0 ? 'true' : undefined}
+								>
+									<span class="eval-rail-thumb">
+										<img
+											src={run.railThumb}
+											alt=""
+											width="640"
+											height="400"
+											loading="eager"
+											decoding="async"
+										/>
+										<span class="eval-rail-slot" data-rail-slot />
+									</span>
+									<span class="eval-rail-name">
+										<EvalVendorAvatar vendor={run.vendor} size="sm" />
+										{run.name}
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				)
+			}
+		</div>
+
+		<aside class="eval-props" aria-label="题目信息">
+			<dl class="eval-props-list">
+				<div>
+					<dt>类型</dt>
+					<dd>{evalCategory(task.category).name.zh}</dd>
+				</div>
+				<div>
+					<dt>难度</dt>
+					<dd>{difficultyLabel[task.difficulty]}</dd>
+				</div>
+				<div>
+					<dt>模型</dt>
+					<dd class="eval-props-models">
+						<EvalVendorPile vendors={cardVendors(cases)} />
+						<span>{models > 1 ? `${models} 个` : '单模型'}</span>
+					</dd>
+				</div>
+				<div>
+					<dt>最近运行</dt>
+					<dd><time datetime={latest}>{latest}</time></dd>
+				</div>
+				{
+					earliest !== latest && (
+						<div>
+							<dt>首次运行</dt>
+							<dd>
+								<time datetime={earliest}>{earliest}</time>
+							</dd>
+						</div>
+					)
+				}
+			</dl>
+
+			<section class="eval-prompt" aria-labelledby="eval-prompt-title">
+				<div class="eval-prompt-head">
+					<h2 id="eval-prompt-title">题目</h2>
+					<button type="button" class="eval-bar-button" data-copy-prompt hidden>
+						<i class="ph ph-copy" aria-hidden="true"></i>
+						<span data-copy-label>复制</span>
+					</button>
+				</div>
+				<div class="eval-prompt-body" data-prompt-body>{task.prompt.zh}</div>
+				<button type="button" class="eval-prompt-more" data-prompt-more hidden>展开全部</button>
+				{
+					task.prompt.en && task.prompt.en !== task.prompt.zh && (
+						<details>
+							<summary>English prompt</summary>
+							<p lang="en">{task.prompt.en}</p>
+						</details>
+					)
+				}
+			</section>
+
+			{
+				task.reference_video && (
+					<figure class="eval-reference">
+						<video src={task.reference_video} controls muted playsinline preload="metadata" />
+						<figcaption>题目附带的参考视频</figcaption>
+					</figure>
+				)
+			}
+
+			{
+				multi && (
+					<ul class="eval-keys" data-eval-keys hidden aria-label="键盘快捷键">
+						<li>
+							<>
+								<kbd>←</kbd>
+								<kbd>→</kbd>
+							</>{' '}
+							切换模型
+						</li>
+						{hasDemo && (
+							<li>
+								<kbd>Enter</kbd> 运行
+							</li>
+						)}
+						<li>
+							<kbd>C</kbd> 对比
+						</li>
+						<li>
+							<kbd>O</kbd> 新窗口打开
+						</li>
+					</ul>
+				)
+			}
+
+			{
+				hasDemo && (
+					<p class="eval-footnote">
+						作品是模型交出的 HTML
+						文件，原样运行在隔离的沙箱里，无法读取本站的登录状态。部分作品依赖外部
+						CDN，网络不佳时可能加载较慢；游戏类作品需要先点击画面获得键盘焦点。
+					</p>
+				)
+			}
+		</aside>
+	</div>
+
+	<script is:inline type="application/json" data-eval-runs set:html={runsJson} />
+</article>
+
+<script>
+	import '../scripts/evalCases';
+</script>

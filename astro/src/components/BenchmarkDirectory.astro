@@ -1,5 +1,6 @@
 ---
 import { benchmarkRoute, groupedBenchmarks, pick, type BenchmarkLocale } from '../lib/benchmarks';
+import { EVAL_CASES_ROUTE } from '../lib/evalCases';
 import '../styles/brainpodCollection.css';
 import '../styles/benchmarks.css';
 
@@ -39,6 +40,16 @@ const groups = groupedBenchmarks();
 						</a>
 					</li>
 				))
+			}
+			{
+				locale === 'zh-CN' && (
+					<li>
+						<a href={EVAL_CASES_ROUTE}>
+							<span>实测案例</span>
+							<i class="ph ph-arrow-up-right" aria-hidden="true" />
+						</a>
+					</li>
+				)
 			}
 		</ul>
 	</div>

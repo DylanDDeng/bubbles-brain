@@ -1,0 +1,23 @@
+---
+import EvalVendorAvatar from './EvalVendorAvatar.astro';
+
+interface Props {
+	vendors: string[];
+	max?: number;
+}
+
+const { vendors, max = 5 } = Astro.props;
+const shown = vendors.slice(0, max);
+const rest = vendors.length - shown.length;
+---
+
+<span class="eval-pile" aria-label={vendors.join('、')}>
+	{shown.map((vendor) => <EvalVendorAvatar vendor={vendor} />)}
+	{
+		rest > 0 && (
+			<span class="eval-avatar eval-avatar--more" aria-hidden="true">
+				+{rest}
+			</span>
+		)
+	}
+</span>

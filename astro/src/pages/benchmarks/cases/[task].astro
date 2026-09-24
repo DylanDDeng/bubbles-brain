@@ -1,0 +1,22 @@
+---
+import EvalCaseTask from '../../../components/EvalCaseTask.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { casesForTask, evalLedger, evalModel, evalTaskRoute } from '../../../lib/evalCases';
+
+export function getStaticPaths() {
+	return evalLedger.tasks.map((task) => ({ params: { task: task.id }, props: { task } }));
+}
+
+const { task } = Astro.props;
+const models = [...new Set(casesForTask(task.id).map((item) => evalModel(item.model).name))];
+---
+
+<BaseLayout
+	title={`${task.title.zh} · 模型实测案例 · Bubble's Brain`}
+	description={`「${task.title.zh}」的模型实测：${models.slice(0, 6).join('、')}${models.length > 6 ? ' 等' : ''}交出的作品，可直接运行对比。`}
+	canonicalPath={evalTaskRoute(task.id)}
+	alternateHref={null}
+	section="benchmarks"
+>
+	<EvalCaseTask task={task} />
+</BaseLayout>

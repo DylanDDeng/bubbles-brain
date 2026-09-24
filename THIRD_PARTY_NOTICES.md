@@ -32,3 +32,11 @@ SOFTWARE.
 Instrument Serif and Inter are distributed under the SIL Open Font License,
 Version 1.1. The webfont files are self-hosted so the site can keep its current
 Content Security Policy and avoid third-party font requests.
+
+## LobeHub Icons
+
+The model vendor logos in `static/images/vendors/` come from
+[LobeHub Icons](https://github.com/lobehub/lobe-icons)
+(`@lobehub/icons-static-svg`), distributed under the MIT License. The logos
+themselves are trademarks of their respective companies and are used only to
+identify which vendor made each model.

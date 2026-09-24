@@ -1,0 +1,27 @@
+---
+import { vendorMark } from '../lib/evalCases';
+
+interface Props {
+	vendor: string;
+	size?: 'md' | 'sm';
+	[attribute: string]: unknown;
+}
+
+const { vendor, size = 'md', ...rest } = Astro.props;
+const mark = vendorMark(vendor);
+---
+
+<span
+	class:list={['eval-avatar', { 'eval-avatar--sm': size === 'sm' }]}
+	title={vendor}
+	aria-hidden="true"
+	{...rest}
+>
+	{
+		mark.logo ? (
+			<img src={mark.logo} alt="" width="14" height="14" decoding="async" />
+		) : (
+			mark.initial
+		)
+	}
+</span>

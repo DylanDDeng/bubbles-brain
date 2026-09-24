@@ -1,7 +1,6 @@
 ---
 import {
 	cardVendors,
-	evalCategory,
 	evalLedger,
 	evalModel,
 	evalTaskCards,
@@ -140,7 +139,6 @@ const usedCategories = categories
 								<span class="eval-card-meta">
 									<EvalVendorPile vendors={cardVendors(card.cases)} />
 									<span class="eval-card-count">{models > 1 ? `${models} 个模型` : '单模型'}</span>
-									<span class="eval-card-category">{evalCategory(card.task.category).name.zh}</span>
 									<time datetime={cover.date}>{shortDate(cover.date)}</time>
 								</span>
 							</span>

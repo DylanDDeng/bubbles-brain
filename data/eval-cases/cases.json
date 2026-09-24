@@ -1960,6 +1960,19 @@
         "svg"
       ],
       "bytes": 17688
+    },
+    {
+      "id": "claude-opus-5.5-voxel-shanghai",
+      "task": "voxel-shanghai",
+      "model": "claude-opus-5.5",
+      "file": "/eval-demos/claude-opus-5.5-voxel-shanghai.html",
+      "date": "2026-09-24",
+      "page_title": "魔都 · 体素上海 Voxel Shanghai",
+      "stack": [
+        "three.js",
+        "canvas"
+      ],
+      "bytes": 95837
     }
   ],
   "excluded_files": [

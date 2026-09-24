@@ -135,3 +135,8 @@ bucket_name = "bubble-content-site-manifests"
 
 # Set CONTENT_BACKLOG_REPLAY_SECRET as a Worker secret. Its value must exactly
 # match the secret configured on bubble-content-deployer.
+
+# The daily-news cron is retired. Keep this explicit: omitting [triggers] makes
+# `wrangler deploy` leave the previously deployed cron in place.
+[triggers]
+crons = []

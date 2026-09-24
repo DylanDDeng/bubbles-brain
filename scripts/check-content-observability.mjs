@@ -4,10 +4,6 @@ import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
 import { validateContentDatabaseTopology } from "./content-database-topology.mjs";
-import {
-  chunkScheduledRuns,
-  dueScheduledRuns,
-} from "../src/daily/scheduleContract.js";
 
 const PROJECT_REF = /^[a-z0-9]{20}$/;
 const ACCOUNT_ID = /^[a-f0-9]{32}$/i;
@@ -97,27 +93,6 @@ export function validateContentObservabilityEnvironment(env) {
   );
   if (apiToken.length < 32)
     throw new Error("Cloudflare analytics token is too short");
-  const scheduleHealthToken = required(
-    "CONTENT_SCHEDULE_HEALTH_TOKEN",
-    env.CONTENT_SCHEDULE_HEALTH_TOKEN,
-  );
-  if (scheduleHealthToken.length < 32)
-    throw new Error("content schedule health token is too short");
-  const scheduleHealthUrl = new URL(
-    required("CONTENT_SCHEDULE_HEALTH_URL", env.CONTENT_SCHEDULE_HEALTH_URL),
-  );
-  if (
-    scheduleHealthUrl.protocol !== "https:" ||
-    scheduleHealthUrl.username ||
-    scheduleHealthUrl.password ||
-    scheduleHealthUrl.pathname !== "/health/scheduled" ||
-    scheduleHealthUrl.search ||
-    scheduleHealthUrl.hash
-  ) {
-    throw new Error(
-      "CONTENT_SCHEDULE_HEALTH_URL must be an exact HTTPS /health/scheduled endpoint",
-    );
-  }
   const currentUrls = urls("CONTENT_CURRENT_URLS", env.CONTENT_CURRENT_URLS);
   if (currentUrls.some((url) => url.pathname !== "/v1/current" || url.search))
     throw new Error(
@@ -173,16 +148,10 @@ export function validateContentObservabilityEnvironment(env) {
     databaseUrl,
     manifestUrls,
     projectRef,
-    scheduleHealthToken,
-    scheduleHealthUrl,
     startedAt,
     topology,
     zoneId,
   };
-}
-
-export function dueContentBatches(now = Date.now(), lookbackHours = 30) {
-  return dueScheduledRuns(now, lookbackHours);
 }
 
 function currentIdentity(value) {
@@ -242,59 +211,6 @@ function sameStaticIdentity(current, staticManifest) {
   );
 }
 
-function sameInstant(left, right) {
-  const leftEpoch = Date.parse(String(left || ""));
-  const rightEpoch = Date.parse(String(right || ""));
-  return (
-    Number.isFinite(leftEpoch) &&
-    Number.isFinite(rightEpoch) &&
-    leftEpoch === rightEpoch
-  );
-}
-
-function scheduledRunEvidenceComplete(outcome, due) {
-  const startedAt = Date.parse(String(outcome?.started_at || ""));
-  const finishedAt = Date.parse(String(outcome?.finished_at || ""));
-  const releaseRequired = outcome?.no_op !== true;
-  return (
-    outcome?.run_id === due.run_id &&
-    sameInstant(outcome?.scheduled_at, due.scheduled_at) &&
-    outcome?.status === "succeeded" &&
-    Number.isFinite(startedAt) &&
-    Number.isFinite(finishedAt) &&
-    finishedAt >= startedAt &&
-    outcome?.source_result?.status === "succeeded" &&
-    SHA256.test(String(outcome?.content_sha256 || "")) &&
-    outcome?.database_mirror?.status === "mirrored" &&
-    (!releaseRequired ||
-      (UUID.test(String(outcome?.site_release_id || "")) &&
-        UUID.test(String(outcome?.dispatch_id || "")) &&
-        Number.isSafeInteger(Number(outcome?.site_release_sequence)) &&
-        Number(outcome.site_release_sequence) > 0))
-  );
-}
-
-function scheduledRunEvidenceAligned(kvOutcome, databaseOutcome) {
-  return (
-    kvOutcome?.run_id === databaseOutcome?.run_id &&
-    sameInstant(kvOutcome?.scheduled_at, databaseOutcome?.scheduled_at) &&
-    kvOutcome?.status === databaseOutcome?.status &&
-    sameInstant(kvOutcome?.started_at, databaseOutcome?.started_at) &&
-    sameInstant(kvOutcome?.finished_at, databaseOutcome?.finished_at) &&
-    kvOutcome?.source_result?.status === databaseOutcome?.source_result?.status &&
-    kvOutcome?.content_sha256 === databaseOutcome?.content_sha256 &&
-    (kvOutcome?.no_op === true) === (databaseOutcome?.no_op === true) &&
-    kvOutcome?.database_mirror?.status ===
-      databaseOutcome?.database_mirror?.status &&
-    String(kvOutcome?.site_release_id || "") ===
-      String(databaseOutcome?.site_release_id || "") &&
-    Number(kvOutcome?.site_release_sequence) ===
-      Number(databaseOutcome?.site_release_sequence) &&
-    String(kvOutcome?.dispatch_id || "") ===
-      String(databaseOutcome?.dispatch_id || "")
-  );
-}
-
 export function evaluateContentObservability(input, now = Date.now()) {
   const reasons = [];
   const database = input.database || {};
@@ -321,62 +237,10 @@ export function evaluateContentObservability(input, now = Date.now()) {
       reasons.push(`static_manifest_drift:${endpoint.url}`);
   }
 
+  // The daily-news cron was retired (55c9af5), so there are no scheduled
+  // publication batches left to expect; release, edge, API, search and
+  // outbox health are still checked.
   const publicationAttempts = database.publication_attempts || [];
-  const attemptsByRunId = new Map(
-    publicationAttempts
-      .filter((attempt) => /^scheduled:\d{13}$/.test(String(attempt.trigger_kind || "")))
-      .map((attempt) => [String(attempt.trigger_kind), attempt]),
-  );
-  const dueRuns = dueContentBatches(now).filter(
-    (batch) => Date.parse(batch.scheduled_at) >= (input.startedAt ?? -Infinity),
-  );
-  const scheduledOutcomes = new Map(
-    (input.scheduledOutcomes || []).map((outcome) => [
-      String(outcome?.scheduled_at || ""),
-      outcome,
-    ]),
-  );
-  const databaseScheduledRuns = new Map(
-    (Array.isArray(database.scheduled_runs) ? database.scheduled_runs : [])
-      .map((outcome) => [String(outcome?.run_id || ""), outcome]),
-  );
-  for (const due of dueRuns) {
-    const scheduledOutcome = scheduledOutcomes.get(due.scheduled_at);
-    const databaseScheduledRun = databaseScheduledRuns.get(due.run_id);
-    const scheduledKey = `${due.run_id}:${due.report_date}:${due.batch_id}`;
-    if (!scheduledOutcome || scheduledOutcome.status === "missing") {
-      reasons.push(`scheduled_run_missing:${scheduledKey}`);
-    } else if (scheduledOutcome.status === "started") {
-      reasons.push(`scheduled_run_terminal_missing:${scheduledKey}`);
-    } else if (scheduledOutcome.status !== "succeeded") {
-      reasons.push(`scheduled_run_failed:${scheduledKey}`);
-    } else if (!scheduledRunEvidenceComplete(scheduledOutcome, due)) {
-      reasons.push(`scheduled_run_evidence_incomplete:${scheduledKey}`);
-    }
-
-    if (!databaseScheduledRun) {
-      reasons.push(`scheduled_run_database_trace_missing:${scheduledKey}`);
-    } else if (!scheduledRunEvidenceComplete(databaseScheduledRun, due)) {
-      reasons.push(`scheduled_run_database_trace_invalid:${scheduledKey}`);
-    } else if (
-      scheduledOutcome &&
-      !scheduledRunEvidenceAligned(scheduledOutcome, databaseScheduledRun)
-    ) {
-      reasons.push(`scheduled_run_database_trace_mismatch:${scheduledKey}`);
-    }
-
-    const attempt = attemptsByRunId.get(due.run_id);
-    const noOp =
-      databaseScheduledRun?.no_op === true || scheduledOutcome?.no_op === true;
-    if (!attempt && !noOp) {
-      reasons.push(`scheduled_run_database_attempt_missing:${scheduledKey}`);
-    } else if (attempt && attempt.status === "failed") {
-      reasons.push(`scheduled_run_database_failed:${scheduledKey}`);
-    } else if (attempt && !["succeeded", "failed"].includes(attempt.status)) {
-      reasons.push(`scheduled_run_database_terminal_missing:${scheduledKey}`);
-    }
-  }
-
   const latestSucceededDate = publicationAttempts
     .filter((attempt) => attempt.status === "succeeded")
     .map((attempt) => String(attempt.report_date))
@@ -454,8 +318,8 @@ export function evaluateContentObservability(input, now = Date.now()) {
     },
     checked_at: new Date(now).toISOString(),
     current,
-    due_batches: dueRuns,
-    due_runs: dueRuns,
+    // record_content_observability_v1 still requires an array here.
+    due_batches: [],
     healthy: reasons.length === 0,
     outbox: {
       dead_letter_count: deadLetterCount,
@@ -524,33 +388,6 @@ async function cloudflareAnalytics(input, now) {
   );
 }
 
-export async function scheduledRunHealth(input, now, fetcher = fetchJson) {
-  const due = dueContentBatches(now).filter(
-    (batch) => Date.parse(batch.scheduled_at) >= input.startedAt,
-  );
-  if (!due.length) return [];
-  const pages = await Promise.all(
-    chunkScheduledRuns(due).map(async (page) => {
-      const url = new URL(input.scheduleHealthUrl);
-      for (const run of page) {
-        url.searchParams.append("scheduled_at", run.scheduled_at);
-      }
-      const body = await fetcher(url, {
-        headers: { Authorization: `Bearer ${input.scheduleHealthToken}` },
-      });
-      if (
-        body?.success !== true ||
-        !Array.isArray(body.slots) ||
-        body.slots.length !== page.length
-      ) {
-        throw new Error("scheduled run health response is malformed");
-      }
-      return body.slots;
-    }),
-  );
-  return pages.flat();
-}
-
 async function run(env = process.env, now = Date.now()) {
   const input = validateContentObservabilityEnvironment(env);
   const sql = postgres(input.databaseUrl, {
@@ -561,7 +398,7 @@ async function run(env = process.env, now = Date.now()) {
   try {
     const rows =
       await sql`select private.get_content_observability_v1() as result`;
-    const [currentEndpoints, staticManifests, analytics, scheduledOutcomes] = await Promise.all([
+    const [currentEndpoints, staticManifests, analytics] = await Promise.all([
       Promise.all(
         input.currentUrls.map(async (url) => ({
           body: await fetchJson(url, {
@@ -579,7 +416,6 @@ async function run(env = process.env, now = Date.now()) {
         })),
       ),
       cloudflareAnalytics(input, now),
-      scheduledRunHealth(input, now),
     ]);
     const result = evaluateContentObservability(
       {
@@ -588,9 +424,7 @@ async function run(env = process.env, now = Date.now()) {
         cacheSampleMinimum: input.cacheSampleMinimum,
         currentEndpoints,
         database: rows[0]?.result,
-        scheduledOutcomes,
         staticManifests,
-        startedAt: input.startedAt,
       },
       now,
     );

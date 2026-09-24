@@ -26,8 +26,6 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
       CLOUDFLARE_ANALYTICS_API_TOKEN: ${{ secrets.CLOUDFLARE_ANALYTICS_API_TOKEN }}
-      CONTENT_SCHEDULE_HEALTH_TOKEN: ${{ secrets.CONTENT_SCHEDULE_HEALTH_TOKEN }}
-      CONTENT_SCHEDULE_HEALTH_URL: ${{ vars.CONTENT_SCHEDULE_HEALTH_URL }}
       CONTENT_CURRENT_URLS: ${{ vars.CONTENT_CURRENT_URLS }}
       CONTENT_STATIC_MANIFEST_URLS: ${{ vars.CONTENT_STATIC_MANIFEST_URLS }}
       CONTENT_API_CACHE_HIT_MINIMUM: ${{ vars.CONTENT_API_CACHE_HIT_MINIMUM || '0.5' }}
@@ -49,5 +47,5 @@ jobs:
       - name: Validate isolated least-privilege monitor configuration
         run: node scripts/validate-content-production-config.mjs workflow-observability
 
-      - name: Check batch, release, edge, API and search health
+      - name: Check release, edge, API, search and outbox health
         run: npm run content:observability:check

@@ -21,7 +21,10 @@ describe('production schedule contract', () => {
             new URL('../../wrangler.toml', import.meta.url),
             'utf8',
         );
-        expect(config).not.toMatch(/^\s*crons\s*=/m);
+        // An explicit empty list is required: omitting [triggers] would leave
+        // the previously deployed cron running.
+        expect(config).toMatch(/^crons = \[\]$/m);
+        expect(config).not.toMatch(/^\s*crons\s*=\s*\[\s*["']/m);
     });
 
     it('maps every run for one Beijing report date to its cumulative batch', () => {

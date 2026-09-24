@@ -374,7 +374,8 @@ function setupTask(root: HTMLElement, signal: AbortSignal) {
 		(event) => {
 			if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
 			const target = event.target as HTMLElement;
-			if (target.closest('input, textarea, select, [contenteditable="true"]')) return;
+			// A focused video keeps its own keys: ←/→ seek, Enter/space play, not switch runs.
+			if (target.closest('input, textarea, select, video, [contenteditable="true"]')) return;
 			const key: Key = state.compare ? 'b' : 'a';
 			if (runs.length > 1 && event.key === 'ArrowLeft') step(-1);
 			else if (runs.length > 1 && event.key === 'ArrowRight') step(1);

@@ -412,6 +412,7 @@ function classifyCodeReleasePath(
       "astro/eslint.config.js",
       "astro/prettier.config.mjs",
       "astro/vitest.config.ts",
+      "data/eval-cases/inbox/README.md",
       "package.json",
       "LICENSE",
       "start.sh",
@@ -448,6 +449,9 @@ function classifyCodeReleasePath(
       "static/fonts/",
       "static/media/",
       "static/_responsive/",
+      "static/eval-demos/",
+      "static/images/eval-cases/",
+      "static/images/vendors/",
       "static/images/highlights/research-acceleration/",
     ].some((prefix) => path.startsWith(prefix)) ||
     [
@@ -472,6 +476,7 @@ function classifyCodeReleasePath(
       "astro/wrangler.jsonc",
       "cloudflare-pages.toml",
       "data/benchmarks.json",
+      "data/eval-cases/cases.json",
       "data/knowledge/taxonomy.json",
       "schemas/benchmarks.schema.json",
       "static/css/daily-timeline.css",

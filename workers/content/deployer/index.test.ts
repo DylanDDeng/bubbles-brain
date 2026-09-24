@@ -1058,6 +1058,38 @@ describe("automatic code release boundary", () => {
     }
   });
 
+  it("accepts the eval case ledger, demos, thumbnails and vendor logos only", () => {
+    const releasePaths = [
+      "data/eval-cases/cases.json",
+      "data/eval-cases/inbox/README.md",
+      "static/eval-demos/gpt-6-astra-macbook-360-svg.html",
+      "static/images/eval-cases/gpt-6-astra-macbook-360-svg.webp",
+      "static/images/eval-cases/works/claude-opus-5.5-p5-brush-fish.webp",
+      "static/images/vendors/openai.svg",
+    ];
+    expect(
+      validateCodeReleaseChangeSet(
+        comparison(
+          releasePaths.map((filename) => ({ filename, status: "added" })),
+        ),
+        { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+      ),
+    ).toHaveLength(releasePaths.length);
+    for (const filename of [
+      "data/eval-cases/cases.draft.json",
+      "data/eval-cases/inbox/new-demo.html",
+      "static/eval-demos-draft/demo.html",
+      "static/images/vendors-draft/openai.svg",
+    ]) {
+      expect(() =>
+        validateCodeReleaseChangeSet(
+          comparison([{ filename, status: "added" }]),
+          { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+        ),
+      ).toThrow(`Code release contains forbidden or unknown path: ${filename}`);
+    }
+  });
+
   it("accepts the Vibe Coding and Pi tutorial release paths", () => {
     const releasePaths = [
       "astro/src/data/vibeCodingPatternDetails.ts",

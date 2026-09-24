@@ -34,8 +34,8 @@ export interface EvalCase {
 	/** Runnable HTML under /eval-demos/ (default) or a static screenshot under /images/eval-cases/works/. */
 	kind?: 'html' | 'image';
 	file: string;
+	/** When the run was made. The year a case is filed under comes from its model, not from this. */
 	date: string;
-	year: number;
 	page_title: string | null;
 	stack: string[];
 	bytes: number;
@@ -99,49 +99,81 @@ export function casesForTask(taskId: string, cases = evalLedger.cases): EvalCase
 	return cases.filter((item) => item.task === taskId).sort(byNewest);
 }
 
-export function evalYears(cases = evalLedger.cases): number[] {
-	return [...new Set(cases.map((item) => item.year))].sort((a, b) => b - a);
+/** The year a case is filed under: its model's release year, whenever the run itself happened. */
+export function caseYear(item: EvalCase, ledgerData: EvalLedger = evalLedger): number {
+	const model = ledgerData.models.find((entry) => entry.id === item.model);
+	if (!model) throw new Error(`Unknown eval model: ${item.model}`);
+	return Number(model.released.slice(0, 4));
 }
 
-export interface EvalTaskYearCard {
+export function evalYears(cases = evalLedger.cases, ledgerData: EvalLedger = evalLedger): number[] {
+	return [...new Set(cases.map((item) => caseYear(item, ledgerData)))].sort((a, b) => b - a);
+}
+
+export function modelCount(cases: EvalCase[]): number {
+	return new Set(cases.map((item) => item.model)).size;
+}
+
+export interface EvalTaskCard {
 	task: EvalTask;
-	year: number;
+	/** Every model's run on this task, newest first, regardless of release year. */
 	cases: EvalCase[];
-	/** Runs of the same task in other years, so a card can point at them. */
-	otherYears: Array<{ year: number; count: number }>;
+	/** Release years of the models that took the task (for the year filter only). */
+	years: number[];
 }
 
-export interface EvalYearGroup {
-	year: number;
-	cards: EvalTaskYearCard[];
-	caseCount: number;
+/** One card per task, newest run first. Years are a filter, never a grouping. */
+export function evalTaskCards(ledgerData: EvalLedger = evalLedger): EvalTaskCard[] {
+	return ledgerData.tasks
+		.map((task) => {
+			const cases = ledgerData.cases.filter((item) => item.task === task.id).sort(byNewest);
+			return { task, cases, years: evalYears(cases, ledgerData) };
+		})
+		.filter((card) => card.cases.length > 0)
+		.sort(
+			(a, b) => b.cases[0].date.localeCompare(a.cases[0].date) || b.cases.length - a.cases.length,
+		);
 }
 
 /**
- * The gallery is sliced by evaluation year. A task tested in two years shows up in both,
- * each card carrying only that year's runs.
+ * Vendor logos (LobeHub icon set, MIT) under static/images/vendors/. A vendor without a logo
+ * falls back to its initial.
  */
-export function evalYearGroups(ledgerData: EvalLedger = evalLedger): EvalYearGroup[] {
-	return evalYears(ledgerData.cases).map((year) => {
-		const yearCases = ledgerData.cases.filter((item) => item.year === year);
-		const cards = ledgerData.tasks
-			.map((task) => {
-				const cases = yearCases.filter((item) => item.task === task.id).sort(byNewest);
-				const otherYears = evalYears(ledgerData.cases.filter((item) => item.task === task.id))
-					.filter((other) => other !== year)
-					.map((other) => ({
-						year: other,
-						count: ledgerData.cases.filter((item) => item.task === task.id && item.year === other)
-							.length,
-					}));
-				return { task, year, cases, otherYears };
-			})
-			.filter((card) => card.cases.length > 0)
-			.sort(
-				(a, b) => b.cases[0].date.localeCompare(a.cases[0].date) || b.cases.length - a.cases.length,
-			);
-		return { year, cards, caseCount: yearCases.length };
-	});
+const VENDOR_LOGOS: Record<string, string> = {
+	Anthropic: 'anthropic',
+	OpenAI: 'openai',
+	Google: 'google',
+	DeepSeek: 'deepseek',
+	'Z.ai': 'zai',
+	Qwen: 'qwen',
+	'Moonshot AI': 'moonshot',
+	MiniMax: 'minimax',
+	Xiaomi: 'xiaomi',
+	Meta: 'meta',
+};
+
+export interface VendorMark {
+	/** Logo URL, or null when only the initial can be shown. */
+	logo: string | null;
+	initial: string;
+}
+
+export function vendorMark(vendor: string): VendorMark {
+	const slug = VENDOR_LOGOS[vendor];
+	return {
+		logo: slug ? `/images/vendors/${slug}.svg` : null,
+		initial: vendor.slice(0, 1).toUpperCase(),
+	};
+}
+
+/** Distinct vendors on a card, in the order their newest run appears. */
+export function cardVendors(cases: EvalCase[]): string[] {
+	return [...new Set(cases.map((item) => evalModel(item.model).vendor))];
+}
+
+/** "09-23" for this year, "2025-12-14" otherwise — compact like Linear's dates. */
+export function shortDate(date: string, now = new Date()): string {
+	return date.startsWith(String(now.getFullYear())) ? date.slice(5) : date;
 }
 
 export function formatBytes(bytes: number): string {

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#eeefeb">
+  <title>MacBook Pro — Every angle. / FORM</title>
+  <style>
+    :root{--paper:#eeefeb;--ink:#252825;--muted:#838780;--line:#d7dad3;--accent:#526d41}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+    button,input{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:5px}button{ -webkit-tap-highlight-color:transparent}
+    .page{max-width:1800px;margin:auto;padding:0 4.4vw;min-height:100svh;display:flex;flex-direction:column}
+    header{height:95px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);flex-shrink:0}
+    .brand{display:flex;align-items:center;gap:10px;font-size:26px;font-weight:800;letter-spacing:-1.5px}.brand svg{width:24px;height:27px}.brand span{font-size:10px;letter-spacing:1.5px;font-weight:400;border-left:1px solid #a8ada3;margin-left:12px;padding-left:19px;line-height:1.6}
+    .header-note{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:1.6px}.status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+    main{flex:1;position:relative}.intro{position:relative;z-index:2;display:flex;justify-content:space-between;padding-top:43px;pointer-events:none}.eyebrow{font-size:10px;letter-spacing:1.8px;color:#73796f;margin-bottom:20px;display:flex;align-items:center;gap:13px}.eyebrow::before{content:"";height:1px;width:25px;background:#939a8b}
+    h1{font-size:clamp(40px,4.75vw,74px);line-height:1.06;letter-spacing:-3.5px;font-weight:500;margin:0}h1 span{color:#91968b}.product{padding-top:27px;text-align:right}.product h2{font-size:19px;font-weight:500;letter-spacing:-.6px;margin:0 0 12px}.product p{font-size:11px;color:#7e8478;margin:0;line-height:1.8}.product .edition{display:inline-flex;align-items:center;gap:7px;margin-top:15px;font-size:9px;letter-spacing:1px;border:1px solid #cbd1c5;border-radius:20px;padding:6px 10px;color:#607252}.edition i{width:4px;height:4px;border-radius:50%;background:#607252}
+    .stage{position:relative;height:clamp(390px,40vw,590px);margin-top:0;isolation:isolate}.stage::before{content:"";position:absolute;left:50%;top:55%;width:62%;height:57%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#fafbf7 0%,transparent 68%);z-index:-1}
+    #scene{width:100%;height:100%;display:block;cursor:grab;touch-action:none;user-select:none;overflow:visible}#scene.dragging{cursor:grabbing}.stage-caption{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font-size:10px;white-space:nowrap;color:#8a9083;pointer-events:none}.stage-caption svg{width:18px;height:18px}.stage-caption b{font-weight:400;color:#bbc0b7;margin:0 4px}
+    .rotation-label{position:absolute;bottom:52px;left:0;display:flex;align-items:center;gap:12px}.rotation-label svg{width:44px;height:44px}.rotation-label span{font-size:9px;color:#93998b;line-height:1.8;letter-spacing:1px}.rotation-label strong{display:block;font-size:13px;font-weight:400;color:#4f5947;font-variant-numeric:tabular-nums;letter-spacing:0}
+    .annotation{position:absolute;right:0;bottom:65px;font-size:9px;letter-spacing:1.5px;color:#8a9182;display:flex;gap:10px;align-items:center}.annotation::before{content:"";width:28px;height:1px;background:#b3bbab}
+    .controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:23px 0 30px;gap:20px}.control-label{font-size:9px;letter-spacing:1.5px;color:#92998a;margin-bottom:13px}.views{display:flex;align-items:center;gap:5px}.view-button{border:0;background:transparent;padding:8px 12px;font-size:11px;color:#7e8674;border-radius:5px;transition:.2s}.view-button:first-child{margin-left:-12px}.view-button.active{background:#dfe4d8;color:#48563b}.view-button:hover{background:#e1e4dc}
+    .toolbar{display:flex;align-items:center;gap:6px;background:#f8f9f5;border:1px solid #fff;border-radius:40px;padding:8px;box-shadow:0 5px 15px #26311f06}.auto-button{display:flex;align-items:center;gap:10px;font-size:11px;padding:12px 18px;border:none;background:#e6eadf;border-radius:28px;min-width:140px;justify-content:center}.auto-button svg{width:15px;height:15px}.auto-button[aria-pressed=true]{background:#536a43;color:#fff}.divider{height:22px;width:1px;background:#dfe3d8;margin:0 4px}.icon-button{height:39px;width:39px;background:none;border:0;border-radius:50%;display:grid;place-items:center}.icon-button:hover{background:#e9ece3}.icon-button svg{width:16px;height:16px}.finish{justify-self:end;min-width:149px}.finish-row{display:flex;align-items:center;gap:11px}.swatch{width:21px;height:21px;border-radius:50%;border:3px solid var(--paper);box-shadow:0 0 0 1px transparent;padding:0}.swatch.active{box-shadow:0 0 0 1px #7c8571}.swatch[data-finish=silver]{background:linear-gradient(135deg,#f4f5f5,#a6aba9)}.swatch[data-finish=black]{background:linear-gradient(135deg,#747773,#30332f)}#finish-name{font-size:11px;margin-left:6px;color:#56604d}
+    footer{border-top:1px solid var(--line);min-height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}.footer-note{font-size:9px;letter-spacing:1.4px;color:#8e9586;display:flex;gap:9px;align-items:center}.footer-note svg{width:13px;height:13px}.lid-control{display:flex;align-items:center;gap:15px;font-size:9px;color:#8e9586;letter-spacing:1px}.lid-control output{font-size:10px;font-variant-numeric:tabular-nums;min-width:31px;color:#5c6952}input[type=range]{width:100px;height:3px;accent-color:#657553;cursor:pointer}.footer-right{font-size:9px;color:#8e9586;letter-spacing:1px}.footer-right span{color:#526346;margin-left:11px}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,10px);opacity:0;pointer-events:none;background:#30382b;color:white;padding:11px 18px;border-radius:30px;font-size:12px;transition:.2s;z-index:10}.toast.visible{opacity:1;transform:translate(-50%,0)}
+    .page:fullscreen{max-width:none;background:var(--paper);overflow:auto}.page:fullscreen .stage{height:calc(100vh - 425px);min-height:400px}
+    @media(min-width:1500px){.stage{margin-top:0}.intro{padding-top:55px}}
+    @media(max-width:760px){.page{padding:0 6vw}header{height:76px}.header-note{font-size:8px;letter-spacing:1px}.brand{font-size:23px}.brand span{font-size:8px;margin-left:3px;padding-left:11px}.intro{padding-top:32px}.eyebrow{font-size:8px;letter-spacing:1.2px;margin-bottom:16px}h1{font-size:45px;letter-spacing:-2.5px}.product{padding-top:27px}.product h2{font-size:15px}.product p{font-size:9px}.edition{display:none!important}.stage{height:410px;margin-top:-15px;margin-left:-5vw;margin-right:-5vw}.rotation-label{left:5vw;bottom:36px}.rotation-label svg{width:32px;height:32px}.annotation{right:5vw;bottom:48px;font-size:8px}.annotation::before{width:15px}.stage-caption{bottom:2px;font-size:9px}.controls{grid-template-columns:1fr 1fr;gap:25px 12px;padding:25px 0}.toolbar{grid-column:1/-1;grid-row:1;justify-self:center}.finish{min-width:unset}.control-label{font-size:8px}.view-button{padding:8px 9px;font-size:10px}.view-button:first-child{margin-left:-9px}footer{flex-wrap:wrap;justify-content:space-between;gap:18px;padding:22px 0}.footer-note{font-size:8px;letter-spacing:.8px}.footer-right{display:none}.lid-control{font-size:8px;gap:8px}input[type=range]{width:75px}}
+    @media(max-width:430px){h1{font-size:39px}.product{padding-top:28px}.product h2{font-size:13px}.product p{font-size:8px}.stage{height:345px;margin-top:5px}.annotation{display:none}.header-note{font-size:7px}.brand span{display:none}.footer-note{font-size:7px}.lid-control{gap:6px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+<div class="page" id="page">
+  <header>
+    <div class="brand"><svg viewBox="0 0 26 28" fill="none" aria-hidden="true"><path d="M2 25V3h21v5H8v5h12v5H8v7Z" fill="currentColor"/><path d="M13 23h10v3H13z" fill="currentColor"/></svg>FORM<span>A STUDY IN<br>GOOD DESIGN</span></div>
+    <div class="header-note"><span class="status-dot"></span> INTERACTIVE OBJECTS &nbsp; / &nbsp; VOL. 001</div>
+  </header>
+  <main>
+    <div class="intro">
+      <div><div class="eyebrow">DESIGNED TO BE EXPLORED</div><h1>Power.<br><span>From every angle.</span></h1></div>
+      <div class="product"><h2>MacBook Pro</h2><p>16-inch silhouette. Unmistakably Pro.<br>A study in aluminum & precision.</p><span class="edition"><i></i> SVG OBJECT STUDY</span></div>
+    </div>
+    <div class="stage">
+      <svg id="scene" viewBox="0 0 1200 700" role="img" aria-label="Interactive MacBook Pro. Drag to rotate 360 degrees, use arrow keys to turn, or plus and minus to zoom." tabindex="0">
+        <defs>
+          <linearGradient id="metal" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#f3f4f3"/><stop offset=".48" stop-color="#cdd0cf"/><stop offset="1" stop-color="#aeb3b1"/></linearGradient>
+          <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d8dcda"/><stop offset=".42" stop-color="#b8bfbb"/><stop offset="1" stop-color="#777e79"/></linearGradient>
+          <linearGradient id="backMetal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d7dcd9"/><stop offset=".5" stop-color="#b9c0bb"/><stop offset="1" stop-color="#929b94"/></linearGradient>
+          <linearGradient id="wall" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#152d2b"/><stop offset=".55" stop-color="#496341"/><stop offset="1" stop-color="#b3ba76"/></linearGradient>
+          <linearGradient id="ribbon" x1="0" y1="1" x2=".85" y2="0"><stop stop-color="#152e2e"/><stop offset=".35" stop-color="#75936b"/><stop offset=".7" stop-color="#d7e3a0"/><stop offset="1" stop-color="#a3b970"/></linearGradient>
+          <linearGradient id="ribbon2" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#203a30"/><stop offset=".4" stop-color="#577750"/><stop offset=".76" stop-color="#bfd39a"/><stop offset="1" stop-color="#eef0b8"/></linearGradient>
+          <linearGradient id="reflection" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".12"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          <radialGradient id="shadow"><stop stop-color="#3b4834" stop-opacity=".25"/><stop offset=".65" stop-color="#536046" stop-opacity=".09"/><stop offset="1" stop-color="#536046" stop-opacity="0"/></radialGradient>
+          <clipPath id="screenClip"><rect width="1000" height="640" rx="15"/></clipPath>
+          <pattern id="speaker" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".75" fill="#565d56" opacity=".8"/></pattern>
+        </defs>
+        <ellipse id="ground-shadow" cx="600" cy="582" rx="350" ry="58" fill="url(#shadow)"/>
+        <g id="model"></g>
+      </svg>
+      <div class="rotation-label"><svg viewBox="0 0 44 44" fill="none" aria-hidden="true"><ellipse cx="22" cy="24" rx="19" ry="9" stroke="#b8c0af"/><path d="M22 4v6M22 34v6M2 24h5M37 24h5" stroke="#a3ae96"/><g id="compass"><path d="m22 13 4 11-4-2-4 2Z" fill="#6c7e59"/><path d="m22 32-4-8 4 2 4-2Z" fill="#b3bda9"/></g></svg><span>ROTATION<strong id="angle">335°</strong></span></div>
+      <div class="annotation">ALL IN THE DETAILS</div>
+      <div class="stage-caption"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 9V4a1.5 1.5 0 0 1 3 0v5-2a1.5 1.5 0 0 1 3 0v2-1a1.5 1.5 0 0 1 3 0v1a1.5 1.5 0 0 1 3 0v4c0 4-3 5-6 5-2 0-3-1-4-3l-4-5c-1-2 1-3 2-1l2 2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Drag to explore <b>·</b> Scroll to zoom</div>
+    </div>
+    <div class="controls">
+      <div><div class="control-label">POINT OF VIEW</div><div class="views"><button class="view-button" data-view="front">Front</button><button class="view-button active" data-view="angle">Perspective</button><button class="view-button" data-view="back">Back</button></div></div>
+      <div class="toolbar"><button class="auto-button" id="auto" aria-pressed="false"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M14.5 5A6 6 0 1 0 15 11M14.5 1.5V5h-3.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Auto-rotate</span></button><span class="divider"></span><button class="icon-button" id="reset" aria-label="Reset view" title="Reset view"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 8a6.5 6.5 0 1 1-.3 4M4 3v5h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="icon-button" id="fullscreen" aria-label="Enter fullscreen" title="Fullscreen"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button></div>
+      <div class="finish"><div class="control-label">THE FINISH</div><div class="finish-row"><button class="swatch active" data-finish="silver" aria-label="Silver finish" aria-pressed="true"></button><button class="swatch" data-finish="black" aria-label="Space Black finish" aria-pressed="false"></button><span id="finish-name">Silver</span></div></div>
+    </div>
+  </main>
+  <footer><div class="footer-note"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m5 4-4 4 4 4m6-8 4 4-4 4M9 2 7 14" stroke="currentColor"/></svg>PURE SVG. INFINITE PERSPECTIVES.</div><label class="lid-control" for="lid">LID ANGLE<input id="lid" type="range" min="15" max="135" value="108" aria-label="Lid opening angle"><output id="lid-value" for="lid">108°</output></label><div class="footer-right">EXPLORE THE FORM <span>↗</span></div></footer>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const scene = $('scene'), model = $('model');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const initial = { yaw: -.43, pitch: .31, zoom: 1, lid: 108 };
+  const state = { ...initial, auto: false, finish: 'silver', dragging: false };
+  let target = null, velocity = 0, lastTime = 0, dirty = true, pointer = null, toastTimer;
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const fmt = v => Number(v.toFixed(3));
+  const poly = (points, fill, stroke = 'none', width = .6) => `<polygon points="${points.map(p => p.map(fmt).join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="${width}" stroke-linejoin="round"/>`;
+  const rounded = (x, y, w, h, r, plane) => {
+    const pts = [];
+    for (const [cx, cy, start] of [[x+w-r,y+r,-90],[x+w-r,y+h-r,0],[x+r,y+h-r,90],[x+r,y+r,180]]) {
+      for(let i=0;i<=5;i++){const a=(start+i*18)*Math.PI/180;pts.push(plane(cx+Math.cos(a)*r,cy+Math.sin(a)*r));}
+    }
+    return pts;
+  };
+  function transform([x,y,z]) {
+    const c=Math.cos(state.yaw),s=Math.sin(state.yaw),cp=Math.cos(state.pitch),sp=Math.sin(state.pitch);
+    const xx=x*c+z*s,zz=-x*s+z*c;
+    return [xx,y*cp-zz*sp,y*sp+zz*cp];
+  }
+  function project(p){const t=transform(p),scale=99*state.zoom;return [600+t[0]*scale,492-t[1]*scale];}
+  function facing(n){return transform(n)[2]>0;}
+  function render(){
+    const parts=[];
+    const add=(points,fill,stroke='none',width=.6,bias=0)=>parts.push({z:points.reduce((sum,p)=>sum+transform(p)[2],0)/points.length+bias,html:poly(points.map(project),fill,stroke,width)});
+    const addHTML=(center,html,bias=0)=>parts.push({z:transform(center)[2]+bias,html});
+    const black=state.finish==='black';
+    const top=(x,z)=>[x,.16,z], bottom=(x,z)=>[x,-.08,z];
+    const perimeter=rounded(-3.1,-2,6.2,4.05,.19,(x,z)=>[x,0,z]);
+    add(perimeter.map(p=>bottom(p[0],p[2])),black?'#343934':'#a6ada8');
+    for(let i=0;i<perimeter.length;i++){
+      const a=perimeter[i],b=perimeter[(i+1)%perimeter.length];
+      const n=[b[2]-a[2],0,a[0]-b[0]];
+      if(facing(n))add([bottom(a[0],a[2]),bottom(b[0],b[2]),top(b[0],b[2]),top(a[0],a[2])],'url(#edge)',black?'#343a34':'#959d96',.45);
+    }
+    if(facing([0,1,0])){
+      add(perimeter.map(p=>top(p[0],p[2])),'url(#metal)',black?'#666e64':'#eef0eb',.8);
+      // The entire keyboard deck is one planar SVG surface, so its details turn with the body.
+      const a=project(top(-3.1,-2)),b=project(top(3.1,-2)),c=project(top(-3.1,2.05));
+      const matrix=`matrix(${fmt((b[0]-a[0])/1000)} ${fmt((b[1]-a[1])/1000)} ${fmt((c[0]-a[0])/660)} ${fmt((c[1]-a[1])/660)} ${fmt(a[0])} ${fmt(a[1])})`;
+      let deck=`<g transform="${matrix}"><rect x="111" y="70" width="778" height="331" rx="17" fill="${black?'#171c19':'#69716b'}"/><rect x="119" y="78" width="762" height="315" rx="12" fill="#252c27"/>`;
+      const rows=[['esc','◉','☀','☀','▦','⌕','☾','◀','▶','▶','◁','◖','◗','◉'],['~','1','2','3','4','5','6','7','8','9','0','−','=','delete'],['tab','Q','W','E','R','T','Y','U','I','O','P','[',']','\\'],['caps','A','S','D','F','G','H','J','K','L',';',"'",'return'],['shift','Z','X','C','V','B','N','M',',','.','/','shift'],['fn','⌃','⌥','⌘','','⌘','⌥','◀','▲','▶']];
+      rows.forEach((row,r)=>{
+        const weights=row.map((k,i)=>r===0?1:r===5?(i===4?5.6:1.05):k.length>1?(k==='shift'?2.1:1.5):1);
+        const unit=(750-(row.length-1)*5)/weights.reduce((a,b)=>a+b,0);
+        let x=125;const y=85+r*50,h=r===0?37:43;
+        row.forEach((key,i)=>{let w=unit*weights[i];deck+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="#111713" stroke="#535c50" stroke-width="1"/><path d="M${x+5} ${y+h-2}h${w-10}" stroke="#858e7d" opacity=".16"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-family="Arial,sans-serif" font-size="${key.length>1?8:11}" fill="#aeb8a4">${key==='&'?'&amp;':key}</text>`;x+=w+5;});
+      });
+      deck+=`<rect x="30" y="91" width="57" height="290" rx="8" fill="url(#speaker)"/><rect x="913" y="91" width="57" height="290" rx="8" fill="url(#speaker)"/><rect x="307" y="422" width="386" height="205" rx="13" fill="${black?'#424a40':'#bcc4bd'}" stroke="${black?'#2b342a':'#909b90'}" stroke-width="1.3"/><path d="M443 655h114" stroke="${black?'#242d22':'#929d8e'}" stroke-width="5" stroke-linecap="round"/><rect x="136" y="23" width="728" height="15" rx="7" fill="#394038"/></g>`;
+      addHTML([0,.17,.025],deck,.003);
+    }else{
+      for(const x of [-2.6,2.6])for(const z of [-1.5,1.55]) add(rounded(x-.2,z-.2,.4,.4,.17,(a,b)=>[a,-.09,b]),'#424940');
+      add(rounded(-.9,-.15,1.8,.3,.08,(x,z)=>[x,-.092,z]),black?'#3a4038':'#9fa89f');
+    }
+    // Recessed connector shapes on both side edges.
+    for(const side of [-1,1]) if(facing([side,0,0])){
+      const sidePlane=(z,y)=>[side*3.105,y,z];
+      const ports=side===-1?[[-1.57,.39],[-.9,.28],[-.42,.28],[.15,.13]]:[[-1.48,.41],[-.79,.28],[-.12,.66]];
+      for(const [z,w] of ports)add(rounded(z,-.035,w,.105,.033,sidePlane),'#29332b','#8e9a8b',.55,.01);
+    }
+    const opening=state.lid*Math.PI/180,sin=Math.sin(opening),cos=Math.cos(opening);
+    const lid=(x,h,t=0)=>[x,.22+sin*h-cos*t,-1.85+cos*h+sin*t];
+    const normal=[0,-cos,sin],front=facing(normal);
+    const outline=rounded(-3.1,0,6.2,3.96,.18,(x,h)=>lid(x,h));
+    const back=rounded(-3.1,0,6.2,3.96,.18,(x,h)=>lid(x,h,-.1));
+    for(let i=0;i<outline.length;i++){const j=(i+1)%outline.length;add([outline[i],outline[j],back[j],back[i]],'url(#edge)',black?'#484f45':'#a5ada3',.4);}
+    if(front){
+      add(outline,'#202820',black?'#6c7765':'#c2cbb9',1.3);
+      const p0=project(lid(-2.965,3.8,.008)),p1=project(lid(2.965,3.8,.008)),p2=project(lid(-2.965,.24,.008));
+      const matrix=`matrix(${fmt((p1[0]-p0[0])/1000)} ${fmt((p1[1]-p0[1])/1000)} ${fmt((p2[0]-p0[0])/640)} ${fmt((p2[1]-p0[1])/640)} ${fmt(p0[0])} ${fmt(p0[1])})`;
+      const screen=`<g transform="${matrix}"><g clip-path="url(#screenClip)"><rect width="1000" height="640" fill="url(#wall)"/><path d="M-170 830C-140 280 460-220 775-135C1110-45 406 177 287 442C190 658 438 675 724 530C1040 370 1094 201 1240 70" fill="none" stroke="#102b27" stroke-width="170"/><path d="M-170 790C-140 240 460-260 775-175C1110-85 406 137 287 402C190 618 438 635 724 490C1040 330 1094 161 1240 30" fill="none" stroke="url(#ribbon)" stroke-width="160"/><path d="M-90 841C-10 443 438 64 719 6C956-43 649 228 540 370C380 577 795 673 1117 334" fill="none" stroke="#263e30" stroke-width="101"/><path d="M-90 820C-10 422 438 43 719-15C956-64 649 207 540 349C380 556 795 652 1117 313" fill="none" stroke="url(#ribbon2)" stroke-width="96"/><path d="M-120 789C-18 337 442-70 738-120" fill="none" stroke="#e0e8b6" stroke-opacity=".26" stroke-width="2"/><rect width="1000" height="640" fill="url(#reflection)"/><rect width="1000" height="24" fill="#122619" opacity=".2"/><g fill="#f2f5df" font-family="Arial,sans-serif" font-size="10" opacity=".85"><text x="17" y="16">●</text><text x="39" y="16" font-weight="600">Finder</text><text x="86" y="16">File</text><text x="116" y="16">Edit</text><text x="148" y="16">View</text><text x="184" y="16">Go</text><text x="209" y="16">Window</text><text x="262" y="16">Help</text><text x="906" y="16">Mon 9:41 AM</text></g><path d="M440 0h120v21q0 10-10 10h-100q-10 0-10-10Z" fill="#1c241c"/><circle cx="500" cy="14" r="3" fill="#344337"/><circle cx="500" cy="14" r="1" fill="#526d66"/></g></g>`;
+      addHTML(lid(0,1.98,.015),screen,.03);
+    }else{
+      add(back,'url(#backMetal)',black?'#5f695a':'#cbd3c4',1);
+      const p0=project(lid(.32,2.43,-.108)),p1=project(lid(-.32,2.43,-.108)),p2=project(lid(.32,1.69,-.108));
+      const matrix=`matrix(${fmt((p1[0]-p0[0])/100)} ${fmt((p1[1]-p0[1])/100)} ${fmt((p2[0]-p0[0])/116)} ${fmt((p2[1]-p0[1])/116)} ${fmt(p0[0])} ${fmt(p0[1])})`;
+      addHTML(lid(0,2.06,-.11),`<g transform="${matrix}" fill="${black?'#182017':'#6a7765'}"><path d="M57 24C56 11 67 2 78 0C79 13 69 24 57 24ZM88 67C88 51 99 43 99 43C92 31 80 28 74 28C63 27 55 34 50 34C44 34 38 28 28 29C12 29 0 43 0 63C0 78 6 95 14 106C20 114 26 118 33 115C40 112 45 108 53 108C62 108 67 115 75 115C85 114 93 100 100 83C92 80 88 74 88 67Z"/></g>`,.03);
+    }
+    parts.sort((a,b)=>a.z-b.z);model.innerHTML=parts.map(p=>p.html).join('');
+    const degrees=((Math.round(state.yaw*180/Math.PI)%360)+360)%360;
+    $('angle').textContent=degrees+'°';$('compass').setAttribute('transform',`rotate(${-degrees} 22 24)`);
+    $('ground-shadow').setAttribute('rx',350*state.zoom);$('ground-shadow').setAttribute('opacity',String(clamp(1.15-state.pitch*.4,.5,1)));
+  }
+  function setAuto(value){state.auto=value;$('auto').setAttribute('aria-pressed',String(value));dirty=true;}
+  function clearView(){document.querySelectorAll('.view-button').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});}
+  function goTo(yaw,pitch,zoom=state.zoom){velocity=0;const delta=Math.atan2(Math.sin(yaw-state.yaw),Math.cos(yaw-state.yaw));target={yaw:state.yaw+delta,pitch,zoom};if(reduced){Object.assign(state,target);target=null;}dirty=true;}
+  scene.addEventListener('pointerdown',e=>{if(e.button!==0||pointer)return;pointer={id:e.pointerId,x:e.clientX,y:e.clientY,time:performance.now()};state.dragging=true;scene.classList.add('dragging');scene.setPointerCapture(e.pointerId);setAuto(false);target=null;velocity=0;clearView();});
+  scene.addEventListener('pointermove',e=>{if(!pointer||pointer.id!==e.pointerId)return;const dx=e.clientX-pointer.x,dy=e.clientY-pointer.y,dt=Math.max(8,performance.now()-pointer.time);state.yaw+=dx*.008;state.pitch=clamp(state.pitch+dy*.006,-.7,1.3);velocity=clamp(dx*.008/dt,-.008,.008);pointer={id:e.pointerId,x:e.clientX,y:e.clientY,time:performance.now()};dirty=true;});
+  function release(e){if(!pointer||pointer.id!==e.pointerId)return;if(performance.now()-pointer.time>90||reduced||e.type==='pointercancel')velocity=0;pointer=null;state.dragging=false;scene.classList.remove('dragging');}
+  scene.addEventListener('pointerup',release);scene.addEventListener('pointercancel',release);scene.addEventListener('lostpointercapture',release);
+  scene.addEventListener('wheel',e=>{e.preventDefault();target=null;state.zoom=clamp(state.zoom-e.deltaY*.0007,.7,1.3);dirty=true;},{passive:false});
+  scene.addEventListener('keydown',e=>{const actions={ArrowLeft:()=>state.yaw-=.12,ArrowRight:()=>state.yaw+=.12,ArrowUp:()=>state.pitch=clamp(state.pitch+.1,-.7,1.3),ArrowDown:()=>state.pitch=clamp(state.pitch-.1,-.7,1.3),'+':()=>state.zoom=clamp(state.zoom+.05,.7,1.3),'=':()=>state.zoom=clamp(state.zoom+.05,.7,1.3),'-':()=>state.zoom=clamp(state.zoom-.05,.7,1.3)};if(actions[e.key]){e.preventDefault();setAuto(false);target=null;velocity=0;clearView();actions[e.key]();dirty=true;}});
+  $('auto').addEventListener('click',()=>{setAuto(!state.auto);target=null;velocity=0;clearView();});
+  document.querySelectorAll('.view-button').forEach(b=>{b.setAttribute('aria-pressed',String(b.classList.contains('active')));b.addEventListener('click',()=>{setAuto(false);clearView();b.classList.add('active');b.setAttribute('aria-pressed','true');const v=b.dataset.view;goTo(v==='front'?0:v==='back'?Math.PI:initial.yaw,v==='front'?.2:v==='back'?.22:initial.pitch);});});
+  $('reset').addEventListener('click',()=>{setAuto(false);state.lid=initial.lid;$('lid').value=initial.lid;$('lid-value').value=initial.lid+'°';goTo(initial.yaw,initial.pitch,1);clearView();const b=document.querySelector('[data-view="angle"]');b.classList.add('active');b.setAttribute('aria-pressed','true');});
+  $('lid').addEventListener('input',e=>{state.lid=+e.target.value;$('lid-value').value=state.lid+'°';dirty=true;});
+  document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>{state.finish=b.dataset.finish;document.querySelectorAll('.swatch').forEach(s=>{s.classList.toggle('active',s===b);s.setAttribute('aria-pressed',String(s===b));});$('finish-name').textContent=state.finish==='silver'?'Silver':'Space Black';const palettes=state.finish==='silver'?{metal:['#f3f4f3','#cdd0cf','#aeb3b1'],edge:['#d8dcda','#b8bfbb','#777e79'],backMetal:['#d7dcd9','#b9c0bb','#929b94']}:{metal:['#70776b','#535c4f','#3d4839'],edge:['#717c69','#424e3b','#273223'],backMetal:['#6b7563','#4e5a46','#35422d']};for(const [id,colors] of Object.entries(palettes))$(id).querySelectorAll('stop').forEach((s,i)=>s.setAttribute('stop-color',colors[i]));dirty=true;}));
+  function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').classList.add('visible');toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2400);}
+  $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if($('page').requestFullscreen)await $('page').requestFullscreen();else toast('Fullscreen is not available in this browser.');}catch{toast('Fullscreen is not available in this preview.');}});
+  document.addEventListener('fullscreenchange',()=>{$('fullscreen').setAttribute('aria-label',document.fullscreenElement?'Exit fullscreen':'Enter fullscreen');});
+  function frame(time){const dt=Math.min(time-lastTime||16,40);lastTime=time;if(target){const k=1-Math.exp(-dt/100);let distance=0;for(const key of ['yaw','pitch','zoom']){const d=target[key]-state[key];state[key]+=d*k;distance+=Math.abs(d);}if(distance<.001){Object.assign(state,target);target=null;}dirty=true;}else if(state.auto&&!state.dragging){state.yaw+=dt*.00022;dirty=true;}else if(!state.dragging&&Math.abs(velocity)>.000015){state.yaw+=velocity*dt;velocity*=Math.exp(-dt/180);dirty=true;}if(dirty){render();dirty=false;}requestAnimationFrame(frame);}
+  render();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-23",
-  "notes": "case.date is when the demo was generated: the source file timestamp when known, otherwise the day it was first committed to static/eval-demos. year = the evaluation year, not the model release year. Cases with kind \"image\" are static screenshots (file lives under /images/eval-cases/works/); all others are runnable HTML under /eval-demos/.",
+  "updated_at": "2026-09-24",
+  "notes": "case.date is when the demo was generated: the source file timestamp when known, otherwise the day it was first committed. The year a case is filed under is its model's release year (models[].released), not the run date. Cases with kind \"image\" are static screenshots (file lives under /images/eval-cases/works/); all others are runnable HTML under /eval-demos/.",
   "categories": [
     {
       "id": "voxel",
@@ -109,6 +109,12 @@
       "released": "2026-02"
     },
     {
+      "id": "gpt-6-astra",
+      "name": "GPT-6 Astra",
+      "vendor": "OpenAI",
+      "released": "2026-09"
+    },
+    {
       "id": "gemini-3-pro",
       "name": "Gemini 3 Pro (high)",
       "vendor": "Google",
@@ -119,6 +125,12 @@
       "name": "Gemini 3 Flash Preview",
       "vendor": "Google",
       "released": "2025-12"
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "vendor": "Google",
+      "released": "2026-09"
     },
     {
       "id": "deepseek-v3.2",
@@ -531,7 +543,6 @@
       "model": "claude-opus-4.5",
       "file": "/eval-demos/claude-opus-4-5-shanghai-voxel.html",
       "date": "2025-11-25",
-      "year": 2025,
       "page_title": "上海体素艺术 - Shanghai Voxel Art",
       "stack": [
         "three.js",
@@ -545,7 +556,6 @@
       "model": "gpt-5.1-codex-max",
       "file": "/eval-demos/gpt-5.1-codex-max-voxel-shanghai.html",
       "date": "2025-11-25",
-      "year": 2025,
       "page_title": "体素上海 | Voxel Shanghai",
       "stack": [
         "canvas"
@@ -558,7 +568,6 @@
       "model": "claude-opus-4.1",
       "file": "/eval-demos/claude-opus-4.1-shanghai-voxel.html",
       "date": "2025-11-28",
-      "year": 2025,
       "page_title": "上海体素艺术场景 - Shanghai Voxel Art",
       "stack": [
         "three.js",
@@ -572,7 +581,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-voxel-shanghai.html",
       "date": "2025-12-03",
-      "year": 2025,
       "page_title": "体素上海：建筑风景",
       "stack": [
         "three.js"
@@ -585,7 +593,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-shanghai-voxel.html",
       "date": "2025-12-12",
-      "year": 2025,
       "page_title": "上海体素城市风景",
       "stack": [
         "three.js",
@@ -599,7 +606,6 @@
       "model": "xiaomi-mimo",
       "file": "/eval-demos/xiaomi-voxel-shanghai-skyline.html",
       "date": "2025-12-17",
-      "year": 2025,
       "page_title": "上海天际线 - 体素艺术",
       "stack": [
         "css-3d"
@@ -612,7 +618,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-shanghai-voxel.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "上海体素建筑风景 - Voxel Shanghai",
       "stack": [
         "css-3d"
@@ -625,7 +630,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-shanghai.html",
       "date": "2026-02-15",
-      "year": 2026,
       "page_title": "上海天际线 - 体素艺术 | Shanghai Skyline Voxel Art",
       "stack": [
         "three.js"
@@ -638,7 +642,6 @@
       "model": "claude-opus-4.5",
       "file": "/eval-demos/claude-opus-4.5.html",
       "date": "2025-11-25",
-      "year": 2025,
       "page_title": "Claude Opus 4 | Anthropic's Most Capable AI",
       "stack": [
         "dom"
@@ -651,7 +654,6 @@
       "model": "gpt-5.1-codex-max",
       "file": "/eval-demos/gpt-5.1-codex-max-about-codex.html",
       "date": "2025-11-26",
-      "year": 2025,
       "page_title": "Codex · AI Developer",
       "stack": [
         "dom"
@@ -664,7 +666,6 @@
       "model": "claude-opus-4.1",
       "file": "/eval-demos/claude-opus-4.1.html",
       "date": "2025-11-28",
-      "year": 2025,
       "page_title": "Claude - AI Assistant",
       "stack": [
         "svg"
@@ -677,7 +678,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-about.html",
       "date": "2025-12-03",
-      "year": 2025,
       "page_title": "Alex Morgan | Portfolio",
       "stack": [
         "dom"
@@ -690,7 +690,6 @@
       "model": "gemini-3-flash",
       "file": "/eval-demos/gemini-3-flash-about.html",
       "date": "2025-12-18",
-      "year": 2025,
       "page_title": "Meet Your AI Assistant",
       "stack": [
         "dom"
@@ -703,7 +702,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-portfolio.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "Claude - AI Assistant by Anthropic",
       "stack": [
         "dom"
@@ -716,7 +714,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-portfolio.html",
       "date": "2025-12-26",
-      "year": 2025,
       "page_title": "Portfolio",
       "stack": [
         "dom"
@@ -729,7 +726,6 @@
       "model": "claude-opus-4.5",
       "file": "/eval-demos/claude-opus-4.5-washing-machine.html",
       "date": "2025-11-25",
-      "year": 2025,
       "page_title": "洗衣机工作原理动画",
       "stack": [
         "svg"
@@ -742,7 +738,6 @@
       "model": "gpt-5.1-codex-max",
       "file": "/eval-demos/gpt-5.1-codex-max-washer-svg.html",
       "date": "2025-11-27",
-      "year": 2025,
       "page_title": "SVG 洗衣机四阶段演示",
       "stack": [
         "svg"
@@ -755,7 +750,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-washing-machine.html",
       "date": "2025-12-03",
-      "year": 2025,
       "page_title": "洗衣机工作原理SVG动画",
       "stack": [
         "svg"
@@ -768,7 +762,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-washing-machine.html",
       "date": "2025-12-12",
-      "year": 2025,
       "page_title": "SVG动画：洗衣机工作原理（进水/洗涤/排水/脱水）",
       "stack": [
         "svg"
@@ -781,7 +774,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-washing-machine.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "洗衣机工作原理 - SVG动画演示",
       "stack": [
         "svg"
@@ -794,7 +786,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-washing-machine.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "洗衣机工作原理演示",
       "stack": [
         "svg"
@@ -807,7 +798,6 @@
       "model": "claude-opus-4.5",
       "file": "/eval-demos/claude-opus-4.5-bouncing-hexagon.html",
       "date": "2025-11-25",
-      "year": 2025,
       "page_title": "旋转六边形内的弹跳球",
       "stack": [
         "p5.js"
@@ -820,7 +810,6 @@
       "model": "gpt-5.1-codex-max",
       "file": "/eval-demos/gpt-5.1-codex-hex-rotating-balls.html",
       "date": "2025-11-27",
-      "year": 2025,
       "page_title": "旋转六边形内的彩色球弹跳 · p5.js",
       "stack": [
         "p5.js"
@@ -833,7 +822,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-hexagon-bouncing-balls.html",
       "date": "2025-12-03",
-      "year": 2025,
       "page_title": "Rotating Hexagon with Bouncing Balls",
       "stack": [
         "p5.js"
@@ -846,7 +834,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-bouncing-balls.html",
       "date": "2025-12-12",
-      "year": 2025,
       "page_title": "旋转六边形内弹跳彩球 - p5.js",
       "stack": [
         "p5.js"
@@ -859,7 +846,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-bouncingball-hexagon.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "彩色球弹跳 - 旋转六边形物理模拟",
       "stack": [
         "p5.js"
@@ -872,7 +858,6 @@
       "model": "qwen3-coder",
       "file": "/eval-demos/Qwen3-coder-hexagon-ball.html",
       "date": "2025-12-16",
-      "year": 2025,
       "page_title": "Bouncing Balls in Rotating Hexagon",
       "stack": [
         "p5.js"
@@ -885,7 +870,6 @@
       "model": "xiaomi-mimo",
       "file": "/eval-demos/xiaomi-bouncing-balls-hexagon.html",
       "date": "2025-12-17",
-      "year": 2025,
       "page_title": "旋转六边形中的彩色弹跳球",
       "stack": [
         "p5.js"
@@ -898,7 +882,6 @@
       "model": "gemini-3-flash",
       "file": "/eval-demos/gemini-3-flash-bouncing-balls.html",
       "date": "2025-12-18",
-      "year": 2025,
       "page_title": "旋转六边形中的彩色弹球 - p5.js",
       "stack": [
         "p5.js"
@@ -911,7 +894,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-bouncing_balls.html",
       "date": "2025-12-23",
-      "year": 2025,
       "page_title": "p5.js 旋转六边形弹球",
       "stack": [
         "p5.js"
@@ -924,7 +906,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-bouncing-balls.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "旋转六边形内的彩色球弹跳",
       "stack": [
         "p5.js"
@@ -937,7 +918,6 @@
       "model": "qwen3-max-thinking",
       "file": "/eval-demos/Qwen3-Max-Thinking-hexagon-ball.html",
       "date": "2026-01-27",
-      "year": 2026,
       "page_title": "旋转六边形内的弹跳球",
       "stack": [
         "p5.js"
@@ -950,7 +930,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-bouncing_balls_hexagon.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "旋转六边形内弹跳彩球",
       "stack": [
         "p5.js"
@@ -963,7 +942,6 @@
       "model": "claude-opus-4.6",
       "file": "/eval-demos/claude-opus-4.6-hexbounce.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "旋转六边形弹球",
       "stack": [
         "p5.js"
@@ -976,7 +954,6 @@
       "model": "gpt-5.3-codex-xhigh",
       "file": "/eval-demos/gpt-5.3-codex-xhigh-p5_rotating_hexagon_balls.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "p5.js 旋转六边形内彩球弹跳",
       "stack": [
         "p5.js"
@@ -989,7 +966,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-bouncing-balls.html",
       "date": "2026-02-14",
-      "year": 2026,
       "page_title": "旋转六边形弹跳球",
       "stack": [
         "p5.js"
@@ -1002,7 +978,6 @@
       "model": "minimax-m2.5",
       "file": "/eval-demos/minimax-m2.5-bouncing-balls-hexagon.html",
       "date": "2026-02-14",
-      "year": 2026,
       "page_title": "旋转六边形内的彩色球 | Bouncing Balls in Rotating Hexagon",
       "stack": [
         "p5.js"
@@ -1015,7 +990,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-macbook-360.html",
       "date": "2025-12-03",
-      "year": 2025,
       "page_title": "360° Draggable MacBook Pro",
       "stack": [
         "svg"
@@ -1028,7 +1002,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-macbook-360.html",
       "date": "2025-12-12",
-      "year": 2025,
       "page_title": "360° Draggable MacBook Pro (SVG)",
       "stack": [
         "svg"
@@ -1041,7 +1014,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-dragon.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel Dragon",
       "stack": [
         "three.js"
@@ -1054,7 +1026,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-dragon.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素飞龙：翅膀扇动与喷火",
       "stack": [
         "canvas"
@@ -1067,7 +1038,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-voxel-dragon.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "体素龙 - 神话生物",
       "stack": [
         "css-3d"
@@ -1080,7 +1050,6 @@
       "model": "qwen3-coder",
       "file": "/eval-demos/Qwen3-coder-voxel-dragon.html",
       "date": "2025-12-16",
-      "year": 2025,
       "page_title": "体素艺术龙 - 飞行与喷火",
       "stack": [
         "css-3d"
@@ -1093,7 +1062,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-voxel-dragon.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "体素龙 - Voxel Dragon",
       "stack": [
         "css-3d"
@@ -1106,7 +1074,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-voxel-dragon.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "Voxel Dragon",
       "stack": [
         "three.js"
@@ -1119,7 +1086,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-snowman.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel Snowman",
       "stack": [
         "three.js"
@@ -1132,7 +1098,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-snowman.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素雪人（微笑）",
       "stack": [
         "canvas"
@@ -1145,7 +1110,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-snowman-voxel.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "体素雪人 - 微笑的冬天朋友",
       "stack": [
         "css-3d"
@@ -1158,7 +1122,6 @@
       "model": "xiaomi-mimo",
       "file": "/eval-demos/xiaomi-voxel-snowman.html",
       "date": "2025-12-17",
-      "year": 2025,
       "page_title": "堆叠式微笑雪人 - 体素艺术",
       "stack": [
         "css-3d"
@@ -1171,7 +1134,6 @@
       "model": "gemini-3-flash",
       "file": "/eval-demos/gemini-3-flash-snowman.html",
       "date": "2025-12-18",
-      "year": 2025,
       "page_title": "Voxel Art Snowman",
       "stack": [
         "three.js"
@@ -1184,7 +1146,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-snowman.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "体素雪人",
       "stack": [
         "css-3d"
@@ -1197,7 +1158,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-snowman.html",
       "date": "2026-02-15",
-      "year": 2026,
       "page_title": "体素雪人 - Happy Snowman",
       "stack": [
         "three.js"
@@ -1210,7 +1170,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-city_intersection.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel City Intersection",
       "stack": [
         "three.js"
@@ -1223,7 +1182,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-intersection.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素城市十字路口：红绿灯 / 人行横道 / 车与人",
       "stack": [
         "canvas"
@@ -1236,7 +1194,6 @@
       "model": "deepseek-v3.2",
       "file": "/eval-demos/deepseek-v3.2-street-basketball.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素艺术街头篮球场",
       "stack": [
         "dom"
@@ -1249,7 +1206,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-street_basketball.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel Street Basketball",
       "stack": [
         "three.js"
@@ -1262,7 +1218,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-basketball.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素街头篮球场：球员、围栏、涂鸦与城市夜景",
       "stack": [
         "canvas"
@@ -1275,7 +1230,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-street-basketball-voxel.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "体素街头篮球场",
       "stack": [
         "css-3d"
@@ -1288,7 +1242,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-eiffel_tower.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel Eiffel Tower",
       "stack": [
         "three.js"
@@ -1301,7 +1254,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-eiffel.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素埃菲尔铁塔：格子铁框架、观景台与拱门底座",
       "stack": [
         "canvas"
@@ -1314,7 +1266,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-eiffel-tower.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "体素埃菲尔铁塔",
       "stack": [
         "css-3d"
@@ -1327,7 +1278,6 @@
       "model": "xiaomi-mimo",
       "file": "/eval-demos/xiaomi-voxel-eiffel-tower.html",
       "date": "2025-12-17",
-      "year": 2025,
       "page_title": "埃菲尔铁塔 - 体素艺术",
       "stack": [
         "css-3d"
@@ -1340,7 +1290,6 @@
       "model": "gemini-3-flash",
       "file": "/eval-demos/gemini-3-flash-effiel-tower.html",
       "date": "2025-12-18",
-      "year": 2025,
       "page_title": "体素埃菲尔铁塔 - Three.js",
       "stack": [
         "three.js"
@@ -1353,7 +1302,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-sydney_opera_house.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "Voxel Sydney Opera House",
       "stack": [
         "three.js"
@@ -1366,7 +1314,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-sydney-opera.html",
       "date": "2025-12-14",
-      "year": 2025,
       "page_title": "体素悉尼歌剧院：贝壳屋顶、海滨港口与入口台阶",
       "stack": [
         "canvas"
@@ -1379,7 +1326,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-siheyuan.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "Voxel Siheyuan (Traditional Chinese Courtyard)",
       "stack": [
         "three.js"
@@ -1392,7 +1338,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-siheyuan.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "传统中国四合院 - 体素艺术",
       "stack": [
         "css-3d"
@@ -1405,7 +1350,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-voxel-siheyuan.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "体素四合院",
       "stack": [
         "canvas"
@@ -1418,7 +1362,6 @@
       "model": "xiaomi-mimo",
       "file": "/eval-demos/xiaomi-voxel-siheyuan.html",
       "date": "2025-12-17",
-      "year": 2025,
       "page_title": "传统四合院 - 体素艺术",
       "stack": [
         "css-3d"
@@ -1431,7 +1374,6 @@
       "model": "gemini-3-flash",
       "file": "/eval-demos/gemini-3-flash-siheyuan.html",
       "date": "2025-12-18",
-      "year": 2025,
       "page_title": "体素中国四合院 - Three.js Voxel Siheyuan",
       "stack": [
         "three.js"
@@ -1444,7 +1386,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-siheyuan.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "传统中国四合院 - 体素艺术",
       "stack": [
         "css-3d"
@@ -1457,7 +1398,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-siheyuan.html",
       "date": "2026-02-15",
-      "year": 2026,
       "page_title": "传统中国四合院 - 体素艺术 (WebGL优化版)",
       "stack": [
         "three.js"
@@ -1470,7 +1410,6 @@
       "model": "gemini-3-pro",
       "file": "/eval-demos/gemini-3-pro-chinatown.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "Voxel Chinatown Paifang",
       "stack": [
         "three.js"
@@ -1483,7 +1422,6 @@
       "model": "glm-4.6",
       "file": "/eval-demos/glm-4.6-chinatown-voxel.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "唐人街牌坊 - Voxel Art",
       "stack": [
         "three.js"
@@ -1496,7 +1434,6 @@
       "model": "gpt-5.2-xhigh",
       "file": "/eval-demos/gpt-5.2-xhigh-chinatown-voxel-paifang.html",
       "date": "2025-12-15",
-      "year": 2025,
       "page_title": "唐人街牌坊（体素 / Three.js）",
       "stack": [
         "three.js",
@@ -1510,7 +1447,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-chinatown.html",
       "date": "2025-12-24",
-      "year": 2025,
       "page_title": "Chinatown Paifang - Voxel Art",
       "stack": [
         "three.js"
@@ -1523,7 +1459,6 @@
       "model": "claude-opus-4.6",
       "file": "/eval-demos/claude-opus-4.6-paifang.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "Chinatown Paifang - Voxel Art",
       "stack": [
         "three.js",
@@ -1537,7 +1472,6 @@
       "model": "gpt-5.3-codex-xhigh",
       "file": "/eval-demos/gpt-5.3-codex-xhigh-chinatown_paifang_voxel.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "Voxel Chinatown Paifang - Three.js",
       "stack": [
         "three.js",
@@ -1551,7 +1485,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-chinatown-paifang.html",
       "date": "2026-02-15",
-      "year": 2026,
       "page_title": "唐人街牌坊 - Chinatown Paifang Voxel Art",
       "stack": [
         "three.js"
@@ -1564,7 +1497,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-platformer-game.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "Super Block Bros - Platformer Game",
       "stack": [
         "canvas"
@@ -1577,7 +1509,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-mario-game.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "超级马里奥风格游戏",
       "stack": [
         "canvas"
@@ -1590,7 +1521,6 @@
       "model": "glm-4.7",
       "file": "/eval-demos/glm-4.7-rubiks_cube.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "Three.js 魔方",
       "stack": [
         "three.js"
@@ -1603,7 +1533,6 @@
       "model": "minimax-m2.1",
       "file": "/eval-demos/MiniMax-M2.1-rubiks-cube.html",
       "date": "2025-12-25",
-      "year": 2025,
       "page_title": "Three.js Rubik's Cube",
       "stack": [
         "three.js"
@@ -1616,7 +1545,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-rubiks-cube.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Three.js 魔方",
       "stack": [
         "three.js"
@@ -1629,7 +1557,6 @@
       "model": "qwen3-max-thinking",
       "file": "/eval-demos/Qwen3-Max-Thinking-rubiks-cube.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Three.js 魔方",
       "stack": [
         "three.js"
@@ -1642,7 +1569,6 @@
       "model": "claude-opus-4.6",
       "file": "/eval-demos/claude-opus-4.6-rubiks-cube.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "3D 魔方 - Three.js",
       "stack": [
         "three.js"
@@ -1655,7 +1581,6 @@
       "model": "gpt-5.3-codex-xhigh",
       "file": "/eval-demos/gpt-5.3-codex-xhigh-rubiks_cube_threejs.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "Three.js 彩色魔方（旋转与还原）",
       "stack": [
         "three.js",
@@ -1669,7 +1594,6 @@
       "model": "glm-5",
       "file": "/eval-demos/glm-5-rubiks-cube.html",
       "date": "2026-02-15",
-      "year": 2026,
       "page_title": "魔方 - Three.js",
       "stack": [
         "three.js"
@@ -1682,7 +1606,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-nintendo_switch_pokemon.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Nintendo Switch - Pokemon Animation",
       "stack": [
         "svg"
@@ -1695,7 +1618,6 @@
       "model": "qwen3-max-thinking",
       "file": "/eval-demos/Qwen3-Max-Thinking-nintendo_switch_pokemon.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Nintendo Switch Playing Pokémon",
       "stack": [
         "svg"
@@ -1708,7 +1630,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-traffic-simulator.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "交通灯模拟器",
       "stack": [
         "dom"
@@ -1721,7 +1642,6 @@
       "model": "qwen3-max-thinking",
       "file": "/eval-demos/Qwen3-Max-Thinking-traffic-simulator.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "交通灯可视化模拟",
       "stack": [
         "dom"
@@ -1734,7 +1654,6 @@
       "model": "gpt-5.3-codex-xhigh",
       "file": "/eval-demos/gpt-5.3-codex-xhigh-traffic_light_simulation.html",
       "date": "2026-02-06",
-      "year": 2026,
       "page_title": "单行道交通灯可视化模拟",
       "stack": [
         "canvas"
@@ -1747,7 +1666,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-ipad-air-animation.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "iPad Air - Flight Speed",
       "stack": [
         "gsap",
@@ -1762,7 +1680,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-ipad-highlights.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "iPad Air - Get the highlights",
       "stack": [
         "svg"
@@ -1775,7 +1692,6 @@
       "model": "kimi-k2.5",
       "file": "/eval-demos/kimi-k2.5-universe-landing.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Kimi Universe",
       "stack": [
         "gsap",
@@ -1789,7 +1705,6 @@
       "model": "qwen3-max-thinking",
       "file": "/eval-demos/Qwen3-Max-Thinking-universe-landing.html",
       "date": "2026-01-28",
-      "year": 2026,
       "page_title": "Kimi Universe",
       "stack": [
         "gsap"
@@ -1802,7 +1717,6 @@
       "model": "glm-5.3-max",
       "file": "/eval-demos/glm-5.3-max-boeing-787-apron.html",
       "date": "2026-08-14",
-      "year": 2026,
       "page_title": "GATE 12 · Boeing 787 停机坪 — Procedural Three.js",
       "stack": [
         "three.js",
@@ -1816,7 +1730,6 @@
       "model": "glm-5.2-max",
       "file": "/eval-demos/glm-5.2-max-boeing-787-apron.html",
       "date": "2026-06-25",
-      "year": 2026,
       "page_title": "Boeing Airliner · Airport Apron · Cinematic 3D",
       "stack": [
         "three.js"
@@ -1829,7 +1742,6 @@
       "model": "muse-1.3",
       "file": "/eval-demos/muse-1.3-boeing-787-apron.html",
       "date": "2026-09-02",
-      "year": 2026,
       "page_title": "Boeing Widebody — Airport Apron 3D",
       "stack": [
         "three.js"
@@ -1842,7 +1754,6 @@
       "model": "mimo-2.6-pro",
       "file": "/eval-demos/mimo-2.6-pro-boeing-787-apron.html",
       "date": "2026-09-22",
-      "year": 2026,
       "page_title": "Boeing 787 Style Airliner — Apron · Three.js",
       "stack": [
         "three.js"
@@ -1855,7 +1766,6 @@
       "model": "claude-opus-5",
       "file": "/eval-demos/claude-opus-5-boeing-787-apron.html",
       "date": "2026-07-24",
-      "year": 2026,
       "page_title": "Boeing Widebody · Apron — Three.js Cinematic Demo",
       "stack": [
         "three.js",
@@ -1869,7 +1779,6 @@
       "model": "claude-opus-5.5",
       "file": "/eval-demos/claude-opus-5.5-voxel-sydney-opera-house.html",
       "date": "2026-09-23",
-      "year": 2026,
       "page_title": "体素悉尼歌剧院",
       "stack": [
         "three.js",
@@ -1883,7 +1792,6 @@
       "model": "mimo-2.6-pro",
       "file": "/eval-demos/mimo-2.6-pro-voxel-shanghai.html",
       "date": "2026-09-23",
-      "year": 2026,
       "page_title": "魔都幻境 · 上海体素风景",
       "stack": [
         "three.js"
@@ -1897,7 +1805,6 @@
       "kind": "image",
       "file": "/images/eval-cases/works/claude-fable-5.1-p5-brush-fish.webp",
       "date": "2026-09-02",
-      "year": 2026,
       "page_title": "墨潮 · Ink Tide",
       "stack": [
         "p5.brush.js"
@@ -1911,7 +1818,6 @@
       "kind": "image",
       "file": "/images/eval-cases/works/claude-opus-5.5-p5-brush-fish.webp",
       "date": "2026-09-23",
-      "year": 2026,
       "page_title": "锦鲤 · p5.brush",
       "stack": [
         "p5.brush.js"
@@ -1924,7 +1830,6 @@
       "model": "mimo-2.6-pro",
       "file": "/eval-demos/mimo-2.6-pro-voxel-snowman.html",
       "date": "2026-09-23",
-      "year": 2026,
       "page_title": "堆雪人 · 体素冬日",
       "stack": [
         "three.js"
@@ -1938,7 +1843,6 @@
       "kind": "image",
       "file": "/images/eval-cases/works/claude-opus-5.5-p5-brush-xu-horse.webp",
       "date": "2026-09-22",
-      "year": 2026,
       "page_title": "奔马 · 墨戏",
       "stack": [
         "p5.brush.js"
@@ -1952,7 +1856,6 @@
       "kind": "image",
       "file": "/images/eval-cases/works/mimo-2.6-pro-p5-brush-xu-horse.webp",
       "date": "2026-09-23",
-      "year": 2026,
       "page_title": "p5.brush · 徐悲鸿 · 奔马",
       "stack": [
         "p5.brush.js"
@@ -1965,12 +1868,98 @@
       "model": "deepseek-v4-pro-0813",
       "file": "/eval-demos/deepseek-v4-pro-0813-boeing-787-apron.html",
       "date": "2026-08-12",
-      "year": 2026,
       "page_title": "Boeing 787 · 机场停机坪",
       "stack": [
         "three.js"
       ],
       "bytes": 29525
+    },
+    {
+      "id": "gpt-6-astra-voxel-shanghai",
+      "task": "voxel-shanghai",
+      "model": "gpt-6-astra",
+      "file": "/eval-demos/gpt-6-astra-voxel-shanghai.html",
+      "date": "2026-09-23",
+      "page_title": "海上万象 · Shanghai in Voxels",
+      "stack": [
+        "webgl2"
+      ],
+      "bytes": 33456
+    },
+    {
+      "id": "gpt-6-astra-voxel-chinatown-paifang",
+      "task": "voxel-chinatown-paifang",
+      "model": "gpt-6-astra",
+      "file": "/eval-demos/gpt-6-astra-voxel-chinatown-paifang.html",
+      "date": "2026-09-23",
+      "page_title": "金阙 · Chinatown in Voxels",
+      "stack": [
+        "three.js",
+        "canvas"
+      ],
+      "bytes": 693894
+    },
+    {
+      "id": "mimo-2.6-pro-voxel-chinatown-paifang",
+      "task": "voxel-chinatown-paifang",
+      "model": "mimo-2.6-pro",
+      "file": "/eval-demos/mimo-2.6-pro-voxel-chinatown-paifang.html",
+      "date": "2026-09-23",
+      "page_title": "唐人街牌楼 · Voxel Paifang",
+      "stack": [
+        "three.js",
+        "canvas"
+      ],
+      "bytes": 20364
+    },
+    {
+      "id": "gemini-3.8-flash-p5-brush-fish",
+      "task": "p5-brush-fish",
+      "model": "gemini-3.8-flash",
+      "kind": "image",
+      "file": "/images/eval-cases/works/gemini-3.8-flash-p5-brush-fish.webp",
+      "date": "2026-09-02",
+      "page_title": "p5.brush - 墨韵锦鲤 1:1 水彩国风",
+      "stack": [
+        "p5.brush.js"
+      ],
+      "bytes": 49942
+    },
+    {
+      "id": "claude-opus-5.5-macbook-360-svg",
+      "task": "macbook-360-svg",
+      "model": "claude-opus-5.5",
+      "file": "/eval-demos/claude-opus-5.5-macbook-360-svg.html",
+      "date": "2026-09-23",
+      "page_title": "MacBook Pro — 360° Draggable SVG",
+      "stack": [
+        "svg"
+      ],
+      "bytes": 20379
+    },
+    {
+      "id": "gpt-6-astra-macbook-360-svg",
+      "task": "macbook-360-svg",
+      "model": "gpt-6-astra",
+      "file": "/eval-demos/gpt-6-astra-macbook-360-svg.html",
+      "date": "2026-09-23",
+      "page_title": "MacBook Pro — Every angle. / FORM",
+      "stack": [
+        "svg"
+      ],
+      "bytes": 27792
+    },
+    {
+      "id": "mimo-2.6-pro-macbook-360-svg",
+      "task": "macbook-360-svg",
+      "model": "mimo-2.6-pro",
+      "file": "/eval-demos/mimo-2.6-pro-macbook-360-svg.html",
+      "date": "2026-09-23",
+      "page_title": "MacBook Pro — 360° Draggable SVG",
+      "stack": [
+        "svg"
+      ],
+      "bytes": 17688
     }
   ],
   "excluded_files": [

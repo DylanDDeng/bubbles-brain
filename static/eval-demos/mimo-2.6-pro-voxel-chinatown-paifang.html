@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唐人街牌楼 · Voxel Paifang</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #25262e; }
+  canvas { display: block; }
+  #hud {
+    position: fixed; left: 14px; top: 12px; color: #f0c14b;
+    font-family: "PingFang SC", "Heiti SC", sans-serif;
+    text-shadow: 0 2px 6px rgba(0,0,0,.7); pointer-events: none;
+  }
+  #hud h1 { margin: 0; font-size: 18px; letter-spacing: 2px; }
+  #hud p  { margin: 4px 0 0; font-size: 12px; color: #e8d9bd; opacity: .8; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <h1>唐人街 · 牌楼</h1>
+  <p>Voxel Paifang — 拖拽旋转 / 滚轮缩放</p>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ---------- error capture hook (for automated verification) ---------- */
+window.__errors = [];
+window.addEventListener('error', e => window.__errors.push(String(e.message)));
+window.addEventListener('unhandledrejection', e => window.__errors.push('rejection: ' + String(e.reason)));
+
+/* ---------- palette ---------- */
+const PAL = {
+  pillarRed : 0xb3282d,
+  redDeep   : 0x7e1f22,
+  redBright : 0xd63a33,
+  gold      : 0xd9a441,
+  goldDark  : 0xb8862f,
+  goldBright: 0xf0c14b,
+  white     : 0xf2ede4,
+  stone     : 0x9aa0a6,
+  stoneDark : 0x70767c,
+  roofGold  : 0xd9a441,
+  roadGray  : 0x5f6368,
+  walkGray  : 0x82868c,
+  bldgA     : 0x8d8172,
+  bldgB     : 0x77808c,
+  bldgC     : 0x9b8f9e,
+  windowGlow: 0xffe6a8,
+  lantern   : 0xe23b2e,
+  dark      : 0x2a2320
+};
+const GLOW = { lantern: 0xff4422, window: 0x664411 };
+
+/* ---------- voxel builder (instanced scaled unit boxes) ---------- */
+const UNIT_GEO = new THREE.BoxGeometry(1, 1, 1);
+const _m4 = new THREE.Matrix4();
+const _v3 = new THREE.Vector3();
+const _s3 = new THREE.Vector3();
+
+class Builder {
+  constructor(name = 'part') {
+    this.name = name;
+    this.batches = new Map();   // key -> { color, emissive, items: [] }
+  }
+  /** axis-aligned box with min corner semantics in *center* coords: center (cx,cy,cz), size (w,h,d) */
+  add(cx, cy, cz, w, h, d, color, emissive = 0) {
+    const key = color + '|' + emissive;
+    if (!this.batches.has(key)) this.batches.set(key, { color, emissive, items: [] });
+    this.batches.get(key).items.push({ cx, cy, cz, w, h, d });
+    return this;
+  }
+  /** unit voxel centered on integer grid (x,y,z), size s */
+  cube(x, y, z, color, emissive = 0, s = 1) {
+    return this.add(x, y, z, s, s, s, color, emissive);
+  }
+  build() {
+    const group = new THREE.Group();
+    group.name = this.name;
+    for (const { color, emissive, items } of this.batches.values()) {
+      const mat = new THREE.MeshLambertMaterial({
+        color,
+        emissive,
+        emissiveIntensity: emissive ? 0.85 : 0
+      });
+      const mesh = new THREE.InstancedMesh(UNIT_GEO, mat, items.length);
+      items.forEach((it, i) => {
+        _v3.set(it.cx, it.cy, it.cz);
+        _s3.set(it.w, it.h, it.d);
+        _m4.compose(_v3, new THREE.Quaternion(), _s3);
+        mesh.setMatrixAt(i, _m4);
+      });
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      group.add(mesh);
+    }
+    return group;
+  }
+  count() {
+    let n = 0;
+    for (const b of this.batches.values()) n += b.items.length;
+    return n;
+  }
+}
+
+/* deterministic pseudo-random */
+function rnd(i) {
+  const s = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
+  return s - Math.floor(s);
+}
+
+/* ---------- renderer / scene ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x25262e);
+scene.fog = new THREE.Fog(0x25262e, 70, 175);
+
+const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 400);
+camera.position.set(0, 15, 58);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 15, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.minDistance = 18;
+controls.maxDistance = 130;
+controls.maxPolarAngle = Math.PI * 0.52;
+controls.update();
+
+/* =====================================================================
+   ROOF TIER — golden voxel roof with upturned eaves (飞檐)
+   Cube-centre coordinates: ridge runs along x at z = zc.
+   ===================================================================== */
+function buildRoof(b, cx, yBase, halfX, halfZ, zc = 0) {
+  for (let k = 0; k <= halfZ; k++) {
+    const y = yBase + k;
+    const zSpan = halfZ - k;
+    for (let x = -halfX; x <= halfX; x++) {
+      for (let z = -zSpan; z <= zSpan; z++) {
+        let color = (x % 2 === 0) ? PAL.roofGold : PAL.goldDark;   // tile ridges
+        if (k === 0 && Math.abs(z) === halfZ) color = PAL.goldBright; // eave edge
+        if (k === halfZ) color = PAL.goldBright;                      // ridge
+        b.cube(cx + x, y, zc + z, color);
+      }
+    }
+  }
+  // upturned eave corners (飞檐): sweep up at both x-ends of the eave line
+  for (const e of [-1, 1]) {
+    for (const s of [-1, 1]) {
+      b.cube(cx + e * halfX,         yBase + 1, zc + s * halfZ,     PAL.goldBright);
+      b.cube(cx + e * (halfX - 1),   yBase + 1, zc + s * halfZ,     PAL.gold);
+      b.cube(cx + e * halfX,         yBase + 1, zc + s * (halfZ - 1), PAL.gold);
+      b.cube(cx + e * halfX,         yBase + 2, zc + s * (halfZ - 1), PAL.goldBright); // tip
+    }
+  }
+  // ridge-end finials (鸱吻)
+  for (const e of [-1, 1]) {
+    b.cube(cx + e * halfX,       yBase + halfZ + 1, zc, PAL.goldBright);
+    b.cube(cx + e * (halfX - 1), yBase + halfZ + 1, zc, PAL.gold);
+    b.cube(cx + e * halfX,       yBase + halfZ + 2, zc, PAL.goldBright);
+    b.cube(cx + e * (halfX + 1), yBase + halfZ + 1, zc, PAL.goldDark);
+  }
+}
+
+/* =====================================================================
+   GROUND & STREET
+   ===================================================================== */
+function createStreet() {
+  const b = new Builder('street');
+  b.add(0, -0.5, -8, 160, 1, 110, PAL.roadGray);        // asphalt
+  b.add(0, 0.02, 8, 90, 0.06, 30, PAL.walkGray);        // sidewalk in front of gate
+  b.add(0, 0.03, -6, 90, 0.06, 26, PAL.walkGray);       // sidewalk behind
+  for (let i = -4; i <= 4; i++) {                        // crosswalk stripes
+    b.add(i * 3.2, 0.05, 19, 2.0, 0.06, 5, PAL.white);
+  }
+  b.add(-24, 0.04, 8, 0.8, 0.07, 30, PAL.goldDark);     // guide line L
+  b.add(24, 0.04, 8, 0.8, 0.07, 30, PAL.goldDark);      // guide line R
+  return b.build();
+}
+
+/* =====================================================================
+   STONE LION (石狮) — blocky guardian, mirrored to both sides
+   ===================================================================== */
+function createLion(b, cx) {
+  // pedestal
+  b.add(cx, 1.0, 6, 4.4, 2.0, 4.4, PAL.stoneDark);
+  b.add(cx, 2.15, 6, 4.8, 0.4, 4.8, PAL.stone);
+  // sitting body
+  b.add(cx, 3.6, 5.4, 2.6, 2.8, 3.0, PAL.stone);
+  b.add(cx, 3.2, 4.4, 3.0, 2.0, 1.8, PAL.stone);        // haunches
+  // front legs + paws
+  b.add(cx - 0.8, 3.2, 6.9, 0.9, 1.8, 1.2, PAL.stone);
+  b.add(cx + 0.8, 3.2, 6.9, 0.9, 1.8, 1.2, PAL.stone);
+  b.add(cx - 0.8, 2.6, 7.3, 1.1, 0.8, 1.2, PAL.stone);  // paws
+  b.add(cx + 0.8, 2.6, 7.3, 1.1, 0.8, 1.2, PAL.stone);
+  // head + mane
+  b.add(cx, 5.9, 6.4, 2.8, 2.6, 2.6, PAL.stone);
+  b.add(cx - 1.5, 6.2, 6.0, 0.8, 1.4, 1.6, PAL.stone);  // mane bumps
+  b.add(cx + 1.5, 6.2, 6.0, 0.8, 1.4, 1.6, PAL.stone);
+  b.add(cx, 7.5, 5.9, 2.4, 0.8, 2.2, PAL.stone);
+  b.add(cx - 1.1, 7.4, 6.6, 0.7, 0.7, 0.7, PAL.stone);  // ears
+  b.add(cx + 1.1, 7.4, 6.6, 0.7, 0.7, 0.7, PAL.stone);
+  // face
+  b.add(cx, 5.6, 7.6, 1.6, 1.1, 0.9, PAL.stone);        // muzzle
+  b.add(cx, 5.9, 8.05, 0.5, 0.5, 0.3, PAL.stoneDark);   // nose
+  b.add(cx - 0.7, 6.4, 7.75, 0.4, 0.4, 0.3, PAL.dark);  // eyes
+  b.add(cx + 0.7, 6.4, 7.75, 0.4, 0.4, 0.3, PAL.dark);
+  b.add(cx, 5.0, 7.7, 0.9, 0.3, 0.3, PAL.stoneDark);    // mouth
+  // curly mane dots (voxel ornament)
+  for (let i = 0; i < 6; i++) {
+    const a = i * Math.PI / 3;
+    b.cube(cx + Math.round(Math.cos(a) * 1.7), 6 + Math.round(Math.sin(a) * 1.3), 5.6, PAL.stone, 0, 0.55);
+  }
+}
+
+/* =====================================================================
+   DRAGON CARVING (龙纹) — sinuous gold body on the main beam front
+   ===================================================================== */
+function createDragon(b, x0, dir) {
+  // dir = +1 : dragon on the right facing centre (head toward x=0)
+  for (let i = 0; i < 9; i++) {
+    const x = x0 - dir * i * 0.85;
+    const y = 19.3 + Math.sin(i * 0.9) * 0.7;
+    b.add(x, y, 1.35, 0.85, 0.85, 0.7, i % 2 ? PAL.gold : PAL.goldBright);
+  }
+  const hx = x0 - dir * 8 * 0.85;
+  b.add(hx, 19.6, 1.4, 1.5, 1.3, 0.9, PAL.goldBright);   // head
+  b.add(hx + dir * 0.2, 20.3, 1.4, 0.4, 0.5, 0.4, PAL.gold);     // horn
+  b.add(hx - dir * 0.4, 20.3, 1.4, 0.4, 0.4, 0.4, PAL.gold);
+  b.add(hx + dir * 0.7, 19.3, 1.4, 0.6, 0.4, 0.5, PAL.white);    // whisker/claw hint
+  b.add(hx + dir * 0.4, 18.9, 1.3, 0.5, 0.5, 0.5, PAL.redBright); // red pearl-ish accent
+  // claw
+  b.add(x0 - dir * 3.4, 18.7, 1.3, 0.5, 0.7, 0.5, PAL.goldBright);
+}
+
+/* =====================================================================
+   CLOUD PATTERN (祥云) — floating white voxel clusters
+   ===================================================================== */
+function createCloud(b, cx, cy, cz) {
+  const cells = [
+    [0, 0, 0], [1, 0, 0], [-1, 0, 0], [2, 0, 0], [-2, 0, 0],
+    [0, 1, 0], [1, 1, 0], [-1, 1, 0],
+    [1, 0, 1], [-1, 0, 1], [0, 0, 1], [0, 2, 0]
+  ];
+  for (const [dx, dy, dz] of cells) {
+    b.cube(cx + dx * 0.9, cy + dy * 0.9, cz + dz * 0.9, dy === 2 ? PAL.goldBright : PAL.white, 0, 0.95);
+  }
+}
+
+/* =====================================================================
+   SIGNBOARD TEXTURE (匾额) — pixelated canvas so it stays voxel-styled
+   ===================================================================== */
+function makeTextTexture(text, sub, w, h) {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = Math.round(512 * h / w);
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  g.fillStyle = '#43100e';
+  g.fillRect(0, 0, c.width, c.height);
+  // voxel border
+  g.strokeStyle = '#f0c14b';
+  g.lineWidth = c.height * 0.06;
+  g.strokeRect(c.height * 0.04, c.height * 0.04, c.width - c.height * 0.08, c.height - c.height * 0.08);
+  g.fillStyle = '#f3ce6a';
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  if (sub) {
+    g.font = `bold ${Math.round(c.height * 0.52)}px "PingFang SC", "Heiti SC", "Songti SC", serif`;
+    g.fillText(text, c.width / 2, c.height * 0.40);
+    g.font = `bold ${Math.round(c.height * 0.17)}px Georgia, serif`;
+    g.fillStyle = '#e8b23a';
+    g.fillText(sub, c.width / 2, c.height * 0.78);
+  } else {
+    g.font = `bold ${Math.round(c.height * 0.6)}px Georgia, serif`;
+    g.fillStyle = '#f3ce6a';
+    g.fillText(text, c.width / 2, c.height / 2);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.magFilter = THREE.NearestFilter;   // keep the chunky look
+  tex.minFilter = THREE.LinearMipmapLinearFilter;
+  return tex;
+}
+
+/* =====================================================================
+   MAIN GATE (牌楼)
+   layout: 4 pillars (inner ±5, outer ±14), 3 roof tiers
+           side roofs y=16 · central roof y=26 · top roof y=31
+   ===================================================================== */
+function createGate() {
+  const b = new Builder('gate');
+
+  /* --- stone plinths + 4 red pillars --- */
+  for (const px of [-14, -5, 5, 14]) {
+    b.add(px, 1.5, 0, 4.6, 3, 4.6, PAL.stone);
+    b.add(px, 3.1, 0, 5.0, 0.5, 5.0, PAL.gold);
+    b.add(px, 3.5, 0, 4.2, 0.4, 4.2, PAL.stoneDark);
+  }
+  b.add(-5, 14.5, 0, 2, 26, 2, PAL.pillarRed);   // inner pillars (tall)
+  b.add(5, 14.5, 0, 2, 26, 2, PAL.pillarRed);
+  b.add(-14, 10, 0, 2, 17, 2, PAL.pillarRed);    // outer pillars
+  b.add(14, 10, 0, 2, 17, 2, PAL.pillarRed);
+  for (const px of [-14, -5, 5, 14]) {           // pillar base rings + collars
+    b.add(px, 4.2, 0, 2.5, 0.6, 2.5, PAL.gold);
+    b.add(px, px === -14 || px === 14 ? 16.6 : 25.6, 0, 2.6, 0.8, 2.6, PAL.gold);
+  }
+
+  /* --- beams (额枋) --- */
+  b.add(0, 16.3, 0, 30, 1.6, 1.8, PAL.redDeep);      // lower beam
+  b.add(0, 19.2, 0, 30, 2.4, 2, PAL.pillarRed);      // main beam
+  b.add(0, 20.7, 0, 30.6, 0.6, 2.4, PAL.gold);       // gold trim
+  b.add(0, 17.5, 0, 30.2, 0.5, 2.2, PAL.goldDark);
+  for (const px of [-9.5, -2.5, 2.5, 9.5]) {         // short posts between beams
+    b.add(px, 17.8, 0, 0.9, 1.4, 1.6, PAL.gold);
+  }
+
+  /* --- dragon carvings on the main beam --- */
+  createDragon(b, 12.6, +1);
+  createDragon(b, -12.6, -1);
+
+  /* --- dou-gong bracket clusters (斗拱) --- */
+  for (const px of [-14, -5, 5, 14]) {
+    const topY = (px === -5 || px === 5) ? 25.2 : 16.4;
+    b.add(px, topY, 0, 4.4, 0.8, 3.4, PAL.white);
+    b.add(px, topY + 0.9, 0, 3.2, 0.8, 2.6, PAL.gold);
+  }
+
+  /* --- central signboard (匾额): frame + face + text plane --- */
+  b.add(0, 23.5, 0.4, 12, 5.6, 2.4, PAL.redDeep);           // backing panel
+  b.add(0, 23.5, 2.3, 13, 6, 1, PAL.gold);                  // gold frame
+  b.add(0, 23.5, 2.6, 11, 4.6, 0.8, 0x43100e);              // dark face
+  const signTex = makeTextTexture('唐人街', 'CHINATOWN', 11, 4.6);
+  const sign = new THREE.Mesh(
+    new THREE.PlaneGeometry(10.6, 4.5),
+    new THREE.MeshBasicMaterial({ map: signTex })
+  );
+  sign.position.set(0, 23.5, 3.02);
+
+  /* --- small CHINATOWN board on the main beam --- */
+  b.add(0, 19.2, 1.4, 9.6, 2.2, 0.6, PAL.gold);
+  b.add(0, 19.2, 1.6, 8.2, 1.5, 0.4, 0x43100e);
+  const beamTex = makeTextTexture('CHINATOWN', null, 8.2, 1.5);
+  const beamSign = new THREE.Mesh(
+    new THREE.PlaneGeometry(8.0, 1.35),
+    new THREE.MeshBasicMaterial({ map: beamTex })
+  );
+  beamSign.position.set(0, 19.2, 1.82);
+
+  /* --- cloud patterns --- */
+  createCloud(b, -12.5, 21.5, 2.5);
+  createCloud(b, 12.5, 21.5, 2.5);
+  createCloud(b, -7.5, 30.5, 3.2);
+  createCloud(b, 7.5, 30.5, 3.2);
+
+  /* --- stone lions at the base --- */
+  createLion(b, -7);
+  createLion(b, 7);
+
+  /* --- 3 roof tiers --- */
+  buildRoof(b, -10, 16, 4, 3, 0);   // left side roof
+  buildRoof(b, 10, 16, 4, 3, 0);    // right side roof
+  buildRoof(b, 0, 26, 9, 3, 0);     // central roof (mid tier)
+  buildRoof(b, 0, 31, 5, 2, 0);     // top roof (top tier)
+
+  /* pedestal carrying the top tier */
+  b.add(0, 30, 0, 5, 1.2, 2, PAL.pillarRed);
+  b.add(0, 30.7, 0, 5.6, 0.5, 2.4, PAL.gold);
+
+  const group = b.build();
+  group.add(sign, beamSign);
+  return { group, blockCount: b.count() };
+}
+
+/* =====================================================================
+   RED LANTERNS (红灯笼) — hanging, glowing, gently swaying
+   ===================================================================== */
+const lanterns = [];
+function createLantern(x, hangY, z, phase) {
+  const pivot = new THREE.Group();
+  pivot.position.set(x, hangY, z);
+
+  const b = new Builder('lantern');
+  // cord
+  b.add(0, -0.5, 0, 0.18, 1.0, 0.18, PAL.goldDark);
+  // gold caps
+  b.add(0, -1.15, 0, 1.5, 0.4, 1.5, PAL.gold);
+  b.add(0, -3.05, 0, 1.5, 0.4, 1.5, PAL.gold);
+  // glowing body: rounded cube of voxels
+  for (const i of [-0.62, 0, 0.62]) {
+    for (const j of [-0.62, 0, 0.62]) {
+      for (const k of [-0.62, 0, 0.62]) {
+        const corner = Math.abs(i) > 0.5 && Math.abs(k) > 0.5 && j === 0;
+        if (corner) continue;
+        b.cube(i, -2.1 + j, k, PAL.lantern, GLOW.lantern, 0.64);
+      }
+    }
+  }
+  // gold ribs
+  b.add(0, -2.1, 0.82, 1.3, 0.16, 0.16, PAL.goldDark);
+  b.add(0, -2.1, -0.82, 1.3, 0.16, 0.16, PAL.goldDark);
+  // tassel
+  b.add(0, -3.5, 0, 0.28, 0.7, 0.28, PAL.redBright);
+  b.cube(0, -3.95, 0, PAL.gold, 0, 0.34);
+
+  const model = b.build();
+  model.castShadow = true;
+  pivot.add(model);
+
+  const light = new THREE.PointLight(0xff7a33, 22, 16, 2);
+  light.position.set(0, -2.1, 0.4);
+  pivot.add(light);
+
+  pivot.userData = { light, phase };
+  lanterns.push(pivot);
+  return pivot;
+}
+
+/* =====================================================================
+   STREET BACKDROP — blocky buildings with warm windows behind the gate
+   ===================================================================== */
+function createBuildings() {
+  const b = new Builder('buildings');
+  const specs = [
+    { x: 3,  y: 15, z: -34, w: 26, h: 30, d: 14, c: PAL.bldgC },
+    { x: 22, y: 11, z: -26, w: 16, h: 22, d: 14, c: PAL.bldgA },
+    { x: -22, y: 10, z: -26, w: 16, h: 20, d: 14, c: PAL.bldgB },
+    { x: 40, y: 8,  z: -22, w: 14, h: 16, d: 12, c: PAL.bldgB },
+    { x: -41, y: 9, z: -24, w: 14, h: 18, d: 12, c: PAL.bldgA }
+  ];
+  let idx = 0;
+  for (const s of specs) {
+    b.add(s.x, s.y, s.z, s.w, s.h, s.d, s.c);
+    b.add(s.x, s.y + s.h / 2 + 0.4, s.z, s.w + 0.8, 0.8, s.d + 0.8, PAL.stoneDark); // parapet
+    // window grid on the front face
+    const cols = Math.floor(s.w / 3.2);
+    const rows = Math.floor(s.h / 4);
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        idx++;
+        if (rnd(idx) < 0.35) continue;
+        const wx = s.x - s.w / 2 + 1.8 + i * 3.2;
+        const wy = 2.6 + j * 4;
+        b.add(wx, wy, s.z + s.d / 2 + 0.1, 1.8, 2.2, 0.25,
+          rnd(idx * 3) < 0.7 ? PAL.windowGlow : 0x3c3f46,
+          rnd(idx * 3) < 0.7 ? GLOW.window : 0);
+      }
+    }
+  }
+  return b.build();
+}
+
+/* =====================================================================
+   LIGHTING — warm dusk ambience + lantern glow
+   ===================================================================== */
+function createLights() {
+  scene.add(new THREE.AmbientLight(0xffd9a8, 1.15));
+  const hemi = new THREE.HemisphereLight(0x8a7f9a, 0x3a3128, 0.5);
+  scene.add(hemi);
+
+  const key = new THREE.DirectionalLight(0xffe3b3, 2.3);
+  key.position.set(28, 46, 38);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.left = -45;
+  key.shadow.camera.right = 45;
+  key.shadow.camera.top = 55;
+  key.shadow.camera.bottom = -12;
+  key.shadow.camera.far = 160;
+  key.shadow.bias = -0.0004;
+  scene.add(key);
+
+  const fill = new THREE.DirectionalLight(0xffb37a, 0.55);
+  fill.position.set(-24, 20, 30);
+  scene.add(fill);
+}
+
+/* =====================================================================
+   ASSEMBLE
+   ===================================================================== */
+function init() {
+  createLights();
+  scene.add(createStreet());
+  scene.add(createBuildings());
+
+  const gate = createGate();
+  scene.add(gate.group);
+
+  // 6 red lanterns hanging from the beam line
+  const spots = [
+    [-14.5, 18, 2.4], [-9.5, 18, 2.4], [-2.5, 18, 2.4],
+    [2.5, 18, 2.4], [9.5, 18, 2.4], [14.5, 18, 2.4]
+  ];
+  spots.forEach(([x, y, z], i) => scene.add(createLantern(x, y, z, i * 1.13)));
+
+  window.__paifang = {
+    ready: true,
+    gateBlocks: gate.blockCount,
+    lanterns: lanterns.length,
+    renderer
+  };
+}
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* ---------- animate ---------- */
+init();
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  for (const l of lanterns) {
+    const ph = l.userData.phase;
+    l.rotation.z = Math.sin(t * 1.1 + ph) * 0.055;
+    l.rotation.x = Math.sin(t * 0.8 + ph * 1.7) * 0.03;
+    l.userData.light.intensity = 20 + Math.sin(t * 12 + ph * 3) * 2.2 + Math.sin(t * 5.3 + ph) * 1.5;
+  }
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>

@@ -9,9 +9,12 @@ import {
 	evalLedger,
 	evalTaskRoute,
 	evalThumb,
-	evalYearGroups,
-	evalYears,
+	evalTaskCards,
+	evalModel,
 	isImageCase,
+	shortDate,
+	vendorMark,
+	caseYear,
 	type EvalLedger,
 } from './evalCases';
 
@@ -38,11 +41,15 @@ describe('eval case ledger', () => {
 		}
 	});
 
-	it('derives the evaluation year from the run date', () => {
-		for (const item of cases) {
-			expect(item.date, item.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-			expect(item.year, item.id).toBe(Number(item.date.slice(0, 4)));
-		}
+	it('dates every run and every model release', () => {
+		for (const item of cases) expect(item.date, item.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+		for (const model of models) expect(model.released, model.id).toMatch(/^\d{4}-\d{2}$/);
+	});
+
+	it('files a case under its model release year, not the run date', () => {
+		const glm47 = { ...cases[0], model: 'glm-4.7', date: '2026-05-01' };
+		expect(evalModel('glm-4.7').released.startsWith('2025')).toBe(true);
+		expect(caseYear(glm47)).toBe(2025);
 	});
 
 	it('accounts for every published demo file exactly once', () => {
@@ -80,35 +87,47 @@ describe('eval case ledger', () => {
 	});
 });
 
-describe('eval year groups', () => {
-	it('lists years newest first and keeps single-model tasks', () => {
-		const groups = evalYearGroups();
-		expect(groups.map((group) => group.year)).toEqual(evalYears());
-		expect(groups.reduce((sum, group) => sum + group.caseCount, 0)).toBe(cases.length);
-		const singles = groups
-			.flatMap((group) => group.cards)
-			.filter((card) => card.cases.length === 1);
-		expect(singles.length).toBeGreaterThan(0);
+describe('eval task cards', () => {
+	it('lists every task once, flat, newest run first', () => {
+		const cards = evalTaskCards();
+		expect(cards.map((card) => card.task.id).sort()).toEqual(tasks.map((task) => task.id).sort());
+		expect(cards.reduce((sum, card) => sum + card.cases.length, 0)).toBe(cases.length);
+		const newest = cards.map((card) => card.cases[0].date);
+		expect(newest).toEqual([...newest].sort().reverse());
+		expect(cards.some((card) => card.cases.length === 1)).toBe(true);
 	});
 
-	it('splits a task tested in two years into one card per year', () => {
+	it('keeps models from different release years on the same card', () => {
+		// glm-4.7 is a 2025 model; glm-5 and kimi-k2.5 are 2026 models.
 		const fixture: EvalLedger = {
 			...evalLedger,
 			tasks: [{ ...tasks[0], id: 't' }],
 			cases: [
-				{ ...cases[0], id: 'a', task: 't', date: '2025-12-01', year: 2025 },
-				{ ...cases[0], id: 'b', task: 't', date: '2026-02-01', year: 2026 },
-				{ ...cases[0], id: 'c', task: 't', date: '2026-01-01', year: 2026 },
+				{ ...cases[0], id: 'a', task: 't', model: 'glm-4.7', date: '2026-03-01' },
+				{ ...cases[0], id: 'b', task: 't', model: 'glm-5', date: '2026-02-15' },
+				{ ...cases[0], id: 'c', task: 't', model: 'kimi-k2.5', date: '2026-01-28' },
 			],
 		};
-		const groups = evalYearGroups(fixture);
-		expect(
-			groups.map((group) => [group.year, group.cards[0].cases.map((item) => item.id)]),
-		).toEqual([
-			[2026, ['b', 'c']],
-			[2025, ['a']],
-		]);
-		expect(groups[0].cards[0].otherYears).toEqual([{ year: 2025, count: 1 }]);
-		expect(groups[1].cards[0].otherYears).toEqual([{ year: 2026, count: 2 }]);
+		const [card] = evalTaskCards(fixture);
+		expect(card.cases.map((item) => item.id)).toEqual(['a', 'b', 'c']);
+		expect(card.years).toEqual([2026, 2025]);
+	});
+});
+
+describe('eval presentation helpers', () => {
+	it('ships a logo for every vendor in the ledger', () => {
+		const vendors = [...new Set(models.map((model) => model.vendor))];
+		for (const vendor of vendors) {
+			const { logo } = vendorMark(vendor);
+			expect(logo, vendor).not.toBeNull();
+			expect(existsSync(resolve(staticRoot, `.${logo}`)), vendor).toBe(true);
+		}
+		expect(vendorMark('Someone New')).toEqual({ logo: null, initial: 'S' });
+	});
+
+	it('drops the year from dates in the current year only', () => {
+		const now = new Date('2026-09-23T00:00:00Z');
+		expect(shortDate('2026-08-14', now)).toBe('08-14');
+		expect(shortDate('2025-12-14', now)).toBe('2025-12-14');
 	});
 });

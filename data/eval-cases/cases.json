@@ -2019,6 +2019,19 @@
         "canvas"
       ],
       "bytes": 819750
+    },
+    {
+      "id": "gpt-6-astra-js-video-midline-theorem",
+      "task": "js-video-midline-theorem",
+      "model": "gpt-6-astra",
+      "kind": "video",
+      "file": "/media/eval-cases/gpt-6-astra-js-video-midline-theorem.mp4",
+      "date": "2026-09-24",
+      "page_title": null,
+      "stack": [
+        "ffmpeg"
+      ],
+      "bytes": 4053546
     }
   ],
   "excluded_files": [

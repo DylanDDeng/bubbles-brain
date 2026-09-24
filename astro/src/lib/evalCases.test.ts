@@ -11,7 +11,9 @@ import {
 	evalThumb,
 	evalTaskCards,
 	evalModel,
+	isHtmlCase,
 	isImageCase,
+	isVideoCase,
 	shortDate,
 	vendorMark,
 	caseYear,
@@ -58,7 +60,7 @@ describe('eval case ledger', () => {
 			.map((name) => `/eval-demos/${name}`)
 			.sort();
 		const listed = [
-			...cases.filter((item) => !isImageCase(item)).map((item) => item.file),
+			...cases.filter(isHtmlCase).map((item) => item.file),
 			...evalLedger.excluded_files.map((x) => x.file),
 		];
 		expect(new Set(listed).size).toBe(listed.length);
@@ -68,6 +70,13 @@ describe('eval case ledger', () => {
 	it('keeps screenshot works out of the executable demo directory', () => {
 		for (const item of cases.filter(isImageCase)) {
 			expect(item.file, item.id).toMatch(/^\/images\/eval-cases\/works\/[^/]+\.(webp|png|jpe?g)$/);
+			expect(existsSync(resolve(staticRoot, `.${item.file}`)), item.id).toBe(true);
+		}
+	});
+
+	it('keeps rendered videos out of the executable demo directory', () => {
+		for (const item of cases.filter(isVideoCase)) {
+			expect(item.file, item.id).toMatch(/^\/media\/eval-cases\/[^/]+\.mp4$/);
 			expect(existsSync(resolve(staticRoot, `.${item.file}`)), item.id).toBe(true);
 		}
 	});

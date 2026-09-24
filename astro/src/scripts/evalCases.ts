@@ -137,7 +137,7 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 
 interface Run {
 	id: string;
-	kind: 'html' | 'image';
+	kind: 'html' | 'image' | 'video';
 	file: string;
 	thumb: string;
 	railThumb: string;
@@ -163,14 +163,33 @@ const stageScale = new ResizeObserver((entries) => {
 });
 
 function unmount(stage: HTMLElement) {
-	stage.querySelector('iframe')?.remove();
+	stage.querySelector('iframe, video')?.remove();
 	delete stage.dataset.running;
+}
+
+const playLabel = (kind: Run['kind']) => (kind === 'video' ? '播放视频' : '点击运行');
+
+// Rendered videos play natively, letterboxed on the stage; they are not demos and need no scaling.
+function mountVideo(stage: HTMLElement, src: string) {
+	const video = document.createElement('video');
+	video.src = src;
+	video.controls = true;
+	video.playsInline = true;
+	video.autoplay = true;
+	video.preload = 'auto';
+	video.title = stage.dataset.title ?? '';
+	stage.append(video);
+	stage.dataset.running = 'true';
 }
 
 function mount(stage: HTMLElement) {
 	const src = stage.dataset.src;
 	if (!src || stage.classList.contains('is-image')) return;
 	unmount(stage);
+	if (stage.classList.contains('is-video')) {
+		mountVideo(stage, src);
+		return;
+	}
 	const frame = document.createElement('iframe');
 	frame.src = src;
 	frame.title = stage.dataset.title ?? '';
@@ -217,12 +236,14 @@ function setupTask(root: HTMLElement, signal: AbortSignal) {
 		stage.dataset.src = run.file;
 		stage.dataset.title = run.title;
 		stage.classList.toggle('is-image', run.kind === 'image');
+		stage.classList.toggle('is-video', run.kind === 'video');
 		const poster = slot.querySelector<HTMLAnchorElement>('[data-slot-poster]')!;
 		poster.href = run.file;
 		const thumb = slot.querySelector<HTMLImageElement>('[data-slot-thumb]')!;
 		thumb.src = run.thumb;
 		thumb.alt = run.title;
 		slot.querySelector<HTMLElement>('[data-slot-play]')!.hidden = run.kind === 'image';
+		slot.querySelector<HTMLElement>('[data-play-label]')?.replaceChildren(playLabel(run.kind));
 		const avatar = slot.querySelector<HTMLElement>('[data-slot-avatar]')!;
 		avatar.title = run.vendor;
 		if (run.logo) {
@@ -243,7 +264,7 @@ function setupTask(root: HTMLElement, signal: AbortSignal) {
 			run.kind === 'image' ? '查看原图' : '新窗口打开';
 		slot.querySelector<HTMLElement>('[data-eval-reload]')!.hidden = true;
 		// Keep playing when the viewer flips between runs: once a slot is live, the next run starts too.
-		if (state.running[key] && run.kind === 'html') mount(stage);
+		if (state.running[key] && run.kind !== 'image') mount(stage);
 	}
 
 	function paintChrome() {
@@ -309,7 +330,9 @@ function setupTask(root: HTMLElement, signal: AbortSignal) {
 	}
 
 	for (const [key, slot] of Object.entries(slots) as Array<[Key, HTMLElement | null]>) {
-		slot?.querySelector<HTMLElement>('[data-play-label]')?.replaceChildren('点击运行');
+		slot
+			?.querySelector<HTMLElement>('[data-play-label]')
+			?.replaceChildren(playLabel(runs[state.index[key]].kind));
 		slot?.addEventListener(
 			'click',
 			(event) => {
@@ -374,7 +397,8 @@ function setupTask(root: HTMLElement, signal: AbortSignal) {
 		if (keys) keys.hidden = false;
 		paintChrome();
 	}
-	if (theater.dataset.autorun) run('a');
+	// A lone demo starts by itself; a lone video waits for a click rather than pulling megabytes.
+	if (theater.dataset.autorun && runs[state.index.a].kind === 'html') run('a');
 
 	setupPrompt(root, signal);
 }

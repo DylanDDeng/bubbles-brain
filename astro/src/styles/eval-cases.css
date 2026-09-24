@@ -118,7 +118,7 @@
 	align-items: center;
 	gap: 6px;
 	height: 28px;
-	padding: 0 9px;
+	padding: 0 8px;
 	border: 0;
 	border-radius: 7px;
 	background: transparent;
@@ -186,6 +186,8 @@
 .eval-menu select {
 	height: 100%;
 	max-width: 150px;
+	/* Size to the chosen option, not the longest model name, so the toolbar keeps to one row. */
+	field-sizing: content;
 	padding: 0 26px 0 30px;
 	border: 0;
 	border-radius: 8px;
@@ -561,6 +563,17 @@
 	background: #fff;
 	transform: scale(var(--eval-scale, 1));
 	transform-origin: 0 0;
+}
+
+/* Rendered videos keep their own aspect ratio, letterboxed on black. */
+.eval-stage video {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	object-fit: contain;
 }
 
 .eval-stage[data-running] .eval-poster {

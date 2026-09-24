@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated_at": "2026-09-24",
-  "notes": "case.date is when the demo was generated: the source file timestamp when known, otherwise the day it was first committed. The year a case is filed under is its model's release year (models[].released), not the run date. Cases with kind \"image\" are static screenshots (file lives under /images/eval-cases/works/); all others are runnable HTML under /eval-demos/.",
+  "notes": "case.date is when the demo was generated: the source file timestamp when known, otherwise the day it was first committed. The year a case is filed under is its model's release year (models[].released), not the run date. Cases with kind \"image\" are static screenshots (file lives under /images/eval-cases/works/), kind \"video\" are rendered MP4s (under /media/eval-cases/); all others are runnable HTML under /eval-demos/.",
   "categories": [
     {
       "id": "voxel",
@@ -50,6 +50,13 @@
       "name": {
         "zh": "生成艺术",
         "en": "Generative art"
+      }
+    },
+    {
+      "id": "video",
+      "name": {
+        "zh": "代码视频",
+        "en": "Code-made video"
       }
     }
   ],
@@ -533,6 +540,18 @@
       "difficulty": "medium",
       "prompt": {
         "zh": "用p5.brush.js 模仿徐悲鸿画马"
+      }
+    },
+    {
+      "id": "js-video-midline-theorem",
+      "title": {
+        "zh": "用 JS 制作视频：三角形中位线定理",
+        "en": "JS-made Video: Triangle Midline Theorem"
+      },
+      "category": "video",
+      "difficulty": "hard",
+      "prompt": {
+        "zh": "只用 JS 制作一个视频，讲述三角形中位线定理"
       }
     }
   ],
@@ -1973,6 +1992,20 @@
         "canvas"
       ],
       "bytes": 95837
+    },
+    {
+      "id": "claude-opus-5.5-js-video-midline-theorem",
+      "task": "js-video-midline-theorem",
+      "model": "claude-opus-5.5",
+      "kind": "video",
+      "file": "/media/eval-cases/claude-opus-5.5-js-video-midline-theorem.mp4",
+      "date": "2026-09-24",
+      "page_title": "三角形中位线定理",
+      "stack": [
+        "canvas",
+        "ffmpeg"
+      ],
+      "bytes": 7308808
     }
   ],
   "excluded_files": [

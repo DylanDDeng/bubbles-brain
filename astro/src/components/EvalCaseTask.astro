@@ -8,7 +8,9 @@ import {
 	evalModel,
 	evalThumb,
 	formatBytes,
+	isHtmlCase,
 	isImageCase,
+	isVideoCase,
 	modelCount,
 	shortDate,
 	vendorMark,
@@ -24,7 +26,9 @@ interface Props {
 
 const { task } = Astro.props;
 const cases = casesForTask(task.id);
+// Something the stage can start (a demo or a video), and whether any of it is sandboxed HTML.
 const hasDemo = cases.some((item) => !isImageCase(item));
+const hasHtml = cases.some(isHtmlCase);
 const models = modelCount(cases);
 const multi = cases.length > 1;
 const latest = cases[0].date;
@@ -37,7 +41,7 @@ const runs = cases.map((item) => {
 	const image = isImageCase(item);
 	return {
 		id: item.id,
-		kind: image ? 'image' : 'html',
+		kind: image ? 'image' : isVideoCase(item) ? 'video' : 'html',
 		file: item.file,
 		thumb: image ? item.file : evalThumb(item.id),
 		railThumb: evalThumb(item.id),
@@ -110,7 +114,10 @@ const second = runs[1] ?? runs[0];
 						({ key, run }) => (
 							<figure class="eval-slot" data-slot={key} hidden={key === 'b'}>
 								<div
-									class:list={['eval-stage', { 'is-image': run.kind === 'image' }]}
+									class:list={[
+										'eval-stage',
+										{ 'is-image': run.kind === 'image', 'is-video': run.kind === 'video' },
+									]}
 									data-eval-stage
 									data-src={run.file}
 									data-title={run.title}
@@ -286,7 +293,7 @@ const second = runs[1] ?? runs[0];
 			}
 
 			{
-				hasDemo && (
+				hasHtml && (
 					<p class="eval-footnote">
 						作品是模型交出的 HTML
 						文件，原样运行在隔离的沙箱里，无法读取本站的登录状态。部分作品依赖外部

@@ -31,8 +31,11 @@ export interface EvalCase {
 	id: string;
 	task: string;
 	model: string;
-	/** Runnable HTML under /eval-demos/ (default) or a static screenshot under /images/eval-cases/works/. */
-	kind?: 'html' | 'image';
+	/**
+	 * Runnable HTML under /eval-demos/ (default), a static screenshot under
+	 * /images/eval-cases/works/, or a rendered MP4 under /media/eval-cases/.
+	 */
+	kind?: 'html' | 'image' | 'video';
 	file: string;
 	/** When the run was made. The year a case is filed under comes from its model, not from this. */
 	date: string;
@@ -67,6 +70,14 @@ export function evalTaskRoute(taskId: string): string {
 
 export function isImageCase(item: EvalCase): boolean {
 	return item.kind === 'image';
+}
+
+export function isVideoCase(item: EvalCase): boolean {
+	return item.kind === 'video';
+}
+
+export function isHtmlCase(item: EvalCase): boolean {
+	return !item.kind || item.kind === 'html';
 }
 
 export function evalThumb(caseId: string): string {

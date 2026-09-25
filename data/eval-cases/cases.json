@@ -2165,6 +2165,18 @@
         "svg"
       ],
       "bytes": 14473
+    },
+    {
+      "id": "claude-fable-5-switch-pokemon",
+      "task": "switch-pokemon-svg",
+      "model": "claude-fable-5",
+      "file": "/eval-demos/claude-fable-5-switch-pokemon.html",
+      "date": "2026-06-09",
+      "page_title": "Switch · Pocket Battle — SVG Animation",
+      "stack": [
+        "svg"
+      ],
+      "bytes": 17866
     }
   ],
   "excluded_files": [

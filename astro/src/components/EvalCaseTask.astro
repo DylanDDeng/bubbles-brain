@@ -252,6 +252,22 @@ const second = runs[1] ?? runs[0];
 			</section>
 
 			{
+				task.reference_image && (
+					<figure class="eval-reference">
+						<a
+							href={task.reference_image}
+							target="_blank"
+							rel="noopener"
+							data-astro-prefetch="false"
+						>
+							<img src={task.reference_image} alt="题目附带的参考图" loading="lazy" decoding="async" />
+						</a>
+						<figcaption>题目附带的参考图</figcaption>
+					</figure>
+				)
+			}
+
+			{
 				task.reference_video && (
 					<figure class="eval-reference">
 						<video src={task.reference_video} controls muted playsinline preload="metadata" />

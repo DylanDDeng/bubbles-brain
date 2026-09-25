@@ -24,6 +24,8 @@ export interface EvalTask {
 	difficulty: 'easy' | 'medium' | 'hard';
 	prompt: Bilingual;
 	reference_video?: string;
+	/** Image handed to the model with the prompt, under /images/eval-cases/refs/. */
+	reference_image?: string;
 	legacy_id?: string;
 }
 

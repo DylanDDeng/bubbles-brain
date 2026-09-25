@@ -81,12 +81,16 @@ describe('eval case ledger', () => {
 		}
 	});
 
-	it('ships a thumbnail for every case and a file for every reference video', () => {
+	it('ships a thumbnail for every case and a file for every reference video and image', () => {
 		for (const item of cases) {
 			expect(existsSync(resolve(staticRoot, `.${evalThumb(item.id)}`)), item.id).toBe(true);
 		}
 		for (const task of tasks.filter((t) => t.reference_video)) {
 			expect(existsSync(resolve(staticRoot, `.${task.reference_video}`)), task.id).toBe(true);
+		}
+		for (const task of tasks.filter((t) => t.reference_image)) {
+			expect(task.reference_image, task.id).toMatch(/^\/images\/eval-cases\/refs\/[^/]+\.(webp|png|jpe?g)$/);
+			expect(existsSync(resolve(staticRoot, `.${task.reference_image}`)), task.id).toBe(true);
 		}
 	});
 

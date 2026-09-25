@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xiaomi SU7 · SVG</title>
+<style>
+  :root { --bg: #8fa3b8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(ellipse 70% 45% at 45% 70%, rgba(223,231,239,.75), rgba(223,231,239,0) 70%),
+      linear-gradient(110deg, #546c86 0%, #7f96ae 45%, #c3cfdb 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    overflow: hidden;
+  }
+  svg { width: 100vw; height: 100vh; display: block; overflow: visible; }
+  .tail { animation: glow 3.2s ease-in-out infinite; }
+  @keyframes glow { 0%,100% { opacity: .85 } 50% { opacity: 1 } }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1446 613" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Xiaomi SU7 rear three-quarter view">
+  <defs>
+    <!-- Studio background -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0.35">
+      <stop offset="0" stop-color="#546c86"/>
+      <stop offset="0.45" stop-color="#7f96ae"/>
+      <stop offset="1" stop-color="#c3cfdb"/>
+    </linearGradient>
+    <radialGradient id="floorLight" cx="0.42" cy="0.78" r="0.55">
+      <stop offset="0" stop-color="#dfe7ef" stop-opacity=".95"/>
+      <stop offset="0.55" stop-color="#b9c7d6" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#8fa3b8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="vignette" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3f566f" stop-opacity=".35"/>
+      <stop offset=".45" stop-color="#3f566f" stop-opacity="0"/>
+      <stop offset="1" stop-color="#3f566f" stop-opacity=".25"/>
+    </linearGradient>
+
+    <!-- Paint -->
+    <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#46adf7"/>
+      <stop offset="0.35" stop-color="#1d8ae6"/>
+      <stop offset="0.75" stop-color="#1572cf"/>
+      <stop offset="1" stop-color="#0c4f9c"/>
+    </linearGradient>
+    <linearGradient id="rearPaint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3aa2f2"/>
+      <stop offset="0.4" stop-color="#1e8ce6"/>
+      <stop offset="1" stop-color="#0f5fb8"/>
+    </linearGradient>
+    <linearGradient id="sideShade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0a3f80" stop-opacity=".55"/>
+      <stop offset="0.35" stop-color="#0a3f80" stop-opacity="0"/>
+      <stop offset="0.75" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0a3f80" stop-opacity=".35"/>
+    </linearGradient>
+    <linearGradient id="lowerShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#062b5c" stop-opacity="0"/>
+      <stop offset="1" stop-color="#062b5c" stop-opacity=".55"/>
+    </linearGradient>
+
+    <!-- Glass -->
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a3442"/>
+      <stop offset="0.45" stop-color="#0d1219"/>
+      <stop offset="1" stop-color="#05070a"/>
+    </linearGradient>
+    <linearGradient id="sideGlass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3b4a5c"/>
+      <stop offset="0.5" stop-color="#1a222d"/>
+      <stop offset="1" stop-color="#0b0f15"/>
+    </linearGradient>
+
+    <!-- Taillight -->
+    <linearGradient id="tail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7a0b12"/>
+      <stop offset="0.2" stop-color="#e3242e"/>
+      <stop offset="0.5" stop-color="#ff5058"/>
+      <stop offset="0.8" stop-color="#e3242e"/>
+      <stop offset="1" stop-color="#8e0f17"/>
+    </linearGradient>
+
+    <!-- Wheels -->
+    <radialGradient id="rimFace" cx=".45" cy=".4" r=".7">
+      <stop offset="0" stop-color="#e9edf1"/>
+      <stop offset=".6" stop-color="#a8b0b9"/>
+      <stop offset="1" stop-color="#5d656e"/>
+    </radialGradient>
+    <radialGradient id="tire" cx=".5" cy=".5" r=".5">
+      <stop offset=".78" stop-color="#1a1c20"/>
+      <stop offset=".92" stop-color="#2b2e33"/>
+      <stop offset="1" stop-color="#0c0d0f"/>
+    </radialGradient>
+
+    <linearGradient id="rearFade" gradientUnits="userSpaceOnUse" x1="752" y1="0" x2="810" y2="0">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <mask id="rearMask"><rect x="700" y="250" width="360" height="220" fill="url(#rearFade)"/></mask>
+    <linearGradient id="haunch" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".55" stop-color="#e8f5ff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="blur30" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="blur8" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur3"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="blur1"><feGaussianBlur stdDeviation="1"/></filter>
+
+    <!-- Five twin-spoke rim, drawn in a unit circle (r = 60) -->
+    <g id="spoke">
+      <path d="M -5 -12 L -15 -52 L -2 -53 L 0 -12 Z" fill="#c9d0d7"/>
+      <path d="M 5 -12 L 15 -52 L 2 -53 L 0 -12 Z" fill="#9aa3ad"/>
+      <path d="M 0 -12 L -1 -53 L 1 -53 Z" fill="#3a4047"/>
+    </g>
+    <g id="rim">
+      <circle r="60" fill="url(#tire)"/>
+      <circle r="55" fill="none" stroke="#34383e" stroke-width="2"/>
+      <circle r="48" fill="#1e2227"/>
+      <!-- brake disc & caliper -->
+      <circle r="34" fill="#4b525a"/>
+      <circle r="34" fill="none" stroke="#6b737c" stroke-width="2" stroke-dasharray="2 3"/>
+      <path d="M -38 -14 A 40 40 0 0 0 -30 26 L -22 18 A 29 29 0 0 1 -28 -10 Z" fill="#d11f2a"/>
+      <circle r="48" fill="none" stroke="url(#rimFace)" stroke-width="6"/>
+      <use href="#spoke"/>
+      <use href="#spoke" transform="rotate(72)"/>
+      <use href="#spoke" transform="rotate(144)"/>
+      <use href="#spoke" transform="rotate(216)"/>
+      <use href="#spoke" transform="rotate(288)"/>
+      <circle r="13" fill="url(#rimFace)"/>
+      <circle r="6" fill="#2d3237"/>
+      <circle r="3" fill="#8a939c"/>
+    </g>
+  </defs>
+
+  <!-- ===== Studio ===== -->
+
+  <!-- ===== Shadows ===== -->
+  <ellipse cx="1000" cy="445" rx="400" ry="72" fill="#3c4d62" opacity=".55" filter="url(#blur30)"/>
+  <ellipse cx="760" cy="448" rx="300" ry="26" fill="#1c2633" opacity=".55" filter="url(#blur8)"/>
+  <ellipse cx="660" cy="472" rx="52" ry="10" fill="#0d1218" opacity=".7" filter="url(#blur3)"/>
+  <ellipse cx="452" cy="378" rx="36" ry="7" fill="#0d1218" opacity=".6" filter="url(#blur3)"/>
+
+  <!-- ===== Wheel wells (behind body openings) ===== -->
+  <ellipse cx="662" cy="398" rx="52" ry="72" fill="#070a0e"/>
+  <ellipse cx="450" cy="320" rx="34" ry="56" fill="#070a0e"/>
+
+  <!-- ===== Main body ===== -->
+  <path id="body" fill="url(#paint)" d="
+    M 432 250
+    C 446 238, 482 232, 516 230
+    L 560 205
+    C 600 180, 640 172, 700 170
+    C 780 166, 850 172, 900 200
+    C 935 222, 960 250, 975 272
+    C 995 278, 1015 286, 1025 300
+    C 1032 320, 1037 350, 1037 380
+    C 1037 410, 1033 432, 1020 441
+    L 850 449
+    C 800 451, 745 449, 712 442
+    C 716 395, 702 345, 664 332
+    C 628 324, 606 356, 606 400
+    L 490 372
+    C 490 322, 476 272, 452 266
+    C 434 266, 422 296, 421 334
+    C 418 300, 420 266, 432 250 Z"/>
+  <!-- side tonal shading -->
+  <path fill="url(#sideShade)" d="
+    M 432 250 C 446 238, 482 232, 516 230 L 760 272 L 770 440 L 712 442
+    C 716 395, 702 345, 664 332 C 628 324, 606 356, 606 400 L 490 372
+    C 490 322, 476 272, 452 266 C 434 266, 422 296, 421 334 C 418 300, 420 266, 432 250 Z"/>
+  <path fill="url(#lowerShade)" d="M 490 330 L 760 360 L 770 440 L 712 442 C 716 395, 702 345, 664 332 C 628 324, 606 356, 606 400 L 490 372 Z"/>
+
+  <!-- rear face -->
+  <path fill="url(#rearPaint)" mask="url(#rearMask)" d="
+    M 762 282
+    C 850 272, 965 268, 1024 298
+    C 1032 320, 1037 350, 1037 380
+    C 1037 410, 1033 432, 1020 441
+    L 850 449 C 815 450, 790 449, 772 446
+    C 760 400, 752 330, 762 282 Z"/>
+  <!-- rear-quarter bulge highlight -->
+  <path d="M 700 262 C 730 268, 752 276, 764 290 C 770 320, 766 350, 752 372 C 748 330, 736 296, 700 280 Z" fill="#7cc6ff" opacity=".35" filter="url(#blur3)"/>
+
+  <path d="M 640 262 C 690 266, 735 272, 768 288 C 790 284, 820 280, 850 279 C 810 286, 785 292, 770 298 C 740 284, 690 274, 640 268 Z" fill="url(#haunch)" filter="url(#blur1)"/>
+  <path d="M 440 250 C 460 242, 490 238, 516 236 C 490 244, 462 250, 444 258 Z" fill="#bfe3ff" opacity=".55" filter="url(#blur1)"/>
+
+  <!-- ===== Glass ===== -->
+  <!-- side windows -->
+  <path fill="url(#sideGlass)" d="
+    M 520 242 C 540 216, 572 195, 612 186
+    C 645 186, 680 198, 702 218
+    L 716 250 C 716 258, 708 261, 700 259
+    L 530 251 C 522 250, 517 247, 520 242 Z"/>
+  <path d="M 588 192 L 604 190 L 612 256 L 598 255 Z" fill="#0a0d12"/>
+  <path d="M 540 232 C 560 210, 585 198, 598 196 L 603 214 C 580 220, 558 232, 545 244 Z" fill="#8fa6bf" opacity=".22"/>
+  <!-- panoramic roof + rear window -->
+  <path fill="url(#glass)" d="
+    M 598 180
+    C 650 168, 760 163, 832 168
+    C 882 180, 926 216, 956 262
+    C 961 271, 951 275, 940 275
+    L 782 278
+    C 762 278, 748 270, 736 257
+    L 692 207
+    C 672 192, 632 186, 598 180 Z"/>
+  <path d="M 620 178 C 680 170, 760 168, 820 171 C 780 176, 700 180, 640 186 Z" fill="#6f8399" opacity=".35" filter="url(#blur1)"/>
+  <path d="M 850 186 C 880 205, 905 228, 922 252 L 900 252 C 885 230, 866 208, 842 192 Z" fill="#516579" opacity=".25"/>
+  <circle cx="808" cy="208" r="2.2" fill="#4a5664"/>
+  <!-- glass trim line -->
+  <path d="M 736 257 C 748 270, 762 278, 782 278 L 940 275" fill="none" stroke="#5fb4f5" stroke-width="1.2" opacity=".6"/>
+
+  <!-- ===== Shoulder / character lines ===== -->
+  <path d="M 520 254 C 600 262, 690 266, 760 283 C 850 273, 960 270, 1022 296" fill="none" stroke="#9bd4ff" stroke-width="2" opacity=".55"/>
+  <path d="M 765 300 C 860 290, 960 288, 1020 306" fill="none" stroke="#0b4f9e" stroke-width="1.4" opacity=".5"/>
+  <!-- trunk shut line -->
+  <path d="M 790 346 C 860 342, 960 336, 1030 330" fill="none" stroke="#0a4389" stroke-width="1" opacity=".55"/>
+
+  <!-- ===== Taillight ===== -->
+  <g class="tail">
+    <path d="M 722 334 C 745 326, 785 321, 815 319 L 1000 309 C 1016 308, 1029 311, 1029 318 C 1021 326, 1006 328, 990 328 L 830 336 C 790 338, 750 339, 722 334 Z" fill="#ff3b44" opacity=".6" filter="url(#blur8)"/>
+    <path d="M 722 334 C 745 326, 785 321, 815 319 L 1000 309 C 1016 308, 1029 311, 1029 318 C 1021 326, 1006 328, 990 328 L 830 336 C 790 338, 750 339, 722 334 Z" fill="#2a060a"/>
+    <path d="M 728 332 C 750 327, 785 323, 815 322 L 1000 312 C 1012 311, 1022 313, 1024 317 C 1014 322, 1002 323, 990 323 L 830 330 C 790 332, 755 334, 728 332 Z" fill="url(#tail)"/>
+    <path d="M 740 330 C 780 325, 820 324, 860 322 L 1000 315" fill="none" stroke="#ffc2c5" stroke-width="1" opacity=".8"/>
+  </g>
+  <text x="916" y="315" font-size="8.5" letter-spacing="2.4" fill="#d9e6f2" text-anchor="middle" transform="rotate(-2.4 916 315)" font-weight="600">XIAOMI</text>
+  <text x="992" y="352" font-size="7" fill="#e6eef6" transform="rotate(-2.6 992 352)" font-weight="700" font-style="italic">SU7</text>
+  <text x="834" y="364" font-size="7" fill="#cfe3f5" transform="rotate(-2 834 364)">小米</text>
+
+  <!-- ===== Rear bumper / diffuser ===== -->
+  <path fill="#0b0e13" d="
+    M 748 394 C 810 400, 900 394, 1036 377
+    L 1036 402 C 1032 428, 1022 438, 1006 441
+    L 860 450 C 810 452, 775 450, 752 444
+    C 742 428, 740 408, 748 394 Z"/>
+  <path d="M 748 394 C 810 400, 900 394, 1036 377" fill="none" stroke="#4d5a68" stroke-width="1.2"/>
+  <!-- blue lower valances -->
+  <path d="M 776 424 C 790 417, 838 415, 852 419 C 856 426, 856 434, 853 440 C 830 444, 800 444, 782 441 C 776 436, 774 430, 776 424 Z" fill="#1667c4"/>
+  <path d="M 974 412 C 990 405, 1020 401, 1034 400 C 1034 410, 1031 418, 1026 423 C 1010 427, 990 429, 978 428 C 972 423, 971 417, 974 412 Z" fill="#1667c4"/>
+  <!-- rear reflectors -->
+  <rect x="790" y="430" width="44" height="4" rx="2" fill="#c0212b" transform="rotate(-1 812 432)"/>
+  <rect x="985" y="415" width="36" height="4" rx="2" fill="#c0212b" transform="rotate(-3 1003 417)"/>
+  <!-- license plate -->
+  <g transform="rotate(-2.6 917 408)">
+    <rect x="871" y="391" width="92" height="33" rx="3" fill="#f3f5f7" stroke="#9aa4ae" stroke-width="1"/>
+    <text x="917" y="413" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#2a2f35" text-anchor="middle">XIAOMI SU7</text>
+  </g>
+
+  <!-- ===== Side details ===== -->
+  <!-- rear quarter vent -->
+  <path d="M 722 372 C 730 366, 742 366, 746 372 L 744 400 C 738 404, 728 402, 724 396 Z" fill="#07090c"/>
+  <!-- side skirt -->
+  <path d="M 490 372 L 606 400 L 608 418 C 560 404, 520 392, 490 382 Z" fill="#0b0e13"/>
+  <path d="M 492 374 L 606 402" stroke="#6a7a8c" stroke-width="1" opacity=".7"/>
+  <!-- door seams -->
+  <path d="M 596 258 C 598 300, 602 340, 606 378" fill="none" stroke="#0a3f80" stroke-width="1.1" opacity=".7"/>
+  <path d="M 700 262 C 706 280, 708 300, 704 330" fill="none" stroke="#0a3f80" stroke-width="1.1" opacity=".6"/>
+  <!-- flush door handles -->
+  <rect x="528" y="279" width="18" height="4" rx="2" fill="#0b3c78" transform="rotate(5 537 281)"/>
+  <rect x="606" y="292" width="18" height="4" rx="2" fill="#0b3c78" transform="rotate(5 615 294)"/>
+  <!-- charging flap -->
+  <ellipse cx="700" cy="303" rx="16" ry="12" fill="none" stroke="#0e4a93" stroke-width="1.1" opacity=".75"/>
+  <!-- mirror -->
+  <path d="M 478 236 C 480 224, 492 220, 504 222 C 512 224, 514 234, 510 240 C 500 244, 486 244, 478 236 Z" fill="#1a82de"/>
+  <path d="M 480 238 C 490 243, 502 243, 510 240 L 508 244 C 498 247, 486 246, 480 238 Z" fill="#0b0e13"/>
+
+  <!-- ===== Wheels ===== -->
+  <use href="#rim" transform="translate(660 408) rotate(-4) scale(0.72 1.16)"/>
+  <use href="#rim" transform="translate(449 324) rotate(-3) scale(0.5 0.92)"/>
+
+  <!-- wheel-arch lip highlights -->
+  <path d="M 606 400 C 606 356, 628 324, 664 332 C 702 345, 716 395, 712 442" fill="none" stroke="#63b8fa" stroke-width="1.6" opacity=".6"/>
+  <path d="M 421 334 C 422 296, 434 266, 452 266 C 476 272, 490 322, 490 372" fill="none" stroke="#63b8fa" stroke-width="1.4" opacity=".5"/>
+</svg>
+</body>
+</html>

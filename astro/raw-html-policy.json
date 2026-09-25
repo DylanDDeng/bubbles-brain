@@ -2,8 +2,8 @@
 	"schema_version": 2,
 	"route_prefix": "/eval-demos/",
 	"source_directory": "static/eval-demos",
-	"expected_html_files": 116,
-	"aggregate_sha256": "b6a1afd8b076fb1d49ed6a6186bc250f606cc203b6b68733b1c29a7c42392167",
+	"expected_html_files": 117,
+	"aggregate_sha256": "398c2d2db5c1017df7387c3b2c23ecbeea0a39b274ce3cc47893e148945b3e2f",
 	"indexable": false,
 	"same_origin_access": false,
 	"required_headers": {

@@ -2115,6 +2115,19 @@
         "three.js"
       ],
       "bytes": 37908
+    },
+    {
+      "id": "claude-fable-5-voxel-shanghai",
+      "task": "voxel-shanghai",
+      "model": "claude-fable-5",
+      "file": "/eval-demos/claude-fable-5-voxel-shanghai.html",
+      "date": "2026-06-09",
+      "page_title": "上海 · 体素之城 | Shanghai Voxel City",
+      "stack": [
+        "three.js",
+        "canvas"
+      ],
+      "bytes": 41414
     }
   ],
   "excluded_files": [

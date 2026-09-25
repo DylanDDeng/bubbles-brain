@@ -92,6 +92,12 @@
       "released": "2026-09"
     },
     {
+      "id": "claude-fable-5",
+      "name": "Claude Fable 5",
+      "vendor": "Anthropic",
+      "released": "2026-06"
+    },
+    {
       "id": "claude-fable-5.1",
       "name": "Claude Fable 5.1",
       "vendor": "Anthropic",
@@ -2097,6 +2103,18 @@
         "ffmpeg"
       ],
       "bytes": 17200704
+    },
+    {
+      "id": "claude-fable-5-boeing-787-apron",
+      "task": "boeing-787-apron",
+      "model": "claude-fable-5",
+      "file": "/eval-demos/claude-fable-5-boeing-787-apron.html",
+      "date": "2026-06-10",
+      "page_title": "Boeing 787 · Airport Apron 3D",
+      "stack": [
+        "three.js"
+      ],
+      "bytes": 37908
     }
   ],
   "excluded_files": [

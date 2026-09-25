@@ -585,6 +585,19 @@
         "zh": "制作一段 30 秒的视频，用过度兴奋、疯狂快节奏的方式介绍你自己。",
         "en": "Make an overly excited 30s video frenetically introducing yourself."
       }
+    },
+    {
+      "id": "xiaomi-su7-svg",
+      "title": {
+        "zh": "用 SVG 复刻海湾蓝小米 SU7",
+        "en": "Recreate the Bay Blue Xiaomi SU7 in SVG"
+      },
+      "category": "svg",
+      "difficulty": "hard",
+      "prompt": {
+        "zh": "根据这个参考图，SVG 做一个参考图中的小米 SU7 车子，HTML 渲染。"
+      },
+      "reference_image": "/images/eval-cases/refs/xiaomi-su7-svg.webp"
     }
   ],
   "cases": [
@@ -2128,6 +2141,18 @@
         "canvas"
       ],
       "bytes": 41414
+    },
+    {
+      "id": "gpt-6-astra-xiaomi-su7-svg",
+      "task": "xiaomi-su7-svg",
+      "model": "gpt-6-astra",
+      "file": "/eval-demos/gpt-6-astra-xiaomi-su7-svg.html",
+      "date": "2026-09-22",
+      "page_title": "小米 SU7 · 海湾蓝 / SVG",
+      "stack": [
+        "svg"
+      ],
+      "bytes": 24370
     }
   ],
   "excluded_files": [

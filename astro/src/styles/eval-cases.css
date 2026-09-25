@@ -905,8 +905,10 @@
 	margin: 0;
 }
 
-.eval-reference video {
+.eval-reference video,
+.eval-reference img {
 	display: block;
+	height: auto;
 	width: 100%;
 	border-radius: 8px;
 	background: #000;

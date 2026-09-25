@@ -2084,6 +2084,19 @@
         "ffmpeg"
       ],
       "bytes": 21662136
+    },
+    {
+      "id": "mimo-2.6-pro-overexcited-self-intro",
+      "task": "overexcited-self-intro",
+      "model": "mimo-2.6-pro",
+      "kind": "video",
+      "file": "/media/eval-cases/mimo-2.6-pro-overexcited-self-intro.mp4",
+      "date": "2026-09-25",
+      "page_title": null,
+      "stack": [
+        "ffmpeg"
+      ],
+      "bytes": 17200704
     }
   ],
   "excluded_files": [

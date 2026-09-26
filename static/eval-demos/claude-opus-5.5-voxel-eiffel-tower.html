@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体素埃菲尔铁塔</title>
+<style>
+  :root {
+    --panel-bg: rgba(255, 255, 255, 0.72);
+    --panel-border: rgba(255, 255, 255, 0.6);
+    --text: #2b2118;
+    --muted: #7a6a58;
+    --accent: #a8722f;
+    --btn-bg: rgba(255, 255, 255, 0.55);
+    --btn-hover: rgba(255, 255, 255, 0.9);
+    --btn-active: #2b2118;
+    --btn-active-text: #fbe7c2;
+  }
+  body.night {
+    --panel-bg: rgba(12, 16, 38, 0.66);
+    --panel-border: rgba(255, 210, 140, 0.18);
+    --text: #f6e6c8;
+    --muted: #a99c86;
+    --accent: #f0b35a;
+    --btn-bg: rgba(255, 255, 255, 0.06);
+    --btn-hover: rgba(255, 255, 255, 0.16);
+    --btn-active: #f0b35a;
+    --btn-active-text: #1a1206;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    color: var(--text);
+    background: #9fcdf0;
+  }
+  .sky { position: fixed; inset: 0; transition: opacity 1.2s ease; }
+  #sky-day { background: linear-gradient(to bottom, #4f9be0 0%, #9fcdf0 50%, #e4eee9 100%); }
+  #sky-night {
+    background: radial-gradient(ellipse at 50% 110%, #3a3560 0%, transparent 55%),
+                linear-gradient(to bottom, #02040f 0%, #0a1433 55%, #1c2550 100%);
+    opacity: 0;
+  }
+  body.night #sky-night { opacity: 1; }
+  canvas#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+
+  .panel {
+    position: fixed;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    transition: background .8s, color .8s, border-color .8s;
+  }
+  .title { top: 20px; left: 20px; padding: 18px 22px 16px; width: 290px; }
+  .eyebrow { font-size: 11px; letter-spacing: .24em; color: var(--accent); font-weight: 700; }
+  .title h1 { margin: 6px 0 4px; font-size: 28px; letter-spacing: .06em; }
+  .title p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+  .stats div { background: var(--btn-bg); border-radius: 10px; padding: 8px 10px; }
+  .stats b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .stats span { font-size: 11px; color: var(--muted); }
+
+  .views { top: 20px; right: 20px; padding: 12px; display: flex; flex-direction: column; gap: 6px; width: 170px; }
+  .label { font-size: 11px; letter-spacing: .2em; color: var(--muted); padding: 2px 6px 4px; font-weight: 700; }
+  button {
+    font: inherit; font-size: 13px; color: var(--text);
+    background: var(--btn-bg); border: 1px solid transparent;
+    border-radius: 10px; padding: 8px 12px; cursor: pointer; text-align: left;
+    transition: background .2s, color .2s, transform .1s;
+  }
+  button:hover { background: var(--btn-hover); }
+  button:active { transform: scale(.97); }
+  button.active, button.on { background: var(--btn-active); color: var(--btn-active-text); }
+
+  .toolbar { left: 50%; bottom: 22px; transform: translateX(-50%); padding: 8px; display: flex; gap: 6px; }
+  .toolbar button { text-align: center; white-space: nowrap; }
+  .hint { position: fixed; right: 22px; bottom: 30px; font-size: 12px; color: var(--muted); text-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+  @media (max-width: 760px) {
+    .title { top: 12px; left: 12px; right: 12px; width: auto; padding: 12px 14px; }
+    .title h1 { font-size: 22px; }
+    .title p { display: none; }
+    .stats { margin-top: 8px; }
+    .views { top: auto; bottom: 76px; right: 12px; left: 12px; width: auto; flex-direction: row; overflow-x: auto; padding: 8px; }
+    .views .label { display: none; }
+    .views button { white-space: nowrap; flex: none; }
+    .toolbar { bottom: 12px; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="sky-day" class="sky"></div>
+<div id="sky-night" class="sky"></div>
+<canvas id="c"></canvas>
+
+<header class="panel title">
+  <div class="eyebrow">VOXEL · PARIS · 1889</div>
+  <h1>埃菲尔铁塔</h1>
+  <p>体素艺术 · 格构铁架 · 三层观景台 · 拱门底座</p>
+  <div class="stats">
+    <div><b id="vcount">0</b><span>体素</span></div>
+    <div><b id="hcount">0</b><span>层高</span></div>
+    <div><b id="prog">0%</b><span>搭建</span></div>
+  </div>
+</header>
+
+<nav class="panel views">
+  <div class="label">视角</div>
+  <button data-view="overview" class="active">全景</button>
+  <button data-view="top">顶层观景台 · 276m</button>
+  <button data-view="second">二层观景台 · 115m</button>
+  <button data-view="first">一层观景台 · 57m</button>
+  <button data-view="arch">拱门底座</button>
+  <button data-view="under">塔下仰望</button>
+</nav>
+
+<div class="panel toolbar">
+  <button id="btnNight">🌙 夜景</button>
+  <button id="btnRotate" class="on">⟳ 自动旋转</button>
+  <button id="btnBuild">▦ 重新搭建</button>
+</div>
+<div class="hint">拖拽旋转 · 滚轮缩放 · 右键平移</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ============================================================
+   工具函数
+   ============================================================ */
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const rand = mulberry32(1889);
+const mod = (a, n) => ((a % n) + n) % n;
+const jit = (amt) => (rand() - 0.5) * amt;
+const lerp = (a, b, t) => a + (b - a) * t;
+const _c = new THREE.Color();
+const shade = (hex, l) => _c.set(hex).offsetHSL(0, 0, l).getHex();
+
+// 体素集合：solid 为普通体素，glow 为夜间发光体素（玻璃、灯）
+const K = (x, y, z) => ((x + 200) * 1000 + (y + 50)) * 1000 + (z + 200);
+class VoxelSet {
+  constructor() { this.m = new Map(); }
+  put(x, y, z, c) { this.m.set(K(x, y, z), [x, y, z, c, null]); }
+  glow(x, y, z, day, night) { this.m.set(K(x, y, z), [x, y, z, day, night]); }
+  split() {
+    const s = [], g = [];
+    for (const v of this.m.values()) (v[4] == null ? s : g).push(v);
+    s.sort((a, b) => a[1] - b[1]);
+    g.sort((a, b) => a[1] - b[1]);
+    return { solid: s, glow: g };
+  }
+}
+
+/* ============================================================
+   调色板
+   ============================================================ */
+const C = {
+  ironLo: new THREE.Color('#533c28'),
+  ironHi: new THREE.Color('#9a7a52'),
+  arch: '#7b5a39',
+  beam: '#3b2d20',
+  deck: '#a89475', deck2: '#9a8768',
+  gold: '#d0a94e', goldDark: '#9a7433',
+  rail: '#2d2319',
+  frame: '#33291f',
+  roof: '#3d4450',
+  stone: '#bdb39c', stoneCap: '#d6ccb4',
+  glassDay: '#9fd3ea', glassNight: '#ffd680',
+  lampDay: '#efe6c8', lampNight: '#fff1b8',
+  redDay: '#d8342a', redNight: '#ff3b2f',
+  antennaW: '#e8e6e0', antennaR: '#c8382e',
+  sand: '#d9c8a1', grass: '#5f9d48', grass2: '#69a851',
+  dirt: '#7a5a3c', dirt2: '#664a31',
+  hedge: '#3e7a35', trunk: '#6b4a2b', leaf: '#3f7f36', leaf2: '#4f8f3c',
+};
+function iron(y, l = 0) {
+  _c.copy(C.ironLo).lerp(C.ironHi, Math.min(1, Math.max(0, y) / 150));
+  _c.offsetHSL(0, 0, jit(0.05) + l);
+  return _c.getHex();
+}
+
+/* ============================================================
+   铁塔几何：轮廓曲线（半宽随高度变化）
+   ============================================================ */
+const PROFILE = [[0, 40], [10, 34.5], [20, 29.5], [28, 26], [40, 21], [57, 15.5],
+                 [75, 11.2], [95, 8.2], [115, 6.2], [135, 4.6]];
+function W(y) {
+  if (y <= 0) return PROFILE[0][1];
+  for (let i = 1; i < PROFILE.length; i++) {
+    const [y1, w1] = PROFILE[i], [y0, w0] = PROFILE[i - 1];
+    if (y <= y1) return lerp(w0, w1, (y - y0) / (y1 - y0));
+  }
+  return PROFILE[PROFILE.length - 1][1];
+}
+const T = (y) => 11 + y * 0.022;          // 塔腿厚度
+const Y1 = 28, Y2 = 57, Y3 = 135;          // 三层观景台高度
+
+const tower = new VoxelSet();
+const scenery = new VoxelSet();
+const put = (x, y, z, c) => tower.put(x, y, z, c);
+const glow = (x, y, z, d, n) => tower.glow(x, y, z, d, n);
+
+// 在四个立面上放置体素：u 沿立面方向，d 为到中心的距离
+function sput(side, u, y, d, c, n) {
+  const f = n != null ? (a, b, cc) => glow(a, b, cc, c, n) : (a, b, cc) => put(a, b, cc, c);
+  if (side === 0) f(u, y, d);
+  else if (side === 1) f(-u, y, -d);
+  else if (side === 2) f(d, y, -u);
+  else f(-d, y, u);
+}
+
+// 格构矩形截面：角柱 + 水平横梁 + X 形斜撑
+function latticeRect(x0, x1, z0, z1, y, P) {
+  const fill = (x, z, s, near) => {
+    if (near || mod(y, P) === 0 || mod(s + y, P) === 0 || mod(s - y, P) === 0)
+      put(x, y, z, iron(y, near ? -0.04 : 0));
+  };
+  for (let x = x0; x <= x1; x++) {
+    const near = x <= x0 + 1 || x >= x1 - 1;
+    fill(x, z0, x, near); fill(x, z1, x, near);
+  }
+  for (let z = z0 + 1; z < z1; z++) {
+    const near = z <= z0 + 1 || z >= z1 - 1;
+    fill(x0, z, z, near); fill(x1, z, z, near);
+  }
+}
+
+// 方形环的周长遍历
+function ring(m, fn) {
+  for (let x = -m; x <= m; x++) { fn(x, -m, x, Math.abs(x) === m); fn(x, m, x, Math.abs(x) === m); }
+  for (let z = -m + 1; z < m; z++) { fn(-m, z, z, false); fn(m, z, z, false); }
+}
+function filled(y, m, c) {
+  for (let x = -m; x <= m; x++) for (let z = -m; z <= m; z++) put(x, y, z, typeof c === 'function' ? c() : c);
+}
+
+/* ---------- 1. 四条塔腿 → 合并为单一塔身 ---------- */
+let mergeY = 0;
+for (let y = 0; y < Y3; y++) {
+  const w = W(y), t = T(y);
+  if (t < w - 1) {
+    const o = Math.round(w), i = Math.round(w - t);
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+      const xa = sx > 0 ? [i, o] : [-o, -i];
+      const za = sz > 0 ? [i, o] : [-o, -i];
+      latticeRect(xa[0], xa[1], za[0], za[1], y, 6);
+    }
+  } else {
+    if (!mergeY) mergeY = y;
+    const o = Math.round(w);
+    latticeRect(-o, o, -o, o, y, o > 7 ? 6 : 4);
+  }
+}
+
+/* ---------- 2. 石砌基座 ---------- */
+{
+  const o = Math.round(W(0)) + 1, i = Math.round(W(0) - T(0)) - 1;
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    for (let y = 0; y <= 2; y++) {
+      const shrink = y === 2 ? 1 : 0;
+      for (let a = i + shrink; a <= o - shrink; a++) for (let b = i + shrink; b <= o - shrink; b++)
+        put(a * sx, y, b * sz, y === 2 ? shade(C.stoneCap, jit(0.04)) : shade(C.stone, jit(0.05)));
+    }
+  }
+}
+
+/* ---------- 3. 底座四面大拱门 + 拱肩格构 ---------- */
+{
+  const AY0 = 4, AA = Math.round(W(AY0) - T(AY0)), AB = 20;
+  for (let side = 0; side < 4; side++) {
+    // 拱圈（两层厚、两格深）
+    for (let tt = 0; tt <= Math.PI + 1e-6; tt += 0.004) {
+      for (let r = 0; r < 2; r++) {
+        const u = Math.round((AA - r) * Math.cos(tt));
+        const y = Math.round(AY0 + (AB - r) * Math.sin(tt));
+        const d = Math.round(W(y));
+        const col = r === 0 ? shade(C.arch, -0.03) : shade(C.arch, 0.04);
+        sput(side, u, y, d, col);
+        sput(side, u, y, d - 1, col);
+      }
+    }
+    // 拱肩上的细密格构 + 一层下方的大梁
+    for (let u = -AA; u <= AA; u++) {
+      const ya = AY0 + AB * Math.sqrt(Math.max(0, 1 - (u / AA) ** 2));
+      for (let y = Math.ceil(ya) + 1; y < Y1 - 3; y++) {
+        const d = Math.round(W(y));
+        if (Math.abs(u) > d - T(y)) continue;
+        const girder = y >= Y1 - 5;
+        if (girder || mod(u + y, 4) === 0 || mod(u - y, 4) === 0) sput(side, u, y, d, iron(y, girder ? -0.03 : 0));
+      }
+    }
+  }
+}
+
+/* ---------- 4. 观景台 ---------- */
+function platform(y, outer, inner, lamps) {
+  for (let x = -outer; x <= outer; x++) for (let z = -outer; z <= outer; z++) {
+    const m = Math.max(Math.abs(x), Math.abs(z));
+    if (m < inner) continue;
+    put(x, y, z, shade(C.beam, jit(0.03)));
+    put(x, y + 1, z, m === outer ? C.gold : shade(mod(x + z, 2) ? C.deck : C.deck2, jit(0.03)));
+    if (m === outer) {
+      const s = Math.abs(x) === outer ? z : x;
+      if (mod(s, 2) === 0) put(x, y + 2, z, C.rail);           // 栏杆立柱
+      put(x, y + 3, z, C.rail);                                 // 扶手
+      if (lamps && mod(s, 8) === 0) glow(x, y + 4, z, C.lampDay, C.lampNight);
+      put(x, y - 1, z, C.goldDark);                             // 装饰檐带
+      if (mod(s, 4) !== 2) put(x, y - 2, z, iron(y - 2, -0.02)); // 小拱饰
+      if (mod(s, 4) === 0) put(x, y - 3, z, iron(y - 3, -0.02));
+    }
+  }
+}
+// 观景台上的玻璃小亭
+function pavilion(side, y, dNear, dFar, half, h) {
+  for (let u = -half; u <= half; u++) for (let d = dNear; d <= dFar; d++) for (let yy = y; yy < y + h; yy++) {
+    const eU = Math.abs(u) === half, eD = d === dNear || d === dFar;
+    if (!eU && !eD) continue;
+    const frame = (eU && eD) || yy === y || yy === y + h - 1 || mod(u, 3) === 0;
+    if (frame) sput(side, u, yy, d, C.frame);
+    else sput(side, u, yy, d, C.glassDay, C.glassNight);
+  }
+  for (let u = -half - 1; u <= half + 1; u++) for (let d = dNear - 1; d <= dFar + 1; d++)
+    sput(side, u, y + h, d, shade(C.roof, jit(0.04)));
+  for (let u = -half; u <= half; u++) sput(side, u, y + h + 1, Math.round((dNear + dFar) / 2), C.goldDark);
+}
+
+// 第一层
+const o1 = Math.round(W(Y1)) + 3;
+platform(Y1, o1, Math.round(W(Y1) - T(Y1)) - 1, true);
+for (let s = 0; s < 4; s++) pavilion(s, Y1 + 2, o1 - 7, o1 - 3, 7, 4);
+
+// 第二层
+const o2 = Math.round(W(Y2)) + 3;
+platform(Y2, o2, 3, true);
+for (let s = 0; s < 4; s++) pavilion(s, Y2 + 2, o2 - 5, o2 - 3, 2, 3);
+// 二层下方连接四腿的大梁
+for (let side = 0; side < 4; side++) for (let y = Y2 - 5; y < Y2 - 3; y++) {
+  const d = Math.round(W(y));
+  for (let u = -d; u <= d; u++) sput(side, u, y, d, iron(y, -0.03));
+}
+
+// 电梯井导轨
+for (let y = Y2 + 2; y <= Y3 + 6; y++)
+  for (const [x, z] of [[-2, -2], [2, -2], [-2, 2], [2, 2]]) put(x, y, z, C.frame);
+
+// 第三层：封闭玻璃观景舱 + 灯笼 + 天线
+const o3 = Math.round(W(Y3)) + 3;
+platform(Y3, o3, 2, true);
+for (let y = Y3 + 2; y <= Y3 + 6; y++) ring(6, (x, z, s, corner) => {
+  const frame = corner || y === Y3 + 2 || y === Y3 + 6 || mod(s, 3) === 0;
+  frame ? put(x, y, z, C.frame) : glow(x, y, z, C.glassDay, C.glassNight);
+});
+filled(Y3 + 7, 7, () => shade(C.roof, jit(0.05)));
+ring(7, (x, z) => put(x, Y3 + 7, z, C.gold));
+filled(Y3 + 8, 5, () => iron(Y3 + 8));
+for (let y = Y3 + 9; y <= Y3 + 12; y++) ring(3, (x, z, s, corner) => {
+  const frame = corner || y === Y3 + 9 || mod(s, 2) === 0;
+  frame ? put(x, y, z, iron(y, -0.03)) : glow(x, y, z, C.glassDay, C.glassNight);
+});
+filled(Y3 + 13, 4, () => shade(C.roof, jit(0.04)));
+filled(Y3 + 14, 2, C.gold);
+filled(Y3 + 15, 1, C.gold);
+for (let y = Y3 + 16; y <= Y3 + 30; y++) put(0, y, 0, mod(y, 4) < 2 ? C.antennaW : C.antennaR);
+put(1, Y3 + 20, 0, C.antennaW); put(-1, Y3 + 20, 0, C.antennaW);
+put(0, Y3 + 20, 1, C.antennaW); put(0, Y3 + 20, -1, C.antennaW);
+glow(0, Y3 + 31, 0, C.redDay, C.redNight);
+
+/* ============================================================
+   场景：广场、草坪、树篱、树木、路灯
+   ============================================================ */
+const G = 78;
+for (let x = -G; x <= G; x++) for (let z = -G; z <= G; z++) {
+  const m = Math.max(Math.abs(x), Math.abs(z));
+  const path = Math.abs(x) <= 3 || Math.abs(z) <= 3;
+  const c = (m <= 47 || path)
+    ? shade(C.sand, jit(0.05) + (mod(x, 4) === 0 || mod(z, 4) === 0 ? -0.025 : 0))
+    : shade(mod(x + z, 2) ? C.grass : C.grass2, jit(0.05));
+  scenery.put(x, -1, z, c);
+  if (m === G) for (let y = -4; y <= -2; y++) scenery.put(x, y, z, shade(y === -2 ? C.dirt : C.dirt2, jit(0.05)));
+  if (m === 49 && !path) scenery.put(x, 0, z, shade(C.hedge, jit(0.06)));
+}
+function tree(x, z) {
+  const h = 3 + Math.floor(rand() * 2);
+  for (let y = 0; y < h; y++) scenery.put(x, y, z, C.trunk);
+  const r = 2.4 + rand() * 0.6, cy = h + 1;
+  for (let dx = -3; dx <= 3; dx++) for (let dy = -2; dy <= 3; dy++) for (let dz = -3; dz <= 3; dz++) {
+    if (dx * dx + dy * dy * 1.4 + dz * dz <= r * r + jit(1.5))
+      scenery.put(x + dx, cy + dy, z + dz, shade(rand() < 0.5 ? C.leaf : C.leaf2, jit(0.08)));
+  }
+}
+for (let tx = -72; tx <= 72; tx += 9) for (let tz = -72; tz <= 72; tz += 9) {
+  if (Math.max(Math.abs(tx), Math.abs(tz)) < 54) continue;
+  if (Math.abs(tx) <= 6 || Math.abs(tz) <= 6) continue;
+  tree(tx + Math.round(jit(3)), tz + Math.round(jit(3)));
+}
+// 路灯
+for (const d of [54, 64, 74]) for (const side of [-5, 5]) for (let s = 0; s < 4; s++) {
+  const pts = [[side, d], [-side, -d], [d, side], [-d, -side]][s];
+  for (let y = 0; y <= 3; y++) scenery.put(pts[0], y, pts[1], C.frame);
+  scenery.glow(pts[0], 4, pts[1], C.lampDay, C.lampNight);
+}
+
+/* ============================================================
+   Three.js 场景
+   ============================================================ */
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const FOG_DAY = new THREE.Color('#dbe9ef'), FOG_NIGHT = new THREE.Color('#141c40');
+scene.fog = new THREE.Fog(FOG_DAY.clone(), 280, 720);
+
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.5, 2000);
+camera.position.set(150, 100, 150);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 70, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.55;
+controls.minDistance = 8;
+controls.maxDistance = 460;
+controls.update();
+
+// 灯光
+const hemi = new THREE.HemisphereLight('#d6ecff', '#7a6547', 1.3);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight('#fff1dc', 2.8);
+sun.position.set(120, 230, 80);
+sun.target.position.set(0, 50, 0);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -140, right: 140, top: 140, bottom: -140, near: 10, far: 600 });
+sun.shadow.bias = -0.0004;
+sun.shadow.normalBias = 0.3;
+scene.add(sun, sun.target);
+
+// 构建实例化网格
+const towerGeo = new THREE.BoxGeometry(0.95, 0.95, 0.95);
+const groundGeo = new THREE.BoxGeometry(1, 1, 1);
+function makeMesh(list, geo, mat, shadow) {
+  const mesh = new THREE.InstancedMesh(geo, mat, Math.max(1, list.length));
+  const m = new THREE.Matrix4(), c = new THREE.Color();
+  list.forEach((v, i) => {
+    m.makeTranslation(v[0], v[1] + 0.5, v[2]);
+    mesh.setMatrixAt(i, m);
+    mesh.setColorAt(i, c.setHex(v[3]));
+  });
+  mesh.count = list.length;
+  mesh.castShadow = shadow;
+  mesh.receiveShadow = true;
+  mesh.frustumCulled = false;
+  return mesh;
+}
+function layerCounter(list) {
+  const ends = [];
+  const maxY = list.length ? list[list.length - 1][1] : 0;
+  let i = 0;
+  for (let y = 0; y <= maxY; y++) { while (i < list.length && list[i][1] <= y) i++; ends[y] = i; }
+  return (h) => h < 0 ? 0 : ends[Math.min(Math.floor(h), maxY)];
+}
+
+const T_SET = tower.split(), S_SET = scenery.split();
+
+const towerMat = new THREE.MeshStandardMaterial({ roughness: 0.82, metalness: 0.12, emissive: '#c8701d', emissiveIntensity: 0 });
+const sceneryMat = new THREE.MeshStandardMaterial({ roughness: 0.95, metalness: 0 });
+const glowStd = new THREE.MeshStandardMaterial({ roughness: 0.2, metalness: 0.3 });
+const glowBasic = new THREE.MeshBasicMaterial();
+
+const towerMesh = makeMesh(T_SET.solid, towerGeo, towerMat, true);
+const towerGlow = makeMesh(T_SET.glow, towerGeo, glowStd, false);
+const sceneMesh = makeMesh(S_SET.solid, groundGeo, sceneryMat, true);
+const sceneGlow = makeMesh(S_SET.glow, groundGeo, glowStd, false);
+scene.add(towerMesh, towerGlow, sceneMesh, sceneGlow);
+
+const countSolid = layerCounter(T_SET.solid), countGlow = layerCounter(T_SET.glow);
+const TOP_Y = T_SET.solid[T_SET.solid.length - 1][1] + 1;
+
+document.getElementById('vcount').textContent = (T_SET.solid.length + T_SET.glow.length).toLocaleString();
+
+// 电梯轿厢
+const elevator = new THREE.Mesh(
+  new THREE.BoxGeometry(2.8, 2, 2.8),
+  new THREE.MeshStandardMaterial({ color: '#d9a441', emissive: '#ffb347', emissiveIntensity: 0, roughness: 0.4, metalness: 0.5 })
+);
+elevator.castShadow = true;
+scene.add(elevator);
+
+// 夜间闪烁灯
+const SP = 300;
+const sparkMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.9, 0.9),
+  new THREE.MeshBasicMaterial({ color: '#fffbe8' }), SP);
+sparkMesh.frustumCulled = false;
+sparkMesh.visible = false;
+scene.add(sparkMesh);
+const sparkCands = T_SET.solid.filter(v => v[1] > 3 && rand() < 0.4);
+const spLife = new Float32Array(SP), spMax = new Float32Array(SP), spIdx = new Int32Array(SP);
+const dummy = new THREE.Object3D();
+
+// 探照灯光束
+const beacon = new THREE.Group();
+beacon.position.set(0, Y3 + 11, 0);
+{
+  const g = new THREE.ConeGeometry(9, 200, 32, 1, true);
+  g.rotateZ(Math.PI / 2);
+  g.translate(100, 0, 0);
+  const mat = new THREE.MeshBasicMaterial({ color: '#fff0c4', transparent: true, opacity: 0.1,
+    blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
+  const a = new THREE.Mesh(g, mat), b = new THREE.Mesh(g, mat);
+  b.rotation.y = Math.PI;
+  beacon.add(a, b);
+}
+beacon.visible = false;
+scene.add(beacon);
+
+// 星空
+const stars = (() => {
+  const n = 1400, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const th = rand() * Math.PI * 2, ph = Math.acos(rand() * 0.95), r = 900;
+    pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+    pos[i * 3 + 1] = r * Math.cos(ph);
+    pos[i * 3 + 2] = r * Math.sin(ph) * Math.sin(th);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  return new THREE.Points(g, new THREE.PointsMaterial({ color: '#ffffff', size: 1.6, sizeAttenuation: false,
+    transparent: true, opacity: 0, fog: false, depthWrite: false }));
+})();
+scene.add(stars);
+
+/* ============================================================
+   昼夜切换
+   ============================================================ */
+let nightTarget = 0, nightT = 0, glowIsNight = false;
+const HEMI_SKY = [new THREE.Color('#d6ecff'), new THREE.Color('#3b4a8a')];
+const HEMI_GND = [new THREE.Color('#7a6547'), new THREE.Color('#1a1510')];
+const SUN_COL = [new THREE.Color('#fff1dc'), new THREE.Color('#9fb2ff')];
+
+function setGlowColors(mesh, list, night) {
+  const c = new THREE.Color();
+  list.forEach((v, i) => mesh.setColorAt(i, c.set(night ? v[4] : v[3])));
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  mesh.material = night ? glowBasic : glowStd;
+}
+function applyNight(t) {
+  hemi.intensity = lerp(1.3, 0.35, t);
+  hemi.color.copy(HEMI_SKY[0]).lerp(HEMI_SKY[1], t);
+  hemi.groundColor.copy(HEMI_GND[0]).lerp(HEMI_GND[1], t);
+  sun.intensity = lerp(2.8, 0.55, t);
+  sun.color.copy(SUN_COL[0]).lerp(SUN_COL[1], t);
+  scene.fog.color.copy(FOG_DAY).lerp(FOG_NIGHT, t);
+  towerMat.emissiveIntensity = 0.62 * t;
+  elevator.material.emissiveIntensity = 1.2 * t;
+  stars.material.opacity = t;
+  beacon.visible = t > 0.6;
+  const isNight = t > 0.5;
+  if (isNight !== glowIsNight) {
+    glowIsNight = isNight;
+    setGlowColors(towerGlow, T_SET.glow, isNight);
+    setGlowColors(sceneGlow, S_SET.glow, isNight);
+  }
+}
+
+/* ============================================================
+   搭建动画
+   ============================================================ */
+let buildH = -3;
+const BUILD_SPEED = 30; // 每秒层数
+function rebuild() { buildH = -3; }
+
+/* ============================================================
+   视角切换
+   ============================================================ */
+const VIEWS = {
+  overview: { p: [150, 100, 150], t: [0, 70, 0] },
+  top:      { p: [30, Y3 + 20, 36], t: [0, Y3 + 7, 0] },
+  second:   { p: [42, Y2 + 16, 50], t: [0, Y2 + 4, 0] },
+  first:    { p: [62, Y1 + 16, 70], t: [0, Y1 + 3, 0] },
+  arch:     { p: [0, 9, 96], t: [0, 16, 0] },
+  under:    { p: [5, 1.5, 3], t: [0, 90, 0] },
+};
+let tween = null;
+function goView(name) {
+  const v = VIEWS[name];
+  tween = {
+    t: 0,
+    p0: camera.position.clone(), t0: controls.target.clone(),
+    p1: new THREE.Vector3(...v.p), t1: new THREE.Vector3(...v.t),
+  };
+  document.querySelectorAll('.views button').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+}
+controls.addEventListener('start', () => { tween = null; });
+
+/* ============================================================
+   UI
+   ============================================================ */
+const btnNight = document.getElementById('btnNight');
+const btnRotate = document.getElementById('btnRotate');
+function toggleNight() {
+  nightTarget = nightTarget ? 0 : 1;
+  document.body.classList.toggle('night', !!nightTarget);
+  btnNight.textContent = nightTarget ? '☀️ 白天' : '🌙 夜景';
+}
+function toggleRotate() {
+  controls.autoRotate = !controls.autoRotate;
+  btnRotate.classList.toggle('on', controls.autoRotate);
+}
+btnNight.onclick = toggleNight;
+btnRotate.onclick = toggleRotate;
+document.getElementById('btnBuild').onclick = rebuild;
+document.querySelectorAll('.views button').forEach(b => b.onclick = () => goView(b.dataset.view));
+addEventListener('keydown', (e) => {
+  if (e.key === 'n' || e.key === 'N') toggleNight();
+  if (e.key === 'r' || e.key === 'R') rebuild();
+  if (e.key === ' ') toggleRotate();
+});
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ============================================================
+   主循环
+   ============================================================ */
+const elHeight = document.getElementById('hcount'), elProg = document.getElementById('prog');
+const clock = new THREE.Clock();
+let elapsed = 0;
+applyNight(0);
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  elapsed += dt;
+
+  // 搭建
+  if (buildH < TOP_Y + 1) {
+    buildH += BUILD_SPEED * dt;
+    towerMesh.count = countSolid(buildH);
+    towerGlow.count = countGlow(buildH);
+    const h = Math.max(0, Math.min(TOP_Y, Math.floor(buildH)));
+    elHeight.textContent = h;
+    elProg.textContent = Math.round(h / TOP_Y * 100) + '%';
+  }
+  const built = buildH >= TOP_Y;
+
+  // 昼夜过渡
+  if (Math.abs(nightT - nightTarget) > 1e-3) {
+    nightT += Math.sign(nightTarget - nightT) * Math.min(Math.abs(nightTarget - nightT), dt * 0.9);
+    applyNight(nightT);
+  }
+
+  // 电梯
+  elevator.visible = built;
+  const k = 0.5 - 0.5 * Math.cos(elapsed * 0.35);
+  elevator.position.set(0, lerp(Y2 + 3, Y3 + 3, k), 0);
+
+  // 探照灯
+  beacon.rotation.y = elapsed * 0.6;
+
+  // 闪烁灯
+  sparkMesh.visible = built && nightT > 0.85;
+  if (sparkMesh.visible) {
+    for (let i = 0; i < SP; i++) {
+      spLife[i] -= dt;
+      if (spLife[i] <= 0) {
+        spIdx[i] = Math.floor(Math.random() * sparkCands.length);
+        spMax[i] = spLife[i] = 0.08 + Math.random() * 0.22;
+      }
+      const v = sparkCands[spIdx[i]];
+      const s = Math.sin((spLife[i] / spMax[i]) * Math.PI) * 1.25;
+      dummy.position.set(v[0], v[1] + 0.5, v[2]);
+      dummy.scale.setScalar(Math.max(0.001, s));
+      dummy.updateMatrix();
+      sparkMesh.setMatrixAt(i, dummy.matrix);
+    }
+    sparkMesh.instanceMatrix.needsUpdate = true;
+  }
+
+  // 相机
+  if (tween) {
+    tween.t = Math.min(1, tween.t + dt / 1.5);
+    const e = tween.t < 0.5 ? 4 * tween.t ** 3 : 1 - Math.pow(-2 * tween.t + 2, 3) / 2;
+    camera.position.lerpVectors(tween.p0, tween.p1, e);
+    controls.target.lerpVectors(tween.t0, tween.t1, e);
+    camera.lookAt(controls.target);
+    if (tween.t >= 1) { tween = null; controls.update(); }
+  } else {
+    controls.update();
+  }
+  if (camera.position.y < 0.8) camera.position.y = 0.8;
+
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>

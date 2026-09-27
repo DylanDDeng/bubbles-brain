@@ -1,0 +1,18 @@
+---
+import { brainPodParent } from '../lib/brainpodSections';
+
+interface Props {
+	collection: string;
+}
+
+const parent = brainPodParent(Astro.props.collection);
+---
+
+{
+	parent && parent.id !== Astro.props.collection && (
+		<a class="bc-parent-link" href={'#bc-' + parent.id} data-room-pick={parent.id}>
+			<i class="ph ph-arrow-left" aria-hidden="true" />
+			{parent.title}
+		</a>
+	)
+}

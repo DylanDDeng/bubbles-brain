@@ -7,6 +7,7 @@ import CollectionCover from './CollectionCover.astro';
 import SiteActions from './SiteActions.astro';
 import FooterLinks from './FooterLinks.astro';
 import BrainPodCollectionList from './BrainPodCollectionList.astro';
+import BrainPodCollectionParentLink from './BrainPodCollectionParentLink.astro';
 import BenchmarkDirectory from './BenchmarkDirectory.astro';
 import BrainPodTermsDirectory from './BrainPodTermsDirectory.astro';
 import '../styles/brainpodCollection.css';
@@ -115,6 +116,7 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 								<BenchmarkDirectory locale="zh-CN" embedded />
 							) : (
 								<>
+									<BrainPodCollectionParentLink collection={collection.id} />
 									<header class="bc-panel-heading">
 										<h2 id={'bc-title-' + collection.id} tabindex="-1">
 											{collection.title}

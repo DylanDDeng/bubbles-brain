@@ -1,10 +1,12 @@
 ---
 import { buildBrainPodTerms } from '../lib/brainpodTerms';
+import BrainPodCollectionParentLink from './BrainPodCollectionParentLink.astro';
 const categories = buildBrainPodTerms();
 ---
 
 <div class="bc-term-directory">
 	<div data-room-subview="vibe-coding-terms">
+		<BrainPodCollectionParentLink collection="vibe-coding-terms" />
 		<header class="bc-panel-heading">
 			<h2 id="bc-title-vibe-coding-terms" tabindex="-1">术语</h2>
 		</header>

@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { legacyEntryIsRoutable, loadLegacyContent, type LegacyContentEntry } from './legacyContent';
 
 const expectedArticleRoutes = [
+	'/highlights/2026-09-27-using-claude-code-spending-your-effort/',
+	'/en/highlights/2026-09-27-using-claude-code-spending-your-effort/',
 	'/highlights/2026-09-17-measuring-pace-of-ai-development/',
 	'/en/highlights/2026-09-17-measuring-pace-of-ai-development/',
 	'/highlights/2026-09-14-rethinking-skills-and-prompts-for-gpt-6-astra/',
@@ -70,6 +72,41 @@ function highlightRecords(entries: LegacyContentEntry[]) {
 }
 
 describe('unified highlights content', () => {
+	it('retains the effort article evidence and separates editorial explanations in both languages', async () => {
+		const records = highlightRecords(await loadLegacyContent()).filter(
+			(entry) => entry.frontmatter.externalId === 'using-claude-code-spending-your-effort',
+		);
+
+		expect(records.map((entry) => entry.locale).sort()).toEqual(['en', 'zh-CN']);
+		for (const entry of records) {
+			expect(entry.frontmatter.sourceUrl).toBe('https://x.com/trq212/status/2103576349499855160');
+			expect(entry.frontmatter.kind).toBe('article');
+			expect(entry.frontmatter.draft).toBe(false);
+			expect(entry.body.match(/https:\/\/pbs\.twimg\.com\/media\//g)).toHaveLength(8);
+			for (const evidence of [
+				'https://claude.dev/blog/spending-your-effort/',
+				'https://github.com/harbor-framework/terminal-bench/releases/tag/v3.0.0',
+				'html-js-filter',
+				'mvcc-lsm-compaction',
+				'cli-2ph-simple',
+				'gsea-proteomics',
+				'1/5',
+				'0/5',
+				'4/5',
+				'5/5',
+				'xhigh',
+				'/effort',
+			]) {
+				expect(entry.body).toContain(evidence);
+			}
+			expect(entry.body).toContain(
+				entry.locale === 'zh-CN'
+					? '---\n\n## 译者补充：如何专业地理解这些结论'
+					: '---\n\n## Editorial notes: interpreting the findings',
+			);
+		}
+	});
+
 	it('preserves the AI development measurements, appendix, and footnotes in both languages', async () => {
 		const records = highlightRecords(await loadLegacyContent()).filter(
 			(entry) => entry.frontmatter.externalId === 'measuring-pace-of-ai-development',

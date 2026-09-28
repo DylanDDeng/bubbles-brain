@@ -17,6 +17,20 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-27',
+		tag: '精选阅读',
+		type: 'content',
+		title: '收录 Claude Code effort 使用指南',
+		summary:
+			'新增《使用 Claude Code：如何分配 effort，让算力用在关键处》中英文全文，保留原图与测试数据，并附术语和实践解读。',
+		links: [
+			{
+				label: '阅读 effort 使用指南',
+				href: '/highlights/2026-09-27-using-claude-code-spending-your-effort/',
+			},
+		],
+	},
+	{
 		date: '2026-09-16',
 		tag: '模型评测与 AI 术语',
 		type: 'content',

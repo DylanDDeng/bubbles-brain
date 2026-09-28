@@ -16,7 +16,18 @@ const categories = buildBrainPodTerms();
 					<li>
 						<a href={'#bc-' + category.pages[0].id} data-room-pick={category.pages[0].id}>
 							<>
-								<span>{category.label}</span>
+								<span>
+									{category.label}
+									<span
+										class="reading-update-dot"
+										data-update-items={category.pages
+											.flatMap((page) => page.terms.map((term) => `/vibe-coding/terms/${term.id}/`))
+											.join(' ')}
+										role="img"
+										aria-label="有未读更新"
+										hidden
+									/>
+								</span>
 								<i class="ph ph-arrow-right" aria-hidden="true" />
 							</>
 						</a>
@@ -50,6 +61,13 @@ const categories = buildBrainPodTerms();
 									<span>
 										{term.chineseName}
 										{term.chineseName !== term.name && `（${term.name}）`}
+										<span
+											class="reading-update-dot"
+											data-update-item={`/vibe-coding/terms/${term.id}/`}
+											role="img"
+											aria-label="未读更新"
+											hidden
+										/>
 									</span>
 									<i class="ph ph-arrow-up-right" aria-hidden="true" />
 								</a>
@@ -65,6 +83,16 @@ const categories = buildBrainPodTerms();
 								>
 									<i class="ph ph-arrow-left" aria-hidden="true" />
 									上一页
+									<span
+										class="reading-update-dot"
+										data-update-items={category.pages
+											.slice(0, index)
+											.flatMap((page) => page.terms.map((term) => `/vibe-coding/terms/${term.id}/`))
+											.join(' ')}
+										role="img"
+										aria-label="前面的页面有未读更新"
+										hidden
+									/>
 								</a>
 							) : (
 								<span />
@@ -81,6 +109,16 @@ const categories = buildBrainPodTerms();
 									data-room-pick={category.pages[index + 1].id}
 								>
 									下一页
+									<span
+										class="reading-update-dot"
+										data-update-items={category.pages
+											.slice(index + 1)
+											.flatMap((page) => page.terms.map((term) => `/vibe-coding/terms/${term.id}/`))
+											.join(' ')}
+										role="img"
+										aria-label="后面的页面有未读更新"
+										hidden
+									/>
 									<i class="ph ph-arrow-right" aria-hidden="true" />
 								</a>
 							) : (

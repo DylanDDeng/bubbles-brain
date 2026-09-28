@@ -33,28 +33,46 @@ export function markReadingUpdateSeen(key: string) {
 	refreshReadingIndicators();
 }
 
-export function refreshReadingIndicators() {
+function getUnreadReadingUpdates(): ReadingUpdate[] {
 	const payload = document.querySelector('[data-brainpod-library]');
-	if (!payload?.textContent) return;
+	if (!payload?.textContent) return [];
 	let updates: ReadingUpdate[];
 	try {
 		updates = JSON.parse(payload.textContent).updates ?? [];
 	} catch {
-		return;
+		return [];
 	}
-	const unread = unreadReadingUpdates(updates, history());
+	return unreadReadingUpdates(updates, history());
+}
+
+export function refreshReadingIndicators() {
+	const unread = getUnreadReadingUpdates();
+	const keys = new Set(unread.map((update) => update.item.key));
+	const normalize = (key: string) => key.replace(/^\/en\//, '/');
+	const paint = (dot: HTMLElement, count: number) => {
+		dot.hidden = count === 0;
+		const label = document.documentElement.lang.startsWith('en')
+			? `${count} unread update${count === 1 ? '' : 's'}`
+			: `${count} 条未读更新`;
+		dot.title = label;
+		dot.setAttribute('aria-label', label);
+	};
 	for (const dot of document.querySelectorAll<HTMLElement>('[data-update-sections]')) {
 		const sections = dot.dataset.updateSections?.split(' ') ?? [];
-		dot.hidden = !unread.some((update) => sections.includes(update.item.section));
+		paint(dot, unread.filter((update) => sections.includes(update.item.section)).length);
 	}
 	for (const dot of document.querySelectorAll<HTMLElement>('[data-update-item]')) {
-		dot.hidden = !unread.some((update) => update.item.key === dot.dataset.updateItem);
+		paint(dot, keys.has(normalize(dot.dataset.updateItem || '')) ? 1 : 0);
+	}
+	for (const dot of document.querySelectorAll<HTMLElement>('[data-update-items]')) {
+		const items = new Set((dot.dataset.updateItems || '').split(' ').map(normalize));
+		paint(dot, [...items].filter((key) => keys.has(key)).length);
 	}
 }
 
 function init() {
 	save(history());
-	if (document.querySelector('.legacy-article .article-content, .concept-detail')) {
+	if (document.querySelector('.legacy-article .article-content, .concept-detail, .bench-detail')) {
 		markReadingUpdateSeen(location.pathname.replace(/^\/en\//, '/'));
 	}
 	refreshReadingIndicators();

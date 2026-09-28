@@ -35,7 +35,18 @@ const groups = groupedBenchmarks();
 				groups.map((group) => (
 					<li>
 						<a href={`#bc-benchmarks-${group.id}`} data-room-pick={`benchmarks-${group.id}`}>
-							<span>{pick(group.name, locale)}</span>
+							<span>
+								{pick(group.name, locale)}
+								<span
+									class="reading-update-dot"
+									data-update-items={group.benchmarks
+										.map((benchmark) => benchmarkRoute(benchmark.id, locale))
+										.join(' ')}
+									role="img"
+									aria-label={locale === 'en' ? 'Unread updates' : '有未读更新'}
+									hidden
+								/>
+							</span>
 							<i class="ph ph-arrow-right" aria-hidden="true" />
 						</a>
 					</li>

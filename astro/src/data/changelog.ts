@@ -17,6 +17,20 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-28',
+		tag: '精选阅读',
+		type: 'content',
+		title: '收录 Claude 自动评测设计与爬坡优化指南',
+		summary:
+			'新增中英文详细精读，保留全部 9 张原图与关键实验数据，解读评测设计、爬坡流程及过拟合防范。',
+		links: [
+			{
+				label: '阅读评测与爬坡优化指南',
+				href: '/highlights/2026-09-28-automating-eval-design-and-hillclimbing/',
+			},
+		],
+	},
+	{
 		date: '2026-09-27',
 		tag: '精选阅读',
 		type: 'content',

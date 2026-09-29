@@ -19,13 +19,13 @@ Automated optimization depends on a reliable measurement process. Lance Martin d
 
 A useful evaluation represents production work, usually rewards stronger models and greater reasoning effort, leaves achievable room for improvement, and produces sufficiently stable results. Investigate unclear requirements, inconsistent grading, configuration differences, and leftover environment state before attributing failures to the model.
 
-![Evaluation quality: capability curves, headroom, and uncertainty](/images/highlights/automating-eval-design/figure-01.png)
+![Evaluation quality: capability curves, headroom, and uncertainty](/media/highlights/automating-eval-design/figure-01.png)
 
 Figure 1 · Read the capability curves, remaining headroom, and uncertainty together. A maximum score alone says little about evaluation quality.
 
 Sampling only failures of the current model can bias the task mix toward that model's particular weaknesses. Human difficulty judgments and real incidents help broaden coverage. Production traffic can also miss difficult tasks that users do not expect the product to handle.
 
-![Failure-based sampling compared with human-selected challenges](/images/highlights/automating-eval-design/figure-02.png)
+![Failure-based sampling compared with human-selected challenges](/media/highlights/automating-eval-design/figure-02.png)
 
 Figure 2 · Failure-selected examples cluster in capability valleys; human-selected challenges need not follow that pattern.
 
@@ -33,13 +33,13 @@ Figure 2 · Failure-selected examples cluster in capability valleys; human-selec
 
 The workflow favors production transcripts, then incident and support records, manually written examples, and finally generated cases grounded in the codebase. Retention and sensitivity need consideration before using production data. Users review the proposed inputs before proceeding.
 
-![Reviewing email-routing evaluation inputs](/images/highlights/automating-eval-design/figure-03.png)
+![Reviewing email-routing evaluation inputs](/media/highlights/automating-eval-design/figure-03.png)
 
 Figure 3 · The email-routing example presents 24 inputs for review. This checks the task selection before scores are produced.
 
 Use deterministic checks where outputs have clear constraints. Open-ended answers may need a separate judge model with explicit, verifiable criteria and explanations. For comparative judgments, randomize ordering and hide which candidate is the baseline. Human review of scored traces is part of validating the grader.
 
-![Baseline results and repetition-level traces](/images/highlights/automating-eval-design/figure-04.png)
+![Baseline results and repetition-level traces](/media/highlights/automating-eval-design/figure-04.png)
 
 Figure 4 · The example's 0.681 baseline is backed by per-case results and links to repetition-level JSON traces.
 
@@ -49,19 +49,19 @@ The output includes cases, grading and execution code, structured records, trans
 
 Choose a measurable objective and specify editable components: prompts, Skill instructions, tool descriptions, model settings, or bounded harness changes. Cheap, reversible edits make effects easier to interpret. Measurement noise must be smaller than the improvement worth acting on.
 
-![Paths from benchmark details to harness overfitting](/images/highlights/automating-eval-design/figure-05.png)
+![Paths from benchmark details to harness overfitting](/media/highlights/automating-eval-design/figure-05.png)
 
 Figure 5 · Benchmark-specific tools, directory assumptions, tailored wording, and case-by-case patches can inflate scores without helping production. Access to reference answers creates a more direct leakage path.
 
 Separate examples available for failure analysis from held-out examples whose contents remain unavailable to the optimizer. “Train” here describes the configuration search, not model-weight training. Avoid copying failed examples into prompts and prevent access to answers.
 
-![One-patch optimization with training and held-out results](/images/highlights/automating-eval-design/figure-06.png)
+![One-patch optimization with training and held-out results](/media/highlights/automating-eval-design/figure-06.png)
 
 Figure 6 · Each round tests one proposed patch. The quality-oriented workflow retains improvements across both splits and rolls back regressions or train-only gains.
 
 After repeated stalls, classify remaining failures before editing again. Some need better measurements or corrections to the task, grader, or infrastructure. Finish with a comparison against the baseline and uncertainty estimates; changes within noise do not justify a confident improvement claim.
 
-![Comparison of optimization variants across both splits](/images/highlights/automating-eval-design/figure-07.png)
+![Comparison of optimization variants across both splits](/media/highlights/automating-eval-design/figure-07.png)
 
 Figure 7 · In the illustration, v1 scores 0.875 on both splits. Adding worked examples in v2 helps only the training split, so that variant is rejected.
 
@@ -78,7 +78,7 @@ The support example uses 30 search tickets and 14 held-out tickets. Search-stage
 
 Changes remove unnecessary procedures and conflicting instructions, then clarify routing and refund rules. Model pricing also contributes: the article reports 20% lower input/output prices and 60% lower cache-read prices for Opus 5.5 versus Opus 4.8.
 
-![Support accuracy versus token cost per ticket](/images/highlights/automating-eval-design/figure-08.png)
+![Support accuracy versus token cost per ticket](/media/highlights/automating-eval-design/figure-08.png)
 
 Figure 8 · The search trajectory changes several factors together. It does not isolate a single cause of the savings.
 
@@ -86,7 +86,7 @@ On the separate 14-ticket holdout, final accuracy is 90.5% versus 78.6% for the 
 
 The API Skill example starts around 66%. Adding eight missing feature descriptions brings it to 74%; correcting C# and Java tables reaches 77%. Guidance redirecting obsolete API patterns, plus better placement of warnings, raises it to 80%.
 
-![API Skill pass rates over optimization rounds](/images/highlights/automating-eval-design/figure-09.png)
+![API Skill pass rates over optimization rounds](/media/highlights/automating-eval-design/figure-09.png)
 
 Figure 9 · The plotted score rises from 66.1% to 87.9% by round 24. The later phase includes grader repairs as well as Skill changes.
 

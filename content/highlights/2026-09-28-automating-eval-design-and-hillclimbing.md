@@ -28,13 +28,13 @@ articleIntro:
 | 有效提升空间 | 最强配置仍有可解决的失败 | 任务是否不可能完成，评分要求是否未写进题目 |
 | 运行稳定性 | 重复运行的波动足够小 | 评分一致性、effort 配置、环境残留及基础设施错误 |
 
-![评测设计：能力曲线、提升空间与误差条](/images/highlights/automating-eval-design/figure-01.png)
+![评测设计：能力曲线、提升空间与误差条](/media/highlights/automating-eval-design/figure-01.png)
 
 图 1｜可靠评测的四个观察角度。读图时同时看曲线走势、距满分的差距和误差条：单看最高分，无法判断一套评测是否适合做优化。
 
 还有一个容易忽略的偏差：只收集当前模型做错的题目，会过度关注这个模型特有的弱点。选题应结合人工难度判断、真实故障和业务价值。线上流量也不天然完整，因为用户可能只尝试自己认为能成功的功能。
 
-![对抗式采样与人工选取难例的对比](/images/highlights/automating-eval-design/figure-02.png)
+![对抗式采样与人工选取难例的对比](/media/highlights/automating-eval-design/figure-02.png)
 
 图 2｜两种采样方式。左图集中选择当前模型能力曲线的低谷；右图依据人的难度判断选题。重点是让评测覆盖有价值的问题，而非只针对一个模型的失败模式。
 
@@ -46,7 +46,7 @@ articleIntro:
 
 生成后先逐项审阅，确认输入具有代表性。图 3 展示的邮件分流评测有 24 个输入，标签帮助人检查任务类型和难度覆盖。这一步需要用户确认，而不是生成完就直接开跑。
 
-![邮件分流评测的输入审阅页面](/images/highlights/automating-eval-design/figure-03.png)
+![邮件分流评测的输入审阅页面](/media/highlights/automating-eval-design/figure-03.png)
 
 图 3｜输入审阅页。它解决的是“测什么”的问题，先于“得多少分”。
 
@@ -54,7 +54,7 @@ articleIntro:
 
 人还需要检查一批已评分的完整记录，确认评分器的判断符合预期。之后再估算案例数、重复次数、模型数与运行成本，执行基线，报告置信区间。
 
-![基线评分与每次运行记录的结果页面](/images/highlights/automating-eval-design/figure-04.png)
+![基线评分与每次运行记录的结果页面](/media/highlights/automating-eval-design/figure-04.png)
 
 图 4｜结果与执行记录相连。原图中的基线均值为 0.681；逐案例得分可以继续追溯到每次运行的 JSON 记录。总分负责概括，记录负责解释。
 
@@ -72,19 +72,19 @@ articleIntro:
 
 训练集允许优化器查看失败记录，留出测试集的具体样例则不开放。这里的“训练”指搜索配置与改动，并不意味着训练模型权重。不要把失败案例原样写进提示词，也要防止模型从文件或仓库直接获得参考答案。
 
-![评测信息进入执行框架的过拟合路径](/images/highlights/automating-eval-design/figure-05.png)
+![评测信息进入执行框架的过拟合路径](/media/highlights/automating-eval-design/figure-05.png)
 
 图 5｜框架过拟合的不同路径。为了评测添加专用 OCR 工具、硬编码目录命令、针对特定措辞打补丁，都可能让分数提高，却没有改善真实业务；直接获取参考答案则属于更明显的泄漏。
 
 每轮提出一项有明确原因的改动，再检查训练集与测试集。如果只改善训练集而测试集停滞，应警惕过拟合并撤销；发生退步也应回退。原文的质量优化流程会保留两侧都改善的版本。
 
-![单项改动、训练集与留出集评估的爬坡循环](/images/highlights/automating-eval-design/figure-06.png)
+![单项改动、训练集与留出集评估的爬坡循环](/media/highlights/automating-eval-design/figure-06.png)
 
 图 6｜“分析失败—提出补丁—运行评测—决定保留或回退”的循环。分析器读取的是训练集失败，测试集提供独立的表现反馈。
 
 连续两三轮无进展时，先对失败按根因分类，分清能力不足、题目含糊、评分器错误和环境问题；如果收益小到无法测出，也应暂停微调、改善测量条件。最终报告需要比较基线和选定版本，并展示不确定性；噪声范围内的上涨不足以支持合并。
 
-![优化版本的训练集与测试集对比报告](/images/highlights/automating-eval-design/figure-07.png)
+![优化版本的训练集与测试集对比报告](/media/highlights/automating-eval-design/figure-07.png)
 
 图 7｜版本比较报告。示例中 v1 的训练集与测试集均为 0.875；v2 加入完整示例后只改善训练集，因此被撤销。更多提示内容不保证更好的泛化。
 
@@ -103,7 +103,7 @@ articleIntro:
 
 提示词清理涉及强制工具调用、冗余推演步骤和矛盾规则；后续又完善分流与退款上限规则。降本也有定价因素：文中称 Opus 5.5 相比 Opus 4.8，输入、输出 token 单价低 20%，缓存读取低 60%。
 
-![客服任务中准确率与每张工单成本的关系](/images/highlights/automating-eval-design/figure-08.png)
+![客服任务中准确率与每张工单成本的关系](/media/highlights/automating-eval-design/figure-08.png)
 
 图 8｜搜索阶段的成本—准确率路径。模型、effort、提示词和价格共同变化，不能把全部收益归因于某一个因素。
 
@@ -115,7 +115,7 @@ articleIntro:
 
 进一步分析发现，有些说明虽然存在，模型仍会沿用旧 API 写法。增加新旧写法对照、调整提醒位置后，分数升至 80%。这说明文档的组织方式与纠错提示，可能和信息是否齐全一样重要。
 
-![API Skill 各轮优化的通过率曲线](/images/highlights/automating-eval-design/figure-09.png)
+![API Skill 各轮优化的通过率曲线](/media/highlights/automating-eval-design/figure-09.png)
 
 图 9｜多轮优化的阶段变化。曲线从 66.1% 到第 24 轮的 87.9%；正文使用了取整后的数字。末段同时包含评分器修正与 Skill 改动。
 

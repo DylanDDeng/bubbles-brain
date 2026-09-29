@@ -11,6 +11,114 @@
 		}
 	},
 	"sources": {
+		"/images/highlights/automating-eval-design/figure-01.png": {
+			"source_sha256": "290b7cbf644ebcdff15e6a143aaf6a1a049d7164dadc7cd5c7bd80572ac85bc6",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-01-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-01-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-01-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-01-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-01-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-01-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-02.png": {
+			"source_sha256": "6a014fa959cbc13b3026ca0f2ac1cb8754d541bd07da79bb4c61d81af428024a",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-02-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-02-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-02-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-02-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-02-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-02-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-03.png": {
+			"source_sha256": "bccc92050c6361924330ef504796ca2c0ce9208d8837356472373f8957b9fdd5",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-03-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-03-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-03-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-03-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-03-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-03-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-04.png": {
+			"source_sha256": "9c7c2f00ebdd0f9e6b8ad0d3de8cdcc6ebb162c9d2fa5b4f4950ac36b736aef8",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-04-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-04-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-04-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-04-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-04-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-04-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-05.png": {
+			"source_sha256": "a328a3f4d5bfd0967174ef2ca79bc8f094d8db3c12af71be3189891bf40d0e53",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-05-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-05-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-05-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-05-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-05-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-05-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-06.png": {
+			"source_sha256": "dafbc5fb0edf5aeed96af8984ec09f6a0f8ebd753274c305ccf3043e1640d75a",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-06-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-06-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-06-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-06-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-06-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-06-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-07.png": {
+			"source_sha256": "8c9b0ffdf9d75df81ec451ccb55feb091693fb7eb88ad9c20f3911387e3ec4e1",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-07-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-07-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-07-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-07-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-07-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-07-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-08.png": {
+			"source_sha256": "30294a004560ab4b287482ef536a7fdacb9af75c3599e2a5174db8522c189f5e",
+			"width": 2088,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-08-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-08-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-08-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-08-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-08-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-08-1440.webp"
+			]
+		},
+		"/images/highlights/automating-eval-design/figure-09.png": {
+			"source_sha256": "5a2d1629b9d790991737608384accbb5b175bbb147c569dc26b54fd603ef5ac2",
+			"width": 2400,
+			"variants": [
+				"/_responsive/images/highlights/automating-eval-design/figure-09-640.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-09-640.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-09-960.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-09-960.webp",
+				"/_responsive/images/highlights/automating-eval-design/figure-09-1440.avif",
+				"/_responsive/images/highlights/automating-eval-design/figure-09-1440.webp"
+			]
+		},
 		"/media/codex-tutorials/codex-app-beginner-guide/img_001.png": {
 			"source_sha256": "5f4d271c9056122f45d62cef53df4659c1a4b8493e2338e821f4a38c1bb26f74",
 			"width": 1080,

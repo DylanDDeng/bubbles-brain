@@ -658,7 +658,8 @@
 
 .eval-slot-actions :is(a, button):hover {
 	text-decoration: underline;
-	text-underline-offset: 3px;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
 }
 
 /* A compared (half-width) slot keeps the model line and moves actions underneath. */

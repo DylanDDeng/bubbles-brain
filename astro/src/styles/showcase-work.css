@@ -189,7 +189,7 @@
 .work-pager a:hover strong {
 	text-decoration: underline;
 	text-decoration-color: #b5b5b5;
-	text-underline-offset: 4px;
+	text-underline-offset: 5px;
 }
 .work-pager__next {
 	margin-left: auto;

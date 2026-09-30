@@ -59,6 +59,7 @@
 }
 .terms-category h2 a:hover {
 	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
 	text-underline-offset: 5px;
 }
 .terms-category__lede {

@@ -296,7 +296,8 @@
 .bench-notes a:hover,
 .bench-guide-source a:hover {
 	text-decoration: underline;
-	text-underline-offset: 4px;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
 }
 
 .bench-notes li > a {

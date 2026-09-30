@@ -167,7 +167,7 @@
 .home-try__list a:hover {
 	text-decoration: underline;
 	text-decoration-color: #b5b5b5;
-	text-underline-offset: 4px;
+	text-underline-offset: 5px;
 }
 /* A dot between the questions on show; inline-block keeps it out of the hover underline. */
 .home-try__list a:not([hidden]) ~ a:not([hidden])::before {
@@ -197,6 +197,7 @@
 }
 .home-sections a:hover {
 	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
 	text-underline-offset: 5px;
 }
 .home-sections span {

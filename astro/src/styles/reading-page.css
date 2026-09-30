@@ -241,7 +241,7 @@
 .collection-site .reading-page .article-pagination > a:hover strong {
 	text-decoration: underline;
 	text-decoration-color: #b5b5b5;
-	text-underline-offset: 4px;
+	text-underline-offset: 5px;
 }
 
 /* The floating "current section" pill exists only on phones. */

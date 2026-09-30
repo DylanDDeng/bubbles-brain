@@ -132,3 +132,35 @@
 		text-decoration: none;
 	}
 }
+
+/* 404 borrows the home page's layout. */
+.not-found {
+	padding-top: 56px;
+}
+.not-found__code {
+	margin: 0;
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+.not-found__title {
+	margin: -12px 0 0;
+	font-size: 32px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+.not-found .home-lede {
+	margin-top: -8px;
+}
+
+/* The English home adds a short list under the sections. */
+.home-list {
+	width: 100%;
+	margin-top: 24px;
+	text-align: left;
+}
+.home-list h2 {
+	margin: 0 0 4px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--ink-faint);
+}

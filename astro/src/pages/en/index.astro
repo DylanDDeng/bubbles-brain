@@ -1,9 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import CollectionCover from '../../components/CollectionCover.astro';
 import { buildKnowledgeSearchIndex } from '../../lib/searchIndex';
+import { siteSections } from '../../lib/siteSections';
+import { benchmarkLedger } from '../../lib/benchmarks';
+import '../../styles/home.css';
+
 const index = await buildKnowledgeSearchIndex({ locale: 'en' });
-const articles = index.items.filter((item) => item.section === 'highlights').slice(0, 8);
+const highlights = index.items.filter((item) => item.section === 'highlights');
+const counts: Record<string, number> = {
+	highlights: highlights.length,
+	benchmarks: benchmarkLedger.benchmarks.length,
+};
+const sections = siteSections('en').map((section) => ({ ...section, count: counts[section.id] }));
+const recent = highlights.slice(0, 5);
 ---
 
 <BaseLayout
@@ -11,27 +20,48 @@ const articles = index.items.filter((item) => item.section === 'highlights').sli
 	description="A personal collection of AI knowledge, primary sources and practical guides."
 	lang="en"
 	alternateHref="/"
+	home
 >
-	<section class="legacy-shell directory-page english-collection">
-		<header class="directory-hero collection-masthead">
-			<div><h1>A place for<br />curiosity.</h1></div>
-			<a href="/en/highlights/" class="masthead-cover" aria-label="Open Highlights"
-				><CollectionCover section="highlights" /></a
-			>
-		</header>
-		<div class="english-reading">
-			<h2>Highlights</h2>
-			<div>
+	<div class="home">
+		<img
+			class="home-cat"
+			src="/images/cat-pose-3.jpg"
+			alt="The cat curator standing, a pencil drawing"
+			width="1100"
+			height="765"
+		/>
+		<h1 class="home-title">Bubble's Brain</h1>
+		<p class="home-lede">A personal AI knowledge base, kept by a cat.</p>
+		<nav class="home-sections" aria-label="Sections">
+			{
+				sections.map((section) => (
+					<a href={section.href}>
+						{section.label}
+						{section.count !== undefined && <span>{section.count}</span>}
+					</a>
+				))
+			}
+		</nav>
+		<section class="home-list" aria-labelledby="en-recent">
+			<h2 id="en-recent">Recent highlights</h2>
+			<ol class="rr-rows">
 				{
-					articles.map((item) => (
-						<a href={item.href}>
-							{item.title}
-							<i class="ph ph-arrow-up-right" aria-hidden="true" />
-						</a>
+					recent.map((item) => (
+						<li>
+							<a
+								class="rr-row"
+								href={item.href}
+								target={item.external ? '_blank' : undefined}
+								rel={item.external ? 'noopener noreferrer' : undefined}
+							>
+								<span class="rr-row__title">{item.title}</span>
+								<span class="rr-row__side">{item.date?.slice(5, 10).replace('-', '.')}</span>
+							</a>
+						</li>
 					))
-				}<a class="collection-back" href="/en/highlights/"
-					>View all<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
-			</div>
-		</div>
-	</section>
+				}
+			</ol>
+			<a class="rr-more" href="/en/highlights/">All highlights</a>
+		</section>
+	</div>
 </BaseLayout>

@@ -852,3 +852,13 @@
 	border-radius: 0;
 	background: none;
 }
+@media (max-width: 700px) {
+	.collection-site .legacy-article,
+	.collection-site .legacy-article:has(.article-outline) {
+		--type-display: 30px;
+		--type-section: 22px;
+	}
+	.collection-site .legacy-article .article-lede {
+		font-size: 17px;
+	}
+}

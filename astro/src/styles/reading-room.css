@@ -407,3 +407,51 @@
 	filter: grayscale(1);
 	cursor: pointer;
 }
+
+/* Detail pages: the way back is a small grey breadcrumb, not an arrow button. */
+.collection-site :is(.collection-back, .concept-detail-back) {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+	min-height: 32px;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ink-faint);
+	font: 400 13px/1.6 var(--sans);
+	letter-spacing: 0;
+	text-decoration: none;
+	text-transform: none;
+}
+.collection-site :is(.collection-back, .concept-detail-back):hover {
+	color: var(--ink);
+}
+.collection-site :is(.collection-back, .concept-detail-back) > i {
+	display: none;
+}
+
+/* Small labels across the older templates read as quiet grey text, not uppercase code. */
+.collection-site
+	:is(
+		.showcase-label,
+		.showcase-count,
+		.showcase-reel-meta,
+		.showcase-prompt-tag,
+		.concept-section-index,
+		.design-kicker,
+		.design-section-index,
+		.article-facts dt,
+		.eval-counter,
+		.command-search-header p,
+		.command-search-footer,
+		.command-search-result-index,
+		.command-search-result-section,
+		.command-search-result-date
+	) {
+	font-family: var(--sans);
+	font-size: 13px;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+}

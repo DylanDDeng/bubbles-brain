@@ -1,8 +1,6 @@
 ---
-import CatCurator from '../../components/CatCurator.astro';
-import KnowledgeResults from '../../components/KnowledgeResults.astro';
-import { CAT_STATE_LINES } from '../../data/catCurator';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import KnowledgeResults from '../../components/KnowledgeResults.astro';
 import { buildKnowledgeSearchIndex } from '../../lib/searchIndex';
 import '../../styles/knowledge.css';
 
@@ -14,27 +12,22 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 	title="知识搜索 · Bubble's Brain"
 	description="搜索教程、精选阅读、Vibe Coding 术语、Skills 与 Design"
 >
-	<section class="knowledge-shell knowledge-search" data-knowledge-search>
-		<header class="knowledge-heading knowledge-search-heading">
-			<div>
-				<h1>搜索知识库</h1>
-			</div>
-		</header>
-
+	<section class="rr-page knowledge-search" data-knowledge-search>
+		<h1 class="sr-only">搜索知识库</h1>
 		<form class="knowledge-search-form" data-knowledge-search-form method="get" role="search">
-			<div class="knowledge-query-field">
+			<label class="knowledge-query">
 				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-				<label class="sr-only" for="knowledge-query">搜索词</label>
+				<span class="sr-only">搜索词</span>
 				<input
 					id="knowledge-query"
 					name="q"
 					type="search"
 					autocomplete="off"
-					placeholder="搜索标题、术语、摘要或标签…"
+					placeholder="搜索标题、术语、摘要或标签"
 				/>
-			</div>
-			<div class="knowledge-filter-field">
-				<i class="ph ph-books" aria-hidden="true"></i>
+			</label>
+			<button class="sr-only" type="submit">搜索</button>
+			<div class="knowledge-search-bar">
 				<label class="sr-only" for="knowledge-section">知识栏目</label>
 				<select id="knowledge-section" name="section" hidden tabindex="-1" aria-hidden="true">
 					<option value="">全部栏目</option>
@@ -44,14 +37,14 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 						))
 					}
 				</select>
-				<details class="knowledge-filter-menu" data-knowledge-filter-menu>
+				<details class="knowledge-filter" data-knowledge-filter-menu>
 					<summary>
 						<span data-knowledge-filter-label>全部栏目</span>
 						<i class="ph ph-caret-down" aria-hidden="true"></i>
 					</summary>
-					<div class="knowledge-filter-options" role="menu" aria-label="选择知识栏目">
+					<div class="knowledge-filter__options" role="menu" aria-label="选择知识栏目">
 						<button type="button" role="menuitemradio" aria-checked="true" data-section-value="">
-							<span>全部栏目</span><i class="ph ph-check" aria-hidden="true"></i>
+							全部栏目
 						</button>
 						{
 							index.sections.map((section) => (
@@ -61,37 +54,34 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 									aria-checked="false"
 									data-section-value={section}
 								>
-									<span>{sectionLabels.get(section)}</span>
-									<i class="ph ph-check" aria-hidden="true" />
+									{sectionLabels.get(section)}
 								</button>
 							))
 						}
 					</div>
 				</details>
+				<span class="knowledge-count" aria-live="polite">
+					<span data-search-result-count>{index.item_count}</span> 条结果
+				</span>
 			</div>
-			<button class="knowledge-search-submit" type="submit">搜索</button>
 		</form>
-
-		<div class="knowledge-search-status" aria-live="polite">
-			<span><strong data-search-result-count>{index.item_count}</strong> 条结果</span>
-			<noscript>JavaScript 关闭时展示完整知识索引。</noscript>
-		</div>
+		<noscript><p class="rr-empty">JavaScript 关闭时展示完整知识索引。</p></noscript>
 
 		<KnowledgeResults items={index.items} filterable />
 		<div class="knowledge-empty" data-search-empty hidden={index.item_count !== 0}>
-			<CatCurator
-				class="knowledge-empty-cat"
-				pose={CAT_STATE_LINES.searchEmpty.pose}
-				line={CAT_STATE_LINES.searchEmpty.zh}
-			/>
-			<p>{index.item_count === 0 ? '知识库还没有可检索的内容。' : '没有找到符合条件的内容。'}</p>
-			{
-				index.item_count > 0 && (
-					<button type="button" data-clear-search>
-						清除筛选
-					</button>
-				)
-			}
+			<img src="/images/cat-pose-4.jpg" alt="趴着的猫馆长" width="1100" height="765" />
+			<div>
+				<p class="knowledge-empty__title">
+					{index.item_count === 0 ? '知识库还没有可检索的内容。' : '没有找到。换个说法试试？'}
+				</p>
+				{
+					index.item_count > 0 && (
+						<button type="button" data-clear-search>
+							清除搜索
+						</button>
+					)
+				}
+			</div>
 		</div>
 	</section>
 </BaseLayout>

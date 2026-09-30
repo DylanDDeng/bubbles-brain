@@ -9,51 +9,36 @@ interface Props {
 const { items, filterable = false } = Astro.props;
 ---
 
-<div class="knowledge-results" data-knowledge-results>
+<ol class="rr-rows knowledge-results" data-knowledge-results>
 	{
 		items.map((item) => (
-			<article
-				class="knowledge-result"
+			<li
 				data-knowledge-search-item={filterable ? '' : undefined}
 				data-section={filterable ? item.section : undefined}
 				data-search={filterable ? item.search_text : undefined}
 			>
-				<div class="knowledge-result-date">
-					{item.date ? (
-						<>
-							<time datetime={item.date}>{item.date.slice(5)}</time>
-							<span>{item.date.slice(0, 4)}</span>
-						</>
-					) : (
-						<span>—</span>
-					)}
-				</div>
-				<div class="knowledge-result-body">
-					<p class="knowledge-result-meta">
-						<span>{item.section_label}</span>
-					</p>
-					<h2>
-						<a
-							href={item.href}
-							target={item.external ? '_blank' : undefined}
-							rel={item.external ? 'noopener noreferrer' : undefined}
-						>
-							{item.title}
-							{item.external && (
-								<i class="ph ph-arrow-up-right knowledge-result-external" aria-hidden="true" />
-							)}
-						</a>
-					</h2>
-					{item.summary && <p class="knowledge-result-summary">{item.summary}</p>}
-					{item.tags.length > 0 && (
-						<ul class="knowledge-result-tags" aria-label="标签">
-							{item.tags.map((tag) => (
-								<li>{tag}</li>
-							))}
-						</ul>
-					)}
-				</div>
-			</article>
+				<a
+					class="knowledge-result"
+					href={item.href}
+					target={item.external ? '_blank' : undefined}
+					rel={item.external ? 'noopener noreferrer' : undefined}
+				>
+					<span class="knowledge-result__meta">
+						{item.section_label}
+						{item.date && (
+							<>
+								{' · '}
+								<time datetime={item.date}>{item.date.slice(0, 10).replaceAll('-', '.')}</time>
+							</>
+						)}
+					</span>
+					<span class="knowledge-result__title">
+						{item.title}
+						{item.external && ' ↗'}
+					</span>
+					{item.summary && <span class="knowledge-result__summary">{item.summary}</span>}
+				</a>
+			</li>
 		))
 	}
-</div>
+</ol>

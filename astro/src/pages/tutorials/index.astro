@@ -13,7 +13,6 @@ const series = TUTORIAL_SERIES.map((meta) => ({
 	title: data.collection(meta.id)?.title ?? meta.id,
 	lessons: seriesLessons(data, meta.id),
 }));
-const total = series.reduce((sum, item) => sum + item.lessons.length, 0);
 ---
 
 <BaseLayout
@@ -23,7 +22,6 @@ const total = series.reduce((sum, item) => sum + item.lessons.length, 0);
 	<div class="rr-page">
 		<header class="rr-head">
 			<h1 class="rr-title">教程</h1>
-			<p class="rr-lede">{series.length} 个系列，{total} 篇。零基础的话，从新手村第一课开始。</p>
 		</header>
 
 		{
@@ -32,10 +30,7 @@ const total = series.reduce((sum, item) => sum + item.lessons.length, 0);
 					<div class="rr-block__head">
 						<h2 class="rr-block__title" id={`series-${item.id}`}>
 							{item.title}
-							<span class="rr-count">
-								{item.level} · {item.lessons.length}{' '}
-								{item.id === 'newbie-tutorials' ? '课' : '篇'}
-							</span>
+							<span class="rr-count">{item.level}</span>
 						</h2>
 						<p class="rr-block__lede">{item.lede}</p>
 					</div>

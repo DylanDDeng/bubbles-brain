@@ -41,7 +41,9 @@ const promptLines = (text: string) =>
 								aria-current={item.id === work.id ? 'page' : undefined}
 								data-astro-prefetch="false"
 							>
-								<span>{item.title}</span>
+								<span class="work-reel__title" title={item.title}>
+									{item.title}
+								</span>
 								<span class="work-reel__time">{formatShowcaseDuration(item.duration)}</span>
 							</a>
 						</li>

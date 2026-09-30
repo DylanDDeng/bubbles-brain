@@ -50,6 +50,13 @@
 .work-reel a[aria-current] {
 	color: var(--ink);
 }
+/* One line per work, as in the draft: a long title is cut short rather than wrapping. */
+.work-reel__title {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 .work-reel__time {
 	flex-shrink: 0;
 	font-variant-numeric: tabular-nums;

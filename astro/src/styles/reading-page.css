@@ -346,13 +346,20 @@
 	}
 }
 
-/* Wide screens: tables may step 90px out on each side, so three columns fit without a scrollbar.
-   There is room: the rail ends well before the widened edge. */
-@media (min-width: 1280px) {
-	.collection-site .reading-page .article-content .article-table-scroll {
-		width: calc(100% + 180px);
-		max-width: none;
-		margin-inline: -90px;
+/* Tables share the text's edges: exactly the column's width, cells wrapping instead of
+   overflowing. Only phones, where three columns would be crushed, scroll sideways. */
+.collection-site .reading-page .article-content .article-table-scroll {
+	width: 100%;
+	max-width: 100%;
+	margin-inline: 0;
+}
+.collection-site .reading-page .article-content .article-table-scroll table {
+	width: 100%;
+	min-width: 0;
+}
+@media (max-width: 600px) {
+	.collection-site .reading-page .article-content .article-table-scroll table {
+		min-width: 480px;
 	}
 }
 

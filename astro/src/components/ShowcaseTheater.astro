@@ -1,0 +1,249 @@
+---
+import {
+	formatShowcaseDuration,
+	showcaseByNewest,
+	showcaseCategories,
+	showcaseHref,
+	showcaseMedium,
+	type ShowcaseWork,
+} from '../data/showcase';
+import '../styles/showcase.css';
+
+interface Props {
+	/** The work on the screen; defaults to the newest. */
+	work?: ShowcaseWork;
+	/** In the home room the section label is the panel heading and the work title steps down. */
+	context: 'room' | 'page';
+}
+
+const works = showcaseByNewest();
+const { work = works[0], context } = Astro.props;
+const position = works.indexOf(work) + 1;
+const medium = showcaseMedium(work.medium)?.title ?? work.medium;
+// Only categories that hold a work are offered; each links to its newest work, filtered.
+const categories = showcaseCategories
+	.map((category) => ({ ...category, works: works.filter((w) => w.category === category.id) }))
+	.filter((category) => category.works.length);
+const pad = (n: number) => String(n).padStart(2, '0');
+const prompt = work.prompt;
+const promptLangs = (['zh', 'en'] as const).filter((lang) => prompt?.[lang]);
+const Title = context === 'page' ? 'h1' : 'h3';
+const PromptHeading = context === 'page' ? 'h2' : 'h4';
+// Section tags such as <inputs> in a structured prompt are set quieter than the instructions.
+const promptLines = (text: string) =>
+	text.split('\n').map((line) => ({ line, tag: /^<\/?[\w-]+>$/.test(line.trim()) }));
+const wide = work.width / work.height >= 16 / 9 - 0.01;
+---
+
+<div class="showcase-theater" data-showcase-theater>
+	<div class="showcase-screen-col">
+		<div class="showcase-bar">
+			<slot name="back" />
+			{
+				context === 'room' ? (
+					<header class="bc-panel-heading showcase-label">
+						<h2 id="bc-title-vibe-coding-showcase" tabindex="-1">
+							Showcase <span aria-hidden="true">·</span> <span>{medium}</span>
+						</h2>
+					</header>
+				) : (
+					<p class="showcase-label">
+						Showcase <span aria-hidden="true">·</span> {medium}
+					</p>
+				)
+			}
+		</div>
+		<figure class:list={['showcase-screen', { 'showcase-screen--framed': !wide }]}>
+			{!wide && <img class="showcase-screen-fill" src={work.poster} alt="" aria-hidden="true" />}
+			<video
+				src={work.video}
+				poster={work.poster}
+				width={work.width}
+				height={work.height}
+				controls
+				playsinline
+				preload="metadata"
+				aria-label={work.title}></video>
+		</figure>
+
+		{
+			prompt && promptLangs.length > 0 && (
+				<section
+					class="showcase-prompt"
+					aria-labelledby={`showcase-prompt-${work.id}`}
+					data-showcase-prompt
+				>
+					<span class="showcase-prompt-mark" aria-hidden="true">
+						“
+					</span>
+					<div class="showcase-prompt-body">
+						<div class="showcase-prompt-head">
+							<PromptHeading id={`showcase-prompt-${work.id}`}>提示词</PromptHeading>
+							<div class="showcase-prompt-tools" data-prompt-tools hidden>
+								{promptLangs.length > 1 && (
+									<div class="showcase-prompt-langs" role="group" aria-label="提示词语言">
+										{promptLangs.map((lang, i) => (
+											<button
+												type="button"
+												data-prompt-lang={lang}
+												aria-pressed={i === 0 ? 'true' : 'false'}
+											>
+												{lang === 'zh' ? '中' : 'EN'}
+											</button>
+										))}
+									</div>
+								)}
+								<button type="button" class="showcase-link-button" data-prompt-copy>
+									复制
+								</button>
+							</div>
+						</div>
+						{promptLangs.map((lang, i) => (
+							<p
+								class="showcase-prompt-text"
+								lang={lang === 'zh' ? 'zh-CN' : 'en'}
+								data-prompt-text={lang}
+								hidden={i > 0}
+							>
+								{promptLines(prompt[lang]!).map(({ line, tag }, j, all) => (
+									<Fragment>
+										{tag ? <span class="showcase-prompt-tag">{line}</span> : line}
+										{j < all.length - 1 ? '\n' : ''}
+									</Fragment>
+								))}
+							</p>
+						))}
+						<button
+							type="button"
+							class="showcase-link-button"
+							data-prompt-toggle
+							aria-expanded="false"
+							hidden
+						>
+							展开全部
+						</button>
+					</div>
+				</section>
+			)
+		}
+	</div>
+
+	<aside class="showcase-side" aria-label="作品信息">
+		<div class="showcase-now">
+			<p class="showcase-count" data-showcase-count>
+				{context === 'room' ? '正在放映' : '作品'} · <span data-count-position>{pad(position)}</span
+				> /{' '}
+				<span data-count-total>{pad(works.length)}</span>
+			</p>
+			<Title class="showcase-title">
+				{
+					context === 'room' ? (
+						<a href={showcaseHref(work)} data-astro-prefetch="false">
+							{work.title}
+						</a>
+					) : (
+						work.title
+					)
+				}
+			</Title>
+			<p class="showcase-note">{work.note}</p>
+			{
+				work.source && (
+					<p class="showcase-meta">
+						来源：
+						<a href={work.source.url} target="_blank" rel="noopener noreferrer">
+							{work.source.author}
+							{work.source.platform && ` · ${work.source.platform}`}
+						</a>
+					</p>
+				)
+			}
+		</div>
+		{
+			works.length > 1 && (
+				<nav class="showcase-reel" aria-label="片单">
+					{categories.length > 1 ? (
+						<details class="showcase-filter" data-showcase-filter>
+							<summary>
+								片单 · <span data-filter-label>全部</span>
+								<svg
+									width="12"
+									height="12"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</summary>
+							<ul aria-label="按分类筛选">
+								<li>
+									<a
+										href={showcaseHref(work)}
+										data-filter-option=""
+										aria-current="true"
+										data-astro-prefetch="false"
+									>
+										<span>全部</span>
+										<span class="showcase-filter-count">{works.length}</span>
+									</a>
+								</li>
+								{categories.map((category) => (
+									<li>
+										<a
+											href={`${showcaseHref(category.works[0])}?c=${category.id}`}
+											data-filter-option={category.id}
+											data-astro-prefetch="false"
+										>
+											<span>{category.title}</span>
+											<span class="showcase-filter-count">{category.works.length}</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						</details>
+					) : (
+						<p class="showcase-reel-label">片单</p>
+					)}
+					<ol>
+						{works.map((item) => (
+							<li data-category={item.category}>
+								<a
+									href={showcaseHref(item)}
+									aria-current={item.id === work.id ? 'true' : undefined}
+									data-astro-prefetch="false"
+								>
+									<span class="showcase-reel-thumb">
+										<img
+											src={item.poster}
+											alt=""
+											width={item.width}
+											height={item.height}
+											loading="lazy"
+											decoding="async"
+										/>
+									</span>
+									<span class="showcase-reel-text">
+										<span class="showcase-reel-title">{item.title}</span>
+										<span class="showcase-reel-meta">
+											{formatShowcaseDuration(item.duration)}
+											{item.id === work.id && ' · 正在放映'}
+										</span>
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				</nav>
+			)
+		}
+	</aside>
+</div>
+
+<script>
+	import '../scripts/showcase';
+</script>

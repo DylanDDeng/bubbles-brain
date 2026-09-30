@@ -8,7 +8,7 @@ export const brainPodSections = [
 	{
 		id: 'vibe-coding',
 		title: 'Vibe Coding',
-		children: ['vibe-coding-terms', 'vibe-coding-skills', 'vibe-coding-design'],
+		children: ['vibe-coding-terms', 'vibe-coding-skills', 'vibe-coding-design', 'vibe-coding-showcase'],
 	},
 	{ id: 'highlights', title: '精选阅读', children: ['highlights'] },
 	{ id: 'benchmarks', title: 'Benchmarks', children: ['benchmarks'] },

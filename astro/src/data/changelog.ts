@@ -17,6 +17,21 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-29',
+		tag: 'Vibe Coding',
+		type: 'feature',
+		title: '新增 Showcase：收集别人用 AI 做出的酷炫作品',
+		summary:
+			'Vibe Coding 下新开 Showcase 子栏目，按作品类型分类展示，首个分类是 Code to Video。首件作品是 Claude Opus 5.5 复刻自己的发布视频。',
+		links: [
+			{ label: '浏览 Showcase', href: '/#bc-vibe-coding-showcase' },
+			{
+				label: '观看 Claude Opus 5.5 发布视频',
+				href: '/vibe-coding/showcase/claude-opus-5.5-intro/',
+			},
+		],
+	},
+	{
 		date: '2026-09-28',
 		tag: '精选阅读',
 		type: 'content',

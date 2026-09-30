@@ -4,6 +4,7 @@ import { basename, extname, resolve } from 'node:path';
 import matter from 'gray-matter';
 
 import { designBrands } from '../data/designBrands';
+import { showcaseCategory, showcaseHref, showcaseMedium, showcaseWorks } from '../data/showcase';
 import { vibeCodingSkillCategories, vibeCodingSkillMeta } from '../data/vibeCodingSkills';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
 import { benchmarkCategories, benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
@@ -15,7 +16,12 @@ import {
 } from './legacyContent';
 
 export type KnowledgeSearchSection =
-	LegacySection | 'vibe-coding-terms' | 'vibe-coding-skills' | 'vibe-coding-design' | 'benchmarks';
+	| LegacySection
+	| 'vibe-coding-terms'
+	| 'vibe-coding-skills'
+	| 'vibe-coding-design'
+	| 'vibe-coding-showcase'
+	| 'benchmarks';
 
 export interface KnowledgeSearchItem {
 	key: string;
@@ -85,18 +91,27 @@ const sectionLabels: Record<LegacyLocale, Record<LegacySection, string>> = {
 
 const knowledgeSectionLabels: Record<
 	LegacyLocale,
-	Record<'vibe-coding-terms' | 'vibe-coding-skills' | 'vibe-coding-design' | 'benchmarks', string>
+	Record<
+		| 'vibe-coding-terms'
+		| 'vibe-coding-skills'
+		| 'vibe-coding-design'
+		| 'vibe-coding-showcase'
+		| 'benchmarks',
+		string
+	>
 > = {
 	'zh-CN': {
 		'vibe-coding-terms': 'Vibe Coding 术语',
 		'vibe-coding-skills': 'Vibe Coding Skills',
 		'vibe-coding-design': 'Vibe Coding Design',
+		'vibe-coding-showcase': 'Vibe Coding Showcase',
 		benchmarks: 'Benchmarks',
 	},
 	en: {
 		'vibe-coding-terms': 'Vibe Coding terms',
 		'vibe-coding-skills': 'Vibe Coding Skills',
 		'vibe-coding-design': 'Vibe Coding Design',
+		'vibe-coding-showcase': 'Vibe Coding Showcase',
 		benchmarks: 'Benchmarks',
 	},
 };
@@ -110,6 +125,7 @@ const sectionOrder: KnowledgeSearchSection[] = [
 	'vibe-coding-terms',
 	'vibe-coding-skills',
 	'vibe-coding-design',
+	'vibe-coding-showcase',
 	'benchmarks',
 	'about',
 	'x-trending',
@@ -263,7 +279,34 @@ function buildVibeCodingItems(locale: LegacyLocale): KnowledgeSearchItem[] {
 			]),
 		};
 	});
-	return [...terms, ...designs];
+	const showcaseSection = 'vibe-coding-showcase' as const;
+	const showcaseSectionLabel = knowledgeSectionLabels[locale][showcaseSection];
+	const showcase = showcaseWorks.map((work): KnowledgeSearchItem => {
+		const category = showcaseCategory(work.category)?.title ?? work.category;
+		const medium = showcaseMedium(work.medium)?.title ?? work.medium;
+		const tags = [category, medium, work.model];
+		return {
+			key: showcaseHref(work),
+			href: showcaseHref(work),
+			title: work.title,
+			summary: work.note,
+			section: showcaseSection,
+			section_label: showcaseSectionLabel,
+			date: work.added,
+			tags,
+			external: false,
+			search_text: normalizedSearchText(locale, [
+				work.title,
+				work.note,
+				work.prompt?.zh,
+				work.prompt?.en,
+				work.source?.author,
+				showcaseSectionLabel,
+				tags,
+			]),
+		};
+	});
+	return [...terms, ...designs, ...showcase];
 }
 
 /** Each benchmark is one entry with its own page: what it measures, then the scores. */

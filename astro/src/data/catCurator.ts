@@ -138,6 +138,11 @@ export const CAT_SECTION_LINES: Record<string, CatLine> = {
 		zh: '色卡我叼来了，你来挑。',
 		en: 'I fetched the swatches. You pick.',
 	},
+	'vibe-coding-showcase': {
+		pose: 'wave',
+		zh: '这些是别人家 AI 的得意之作，我先替你看过了。',
+		en: 'Other people’s AI showing off. I watched them first.',
+	},
 };
 
 export const CAT_STATE_LINES = {

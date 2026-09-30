@@ -2,6 +2,7 @@ import { isRetiredDirectory } from './collectionRoutes';
 import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import { legacyEntryIsRoutable, loadLegacyContent } from './legacyContent';
 import { designBrands } from '../data/designBrands';
+import { showcaseHref, showcaseWorks } from '../data/showcase';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
 
 export { renderRss } from './siteRss';
@@ -132,6 +133,17 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 			locale: 'zh-CN',
 			section: 'vibe-coding',
 			lastmod: null,
+		});
+	}
+
+	for (const work of showcaseWorks) {
+		records.push({
+			route: showcaseHref(work),
+			title: `${work.title} · Showcase`,
+			description: work.note,
+			locale: 'zh-CN',
+			section: 'vibe-coding',
+			lastmod: new Date(work.added),
 		});
 	}
 

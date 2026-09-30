@@ -29,6 +29,18 @@ describe('site feeds', () => {
 		);
 	});
 
+	it('publishes Showcase work pages but not a Showcase directory', async () => {
+		const records = await loadSiteManifest();
+
+		expect(records.some((record) => record.route === '/vibe-coding/showcase/')).toBe(false);
+		expect(records).toContainEqual(
+			expect.objectContaining({
+				route: '/vibe-coding/showcase/claude-opus-5.5-intro/',
+				section: 'vibe-coding',
+			}),
+		);
+	});
+
 	it('publishes the changelog route', async () => {
 		const records = await loadSiteManifest();
 

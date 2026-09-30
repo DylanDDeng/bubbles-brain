@@ -252,6 +252,7 @@ for (const section of [
   "vibe-coding-terms",
   "vibe-coding-skills",
   "vibe-coding-design",
+  "vibe-coding-showcase",
   "about",
   "x-trending",
 ]) {

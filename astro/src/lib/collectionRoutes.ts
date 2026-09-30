@@ -8,6 +8,7 @@ export const collectionDirectories: Record<string, string> = {
 	'/vibe-coding/terms/': 'vibe-coding-terms',
 	'/vibe-coding/skills/': 'vibe-coding-skills',
 	'/vibe-coding/design/': 'vibe-coding-design',
+	'/vibe-coding/showcase/': 'vibe-coding-showcase',
 	'/benchmarks/': 'benchmarks',
 };
 

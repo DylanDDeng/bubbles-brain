@@ -455,3 +455,14 @@
 	letter-spacing: 0;
 	text-transform: none;
 }
+
+/* Short one-line lists (tutorial lessons) need no dividers: spacing alone groups them. */
+.rr-rows--plain {
+	margin-top: -6px;
+}
+.rr-rows--plain > li:not(:last-child) {
+	box-shadow: none;
+}
+.rr-rows--plain .rr-lesson {
+	padding: 10px 0;
+}

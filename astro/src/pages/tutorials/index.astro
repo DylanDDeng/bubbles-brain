@@ -39,7 +39,7 @@ const total = series.reduce((sum, item) => sum + item.lessons.length, 0);
 						</h2>
 						<p class="rr-block__lede">{item.lede}</p>
 					</div>
-					<ol class="rr-rows">
+					<ol class="rr-rows rr-rows--plain">
 						{item.lessons.map((lesson, index) => (
 							<li>
 								<a class="rr-lesson" href={lesson.href}>

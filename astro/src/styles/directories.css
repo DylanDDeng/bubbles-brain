@@ -57,3 +57,8 @@
 		margin-top: 72px;
 	}
 }
+
+/* Benchmarks: a little more air between entries, each is a name and a line. */
+.bench-stack {
+	--stack-gap: 28px;
+}

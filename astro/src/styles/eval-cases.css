@@ -248,15 +248,11 @@
 
 /* ---------------------------------------------------------------- gallery */
 
-.eval-head-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 8px 24px;
+/* The gallery head is the shared centred .rr-head; only the task page keeps its own title. */
+.eval-gallery .eval-head {
+	padding: 0 0 32px;
 }
 
-.eval-head h1,
 .eval-task-head h1 {
 	margin: 0;
 	font-size: clamp(26px, 2.8vw, 32px);
@@ -264,29 +260,6 @@
 	line-height: 1.3;
 	letter-spacing: -0.01em;
 	text-wrap: balance;
-}
-
-.eval-head-stats {
-	display: flex;
-	gap: 18px;
-	margin: 0;
-	color: var(--ink-faint);
-	font-size: 13px;
-}
-
-.eval-head-stats b {
-	color: var(--ink);
-	font: 600 13px var(--mono);
-	font-variant-numeric: tabular-nums;
-}
-
-.eval-lede {
-	max-width: 620px;
-	margin: 10px 0 0;
-	color: var(--ink-soft);
-	font-size: 15px;
-	line-height: 1.7;
-	text-wrap: pretty;
 }
 
 .eval-toolbar {

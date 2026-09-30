@@ -33,7 +33,7 @@ const latest = [...evalLedger.cases]
 	description="先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。"
 	alternateHref="/en/benchmarks/"
 >
-	<div class="rr-page">
+	<div class="rr-page rr-page--narrow">
 		<header class="rr-head">
 			<h1 class="rr-title" lang="en">Benchmarks</h1>
 			<p class="rr-lede">先弄清每个评测在测什么，再去看分数。</p>
@@ -46,13 +46,19 @@ const latest = [...evalLedger.cases]
 					<h2 class="rr-group__label" id={`bench-${group.id}`}>
 						{group.name.zh}
 					</h2>
-					<ul class="rr-rows">
+					<ul class="rr-stack bench-stack">
 						{group.benchmarks.map((benchmark) => (
 							<li>
-								<a class="rr-row" href={benchmarkRoute(benchmark.id, 'zh-CN')}>
-									<span class="rr-row__title">{pick(benchmark.name, 'zh-CN')}</span>
-									<span class="rr-row__side">{benchmark.source}</span>
-									<span class="rr-row__deck">{pick(benchmark.measures, 'zh-CN')}</span>
+								<a class="rr-entry" href={benchmarkRoute(benchmark.id, 'zh-CN')}>
+									<span class="rr-entry__head">
+										<span class="rr-entry__title rr-entry__title--strong">
+											{pick(benchmark.name, 'zh-CN')}
+										</span>
+										{benchmark.source && (
+											<span class="rr-entry__source">{benchmark.source}</span>
+										)}
+									</span>
+									<span class="rr-entry__deck">{pick(benchmark.measures, 'zh-CN')}</span>
 								</a>
 							</li>
 						))}

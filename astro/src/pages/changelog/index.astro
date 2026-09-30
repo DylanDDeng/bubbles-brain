@@ -28,7 +28,7 @@ const months = changelog.reduce<{ key: string; label: string; entries: typeof ch
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/changelog/">
-	<div class="rr-page">
+	<div class="rr-page rr-page--narrow">
 		<header class="rr-head">
 			<h1 class="rr-title">更新日志</h1>
 			<p class="rr-lede">
@@ -42,7 +42,7 @@ const months = changelog.reduce<{ key: string; label: string; entries: typeof ch
 					<h2 class="rr-group__label" id={`log-${month.key}`}>
 						{month.label}
 					</h2>
-					<ol class="rr-rows">
+					<ol class="rr-stack changelog-stack">
 						{month.entries.map((entry) => (
 							<li>
 								<article class="changelog-entry">

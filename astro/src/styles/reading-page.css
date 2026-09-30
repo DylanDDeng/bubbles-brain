@@ -370,3 +370,14 @@
 		padding-inline: 40px;
 	}
 }
+
+/* 精选阅读: the source leads the meta line, with its company's logo. */
+.collection-site .reading-page .reading-meta {
+	align-items: center;
+}
+.collection-site .reading-page .reading-source {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ink-soft);
+}

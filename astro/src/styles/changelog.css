@@ -6,11 +6,14 @@
 	text-decoration-color: #c4c4c4;
 	text-underline-offset: 4px;
 }
+/* No dividers: entries sit 32px apart and the date column reads as a timeline. */
+.changelog-stack {
+	--stack-gap: 32px;
+}
 .changelog-entry {
 	display: grid;
 	grid-template-columns: 72px minmax(0, 1fr);
 	gap: 24px;
-	padding: 20px 0;
 }
 .changelog-entry time {
 	font-size: 13px;

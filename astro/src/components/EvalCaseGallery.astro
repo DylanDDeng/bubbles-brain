@@ -28,22 +28,9 @@ const usedCategories = categories
 ---
 
 <section class="page-shell eval-shell eval-gallery" data-eval-gallery>
-	<header class="eval-head">
-		<a class="collection-back" href="/benchmarks/">
-			<i class="ph ph-arrow-left" aria-hidden="true"></i>
-			Benchmarks
-		</a>
-		<div class="eval-head-row">
-			<h1>模型实测案例</h1>
-			<p class="eval-head-stats">
-				<span><b>{tasks.length}</b> 道题</span>
-				<span><b>{cases.length}</b> 个作品</span>
-				<span><b>{usedModels.length}</b> 个模型</span>
-			</p>
-		</div>
-		<p class="eval-lede">
-			排行榜上的分数之外，把同一道题交给不同模型，直接运行它们交出的网页、SVG 和动画。
-		</p>
+	<header class="rr-head eval-head">
+		<nav class="rr-crumbs" aria-label="位置"><a href="/benchmarks/">Benchmarks</a> / 实测案例</nav>
+		<h1 class="rr-title">实测案例</h1>
 	</header>
 
 	<div class="eval-toolbar" data-eval-filters hidden>

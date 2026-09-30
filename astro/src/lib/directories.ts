@@ -1,6 +1,7 @@
 import { buildBrainPodLibrary, type BrainPodItem } from './brainpod';
 import { loadLegacyContent, type LegacyContentEntry } from './legacyContent';
 import { buildKnowledgeSearchIndex } from './searchIndex';
+import { sourceFromUrl, sourceMark, type SourceMark } from './sourceVendor';
 
 /** Data for the section directory pages, built from the same published index as the rest of the site. */
 export async function loadDirectoryData() {
@@ -53,6 +54,8 @@ export function seriesLessons(data: DirectoryData, id: string): BrainPodItem[] {
 export interface ReadingEntry {
 	item: BrainPodItem;
 	source: string;
+	/** The company logo (or letter) shown beside the source. */
+	mark: SourceMark;
 	featured: boolean;
 }
 
@@ -62,15 +65,13 @@ export function highlightsByMonth(data: DirectoryData) {
 		const legacy = data.legacyByRoute.get(item.key);
 		const intro = legacy?.frontmatter.articleIntro as { sourceName?: string } | undefined;
 		const sourceUrl = legacy?.frontmatter.sourceUrl;
-		let source = intro?.sourceName ?? '';
-		if (!source && typeof sourceUrl === 'string') {
-			try {
-				source = new URL(sourceUrl).hostname.replace(/^www\./, '');
-			} catch {
-				source = '';
-			}
-		}
-		return { item, source, featured: legacy?.frontmatter.featured === true };
+		const source = intro?.sourceName || sourceFromUrl(sourceUrl);
+		return {
+			item,
+			source,
+			mark: sourceMark(source, sourceUrl),
+			featured: legacy?.frontmatter.featured === true,
+		};
 	});
 	const months = new Map<string, ReadingEntry[]>();
 	for (const entry of entries) {

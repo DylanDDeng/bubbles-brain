@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SourceMark from '../../components/SourceMark.astro';
 import { highlightsByMonth, loadDirectoryData, shortDate } from '../../lib/directories';
 
 const data = await loadDirectoryData();
@@ -18,7 +19,7 @@ const years = [...new Set(months.map((month) => month.year))].map((year) => ({
 	description="值得反复读的一手资料与深度文章。每篇都是精读或全译，附原文入口。"
 	alternateHref="/en/highlights/"
 >
-	<div class="rr-page" data-reading-directory data-reading-unit="篇">
+	<div class="rr-page rr-page--narrow" data-reading-directory data-reading-unit="篇">
 		<header class="rr-head">
 			<h1 class="rr-title">精选阅读</h1>
 			<p class="rr-lede">值得反复读的一手资料。每篇都是精读或全译，附原文入口。</p>
@@ -56,24 +57,25 @@ const years = [...new Set(months.map((month) => month.year))].map((year) => ({
 					<h2 class="rr-group__label" id={`month-${month.key}`}>
 						{month.year} 年 {Number(month.month)} 月
 					</h2>
-					<ol class="rr-rows">
-						{month.entries.map(({ item, source }) => (
+					<ol class="rr-stack">
+						{month.entries.map(({ item, source, mark }) => (
 							<li
 								data-reading-item
 								data-search={`${item.title} ${item.summary} ${source}`.toLocaleLowerCase()}
 							>
 								<a
-									class="rr-row"
+									class="rr-entry"
 									href={item.href}
 									target={item.external ? '_blank' : undefined}
 									rel={item.external ? 'noopener noreferrer' : undefined}
 								>
-									<span class="rr-row__title">{item.title}</span>
-									<span class="rr-row__side">{shortDate(item.date)}</span>
-									{item.summary ? <span class="rr-row__deck">{item.summary}</span> : <span />}
-									<span class="rr-row__source">
-										{source}
-										{item.external && ' ↗'}
+									<span class="rr-entry__title">{item.title}</span>
+									<span class="rr-entry__meta">
+										<SourceMark mark={mark} />
+										<span>
+											{[source, shortDate(item.date)].filter(Boolean).join(' · ')}
+											{item.external && ' ↗'}
+										</span>
 									</span>
 								</a>
 							</li>

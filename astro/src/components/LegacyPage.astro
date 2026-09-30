@@ -35,6 +35,8 @@ import '../styles/legacy-pages.css';
 import '../styles/newbie-lab.css';
 import '../styles/ai-infographic.css';
 import '../styles/reading-page.css';
+import SourceMark from './SourceMark.astro';
+import { sourceMark } from '../lib/sourceVendor';
 
 interface Props {
 	record: LegacyContentEntry;
@@ -587,13 +589,18 @@ const libraryApi =
 					<h1>{title}</h1>
 					{description && !articleIntro && <p class="article-lede">{description}</p>}
 					<div class="reading-meta">
+						{articleIntro && (
+							<span class="reading-source">
+								<SourceMark mark={sourceMark(articleIntro.sourceName, sourceUrl)} size={16} />
+								{articleIntro.sourceName}
+							</span>
+						)}
+						{articleIntro?.author && <span class="reading-author">{articleIntro.author}</span>}
 						{record.date && (
 							<time datetime={record.date.toISOString()}>
 								{record.date.toISOString().slice(0, 10).replaceAll('-', '.')}
 							</time>
 						)}
-						{articleIntro?.author && <span class="reading-author">{articleIntro.author}</span>}
-						{articleIntro && <span>{articleIntro.sourceName}</span>}
 						{!articleIntro && (
 							<span>
 								{readingMinutes} {isEnglish ? 'min read' : '分钟阅读'}

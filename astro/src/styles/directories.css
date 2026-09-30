@@ -32,19 +32,12 @@
 	background: var(--paper-muted);
 }
 
-/* Benchmarks: the case gallery teaser under the list. */
-.bench-cases {
-	margin-top: 104px;
-}
-.bench-cases__head {
-	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	gap: 24px;
-	margin-bottom: 28px;
-}
-.bench-cases__head .rr-more {
-	margin: 0;
+/* Benchmarks: when the data was last checked, quietly at the end of the list. */
+.bench-checked {
+	margin: 64px 0 0;
+	color: var(--ink-faint);
+	font-size: 13px;
+	text-align: center;
 }
 
 @media (max-width: 800px) {
@@ -52,9 +45,6 @@
 		grid-template-columns: minmax(0, 1fr);
 		gap: 20px;
 		padding: 28px 0;
-	}
-	.bench-cases {
-		margin-top: 72px;
 	}
 }
 

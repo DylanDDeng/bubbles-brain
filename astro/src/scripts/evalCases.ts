@@ -36,6 +36,11 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 	const sortSelect = filters.querySelector<HTMLSelectElement>('[data-sort]');
 	const cards = [...grid.querySelectorAll<HTMLElement>('.eval-card')];
 	const empty = root.querySelector<HTMLElement>('[data-eval-empty]');
+	const search = filters.querySelector<HTMLInputElement>('[data-eval-search]');
+	const more = root.querySelector<HTMLButtonElement>('[data-eval-more]');
+	// Three rows at a time; the round arrow under the grid reveals the next three.
+	const PAGE = 9;
+	let limit = PAGE;
 
 	const now = Date.now();
 	for (const card of cards) {
@@ -53,6 +58,7 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 		year: params.get('year') ?? '',
 		sort: params.get('sort') ?? 'recent',
 		view: params.get('view') ?? readView() ?? 'grid',
+		query: params.get('q') ?? '',
 	};
 	if (!categoryButtons.some((button) => button.dataset.filterCategory === state.category))
 		state.category = '';
@@ -79,19 +85,24 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 					Number(a.dataset.order) - Number(b.dataset.order)
 				: Number(a.dataset.order) - Number(b.dataset.order),
 		);
-		let visible = 0;
+		const words = state.query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+		let matched = 0;
 		for (const card of ordered) {
-			const show =
+			const match =
 				(!state.category || card.dataset.category === state.category) &&
 				(!state.model || (card.dataset.models ?? '').split(' ').includes(state.model)) &&
-				(!state.year || (card.dataset.years ?? '').split(' ').includes(state.year));
-			card.hidden = !show;
-			if (show) visible += 1;
+				(!state.year || (card.dataset.years ?? '').split(' ').includes(state.year)) &&
+				words.every((word) => (card.dataset.search ?? '').includes(word));
+			card.hidden = !match || matched >= limit;
+			if (match) matched += 1;
 			grid!.append(card);
 		}
-		if (empty) empty.hidden = visible > 0;
+		if (empty) empty.hidden = matched > 0;
+		if (more) more.hidden = matched <= limit;
+		if (search && search.value !== state.query) search.value = state.query;
 
 		const next = new URLSearchParams();
+		if (state.query.trim()) next.set('q', state.query.trim());
 		if (state.category) next.set('type', state.category);
 		if (state.model) next.set('model', state.model);
 		if (state.year) next.set('year', state.year);
@@ -105,8 +116,10 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 		(event) => {
 			const button = (event.target as Element).closest<HTMLButtonElement>('button');
 			if (!button) return;
-			if (button.dataset.filterCategory !== undefined)
+			if (button.dataset.filterCategory !== undefined) {
 				state.category = button.dataset.filterCategory;
+				limit = PAGE;
+			}
 			if (button.dataset.view) {
 				state.view = button.dataset.view;
 				saveView(state.view);
@@ -124,11 +137,29 @@ function setupGallery(root: HTMLElement, signal: AbortSignal) {
 			'change',
 			() => {
 				state[key] = select.value;
+				limit = PAGE;
 				paint();
 			},
 			{ signal },
 		);
 	}
+	search?.addEventListener(
+		'input',
+		() => {
+			state.query = search.value;
+			limit = PAGE;
+			paint();
+		},
+		{ signal },
+	);
+	more?.addEventListener(
+		'click',
+		() => {
+			limit += PAGE;
+			paint();
+		},
+		{ signal },
+	);
 	filters.hidden = false;
 	paint();
 }

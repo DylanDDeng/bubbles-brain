@@ -1,31 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BenchmarksHead from '../../components/BenchmarksHead.astro';
 import { benchmarkLedger, benchmarkRoute, groupedBenchmarks, pick } from '../../lib/benchmarks';
-import {
-	byNewest,
-	EVAL_CASES_ROUTE,
-	evalLedger,
-	evalTaskRoute,
-	evalThumb,
-	isVideoCase,
-	modelCount,
-} from '../../lib/evalCases';
 import '../../styles/directories.css';
 
 const groups = groupedBenchmarks();
-const total = benchmarkLedger.benchmarks.length;
 const checked = benchmarkLedger.checked_at.replaceAll('-', '.');
-const taskTitle = new Map(evalLedger.tasks.map((task) => [task.id, task.title.zh]));
-const latest = [...evalLedger.cases]
-	.filter((item) => !isVideoCase(item))
-	.sort(byNewest)
-	.filter((item, index, all) => all.findIndex((other) => other.task === item.task) === index)
-	.slice(0, 3)
-	.map((item) => ({
-		item,
-		title: taskTitle.get(item.task) ?? item.task,
-		models: modelCount(evalLedger.cases.filter((other) => other.task === item.task)),
-	}));
 ---
 
 <BaseLayout
@@ -34,11 +14,7 @@ const latest = [...evalLedger.cases]
 	alternateHref="/en/benchmarks/"
 >
 	<div class="rr-page rr-page--narrow">
-		<header class="rr-head">
-			<h1 class="rr-title" lang="en">Benchmarks</h1>
-			<p class="rr-lede">先弄清每个评测在测什么，再去看分数。</p>
-			<span class="meta-line">{total} 项评测 · 数据核对于 {checked}</span>
-		</header>
+		<BenchmarksHead current="benchmarks" />
 
 		{
 			groups.map((group) => (
@@ -66,41 +42,7 @@ const latest = [...evalLedger.cases]
 				</section>
 			))
 		}
-	</div>
 
-	<section class="rr-page rr-page--wide bench-cases" aria-labelledby="bench-cases">
-		<div class="bench-cases__head">
-			<div class="rr-block__head">
-				<h2 class="rr-block__title" id="bench-cases">实测案例</h2>
-				<p class="rr-block__lede">
-					同一道题交给不同模型，直接看它们交出来的东西。{evalLedger.tasks.length} 道题 · {
-						evalLedger.cases.length
-					} 个作品 · {modelCount(evalLedger.cases)} 个模型。
-				</p>
-			</div>
-			<a class="rr-more" href={EVAL_CASES_ROUTE}>全部 {evalLedger.tasks.length} 道题</a>
-		</div>
-		<ul class="rr-thumbs">
-			{
-				latest.map(({ item, title, models }) => (
-					<li>
-						<a class="rr-thumb" href={evalTaskRoute(item.task)}>
-							<img
-								src={evalThumb(item.id)}
-								alt=""
-								width="640"
-								height="480"
-								loading="lazy"
-								decoding="async"
-							/>
-							<span class="rr-thumb__caption">
-								<span class="rr-thumb__title">{title}</span>
-								<span class="rr-count">{models} 个模型</span>
-							</span>
-						</a>
-					</li>
-				))
-			}
-		</ul>
-	</section>
+		<p class="bench-checked">数据核对于 {checked}</p>
+	</div>
 </BaseLayout>

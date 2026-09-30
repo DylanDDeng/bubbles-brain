@@ -11,6 +11,7 @@ import {
 	shortDate,
 } from '../lib/evalCases';
 import EvalVendorPile from './EvalVendorPile.astro';
+import BenchmarksHead from './BenchmarksHead.astro';
 import '../styles/eval-cases.css';
 
 const cards = evalTaskCards();
@@ -28,20 +29,20 @@ const usedCategories = categories
 ---
 
 <section class="page-shell eval-shell eval-gallery" data-eval-gallery>
-	<header class="rr-head eval-head">
-		<nav class="rr-crumbs" aria-label="位置"><a href="/benchmarks/">Benchmarks</a> / 实测案例</nav>
-		<h1 class="rr-title">实测案例</h1>
-	</header>
+	<BenchmarksHead current="cases" class="eval-head" />
 
 	<div class="eval-toolbar" data-eval-filters hidden>
-		<div class="eval-seg" role="group" aria-label="题目类型">
-			<button type="button" data-filter-category="" aria-pressed="true">
-				全部 <span>{tasks.length}</span>
-			</button>
+		<label class="rr-search eval-search">
+			<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+			<span class="sr-only">搜索题目或模型</span>
+			<input type="search" placeholder="搜题目或模型，比如 Opus 5.5" autocomplete="off" data-eval-search />
+		</label>
+		<div class="rr-filters eval-types" role="group" aria-label="题目类型">
+			<button type="button" data-filter-category="" aria-pressed="true">全部</button>
 			{
 				usedCategories.map((category) => (
 					<button type="button" data-filter-category={category.id} aria-pressed="false">
-						{category.name.zh} <span>{category.count}</span>
+						{category.name.zh}
 					</button>
 				))
 			}
@@ -104,6 +105,9 @@ const usedCategories = categories
 						data-latest={cover.date}
 						data-count={models}
 						data-order={index}
+						data-search={[card.task.title.zh, ...card.cases.map((item) => evalModel(item.model).name)]
+							.join(' ')
+							.toLocaleLowerCase()}
 					>
 						<a href={evalTaskRoute(card.task.id)}>
 							<span class="eval-thumb">
@@ -136,6 +140,19 @@ const usedCategories = categories
 		}
 	</ul>
 
+	<button type="button" class="rr-more-icon" data-eval-more aria-label="展开更多题目" hidden>
+		<svg
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.8"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg
+		>
+	</button>
 	<p class="eval-empty" data-eval-empty hidden>没有符合筛选条件的案例。</p>
 </section>
 

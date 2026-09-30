@@ -1,0 +1,29 @@
+---
+interface Props {
+	/** Which of the two Benchmarks pages is showing. */
+	current: 'benchmarks' | 'cases';
+	class?: string;
+}
+
+// Benchmarks has two sibling pages: what each benchmark measures, and what models actually
+// produced on the same tasks. Either can grow without pushing the other down the page.
+const { current, class: className } = Astro.props;
+const tabs = [
+	{ id: 'benchmarks', label: '评测', href: '/benchmarks/' },
+	{ id: 'cases', label: '实测案例', href: '/benchmarks/cases/' },
+] as const;
+---
+
+<header class:list={['rr-head', className]}>
+	<h1 class="rr-title" lang="en">Benchmarks</h1>
+	<p class="rr-lede">先弄清每个评测在测什么，再去看模型实际交出来的东西。</p>
+	<nav class="rr-tabs" aria-label="Benchmarks 分页">
+		{
+			tabs.map((tab) => (
+				<a href={tab.href} aria-current={tab.id === current ? 'page' : undefined}>
+					{tab.label}
+				</a>
+			))
+		}
+	</nav>
+</header>

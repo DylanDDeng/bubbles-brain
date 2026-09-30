@@ -105,7 +105,7 @@ export function benchmarkDirectoryRoute(
 	benchmark: BenchmarkDefinition,
 	locale: BenchmarkLocale,
 ): string {
-	return `${locale === 'en' ? '/en/benchmarks/' : '/'}#bc-benchmarks-${benchmark.category}`;
+	return `${locale === 'en' ? '/en/benchmarks/' : '/benchmarks/'}#${locale === 'en' ? 'bc-benchmarks-' : ''}${benchmark.category}`;
 }
 
 export interface RankedScore {

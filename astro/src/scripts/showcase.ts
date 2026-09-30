@@ -145,10 +145,59 @@ function setupFilter(theater: HTMLElement) {
 	apply(requested && current?.dataset.category === requested ? requested : '');
 }
 
+/** Showcase gallery: the category menu filters tiles in place and keeps ?c= in the address. */
+function setupGallery(root: HTMLElement) {
+	if (root.dataset.ready) return;
+	root.dataset.ready = 'true';
+	const menu = root.querySelector<HTMLDetailsElement>('[data-gallery-filter]');
+	if (!menu) return;
+	const options = Array.from(menu.querySelectorAll<HTMLAnchorElement>('[data-gallery-option]'));
+	const tiles = Array.from(root.querySelectorAll<HTMLElement>('.showcase-tile'));
+	const label = menu.querySelector<HTMLElement>('[data-filter-label]');
+	const count = menu.querySelector<HTMLElement>('[data-filter-count]');
+
+	function apply(category: string, push: boolean) {
+		const known = options.some((option) => option.dataset.galleryOption === category);
+		if (!known) category = '';
+		let shown = 0;
+		for (const tile of tiles) {
+			tile.hidden = Boolean(category) && tile.dataset.category !== category;
+			if (!tile.hidden) shown += 1;
+		}
+		for (const option of options) {
+			if (option.dataset.galleryOption === category) option.setAttribute('aria-current', 'true');
+			else option.removeAttribute('aria-current');
+		}
+		if (label)
+			label.textContent =
+				options.find((option) => option.dataset.galleryOption === category)?.firstElementChild
+					?.textContent ?? '全部';
+		if (count) count.textContent = String(shown);
+		if (push) {
+			const url = new URL(location.href);
+			if (category) url.searchParams.set('c', category);
+			else url.searchParams.delete('c');
+			history.replaceState(history.state, '', url);
+		}
+	}
+
+	options.forEach((option) =>
+		option.addEventListener('click', (event) => {
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			event.preventDefault();
+			apply(option.dataset.galleryOption ?? '', true);
+			menu.open = false;
+			menu.querySelector('summary')?.focus();
+		}),
+	);
+	apply(new URL(location.href).searchParams.get('c') ?? '', false);
+}
+
 function initShowcase() {
 	reviveVideos();
 	document.querySelectorAll<HTMLElement>('[data-showcase-prompt]').forEach(setupPrompt);
 	document.querySelectorAll<HTMLElement>('[data-showcase-theater]').forEach(setupFilter);
+	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach(setupGallery);
 }
 
 document.addEventListener('astro:page-load', initShowcase);

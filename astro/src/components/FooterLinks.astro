@@ -1,15 +1,33 @@
 ---
+import { siteSections } from '../lib/siteSections';
+
 interface Props {
 	locale?: 'zh-CN' | 'en';
 }
 const { locale = 'zh-CN' } = Astro.props;
 const isEnglish = locale === 'en';
+const sections = siteSections(locale);
 ---
 
-<nav aria-label={isEnglish ? 'More' : '更多'}>
-	<a href="/changelog/">{isEnglish ? 'Updates' : '更新'}</a>
-	<a href={isEnglish ? '/en/rss.xml' : '/rss.xml'}>RSS</a>
-	<a href="https://github.com/DylanDDeng/bubbles-brain" target="_blank" rel="noopener noreferrer">
-		GitHub
-	</a>
-</nav>
+<div class="footer-grid">
+	<a class="footer-wordmark" href={isEnglish ? '/en/' : '/'}>Bubble's<br />Brain</a>
+	<nav class="footer-column" aria-label={isEnglish ? 'Sections' : '栏目'}>
+		<span class="meta-line">{isEnglish ? 'SECTIONS' : '栏目'}</span>
+		{sections.map((section) => <a href={section.href}>{section.label}</a>)}
+	</nav>
+	<nav class="footer-column" aria-label={isEnglish ? 'The library' : '馆内'}>
+		<span class="meta-line">{isEnglish ? 'LIBRARY' : '馆内'}</span>
+		<a href="/changelog/">{isEnglish ? 'Updates' : '更新日志'}</a>
+		<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
+		<a href="/search/" data-command-search-trigger>{isEnglish ? 'Search' : '搜索'}</a>
+	</nav>
+	<nav class="footer-column" aria-label={isEnglish ? 'Follow' : '订阅'}>
+		<span class="meta-line">{isEnglish ? 'FOLLOW' : '订阅'}</span>
+		<a href={isEnglish ? '/en/rss.xml' : '/rss.xml'}>RSS</a>
+		<a href="https://github.com/DylanDDeng/bubbles-brain" target="_blank" rel="noopener noreferrer"
+			>GitHub</a
+		>
+		<a href={isEnglish ? '/' : '/en/'}>{isEnglish ? '中文' : 'English'}</a>
+	</nav>
+</div>
+<span class="meta-line footer-note">{isEnglish ? '© 2026 · KEPT BY A CAT' : '© 2026 · 由一只猫看管'}</span>

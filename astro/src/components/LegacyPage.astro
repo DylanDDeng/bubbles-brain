@@ -1,4 +1,5 @@
 ---
+import { collectionHome } from '../lib/collectionRoutes';
 import { getEntry, render } from 'astro:content';
 import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
@@ -384,7 +385,7 @@ const libraryApi =
 			>
 				<header class="directory-hero collection-masthead">
 					<div>
-						<a class="collection-back" href={isEnglish ? '/en/' : '/#bc-' + record.section}>
+						<a class="collection-back" href={isEnglish ? '/en/' : collectionHome(record.section)}>
 							<i class="ph ph-arrow-left" aria-hidden="true" />
 							{isEnglish ? 'Collections' : '收藏'}
 						</a>

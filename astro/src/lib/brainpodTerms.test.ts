@@ -7,11 +7,11 @@ import { brainPodTermReturn, buildBrainPodTerms } from './brainpodTerms';
 describe('Collection room term directory', () => {
 	it('returns detail pages to their matching category and pagination position', () => {
 		for (const category of buildBrainPodTerms()) {
-			expect(brainPodTermReturn(category.id)).toBe(`/#bc-${category.pages[0].id}`);
+			expect(brainPodTermReturn(category.id)).toBe(`/vibe-coding/terms/#${category.id}`);
 			for (const page of category.pages)
-				for (const term of page.terms) expect(brainPodTermReturn(term.id)).toBe(`/#bc-${page.id}`);
+				for (const term of page.terms) expect(brainPodTermReturn(term.id)).toBe(`/vibe-coding/terms/#${category.id}`);
 		}
-		expect(brainPodTermReturn('missing')).toBe('/#bc-vibe-coding-terms');
+		expect(brainPodTermReturn('missing')).toBe('/vibe-coding/terms/');
 	});
 	it('includes every published term once, in its original category and order', () => {
 		const directory = buildBrainPodTerms();
@@ -36,7 +36,7 @@ describe('Collection room term directory', () => {
 			}),
 		]);
 		expect(vibeCodingDetailProfiles['confidence-interval']).toBeDefined();
-		expect(brainPodTermReturn('confidence-interval')).toBe('/#bc-vibe-coding-terms-ai-agent-2');
+		expect(brainPodTermReturn('confidence-interval')).toBe('/vibe-coding/terms/#ai-agent');
 	});
 	it('places Divider after Section in the UI layout group with a detail route', () => {
 		const terms = vibeCodingTermCategories.find((category) => category.id === 'ui-patterns')!.terms;
@@ -50,7 +50,7 @@ describe('Collection room term directory', () => {
 		expect(getVibeCodingConcepts().filter((concept) => concept.id === 'divider')).toEqual([
 			expect.objectContaining({ categoryId: 'ui-patterns', isCategory: false }),
 		]);
-		expect(brainPodTermReturn('divider')).toBe('/#bc-vibe-coding-terms-ui-patterns-2');
+		expect(brainPodTermReturn('divider')).toBe('/vibe-coding/terms/#ui-patterns');
 	});
 	it('places Date Picker after Select in the UI input group with a detail route', () => {
 		const terms = vibeCodingTermCategories.find((category) => category.id === 'ui-patterns')!.terms;
@@ -64,7 +64,7 @@ describe('Collection room term directory', () => {
 		expect(getVibeCodingConcepts().filter((concept) => concept.id === 'date-picker')).toEqual([
 			expect.objectContaining({ categoryId: 'ui-patterns', isCategory: false }),
 		]);
-		expect(brainPodTermReturn('date-picker')).toBe('/#bc-vibe-coding-terms-ui-patterns-3');
+		expect(brainPodTermReturn('date-picker')).toBe('/vibe-coding/terms/#ui-patterns');
 	});
 	it.each([
 		{ id: 'divider', parts: 4, sketches: ['dv-horizontal', 'dv-vertical', 'dv-label'] },

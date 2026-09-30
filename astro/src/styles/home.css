@@ -1,0 +1,254 @@
+/* Home: what the library is, what's new, the four sections, where to start. */
+
+.home a {
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.home-hero {
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+	gap: 48px;
+	align-items: end;
+	padding-top: clamp(32px, 5vw, 72px);
+}
+.home-hero__text {
+	display: grid;
+	gap: 32px;
+	justify-items: start;
+	padding-bottom: 40px;
+}
+.home-hero__title {
+	margin: 0;
+	font: 600 var(--type-display) / 1.12 var(--serif);
+	letter-spacing: -0.01em;
+}
+.home-hero__links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px 32px;
+}
+.home .home-hero__links .rr-more {
+	color: var(--seal);
+	font-weight: 500;
+}
+.home .home-quiet-link {
+	font-size: 16px;
+	text-decoration: underline;
+	text-decoration-color: var(--rule);
+	text-underline-offset: 6px;
+}
+.home-hero__cat {
+	display: grid;
+	justify-items: center;
+	gap: 4px;
+	margin: 0;
+}
+.home-hero__cat .rr-cat {
+	height: clamp(320px, 38vw, 560px);
+	object-position: bottom;
+}
+
+/* Recent */
+.home-recent {
+	display: grid;
+	gap: 56px;
+}
+.home-feature {
+	display: grid;
+	grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+	gap: 40px;
+	align-items: end;
+}
+.home-feature img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-radius: 2px;
+	background: var(--ink);
+}
+.home-feature__text {
+	display: grid;
+	gap: 14px;
+	padding-bottom: 6px;
+}
+.home-feature__title {
+	font: 600 clamp(24px, 2.2vw, 32px) / 1.3 var(--serif);
+}
+.home-feature:hover .home-feature__title {
+	color: var(--seal);
+}
+.home-feature__note {
+	font-size: 16px;
+	line-height: 1.8;
+	color: var(--ink-soft);
+}
+.home-recent__list {
+	display: grid;
+	gap: 28px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.home-recent__row {
+	display: grid;
+	grid-template-columns: 80px 170px minmax(0, 1fr);
+	gap: 24px;
+	align-items: baseline;
+}
+.home-recent__section {
+	font-size: 14px;
+	color: var(--ink-soft);
+}
+.home-recent__title {
+	font: 600 clamp(18px, 1.5vw, 21px) / 1.45 var(--serif);
+}
+.home-recent__row:hover .home-recent__title {
+	color: var(--seal);
+}
+
+/* Sections */
+.home-sections {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 72px 64px;
+}
+.home-section {
+	display: grid;
+	align-content: start;
+	gap: 14px;
+}
+.home-section__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 16px;
+}
+.home-section__title {
+	font: 600 clamp(30px, 2.8vw, 40px) / 1.2 var(--serif);
+}
+.home-section:hover .home-section__title {
+	color: var(--seal);
+}
+.home-section__lede {
+	font-size: 16px;
+	line-height: 1.8;
+	color: var(--ink-soft);
+}
+.home-section__detail {
+	font-size: 14px;
+	line-height: 1.9;
+}
+.home-section__thumbs {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+	margin-top: 4px;
+}
+.home-section__thumbs img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 8 / 5;
+	object-fit: cover;
+	border-radius: 2px;
+}
+
+/* 新手村 */
+.home-lessons {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 40px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.home-lesson {
+	display: grid;
+	gap: 16px;
+}
+.home-lesson__mark {
+	font: 700 clamp(64px, 6vw, 88px) / 1 var(--serif);
+}
+.home-lessons li:first-child .home-lesson__mark,
+.home-lesson:hover .home-lesson__mark {
+	color: var(--seal);
+}
+.home-lesson__title {
+	font: 600 18px / 1.55 var(--serif);
+}
+
+/* Curator's line */
+.home-quote__inner {
+	display: grid;
+	grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+	gap: 48px;
+	align-items: center;
+	padding-block: 72px;
+}
+.home-quote .rr-cat {
+	height: 300px;
+}
+.home-quote blockquote {
+	display: grid;
+	gap: 20px;
+	margin: 0;
+}
+.home-quote blockquote p {
+	margin: 0;
+	font: 500 clamp(24px, 2.4vw, 34px) / 1.6 var(--serif);
+}
+.home + .site-footer,
+.home ~ .site-footer {
+	margin-top: 96px;
+}
+
+@media (max-width: 1000px) {
+	.home-feature {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 18px;
+	}
+	.home-lessons {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 32px 20px;
+	}
+}
+@media (max-width: 700px) {
+	.home-hero {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+	}
+	.home-hero__text {
+		gap: 20px;
+		padding-bottom: 0;
+	}
+	.home-hero__title {
+		font-size: 44px;
+		line-height: 1.2;
+	}
+	.home-hero__cat .rr-cat {
+		height: 300px;
+	}
+	.home-sections {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 40px;
+	}
+	.home-recent__row {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 4px;
+	}
+	.home-recent__section {
+		display: none;
+	}
+	.home-quote__inner {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+		padding-block: 48px;
+	}
+	.home-quote .rr-cat {
+		height: 200px;
+	}
+}

@@ -7,7 +7,7 @@ describe('site feeds', () => {
 	it('publishes the Vibe Coding terms route', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records.some((record) => record.route === '/vibe-coding/terms/')).toBe(false);
+		expect(records.some((record) => record.route === '/vibe-coding/terms/')).toBe(true);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/vibe-coding/terms/frontend/',
@@ -20,7 +20,7 @@ describe('site feeds', () => {
 	it('publishes the Vibe Coding design routes', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records.some((record) => record.route === '/vibe-coding/design/')).toBe(false);
+		expect(records.some((record) => record.route === '/vibe-coding/design/')).toBe(true);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/vibe-coding/design/stripe/',
@@ -29,10 +29,10 @@ describe('site feeds', () => {
 		);
 	});
 
-	it('publishes Showcase work pages but not a Showcase directory', async () => {
+	it('publishes the Showcase gallery and its work pages', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records.some((record) => record.route === '/vibe-coding/showcase/')).toBe(false);
+		expect(records.some((record) => record.route === '/vibe-coding/showcase/')).toBe(true);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/vibe-coding/showcase/claude-opus-5.5-intro/',
@@ -56,12 +56,12 @@ describe('site feeds', () => {
 	it('publishes the bilingual benchmarks routes as alternates of each other', async () => {
 		const records = await loadSiteManifest();
 
-		expect(records.some((record) => record.route === '/benchmarks/')).toBe(false);
+		expect(records.some((record) => record.route === '/benchmarks/')).toBe(true);
 		expect(records).toContainEqual(
 			expect.objectContaining({
 				route: '/en/benchmarks/',
 				locale: 'en',
-				alternateRoute: null,
+				alternateRoute: '/benchmarks/',
 			}),
 		);
 		expect(records).toContainEqual(

@@ -56,7 +56,7 @@ describe('benchmark ledger', () => {
 		expect(benchmark.url).toBe('https://www.frontierswe.com/');
 		expect(benchmark.score_label?.en).toBe('Mean@5');
 		expect(benchmark.description.en).toContain('not a 95% confidence interval');
-		expect(benchmarkDirectoryRoute(benchmark, 'zh-CN')).toBe('/#bc-benchmarks-coding');
+		expect(benchmarkDirectoryRoute(benchmark, 'zh-CN')).toBe('/benchmarks/#coding');
 		expect(benchmarkDirectoryRoute(benchmark, 'en')).toBe('/en/benchmarks/#bc-benchmarks-coding');
 		const fallback = rows.find(({ model }) => model.name === 'Claude Fable 5.1')!.score;
 		expect(fallback.note?.en).toContain('Opus 5');
@@ -434,7 +434,7 @@ describe('benchmark ledger', () => {
 	it('returns each detail to its containing category in both locales', async () => {
 		for (const benchmark of benchmarkLedger.benchmarks) {
 			expect(benchmarkDirectoryRoute(benchmark, 'zh-CN')).toBe(
-				`/#bc-benchmarks-${benchmark.category}`,
+				`/benchmarks/#${benchmark.category}`,
 			);
 			expect(benchmarkDirectoryRoute(benchmark, 'en')).toBe(
 				`/en/benchmarks/#bc-benchmarks-${benchmark.category}`,

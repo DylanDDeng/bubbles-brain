@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import VibeSiblings from '../../../components/VibeSiblings.astro';
+import { loadDirectoryData } from '../../../lib/directories';
+import { vibeCodingSkillCategories } from '../../../data/vibeCodingSkills';
+import '../../../styles/directories.css';
+
+const data = await loadDirectoryData();
+const skills = data.index.items.filter((item) => item.section === 'vibe-coding-skills');
+const split = (title: string) => {
+	const match = /^(.+?)（(.+)）$/.exec(title);
+	return match ? { name: match[1], latin: match[2] } : { name: title, latin: '' };
+};
+const groups = vibeCodingSkillCategories
+	.map((category) => ({
+		...category,
+		skills: skills.filter((item) => item.tags.includes(category.label)),
+	}))
+	.filter((group) => group.skills.length);
+---
+
+<BaseLayout
+	title="Skills · Vibe Coding · Bubble's Brain"
+	description="浏览原始 SKILL.md、作者和来源，把好方法带进工作流。"
+>
+	<div class="rr-page">
+		<header class="rr-head">
+			<div class="rr-head__text">
+				<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Skills</nav>
+				<h1 class="rr-title rr-title--latin" lang="en">Skills</h1>
+				<p class="rr-lede">浏览原始 SKILL.md、作者和来源，把好方法带进工作流。</p>
+				<span class="meta-line">{skills.length} 个 · {groups.length} 类</span>
+			</div>
+			<VibeSiblings current="skills" />
+		</header>
+
+		{
+			groups.map((group) => (
+				<section class="rr-split" id={group.id} aria-labelledby={`skills-${group.id}`}>
+					<div class="rr-split__label">
+						<h2 id={`skills-${group.id}`}>{group.label}</h2>
+						<span class="rr-count">{group.skills.length} 个</span>
+						<p>{group.description}</p>
+					</div>
+					<ul class="dir-terms">
+						{group.skills.map((item) => {
+							const { name, latin } = split(item.title);
+							return (
+								<li>
+									<a class="dir-term" href={item.href}>
+										<span class="dir-term__name">{name}</span>
+										{latin && (
+											<span class="dir-term__latin" lang="en">
+												{latin}
+											</span>
+										)}
+									</a>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			))
+		}
+	</div>
+</BaseLayout>

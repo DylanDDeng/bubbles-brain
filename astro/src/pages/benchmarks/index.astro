@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { benchmarkLedger, benchmarkRoute, groupedBenchmarks, pick } from '../../lib/benchmarks';
+import {
+	byNewest,
+	EVAL_CASES_ROUTE,
+	evalLedger,
+	evalThumb,
+	isVideoCase,
+	modelCount,
+} from '../../lib/evalCases';
+import '../../styles/directories.css';
+
+const groups = groupedBenchmarks();
+const total = benchmarkLedger.benchmarks.length;
+const checked = benchmarkLedger.checked_at.replaceAll('-', '.');
+const thumbs = [...evalLedger.cases]
+	.filter((item) => !isVideoCase(item))
+	.sort(byNewest)
+	.filter((item, index, all) => all.findIndex((other) => other.task === item.task) === index)
+	.slice(0, 3);
+---
+
+<BaseLayout
+	title="Benchmarks · Bubble's Brain"
+	description="先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。"
+	alternateHref="/en/benchmarks/"
+>
+	<div class="rr-page">
+		<header class="rr-head rr-head--wide">
+			<div class="rr-head__text">
+				<nav class="rr-crumbs" aria-label="位置"><a href="/">首页</a> / Benchmarks</nav>
+				<h1 class="rr-title rr-title--latin" lang="en">Benchmarks</h1>
+				<p class="rr-lede">先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。</p>
+				<span class="meta-line">{total} 项评测 · 数据核对于 {checked}</span>
+			</div>
+		</header>
+
+		{
+			groups.map((group) => (
+				<section class="rr-split" id={group.id} aria-labelledby={`bench-${group.id}`}>
+					<div class="rr-split__label">
+						<h2 id={`bench-${group.id}`}>{group.name.zh}</h2>
+						<span class="rr-count">{group.benchmarks.length} 项</span>
+					</div>
+					<ul class="rr-rows">
+						{group.benchmarks.map((benchmark) => (
+							<li>
+								<a class="dir-bench" href={benchmarkRoute(benchmark.id, 'zh-CN')}>
+									<span class="rr-row__body">
+										<span class="dir-bench__name">{pick(benchmark.name, 'zh-CN')}</span>
+										<span class="dir-bench__what">{pick(benchmark.measures, 'zh-CN')}</span>
+									</span>
+									<span class="rr-row__source">{benchmark.source}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))
+		}
+
+		<a class="dir-promo" href={EVAL_CASES_ROUTE}>
+			<span class="rr-head__text">
+				<span class="rr-kicker">实测案例</span>
+				<span class="dir-promo__title">同一道题，交给不同的模型</span>
+				<span class="rr-lede">分数之外，直接看它们交出来的东西。点开就能运行。</span>
+				<span class="meta-line"
+					>{evalLedger.tasks.length} 道题 · {evalLedger.cases.length} 个作品 · {
+						modelCount(evalLedger.cases)
+					} 个模型</span
+				>
+			</span>
+			<span class="dir-promo__thumbs">
+				{
+					thumbs.map((item) => (
+						<img
+							src={evalThumb(item.id)}
+							alt=""
+							width="640"
+							height="400"
+							loading="lazy"
+							decoding="async"
+						/>
+					))
+				}
+			</span>
+		</a>
+	</div>
+</BaseLayout>

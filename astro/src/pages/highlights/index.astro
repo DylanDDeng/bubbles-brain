@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+	CHINESE_MONTHS,
+	highlightsByMonth,
+	loadDirectoryData,
+	shortDate,
+} from '../../lib/directories';
+import '../../styles/directories.css';
+
+const data = await loadDirectoryData();
+const months = highlightsByMonth(data);
+const total = months.reduce((sum, month) => sum + month.entries.length, 0);
+const years = [...new Set(months.map((month) => month.year))];
+const latest = months[0]?.entries[0]?.item.date;
+---
+
+<BaseLayout
+	title="精选阅读 · Bubble's Brain"
+	description="值得反复读的一手资料与深度文章。每篇都是精读或全译，附原文入口。"
+	alternateHref="/en/highlights/"
+>
+	<div class="rr-page" data-reading-directory>
+		<header class="rr-head">
+			<div class="rr-head__text">
+				<nav class="rr-crumbs" aria-label="位置"><a href="/">首页</a> / 精选阅读</nav>
+				<h1 class="rr-title">精选阅读</h1>
+				<p class="rr-lede">值得反复读的一手资料与深度文章。每篇都是精读或全译，附原文入口。</p>
+				<span class="meta-line"
+					>{total} 篇{latest && ` · 最近更新 ${latest.slice(0, 10).replaceAll('-', '.')}`}</span
+				>
+			</div>
+			<img
+				class="rr-cat dir-head-cat"
+				src="/images/cat-pose-1.jpg"
+				alt="坐着的猫馆长"
+				width="1100"
+				height="765"
+			/>
+		</header>
+
+		<div class="rr-split dir-filter">
+			<span class="rr-count">筛选</span>
+			<div class="dir-filter__bar">
+				<label class="dir-search">
+					<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+					<span class="sr-only">搜索精选阅读</span>
+					<input type="search" placeholder="搜标题、来源或关键词" autocomplete="off" data-reading-search />
+				</label>
+				<div class="dir-years" role="group" aria-label="年份">
+					<button type="button" data-reading-year="" aria-pressed="true">全部</button>
+					{
+						years.map((year) => (
+							<button type="button" data-reading-year={year} aria-pressed="false">
+								{year}
+							</button>
+						))
+					}
+				</div>
+			</div>
+		</div>
+
+		{
+			months.map((month) => (
+				<section
+					class="rr-split dir-month"
+					data-reading-month={month.year}
+					aria-labelledby={`month-${month.key}`}
+				>
+					<div class="rr-split__label">
+						<span class="rr-count">{month.year}</span>
+						<h2 id={`month-${month.key}`}>{CHINESE_MONTHS[month.month]}</h2>
+						<span class="rr-count" data-reading-count>
+							{month.entries.length} 篇
+						</span>
+					</div>
+					<ol class="rr-rows">
+						{month.entries.map(({ item, source, featured }) => (
+							<li
+								data-reading-item
+								data-search={`${item.title} ${item.summary} ${source}`.toLocaleLowerCase()}
+							>
+								<a
+									class="rr-row"
+									href={item.href}
+									target={item.external ? '_blank' : undefined}
+									rel={item.external ? 'noopener noreferrer' : undefined}
+								>
+									<span class="rr-row__date">{shortDate(item.date)}</span>
+									<span class="rr-row__body">
+										<span class="rr-row__title">
+											{item.title}
+											{featured && <span class="rr-stamp dir-stamp">馆长推荐</span>}
+										</span>
+										{item.summary && <span class="rr-row__deck">{item.summary}</span>}
+									</span>
+									<span class="rr-row__source">
+										{source}
+										{item.external && ' ↗'}
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				</section>
+			))
+		}
+		<p class="dir-empty" data-reading-empty hidden>没有找到匹配的文章，换个词试试。</p>
+	</div>
+</BaseLayout>
+
+<script>
+	import '../../scripts/readingDirectory';
+</script>

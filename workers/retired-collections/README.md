@@ -1,9 +1,14 @@
 # Retired collection directories
 
-The nine Chinese collection indexes live only in homepage sections. This Worker
-enforces real `404` responses on their exact former paths and the retired 2025
-Highlights archive before the Pages asset
-cache can return an old directory. It does not redirect, render a compatibility
+The four tutorial-series indexes (`/newbie-tutorials/` etc.) have no page of their
+own: the series share `/tutorials/`, one anchor each. This Worker enforces real
+`404` responses on those exact paths and the retired 2025 Highlights archive
+before the Pages asset cache can return an old directory.
+
+Since the 2026-09 reading-room redesign, `/highlights/`, `/benchmarks/` and the
+`/vibe-coding/{terms,skills,design,showcase}/` directories are real pages again and
+are no longer routed here. Redeploy this Worker after that release so those paths
+stop returning 404. It does not redirect, render a compatibility
 directory, or intercept article subpaths. The route list is checked against the
 site's collection directory contract by the unit test.
 

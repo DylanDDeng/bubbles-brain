@@ -1,0 +1,214 @@
+---
+import { buildBrainPodLibrary } from '../lib/brainpod';
+import { buildKnowledgeSearchIndex } from '../lib/searchIndex';
+import { byNewest, evalLedger, evalThumb, isVideoCase } from '../lib/evalCases';
+import { showcaseByNewest, showcaseHref } from '../data/showcase';
+import '../styles/home.css';
+
+const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
+const collection = (id: string) => library.collections.find((c) => c.id === id);
+const count = (...ids: string[]) =>
+	ids.reduce((sum, id) => sum + (collection(id)?.items.length ?? 0), 0);
+const fmt = (date: string) => date.slice(5).replace('-', '.');
+
+const featured = showcaseByNewest()[0];
+const recent = library.recent.slice(0, 3);
+const latestHighlight = collection('highlights')?.items[0];
+
+const sections = [
+	{
+		title: '教程',
+		href: '/tutorials/',
+		count: `${count('newbie-tutorials', 'codex-tutorials', 'pi-agent-tutorials', 'workbuddy-tutorials')} 篇`,
+		lede: '从一个好问题开始，到让 Agent 替你把项目做出来。',
+		detail: '新手村 · Codex · Pi Agent · WorkBuddy',
+	},
+	{
+		title: '精选阅读',
+		href: '/highlights/',
+		count: `${count('highlights')} 篇`,
+		lede: '值得反复读的一手资料与深度文章，逐篇精读，附原文。',
+		detail: latestHighlight ? `最近：${latestHighlight.title}` : '',
+	},
+	{
+		title: 'Vibe Coding',
+		href: '/vibe-coding/',
+		count: `${count('vibe-coding-terms', 'vibe-coding-skills', 'vibe-coding-design', 'vibe-coding-showcase')} 条`,
+		lede: '术语图解、好用的 Skills、品牌设计语言，和别人用 AI 做出的作品。',
+		detail: `术语 ${count('vibe-coding-terms')} · Skills ${count('vibe-coding-skills')} · Design ${count('vibe-coding-design')} · Showcase ${count('vibe-coding-showcase')}`,
+	},
+];
+const benchmarkCount = count('benchmarks');
+const caseThumbs = [...evalLedger.cases]
+	.filter((item) => !isVideoCase(item))
+	.sort(byNewest)
+	.filter((item, index, all) => all.findIndex((other) => other.task === item.task) === index)
+	.slice(0, 3);
+
+const newbie = collection('newbie-tutorials')?.items ?? [];
+const lessons = [
+	{ mark: '编', slug: 'why-llms-hallucinate' },
+	{ mark: '念', slug: 'what-is-a-knowledge-base' },
+	{ mark: '忘', slug: 'why-ai-forgets' },
+	{ mark: '造', slug: 'how-llms-are-trained' },
+].flatMap((lesson) => {
+	const item = newbie.find((entry) => entry.href.includes(`/${lesson.slug}/`));
+	return item ? [{ ...lesson, item }] : [];
+});
+---
+
+<div class="home">
+	<section class="rr-page home-hero">
+		<div class="home-hero__text">
+			<span class="meta-line">个人 AI 知识库 · 由猫馆长整理</span>
+			<h1 class="home-hero__title">把 AI 读懂，<br />一次一个问题。</h1>
+			<p class="rr-lede">教程、精读、术语和实测，全部亲手整理。不追热点，只收值得反复读的东西。</p>
+			<div class="home-hero__links">
+				<a class="rr-more" href="/tutorials/#newbie-tutorials">从新手村开始读 →</a>
+				<a class="home-quiet-link" href="/changelog/">看看最近更新</a>
+			</div>
+		</div>
+		<figure class="home-hero__cat">
+			<img
+				class="rr-cat"
+				src="/images/cat-pose-3.jpg"
+				alt="站着的猫馆长，铅笔插画"
+				width="1100"
+				height="765"
+			/>
+			<figcaption class="meta-line">馆长 · 今天值班</figcaption>
+		</figure>
+	</section>
+
+	<section class="rr-page rr-split" aria-labelledby="home-recent">
+		<div class="rr-split__label">
+			<span class="rr-kicker">最近上新</span>
+			<h2 id="home-recent">这周收进来的</h2>
+		</div>
+		<div class="home-recent">
+			{
+				featured && (
+					<a class="home-feature" href={showcaseHref(featured)}>
+						<img
+							src={featured.poster}
+							alt=""
+							width={featured.width}
+							height={featured.height}
+							loading="lazy"
+							decoding="async"
+						/>
+						<span class="home-feature__text">
+							<span class="meta-line">SHOWCASE · {fmt(featured.added)}</span>
+							<span class="home-feature__title">{featured.title}</span>
+							<span class="home-feature__note">{featured.note}</span>
+							<span class="rr-more">去放映厅 →</span>
+						</span>
+					</a>
+				)
+			}
+			<ol class="home-recent__list">
+				{
+					recent.map(({ item, recordedAt }) => (
+						<li>
+							<a class="home-recent__row" href={item.href}>
+								<span class="rr-row__date">{fmt(recordedAt)}</span>
+								<span class="home-recent__section">{item.section_label}</span>
+								<span class="home-recent__title">{item.title}</span>
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<section class="rr-page rr-split" aria-labelledby="home-sections">
+		<div class="rr-split__label">
+			<span class="rr-kicker">馆藏</span>
+			<h2 id="home-sections">四个分馆</h2>
+		</div>
+		<div class="home-sections">
+			{
+				sections.map((section) => (
+					<a class="home-section" href={section.href}>
+						<span class="home-section__head">
+							<span class="home-section__title">{section.title}</span>
+							<span class="rr-count">{section.count}</span>
+						</span>
+						<span class="home-section__lede">{section.lede}</span>
+						<span class="home-section__detail">{section.detail}</span>
+					</a>
+				))
+			}
+			<a class="home-section" href="/benchmarks/">
+				<span class="home-section__head">
+					<span class="home-section__title">Benchmarks</span>
+					<span class="rr-count">{benchmarkCount} 项</span>
+				</span>
+				<span class="home-section__lede"
+					>先弄清每个 benchmark 在测什么，再去看分数；另有同题多模型的实测。</span
+				>
+				<span class="home-section__thumbs">
+					{
+						caseThumbs.map((item) => (
+							<img
+								src={evalThumb(item.id)}
+								alt=""
+								width="640"
+								height="400"
+								loading="lazy"
+								decoding="async"
+							/>
+						))
+					}
+				</span>
+			</a>
+		</div>
+	</section>
+
+	{
+		lessons.length > 0 && (
+			<section class="rr-page rr-split" aria-labelledby="home-newbie">
+				<div class="rr-split__label">
+					<span class="rr-kicker">第一次来</span>
+					<h2 id="home-newbie">新手村四课</h2>
+					<p>零基础，一课只回答一个问题。</p>
+				</div>
+				<ol class="home-lessons">
+					{lessons.map((lesson, index) => (
+						<li>
+							<a class="home-lesson" href={lesson.item.href}>
+								<span class="home-lesson__mark" aria-hidden="true">
+									{lesson.mark}
+								</span>
+								<span class="rr-count">{String(index + 1).padStart(2, '0')}</span>
+								<span class="home-lesson__title">{lesson.item.title}</span>
+							</a>
+						</li>
+					))}
+				</ol>
+			</section>
+		)
+	}
+
+	<section class="rr-band home-quote">
+		<div class="rr-page home-quote__inner">
+			<img
+				class="rr-cat"
+				src="/images/cat-pose-4.jpg"
+				alt="趴着准备扑过来的猫馆长"
+				width="1100"
+				height="765"
+				loading="lazy"
+			/>
+			<blockquote>
+				<p>「这里每一篇我都翻过。<br />挑一篇，坐下来慢慢读。」</p>
+				<footer class="meta-line">—— 猫馆长</footer>
+			</blockquote>
+		</div>
+	</section>
+</div>
+
+<script>
+	import '../scripts/homeRedirects';
+</script>

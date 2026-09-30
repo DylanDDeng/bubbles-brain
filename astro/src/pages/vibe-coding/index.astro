@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadDirectoryData } from '../../lib/directories';
+import { showcaseByNewest } from '../../data/showcase';
+import '../../styles/directories.css';
+
+const data = await loadDirectoryData();
+const items = (id: string) => data.collection(id)?.items ?? [];
+const sample = (id: string, n = 4) =>
+	items(id)
+		.slice(0, n)
+		.map((item) => item.title.replace(/（.*）$/, ''))
+		.join(' · ');
+const showcase = showcaseByNewest();
+const parts = [
+	{
+		title: '术语',
+		href: '/vibe-coding/terms/',
+		count: `${items('vibe-coding-terms').length} 条`,
+		lede: '图解、比喻，还有可以亲手操作的小实验。把 AI 编程的概念一块一块拆开。',
+		sample: '智能体 · 上下文窗口 · 词元 · 版本控制系统',
+	},
+	{
+		title: 'Skills',
+		href: '/vibe-coding/skills/',
+		count: `${items('vibe-coding-skills').length} 个`,
+		lede: '浏览原始 SKILL.md、作者和来源，把好方法带进工作流。',
+		sample: sample('vibe-coding-skills'),
+	},
+	{
+		title: 'Design',
+		href: '/vibe-coding/design/',
+		count: `${items('vibe-coding-design').length} 个品牌`,
+		lede: '从品牌的色彩、字体与界面语言中寻找灵感，看看设计如何写进 AI 的工作方式。',
+		sample: sample('vibe-coding-design').replaceAll(' 的设计语言', ''),
+	},
+	{
+		title: 'Showcase',
+		href: '/vibe-coding/showcase/',
+		count: `${showcase.length} 部`,
+		lede: '别人用 AI 做出来的作品：用代码生成的视频，以后还有网页与更多。',
+		sample: showcase
+			.slice(0, 3)
+			.map((work) => work.title)
+			.join(' · '),
+	},
+];
+---
+
+<BaseLayout
+	title="Vibe Coding · Bubble's Brain"
+	description="术语图解、好用的 Skills、品牌设计语言，和别人用 AI 做出的作品。"
+>
+	<div class="rr-page">
+		<header class="rr-head">
+			<div class="rr-head__text">
+				<nav class="rr-crumbs" aria-label="位置"><a href="/">首页</a> / Vibe Coding</nav>
+				<h1 class="rr-title rr-title--latin" lang="en">Vibe Coding</h1>
+				<p class="rr-lede">用 AI 写代码之前，先把词弄懂、把方法学会、把好作品看够。</p>
+			</div>
+			<img
+				class="rr-cat dir-head-cat"
+				src="/images/cat-pose-2.jpg"
+				alt="举手的猫馆长"
+				width="1100"
+				height="765"
+			/>
+		</header>
+		<section class="rr-split" aria-labelledby="vibe-parts">
+			<div class="rr-split__label">
+				<span class="rr-kicker">分馆</span>
+				<h2 id="vibe-parts">四个部分</h2>
+			</div>
+			<div class="dir-parts">
+				{
+					parts.map((part) => (
+						<a class="dir-part" href={part.href}>
+							<span class="dir-part__head">
+								<span class="dir-part__title">{part.title}</span>
+								<span class="rr-count">{part.count}</span>
+							</span>
+							<span class="dir-part__lede">{part.lede}</span>
+							<span class="dir-part__sample">{part.sample}</span>
+						</a>
+					))
+				}
+			</div>
+		</section>
+	</div>
+</BaseLayout>

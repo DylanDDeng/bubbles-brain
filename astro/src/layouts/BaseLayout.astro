@@ -1,12 +1,13 @@
 ---
 import '../styles/migration.css';
 import '../styles/ricoui-theme.css';
+import '../styles/reading-room.css';
 import '../styles/collection-pages.css';
 import { ClientRouter } from 'astro:transitions';
 import SiteActions from '../components/SiteActions.astro';
 import FooterLinks from '../components/FooterLinks.astro';
 import CommandSearch from '../components/CommandSearch.astro';
-import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import { activeSiteSection, siteSections } from '../lib/siteSections';
 
 interface Props {
 	title: string;
@@ -34,6 +35,8 @@ const homeHref = isEnglish ? '/en/' : '/';
 const languageHref = alternateHref ?? (isEnglish ? '/' : '/en/');
 const canonicalUrl = new URL(canonicalPath, Astro.site);
 const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
+const sections = siteSections(lang);
+const currentSection = activeSiteSection(Astro.url.pathname, lang);
 ---
 
 <!doctype html>
@@ -43,7 +46,7 @@ const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
-		<meta name="theme-color" content="#ffffff" />
+		<meta name="theme-color" content="#f4f1ea" />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
@@ -83,12 +86,38 @@ const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 							href={homeHref}
 							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
-							<>
-								<img class="site-avatar" src={CAT_CURATOR_AVATAR} alt="" width="36" height="36" />
-								<span>Bubble’s Brain</span>
-							</>
+							<span class="site-seal" aria-hidden="true">
+								泡
+							</span>
+							<span class="site-wordmark">Bubble's Brain</span>
 						</a>
+						<nav class="site-sections" aria-label={isEnglish ? 'Sections' : '栏目'}>
+							{sections.map((item) => (
+								<a
+									href={item.href}
+									aria-current={item.id === currentSection ? 'page' : undefined}
+								>
+									{item.label}
+								</a>
+							))}
+						</nav>
 						<SiteActions locale={lang} languageHref={languageHref} />
+						<details class="site-menu">
+							<summary aria-label={isEnglish ? 'Sections' : '打开栏目'}>
+								<i class="ph ph-list" aria-hidden="true" />
+							</summary>
+							<nav aria-label={isEnglish ? 'Sections' : '栏目'}>
+								{sections.map((item) => (
+									<a
+										href={item.href}
+										aria-current={item.id === currentSection ? 'page' : undefined}
+									>
+										{item.label}
+									</a>
+								))}
+								<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
+							</nav>
+						</details>
 					</header>
 				)
 			}

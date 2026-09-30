@@ -10,10 +10,5 @@ routes = [
   { pattern = "bubblenews.today/codex-tutorials/", zone_name = "bubblenews.today" },
   { pattern = "bubblenews.today/pi-agent-tutorials/", zone_name = "bubblenews.today" },
   { pattern = "bubblenews.today/workbuddy-tutorials/", zone_name = "bubblenews.today" },
-  { pattern = "bubblenews.today/highlights/", zone_name = "bubblenews.today" },
   { pattern = "bubblenews.today/highlights/2025/", zone_name = "bubblenews.today" },
-  { pattern = "bubblenews.today/vibe-coding/terms/", zone_name = "bubblenews.today" },
-  { pattern = "bubblenews.today/vibe-coding/skills/", zone_name = "bubblenews.today" },
-  { pattern = "bubblenews.today/vibe-coding/design/", zone_name = "bubblenews.today" },
-  { pattern = "bubblenews.today/benchmarks/", zone_name = "bubblenews.today" },
 ]

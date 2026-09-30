@@ -1,52 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { loadDirectoryData } from '../../lib/directories';
-import { showcaseByNewest, showcaseHref } from '../../data/showcase';
-import { vibeCodingTermCategories } from '../../data/vibeCodingTerms';
-import { designBrands } from '../../data/designBrands';
 import '../../styles/directories.css';
 
-const data = await loadDirectoryData();
-const items = (id: string) => data.collection(id)?.items ?? [];
-const aiTerms = vibeCodingTermCategories.find((category) => category.id === 'ai-agent')?.terms ?? [];
-const showcase = showcaseByNewest();
-const skillName = (title: string) => title.replace(/（.*）$/, '');
-
+// The hub only sends readers on: each part is its name and one line. What is inside each part
+// is shown on its own page, so there are no previews, rules or counts here.
 const parts = [
-	{
-		id: 'terms',
-		title: '术语',
-		href: '/vibe-coding/terms/',
-		count: vibeCodingTermCategories.reduce((sum, category) => sum + category.terms.length, 0),
-		lede: '图解和小实验，把概念一块一块拆开。',
-		names: aiTerms.slice(0, 6).map((term) => ({
-			label: term.chineseName,
-			sub: term.name !== term.chineseName ? term.name : '',
-			href: `/vibe-coding/terms/${term.id}/`,
-		})),
-	},
-	{
-		id: 'skills',
-		title: 'Skills',
-		href: '/vibe-coding/skills/',
-		count: items('vibe-coding-skills').length,
-		lede: '装上就能用的 Agent 技能包，附原始 SKILL.md。',
-		names: items('vibe-coding-skills')
-			.slice(0, 6)
-			.map((item) => ({ label: skillName(item.title), sub: '', href: item.href })),
-	},
-	{
-		id: 'design',
-		title: 'Design',
-		href: '/vibe-coding/design/',
-		count: designBrands.length,
-		lede: `${designBrands.length} 个品牌的 DESIGN.md，拿来教 AI 审美。`,
-		names: designBrands.slice(0, 6).map((brand) => ({
-			label: brand.name,
-			sub: '',
-			href: `/vibe-coding/design/${brand.id}/`,
-		})),
-	},
+	{ title: '术语', href: '/vibe-coding/terms/', lede: '图解和小实验，把概念一块一块拆开。' },
+	{ title: 'Skills', href: '/vibe-coding/skills/', lede: '装上就能用的 Agent 技能包。' },
+	{ title: 'Design', href: '/vibe-coding/design/', lede: '知名品牌的 DESIGN.md，拿来教 AI 审美。' },
+	{ title: 'Showcase', href: '/vibe-coding/showcase/', lede: '别人用 AI 做出来的作品。' },
 ];
 ---
 
@@ -54,67 +16,21 @@ const parts = [
 	title="Vibe Coding · Bubble's Brain"
 	description="术语图解、好用的 Skills、品牌设计语言，和别人用 AI 做出的作品。"
 >
-	<div class="rr-page rr-page--wide">
+	<div class="rr-page rr-page--narrow">
 		<header class="rr-head">
 			<h1 class="rr-title" lang="en">Vibe Coding</h1>
 			<p class="rr-lede">用 AI 写代码之前，先把要用到的词、工具和品味备齐。</p>
 		</header>
 
-		<div class="vibe-parts">
+		<nav class="vibe-entries" aria-label="Vibe Coding 的四个部分">
 			{
 				parts.map((part) => (
-					<section class="vibe-part" aria-labelledby={`vibe-${part.id}`}>
-						<div class="rr-block__head">
-							<h2 class="rr-block__title" id={`vibe-${part.id}`}>
-								<a href={part.href}>{part.title}</a>
-								<span class="rr-count">{part.count}</span>
-							</h2>
-							<p class="rr-block__lede">{part.lede}</p>
-						</div>
-						<ul class="rr-names rr-names--three">
-							{part.names.map((name) => (
-								<li>
-									<a class="rr-name" href={name.href}>
-										<span class="rr-name__main">{name.label}</span>
-										{name.sub && (
-											<span class="rr-name__sub" lang="en">
-												{name.sub}
-											</span>
-										)}
-									</a>
-								</li>
-							))}
-						</ul>
-					</section>
+					<a class="vibe-entry" href={part.href}>
+						<span class="vibe-entry__title">{part.title}</span>
+						<span class="vibe-entry__lede">{part.lede}</span>
+					</a>
 				))
 			}
-			<section class="vibe-part" aria-labelledby="vibe-showcase">
-				<div class="rr-block__head">
-					<h2 class="rr-block__title" id="vibe-showcase">
-						<a href="/vibe-coding/showcase/">Showcase</a>
-						<span class="rr-count">{showcase.length}</span>
-					</h2>
-					<p class="rr-block__lede">别人用 AI 做出来的作品。</p>
-				</div>
-				<ul class="vibe-posters">
-					{
-						showcase.slice(0, 3).map((work) => (
-							<li>
-								<a href={showcaseHref(work)} data-astro-prefetch="false">
-									<img
-										src={work.poster}
-										alt={work.title}
-										width={work.width}
-										height={work.height}
-										loading="lazy"
-										decoding="async"
-									/>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</div>
+		</nav>
 	</div>
 </BaseLayout>

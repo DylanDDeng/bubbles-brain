@@ -1,35 +1,32 @@
 /* Page-specific pieces of the section directories. The shared ones live in reading-room.css. */
 
-/* Vibe Coding hub: one row per part, the label on the left and samples on the right. */
-.vibe-part {
+/* Vibe Coding hub: four parts, each its name and one line. Nothing marks them as buttons;
+   the name underlines on hover. */
+.vibe-entries {
 	display: grid;
-	grid-template-columns: 280px minmax(0, 1fr);
-	gap: 48px;
-	padding: 36px 0;
+	gap: 40px;
 }
-.vibe-part:not(:last-child) {
-	box-shadow: inset 0 -1px 0 var(--rule);
-}
-.vibe-part .rr-names {
-	align-content: start;
-	padding-top: 6px;
-}
-.vibe-posters {
+.vibe-entry {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 12px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
+	gap: 6px;
+	color: var(--ink);
+	text-decoration: none;
 }
-.vibe-posters img {
-	display: block;
-	width: 100%;
-	height: auto;
-	aspect-ratio: 16 / 9;
-	object-fit: cover;
-	border-radius: 8px;
-	background: var(--paper-muted);
+.vibe-entry__title {
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+.vibe-entry:hover .vibe-entry__title {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 6px;
+}
+.vibe-entry__lede {
+	color: var(--ink-soft);
+	font-size: 15px;
+	line-height: 1.7;
 }
 
 /* Benchmarks: when the data was last checked, quietly at the end of the list. */
@@ -40,13 +37,6 @@
 	text-align: center;
 }
 
-@media (max-width: 800px) {
-	.vibe-part {
-		grid-template-columns: minmax(0, 1fr);
-		gap: 20px;
-		padding: 28px 0;
-	}
-}
 
 /* Benchmarks: a little more air between entries, each is a name and a line. */
 .bench-stack {

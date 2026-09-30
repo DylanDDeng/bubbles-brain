@@ -72,7 +72,7 @@ export function refreshReadingIndicators() {
 
 function init() {
 	save(history());
-	if (document.querySelector('.legacy-article .article-content, .concept-detail, .bench-detail')) {
+	if (document.querySelector('.reading-page .article-content, .concept-detail, .bench-detail')) {
 		markReadingUpdateSeen(location.pathname.replace(/^\/en\//, '/'));
 	}
 	refreshReadingIndicators();

@@ -39,13 +39,18 @@ function setupArticleOutline(): void {
 
 	if (entries.length === 0) return;
 
-	const desktopOutline = matchMedia('(min-width: 701px)');
+	const desktopOutline = matchMedia('(min-width: 901px)');
 	const syncOutline = () => {
 		if (document.body.classList.contains('collection-site'))
 			outline.toggleAttribute('open', desktopOutline.matches);
 	};
 	syncOutline();
 	desktopOutline.addEventListener('change', syncOutline);
+
+	const float = document.querySelector<HTMLAnchorElement>('[data-outline-float]');
+	const floatLabel = float?.querySelector<HTMLElement>('[data-outline-float-label]');
+	const openOutline = () => outline.setAttribute('open', '');
+	float?.addEventListener('click', openOutline);
 
 	let frame = 0;
 	const update = () => {
@@ -62,6 +67,10 @@ function setupArticleOutline(): void {
 			if (isActive) entry.link.setAttribute('aria-current', 'location');
 			else entry.link.removeAttribute('aria-current');
 		}
+		if (float) {
+			if (floatLabel) floatLabel.textContent = active.link.textContent ?? '';
+			float.hidden = desktopOutline.matches || outline.getBoundingClientRect().bottom > 0;
+		}
 	};
 	const scheduleUpdate = () => {
 		if (frame === 0) frame = window.requestAnimationFrame(update);
@@ -74,6 +83,7 @@ function setupArticleOutline(): void {
 
 	cleanupOutline = () => {
 		desktopOutline.removeEventListener('change', syncOutline);
+		float?.removeEventListener('click', openOutline);
 		if (frame !== 0) window.cancelAnimationFrame(frame);
 		for (const entry of entries) entry.link.removeEventListener('click', scheduleUpdate);
 		window.removeEventListener('scroll', scheduleUpdate);

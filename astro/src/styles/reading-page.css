@@ -1,0 +1,365 @@
+/* Articles (教程, 精选阅读): one narrow column in the true centre of the page, with the way back
+   and the contents pinned at the left edge. About 34 characters a line, 20px between paragraphs. */
+
+.collection-site .reading-page {
+	--reading-column: 540px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, var(--reading-column)) minmax(0, 1fr);
+	grid-template-areas:
+		'rail header .'
+		'rail main .';
+	column-gap: 40px;
+	align-items: start;
+	width: auto;
+	max-width: none;
+	margin: 0;
+	padding: 96px 80px 0;
+}
+
+/* ------------------------------------------------------------------ rail */
+.collection-site .reading-page .reading-rail {
+	grid-area: rail;
+	position: sticky;
+	top: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	max-width: 240px;
+	max-height: calc(100vh - 64px);
+	overflow-y: auto;
+	padding-right: 8px;
+}
+.collection-site .reading-page .reading-back {
+	align-self: flex-start;
+	color: var(--ink-faint);
+	font-size: 14px;
+	line-height: 1.5;
+	text-decoration: none;
+}
+.collection-site .reading-page .reading-back:hover {
+	color: var(--ink);
+}
+.collection-site .reading-page .article-outline {
+	position: static;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+}
+.collection-site .reading-page .article-outline summary {
+	display: none;
+}
+.collection-site .reading-page .article-outline nav {
+	max-height: none;
+	overflow: visible;
+	padding: 0;
+}
+.collection-site .reading-page .article-outline ol {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.collection-site .reading-page .article-outline a {
+	display: block;
+	padding: 0;
+	border: 0;
+	box-shadow: none;
+	color: var(--ink-faint);
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.5;
+	text-decoration: none;
+}
+.collection-site .reading-page .article-outline li[data-depth='3'] a {
+	padding-left: 14px;
+	font-size: 13px;
+}
+.collection-site .reading-page .article-outline a:hover,
+.collection-site .reading-page .article-outline a[aria-current] {
+	color: var(--ink);
+}
+.collection-site .reading-page .article-outline a[aria-current] {
+	font-weight: 400;
+}
+
+/* ---------------------------------------------------------------- header */
+.collection-site .reading-page .article-header {
+	grid-area: header;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+}
+.collection-site .reading-page .reading-kicker {
+	margin: 0 0 12px;
+	color: var(--ink-faint);
+	font-size: 13px;
+}
+.collection-site .reading-page .article-header h1 {
+	margin: 0;
+	font-size: 30px;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+}
+.collection-site .reading-page .article-lede {
+	max-width: none;
+	margin: 16px 0 0;
+	color: var(--ink-soft);
+	font-size: 16px;
+	line-height: 1.85;
+}
+.collection-site .reading-page .reading-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 16px;
+	margin-top: 16px;
+	color: var(--ink-faint);
+	font: 400 13px/1.6 var(--sans);
+	letter-spacing: 0;
+}
+.collection-site .reading-page .reading-meta a {
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ body */
+.collection-site .reading-page .article-main {
+	grid-area: main;
+	min-width: 0;
+	margin-top: 56px;
+}
+.collection-site .reading-page .article-content {
+	max-width: none;
+	padding: 0;
+	font-size: 16px;
+	line-height: 1.9;
+}
+.collection-site .reading-page .article-content p {
+	margin: 0 0 20px;
+}
+.collection-site .reading-page .article-content :is(ul, ol) {
+	margin: 0 0 20px;
+	padding-left: 1.4em;
+}
+.collection-site .reading-page .article-content li + li {
+	margin-top: 6px;
+}
+.collection-site .reading-page .article-content h2 {
+	margin: 56px 0 16px;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+.collection-site .reading-page .article-content h3 {
+	margin: 36px 0 12px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+.collection-site .reading-page .article-content :is(h2, h3):first-child {
+	margin-top: 0;
+}
+.collection-site .reading-page .article-content :is(table, .article-table-scroll) {
+	margin: 8px 0 28px;
+	font-size: 14px;
+}
+.collection-site .reading-page .article-content th {
+	font-size: 14px;
+}
+.collection-site .reading-page .article-content img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+.collection-site .reading-page .article-content figure {
+	margin: 8px 0 28px;
+}
+.collection-site .reading-page .article-content blockquote {
+	margin: 8px 0 28px;
+	font-size: 16px;
+}
+.collection-site .reading-page .article-content pre {
+	margin: 8px 0 28px;
+	font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- ending */
+.collection-site .reading-page .article-ending {
+	margin-top: 64px;
+	padding-top: 24px;
+	border: 0;
+	box-shadow: inset 0 1px 0 var(--rule);
+}
+.collection-site .reading-page .article-editorial-note {
+	max-width: none;
+	margin: 0 0 28px;
+	color: var(--ink-faint);
+	font-size: 13px;
+	line-height: 1.8;
+}
+.collection-site .reading-page .article-editorial-note a {
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+}
+.collection-site .reading-page .article-pagination {
+	display: flex;
+	justify-content: space-between;
+	gap: 24px;
+	margin: 0 0 64px;
+	padding: 0;
+	box-shadow: none;
+}
+.collection-site .reading-page .article-pagination > a {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 48%;
+	color: var(--ink);
+	text-decoration: none;
+}
+.collection-site .reading-page .article-pagination > .article-next {
+	margin-left: auto;
+	text-align: right;
+}
+.collection-site .reading-page .article-pagination > a > span {
+	color: var(--ink-faint);
+	font: 400 13px/1.6 var(--sans);
+	letter-spacing: 0;
+}
+.collection-site .reading-page .article-pagination strong {
+	font: 400 14px/1.6 var(--sans);
+}
+.collection-site .reading-page .article-pagination > a:hover strong {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 4px;
+}
+
+/* The floating "current section" pill exists only on phones. */
+.article-outline-float {
+	display: none;
+}
+
+/* ---------------------------------------------------------------- phones */
+@media (max-width: 900px) {
+	.collection-site .reading-page {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			'back'
+			'header'
+			'outline'
+			'main';
+		column-gap: 0;
+		max-width: calc(var(--reading-column) + 48px);
+		margin: 0 auto;
+		padding: 20px 24px 0;
+	}
+	.collection-site .reading-page .reading-rail {
+		display: contents;
+	}
+	.collection-site .reading-page .reading-back {
+		grid-area: back;
+		margin-bottom: 24px;
+	}
+	.collection-site .reading-page .article-outline {
+		grid-area: outline;
+		scroll-margin-top: 24px;
+		margin-top: 28px;
+	}
+	.collection-site .reading-page .article-outline summary {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 0 12px;
+		color: var(--ink-faint);
+		font: 400 14px/1.5 var(--sans);
+		letter-spacing: 0;
+		list-style: none;
+		cursor: pointer;
+	}
+	.collection-site .reading-page .article-outline summary::-webkit-details-marker {
+		display: none;
+	}
+	.collection-site .reading-page .article-outline summary i {
+		color: var(--ink-faint);
+		font-size: 12px;
+	}
+	.collection-site .reading-page .article-outline nav {
+		padding-bottom: 20px;
+		box-shadow: inset 0 -1px 0 var(--rule);
+	}
+	.collection-site .reading-page .article-outline ol {
+		gap: 10px;
+	}
+	.collection-site .reading-page .article-outline a {
+		color: var(--ink-soft);
+	}
+	.collection-site .reading-page .article-header h1 {
+		font-size: 26px;
+	}
+	.collection-site .reading-page .article-lede {
+		font-size: 15px;
+		line-height: 1.8;
+	}
+	.collection-site .reading-page .article-main {
+		margin-top: 28px;
+	}
+	.article-outline-float {
+		position: fixed;
+		left: 50%;
+		bottom: calc(20px + env(safe-area-inset-bottom));
+		z-index: 60;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		max-width: calc(100vw - 48px);
+		height: 40px;
+		box-sizing: border-box;
+		padding: 0 18px;
+		border-radius: 999px;
+		background: var(--paper);
+		box-shadow:
+			0 0 0 1px var(--rule-strong),
+			0 6px 24px rgb(0 0 0 / 0.08);
+		color: var(--ink-soft);
+		font-size: 13px;
+		text-decoration: none;
+		white-space: nowrap;
+		transform: translateX(-50%);
+	}
+	.article-outline-float span:last-child {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: var(--ink);
+	}
+	.article-outline-float[hidden] {
+		display: none;
+	}
+}
+
+/* Wide screens: tables may step 90px out on each side, so three columns fit without a scrollbar.
+   There is room: the rail ends well before the widened edge. */
+@media (min-width: 1280px) {
+	.collection-site .reading-page .article-content .article-table-scroll {
+		width: calc(100% + 180px);
+		max-width: none;
+		margin-inline: -90px;
+	}
+}
+
+/* Tablets and small laptops: pull the page edges in so the rail keeps a readable width. */
+@media (min-width: 901px) and (max-width: 1199px) {
+	.collection-site .reading-page {
+		column-gap: 32px;
+		padding-inline: 40px;
+	}
+}

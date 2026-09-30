@@ -34,6 +34,7 @@ import { commentThreadId } from '../lib/comments/threadId';
 import '../styles/legacy-pages.css';
 import '../styles/newbie-lab.css';
 import '../styles/ai-infographic.css';
+import '../styles/reading-page.css';
 
 interface Props {
 	record: LegacyContentEntry;
@@ -352,6 +353,8 @@ const crumbs = [
 		? [{ label: isEnglish ? label.en : label.zh, href: sectionHref }]
 		: []),
 ];
+// The article's way back is the nearest level up: the series for a lesson, the section otherwise.
+const backCrumb = crumbs.at(-1);
 const isImageCompressor = record.route.endsWith('/ai-tools/image-compress/');
 const isAIInfographic = record.route.endsWith('/ai-tools/ai-infographics/');
 const isStandaloneHtml = record.sourcePath.endsWith('.html');
@@ -564,25 +567,33 @@ const libraryApi =
 		) : isAIInfographic ? (
 			<AIInfographicTool locale={record.locale} title={title} description={description} />
 		) : (
-			<article class="article-shell legacy-article" data-collection-section={record.section}>
+			<article class="reading-page" data-collection-section={record.section}>
+				{/* Left rail: the way back, then the contents. On phones it dissolves into the column. */}
+				<div class="reading-rail">
+					{backCrumb && (
+						<a class="reading-back" href={backCrumb.href}>
+							← {backCrumb.label}
+						</a>
+					)}
+					{outlineHeadings.length > 0 && (
+						<ArticleOutline headings={outlineHeadings} locale={record.locale} />
+					)}
+				</div>
+
 				<header class="article-header">
-					<nav class="rr-crumbs article-crumbs" aria-label={isEnglish ? 'Location' : '位置'}>
-						{crumbs.map((crumb, index) => (
-							<Fragment>
-								{index > 0 && ' / '}
-								<a href={crumb.href}>{crumb.label}</a>
-							</Fragment>
-						))}
-					</nav>
+					{crumbs.length > 0 && (
+						<p class="reading-kicker">{crumbs.map((crumb) => crumb.label).join(' · ')}</p>
+					)}
 					<h1>{title}</h1>
 					{description && !articleIntro && <p class="article-lede">{description}</p>}
 					<div class="reading-meta">
-						{articleIntro?.author && <span class="reading-author">{articleIntro.author}</span>}
 						{record.date && (
 							<time datetime={record.date.toISOString()}>
-								{record.date.toISOString().slice(0, 10)}
+								{record.date.toISOString().slice(0, 10).replaceAll('-', '.')}
 							</time>
 						)}
+						{articleIntro?.author && <span class="reading-author">{articleIntro.author}</span>}
+						{articleIntro && <span>{articleIntro.sourceName}</span>}
 						{!articleIntro && (
 							<span>
 								{readingMinutes} {isEnglish ? 'min read' : '分钟阅读'}
@@ -590,24 +601,14 @@ const libraryApi =
 						)}
 						{sourceUrl && (
 							<a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-								{articleIntro
-									? `${articleIntro.sourceName} · ${isEnglish ? 'Original' : '原文'}`
-									: sourceLabel}
-								<i class="ph ph-arrow-up-right" aria-hidden="true" />
+								{articleIntro ? (isEnglish ? 'Original ↗' : '读原文 ↗') : `${sourceLabel} ↗`}
 							</a>
 						)}
 					</div>
 				</header>
 
-				<div
-					class:list={[
-						'article-layout',
-						{ 'article-layout--with-outline': outlineHeadings.length > 0 },
-					]}
-				>
-					<div class="article-main">
-						{articleIntro && <p class="article-editorial-note">{articleIntro.note}</p>}
-						{isStandaloneHtml ? (
+				<div class="article-main">
+					{isStandaloneHtml ? (
 							<iframe
 								class="standalone-article"
 								title={title}
@@ -628,6 +629,19 @@ const libraryApi =
 						)}
 
 						<footer class="article-ending">
+							{articleIntro && (
+								<p class="article-editorial-note">
+									{articleIntro.note}
+									{sourceUrl && (
+										<>
+											{' '}
+											<a href={sourceUrl} target="_blank" rel="noopener noreferrer">
+												{isEnglish ? 'Read the original ↗' : '读英文原文 ↗'}
+											</a>
+										</>
+									)}
+								</p>
+							)}
 							{(newer || older) && (
 								<nav
 									class="article-pagination"
@@ -636,6 +650,7 @@ const libraryApi =
 									{newer && (
 										<a href={newer.route} class="article-previous" rel="prev">
 											<span>
+												←{' '}
 												{isTutorialArticle
 													? isEnglish
 														? 'Previous chapter'
@@ -644,10 +659,7 @@ const libraryApi =
 														? 'Previous'
 														: '上一篇'}
 											</span>
-											<strong>
-												<i class="ph ph-arrow-left" aria-hidden="true" />
-												<span class="article-pagination-title">{newer.title}</span>
-											</strong>
+											<strong class="article-pagination-title">{newer.title}</strong>
 										</a>
 									)}
 									{older && (
@@ -659,12 +671,10 @@ const libraryApi =
 														: '下一章'
 													: isEnglish
 														? 'Next'
-														: '下一篇'}
+														: '下一篇'}{' '}
+												→
 											</span>
-											<strong>
-												<span class="article-pagination-title">{older.title}</span>
-												<i class="ph ph-arrow-right" aria-hidden="true" />
-											</strong>
+											<strong class="article-pagination-title">{older.title}</strong>
 										</a>
 									)}
 								</nav>
@@ -672,10 +682,6 @@ const libraryApi =
 							{threadId && <Discussion threadId={threadId} locale={record.locale} />}
 						</footer>
 					</div>
-					{outlineHeadings.length > 0 && (
-						<ArticleOutline headings={outlineHeadings} locale={record.locale} />
-					)}
-				</div>
 			</article>
 		)
 	}

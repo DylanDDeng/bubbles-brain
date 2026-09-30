@@ -14,7 +14,7 @@ const { headings, locale } = Astro.props;
 const isEnglish = locale === 'en';
 ---
 
-<details class="article-outline" data-article-outline>
+<details class="article-outline" id="article-outline" data-article-outline open>
 	<summary>
 		<span>{isEnglish ? 'Contents' : '目录'}</span>
 		<i class="ph ph-caret-down" aria-hidden="true"></i>
@@ -31,3 +31,8 @@ const isEnglish = locale === 'en';
 		</ol>
 	</nav>
 </details>
+{/* Phones: once the contents scroll away, a small pill shows the current section and leads back to them. */}
+<a class="article-outline-float" href="#article-outline" data-outline-float hidden>
+	<span>{isEnglish ? 'Contents' : '目录'}</span>
+	<span data-outline-float-label></span>
+</a>

@@ -1,0 +1,162 @@
+---
+import SourceMark from './SourceMark.astro';
+import {
+	formatShowcaseDuration,
+	showcaseByNewest,
+	showcaseCategory,
+	showcaseHref,
+	type ShowcaseWork,
+} from '../data/showcase';
+import { sourceMark } from '../lib/sourceVendor';
+import '../styles/showcase.css';
+import '../styles/showcase-work.css';
+
+interface Props {
+	work: ShowcaseWork;
+}
+
+// One work, laid out like an article: the way back and the reel at the left edge,
+// the film in the middle, and a narrow text column under it.
+const { work } = Astro.props;
+const works = showcaseByNewest();
+const next = works[works.indexOf(work) + 1];
+const category = showcaseCategory(work.category)?.title;
+const prompt = work.prompt;
+const promptLangs = (['zh', 'en'] as const).filter((lang) => prompt?.[lang]);
+// Section tags such as <inputs> in a structured prompt are set quieter than the instructions.
+const promptLines = (text: string) =>
+	text.split('\n').map((line) => ({ line, tag: /^<\/?[\w-]+>$/.test(line.trim()) }));
+---
+
+<article class="work-page">
+	<div class="work-rail">
+		<a class="work-back" href="/vibe-coding/showcase/">← Showcase</a>
+		<nav class="work-reel" aria-label="片单">
+			<ol>
+				{
+					works.map((item) => (
+						<li>
+							<a
+								href={showcaseHref(item)}
+								aria-current={item.id === work.id ? 'page' : undefined}
+								data-astro-prefetch="false"
+							>
+								<span>{item.title}</span>
+								<span class="work-reel__time">{formatShowcaseDuration(item.duration)}</span>
+							</a>
+						</li>
+					))
+				}
+			</ol>
+		</nav>
+	</div>
+
+	<figure class:list={['work-screen', { 'work-screen--tall': work.height / work.width > 0.8 }]}>
+		<video
+			src={work.video}
+			poster={work.poster}
+			width={work.width}
+			height={work.height}
+			controls
+			playsinline
+			preload="metadata"
+			aria-label={work.title}
+			data-showcase-video></video>
+	</figure>
+
+	<div class="work-text">
+		<p class="work-kicker">
+			{[category, formatShowcaseDuration(work.duration)].filter(Boolean).join(' · ')}
+		</p>
+		<h1>{work.title}</h1>
+		<p class="work-note">{work.note}</p>
+		{
+			work.source && (
+				<p class="work-source">
+					<span class="work-source__who">
+						<SourceMark mark={sourceMark(work.source.author, work.source.url)} size={16} />
+						{work.source.author}
+					</span>
+					<a href={work.source.url} target="_blank" rel="noopener noreferrer">
+						看原帖 ↗
+					</a>
+				</p>
+			)
+		}
+
+		{
+			prompt && promptLangs.length > 0 && (
+				<section
+					class="showcase-prompt work-prompt"
+					aria-labelledby={`work-prompt-${work.id}`}
+					data-showcase-prompt
+				>
+					<div class="showcase-prompt-head">
+						<h2 id={`work-prompt-${work.id}`}>提示词</h2>
+						<div class="showcase-prompt-tools" data-prompt-tools hidden>
+							{promptLangs.length > 1 && (
+								<div class="showcase-prompt-langs" role="group" aria-label="提示词语言">
+									{promptLangs.map((lang, i) => (
+										<button
+											type="button"
+											data-prompt-lang={lang}
+											aria-pressed={i === 0 ? 'true' : 'false'}
+										>
+											{lang === 'zh' ? '中' : 'EN'}
+										</button>
+									))}
+								</div>
+							)}
+							<button type="button" class="showcase-link-button" data-prompt-copy>
+								复制
+							</button>
+						</div>
+					</div>
+					{promptLangs.map((lang, i) => (
+						<p
+							class="showcase-prompt-text"
+							lang={lang === 'zh' ? 'zh-CN' : 'en'}
+							data-prompt-text={lang}
+							hidden={i > 0}
+						>
+							{promptLines(prompt[lang]!).map(({ line, tag }, j, all) => (
+								<Fragment>
+									{tag ? <span class="showcase-prompt-tag">{line}</span> : line}
+									{j < all.length - 1 ? '\n' : ''}
+								</Fragment>
+							))}
+						</p>
+					))}
+					<button
+						type="button"
+						class="showcase-link-button"
+						data-prompt-toggle
+						aria-expanded="false"
+						hidden
+					>
+						展开全部
+					</button>
+				</section>
+			)
+		}
+
+		<nav class="work-pager" aria-label="上一部与下一部">
+			<a href="/vibe-coding/showcase/">
+				<span>← 回到</span>
+				<strong>Showcase</strong>
+			</a>
+			{
+				next && (
+					<a class="work-pager__next" href={showcaseHref(next)} data-astro-prefetch="false">
+						<span>下一部 →</span>
+						<strong>{next.title}</strong>
+					</a>
+				)
+			}
+		</nav>
+	</div>
+</article>
+
+<script>
+	import '../scripts/showcase';
+</script>

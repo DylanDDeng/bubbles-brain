@@ -56,7 +56,7 @@ function setupPrompt(section: HTMLElement) {
  * state survives the swap, so the film will not play until a full reload. Restart its loading.
  */
 function reviveVideos() {
-	document.querySelectorAll<HTMLVideoElement>('[data-showcase-theater] video').forEach((video) => {
+	document.querySelectorAll<HTMLVideoElement>('[data-showcase-theater] video, video[data-showcase-video]').forEach((video) => {
 		if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) video.load();
 	});
 }

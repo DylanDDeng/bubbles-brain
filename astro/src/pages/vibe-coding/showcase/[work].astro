@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import ShowcaseTheater from '../../../components/ShowcaseTheater.astro';
-import { showcaseHref, showcaseWorks, type ShowcaseWork } from '../../../data/showcase';
+import ShowcaseWork from '../../../components/ShowcaseWork.astro';
+import { showcaseHref, showcaseWorks, type ShowcaseWork as Work } from '../../../data/showcase';
 
 export function getStaticPaths() {
 	return showcaseWorks.map((work) => ({ params: { work: work.id }, props: { work } }));
 }
 
-const { work } = Astro.props as { work: ShowcaseWork };
+const { work } = Astro.props as { work: Work };
 ---
 
 <BaseLayout
@@ -16,12 +16,5 @@ const { work } = Astro.props as { work: ShowcaseWork };
 	canonicalPath={showcaseHref(work)}
 	section="vibe-coding"
 >
-	<article class="page-shell showcase-shell">
-		<ShowcaseTheater work={work} context="page">
-			<a slot="back" class="collection-back" href="/vibe-coding/showcase/">
-				<i class="ph ph-arrow-left" aria-hidden="true"></i>
-				Showcase
-			</a>
-		</ShowcaseTheater>
-	</article>
+	<ShowcaseWork work={work} />
 </BaseLayout>

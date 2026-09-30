@@ -1,4 +1,4 @@
-/* 首页：一只猫，一个名字，一个搜索框，四个栏目。 */
+/* 首页和借用它版式的页面（404、英文首页）：一个名字，一个搜索框，四个栏目。 */
 
 .home {
 	display: flex;
@@ -64,6 +64,122 @@
 .home-search input::placeholder {
 	color: var(--ink-faint);
 }
+
+/* The Chinese home: the name, a large search box that types its own questions, three more
+   questions to try, and the sections. No picture. */
+.home--ask {
+	gap: 0;
+	width: min(680px, calc(100% - 32px));
+	padding-top: clamp(56px, 18vh, 184px);
+}
+.home--ask .home-title {
+	margin: 0;
+	font-size: 48px;
+	letter-spacing: -0.025em;
+}
+.home--ask .home-search {
+	width: 100%;
+	height: 64px;
+	margin-top: 40px;
+	padding: 0 26px;
+	gap: 14px;
+	font-size: 18px;
+	box-shadow:
+		0 0 0 1px var(--rule-strong),
+		0 10px 32px rgb(0 0 0 / 0.06);
+}
+.home--ask .home-search:focus-within {
+	box-shadow:
+		0 0 0 1.5px var(--ink),
+		0 10px 32px rgb(0 0 0 / 0.06);
+}
+.home-search__field {
+	position: relative;
+	display: flex;
+	flex-grow: 1;
+	min-width: 0;
+	align-self: stretch;
+}
+.home-ask {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+	color: var(--ink-faint);
+	text-align: left;
+	pointer-events: none;
+}
+.home-ask[hidden] {
+	display: none;
+}
+.home-ask__text {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.home-ask__caret {
+	flex-shrink: 0;
+	width: 1.5px;
+	height: 1.2em;
+	margin-left: 2px;
+	background: var(--ink);
+	animation: home-caret 1s steps(1) infinite;
+}
+.is-still .home-ask__caret {
+	display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+	.home-ask__caret {
+		animation: none;
+	}
+}
+@keyframes home-caret {
+	50% {
+		opacity: 0;
+	}
+}
+.home-try {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: 22px 0 0;
+	font-size: 14px;
+	line-height: 1.9;
+	color: var(--ink-faint);
+}
+.home-try__label {
+	margin-right: 12px;
+}
+.home-try__list {
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.home-try__list a {
+	white-space: nowrap;
+	color: var(--ink);
+	text-decoration: none;
+}
+.home-try__list a[hidden] {
+	display: none;
+}
+.home-try__list a:hover {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 4px;
+}
+/* A dot between the questions on show; inline-block keeps it out of the hover underline. */
+.home-try__list a:not([hidden]) ~ a:not([hidden])::before {
+	content: '·';
+	display: inline-block;
+	/* Every question ends in a full-width ？, which already carries space on its right. */
+	margin: 0 10px 0 2px;
+	color: var(--ink-faint);
+}
+.home--ask .home-sections {
+	margin-top: 64px;
+}
 .home-sections {
 	display: flex;
 	flex-wrap: wrap;
@@ -87,21 +203,6 @@
 	font-size: 13px;
 	color: var(--ink-faint);
 }
-.home-recent {
-	margin: 12px 0 0;
-	font-size: 14px;
-	line-height: 1.8;
-	color: var(--ink-faint);
-}
-.home-recent a {
-	color: var(--ink);
-	text-decoration: none;
-}
-.home-recent a:hover {
-	text-decoration: underline;
-	text-underline-offset: 4px;
-}
-
 @media (max-width: 700px) {
 	.home {
 		gap: 20px;
@@ -130,6 +231,34 @@
 	}
 	.home-sections a:hover {
 		text-decoration: none;
+	}
+	.home--ask {
+		padding-top: 48px;
+	}
+	.home--ask .home-title {
+		font-size: 34px;
+	}
+	.home--ask .home-search {
+		height: 56px;
+		margin-top: 28px;
+		padding: 0 20px;
+		gap: 12px;
+		font-size: 16px;
+	}
+	.home--ask .home-sections {
+		margin-top: 40px;
+	}
+	/* One question per line: dots at the start of a wrapped line read as clutter. */
+	.home-try,
+	.home-try__list {
+		flex-direction: column;
+		align-items: center;
+	}
+	.home-try__label {
+		margin: 0;
+	}
+	.home-try__list a:not([hidden]) ~ a:not([hidden])::before {
+		display: none;
 	}
 }
 

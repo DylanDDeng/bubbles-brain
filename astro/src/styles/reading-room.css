@@ -37,6 +37,9 @@
 	font-size: 40px;
 	font-weight: 600;
 	line-height: 1.2;
+}
+/* Tightening suits Latin letters; Chinese characters crowd, so only English titles get it. */
+.rr-title:lang(en) {
 	letter-spacing: -0.02em;
 }
 .rr-lede {
@@ -136,7 +139,7 @@
 .rr-group__label {
 	margin: 0 0 4px;
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: 400;
 	color: var(--ink-faint);
 }
 

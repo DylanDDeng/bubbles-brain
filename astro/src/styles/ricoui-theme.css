@@ -71,6 +71,10 @@
 html {
 	background: var(--paper);
 }
+/* Dates keep every digit the same width, so a column of them lines up. */
+time {
+	font-variant-numeric: tabular-nums;
+}
 body {
 	font-family: var(--sans);
 	background: var(--paper);

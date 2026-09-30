@@ -1,5 +1,6 @@
 ---
 import { collectionHome } from '../lib/collectionRoutes';
+import { activeSiteSection, siteSections } from '../lib/siteSections';
 import { getEntry, render } from 'astro:content';
 import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
@@ -341,6 +342,16 @@ const older =
 		? articleSiblings[articleIndex + 1]
 		: null;
 const sectionHref = collectionHref(`${isEnglish ? '/en' : ''}/${record.section}/`);
+// Breadcrumb: the site section, then the collection when it is a series inside that section.
+const siteSection = siteSections(record.locale).find(
+	(item) => item.id === activeSiteSection(record.route, record.locale),
+);
+const crumbs = [
+	...(siteSection ? [{ label: siteSection.label, href: siteSection.href }] : []),
+	...(siteSection?.href !== sectionHref
+		? [{ label: isEnglish ? label.en : label.zh, href: sectionHref }]
+		: []),
+];
 const isImageCompressor = record.route.endsWith('/ai-tools/image-compress/');
 const isAIInfographic = record.route.endsWith('/ai-tools/ai-infographics/');
 const isStandaloneHtml = record.sourcePath.endsWith('.html');
@@ -555,10 +566,14 @@ const libraryApi =
 		) : (
 			<article class="article-shell legacy-article" data-collection-section={record.section}>
 				<header class="article-header">
-					<a class="collection-back" href={sectionHref}>
-						<i class="ph ph-arrow-left" aria-hidden="true" />
-						{isEnglish ? label.en : label.zh}
-					</a>
+					<nav class="rr-crumbs article-crumbs" aria-label={isEnglish ? 'Location' : '位置'}>
+						{crumbs.map((crumb, index) => (
+							<Fragment>
+								{index > 0 && ' / '}
+								<a href={crumb.href}>{crumb.label}</a>
+							</Fragment>
+						))}
+					</nav>
 					<h1>{title}</h1>
 					{description && !articleIntro && <p class="article-lede">{description}</p>}
 					<div class="reading-meta">

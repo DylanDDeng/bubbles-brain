@@ -18,6 +18,8 @@ interface Props {
 	noindex?: boolean;
 	section?: string;
 	immersive?: boolean;
+	/** The home page keeps only the quiet links in its header and has no footer. */
+	home?: boolean;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
 	canonicalPath = Astro.url.pathname,
 	noindex = false,
 	immersive = false,
+	home = false,
 } = Astro.props;
 
 const isEnglish = lang === 'en';
@@ -46,7 +49,7 @@ const currentSection = activeSiteSection(Astro.url.pathname, lang);
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
-		<meta name="theme-color" content="#f4f1ea" />
+		<meta name="theme-color" content="#ffffff" />
 		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
@@ -79,34 +82,35 @@ const currentSection = activeSiteSection(Astro.url.pathname, lang);
 		<a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳到正文'}</a>
 		<div class:list={['site-frame', { 'site-frame--immersive': immersive }]}>
 			{
-				!immersive && (
+				!immersive && home && (
+					<header class="site-header site-header--home">
+						<SiteActions locale={lang} languageHref={languageHref} home />
+					</header>
+				)
+			}
+			{
+				!immersive && !home && (
 					<header class="site-header">
 						<a
 							class="site-home"
 							href={homeHref}
 							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
-							<span class="site-seal" aria-hidden="true">
-								泡
-							</span>
-							<span class="site-wordmark">Bubble's Brain</span>
+							<img class="site-avatar" src="/images/cat-curator.jpg" alt="" width="28" height="28" />
+							<span>Bubble's Brain</span>
 						</a>
-						<nav class="site-sections" aria-label={isEnglish ? 'Sections' : '栏目'}>
-							{sections.map((item) => (
-								<a
-									href={item.href}
-									aria-current={item.id === currentSection ? 'page' : undefined}
-								>
-									{item.label}
-								</a>
-							))}
-						</nav>
-						<SiteActions locale={lang} languageHref={languageHref} />
-						<details class="site-menu">
-							<summary aria-label={isEnglish ? 'Sections' : '打开栏目'}>
-								<i class="ph ph-list" aria-hidden="true" />
-							</summary>
-							<nav aria-label={isEnglish ? 'Sections' : '栏目'}>
+						<a
+							class="site-search"
+							href="/search/"
+							data-command-search-trigger
+							aria-label={isEnglish ? 'Search (⌘K)' : '搜索（⌘K）'}
+						>
+							<i class="ph ph-magnifying-glass" aria-hidden="true" />
+							<span>{isEnglish ? 'Search' : '搜索'}</span>
+							<kbd>⌘K</kbd>
+						</a>
+						<div class="site-nav">
+							<nav class="site-sections" aria-label={isEnglish ? 'Sections' : '栏目'}>
 								{sections.map((item) => (
 									<a
 										href={item.href}
@@ -115,9 +119,27 @@ const currentSection = activeSiteSection(Astro.url.pathname, lang);
 										{item.label}
 									</a>
 								))}
-								<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
 							</nav>
-						</details>
+							<SiteActions locale={lang} languageHref={languageHref} />
+							<details class="site-menu">
+								<summary aria-label={isEnglish ? 'Sections' : '打开栏目'}>
+									<i class="ph ph-list" aria-hidden="true" />
+								</summary>
+								<nav aria-label={isEnglish ? 'Sections' : '栏目'}>
+									{sections.map((item) => (
+										<a
+											href={item.href}
+											aria-current={item.id === currentSection ? 'page' : undefined}
+										>
+											{item.label}
+										</a>
+									))}
+									<a href="/changelog/">{isEnglish ? 'Updates' : '更新日志'}</a>
+									<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
+									<a href={languageHref}>{isEnglish ? '中文' : 'English'}</a>
+								</nav>
+							</details>
+						</div>
 					</header>
 				)
 			}

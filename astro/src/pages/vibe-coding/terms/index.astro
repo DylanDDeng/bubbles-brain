@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import VibeSiblings from '../../../components/VibeSiblings.astro';
 import { vibeCodingTermCategories } from '../../../data/vibeCodingTerms';
-import '../../../styles/directories.css';
 
 const total = vibeCodingTermCategories.reduce((sum, category) => sum + category.terms.length, 0);
 // AI first: it is what most readers come here for.
@@ -15,36 +13,55 @@ const categories = [...vibeCodingTermCategories].sort(
 	title="术语 · Vibe Coding · Bubble's Brain"
 	description="图解、比喻，还有可以亲手操作的小实验。把 AI 编程的概念一块一块拆开。"
 >
-	<div class="rr-page">
+	<div class="rr-page rr-page--wide" data-reading-directory>
 		<header class="rr-head">
-			<div class="rr-head__text">
-				<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / 术语</nav>
-				<h1 class="rr-title">术语<span class="rr-title__latin" lang="en">Glossary</span></h1>
-				<p class="rr-lede">图解、比喻，还有可以亲手操作的小实验。把 AI 编程的概念一块一块拆开。</p>
-				<span class="meta-line">{total} 条 · {categories.length} 类</span>
+			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / 术语</nav>
+			<h1 class="rr-title">术语</h1>
+			<p class="rr-lede">{total} 个词，每个都有图解，有的还能亲手试。</p>
+			<label class="rr-search">
+				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+				<span class="sr-only">查术语</span>
+				<input type="search" placeholder="查一个词，中英文都行" autocomplete="off" data-reading-search />
+			</label>
+			<div class="rr-filters" role="group" aria-label="按分类">
+				<button type="button" data-reading-filter="" aria-pressed="true">全部</button>
+				{
+					categories.map((category) => (
+						<button type="button" data-reading-filter={category.id} aria-pressed="false">
+							{category.label} <span class="rr-count">{category.terms.length}</span>
+						</button>
+					))
+				}
 			</div>
-			<VibeSiblings current="terms" />
 		</header>
 
 		{
 			categories.map((category) => (
-				<section class="rr-split" id={category.id} aria-labelledby={`terms-${category.id}`}>
-					<div class="rr-split__label">
-						<h2 id={`terms-${category.id}`}>
-							<a href={`/vibe-coding/terms/${category.id}/`} class="dir-heading-link">
-								{category.label}
-							</a>
+				<section
+					class="rr-block"
+					id={category.id}
+					data-reading-group={category.id}
+					aria-labelledby={`terms-${category.id}`}
+				>
+					<div class="rr-block__head">
+						<h2 class="rr-block__title" id={`terms-${category.id}`}>
+							<a href={`/vibe-coding/terms/${category.id}/`}>{category.label}</a>
+							<span class="rr-count" data-reading-count>
+								{category.terms.length}
+							</span>
 						</h2>
-						<span class="rr-count">{category.terms.length} 条</span>
-						<p>{category.description}</p>
+						<p class="rr-block__lede">{category.description}</p>
 					</div>
-					<ul class="dir-terms">
+					<ul class="rr-names">
 						{category.terms.map((term) => (
-							<li>
-								<a class="dir-term" href={`/vibe-coding/terms/${term.id}/`}>
-									<span class="dir-term__name">{term.chineseName}</span>
+							<li
+								data-reading-item
+								data-search={`${term.chineseName} ${term.name}`.toLocaleLowerCase()}
+							>
+								<a class="rr-name" href={`/vibe-coding/terms/${term.id}/`}>
+									<span class="rr-name__main">{term.chineseName}</span>
 									{term.name !== term.chineseName && (
-										<span class="dir-term__latin" lang="en">
+										<span class="rr-name__sub" lang="en">
 											{term.name}
 										</span>
 									)}
@@ -55,5 +72,10 @@ const categories = [...vibeCodingTermCategories].sort(
 				</section>
 			))
 		}
+		<p class="rr-empty" data-reading-empty hidden>没有这个词。换个说法，或者用页眉的搜索找找全站。</p>
 	</div>
 </BaseLayout>
+
+<script>
+	import '../../../scripts/readingDirectory';
+</script>

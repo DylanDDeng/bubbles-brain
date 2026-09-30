@@ -145,11 +145,11 @@ function setupFilter(theater: HTMLElement) {
 	apply(requested && current?.dataset.category === requested ? requested : '');
 }
 
-/** Showcase gallery: the category menu filters tiles in place and keeps ?c= in the address. */
+/** Showcase gallery: the category links filter tiles in place and keep ?c= in the address. */
 function setupGallery(root: HTMLElement) {
 	if (root.dataset.ready) return;
 	root.dataset.ready = 'true';
-	const menu = root.querySelector<HTMLDetailsElement>('[data-gallery-filter]');
+	const menu = root.querySelector<HTMLElement>('[data-gallery-filter]');
 	if (!menu) return;
 	const options = Array.from(menu.querySelectorAll<HTMLAnchorElement>('[data-gallery-option]'));
 	const tiles = Array.from(root.querySelectorAll<HTMLElement>('.showcase-tile'));
@@ -186,8 +186,6 @@ function setupGallery(root: HTMLElement) {
 			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 			event.preventDefault();
 			apply(option.dataset.galleryOption ?? '', true);
-			menu.open = false;
-			menu.querySelector('summary')?.focus();
 		}),
 	);
 	apply(new URL(location.href).searchParams.get('c') ?? '', false);

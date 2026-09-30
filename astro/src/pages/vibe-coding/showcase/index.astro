@@ -1,13 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import VibeSiblings from '../../../components/VibeSiblings.astro';
 import {
 	formatShowcaseDuration,
 	showcaseByNewest,
 	showcaseCategories,
 	showcaseHref,
 } from '../../../data/showcase';
-import '../../../styles/directories.css';
 import '../../../styles/showcase.css';
 
 const works = showcaseByNewest();
@@ -17,7 +15,6 @@ const categories = showcaseCategories
 		count: works.filter((work) => work.category === category.id).length,
 	}))
 	.filter((category) => category.count);
-const categoryTitle = new Map(showcaseCategories.map((category) => [category.id, category.title]));
 
 // Waterfall at each video's own shape: newest first, each into the shortest column.
 const COLUMNS = 3;
@@ -30,56 +27,32 @@ works.forEach((work, order) => {
 	column.works.push({ work, order });
 	column.height += work.height / work.width + 0.05;
 });
-const latest = works[0]?.added.replaceAll('-', '.');
 ---
 
 <BaseLayout
 	title="Showcase · Vibe Coding · Bubble's Brain"
 	description="别人用 AI 做出来的作品：用代码生成的视频，以后还有网页与更多。"
 >
-	<div class="rr-page" data-showcase-gallery>
+	<div class="rr-page rr-page--gallery" data-showcase-gallery>
 		<header class="rr-head">
-			<div class="rr-head__text">
-				<nav class="rr-crumbs" aria-label="位置"
-					><a href="/vibe-coding/">Vibe Coding</a> / Showcase</nav
-				>
-				<h1 class="rr-title rr-title--latin" lang="en">
-					Showcase<span class="showcase-gallery-sub" lang="zh-CN">别人用 AI 做出的作品</span>
-				</h1>
-				<span class="meta-line">{works.length} 部{latest && ` · 最新 ${latest}`}</span>
-			</div>
-			<VibeSiblings current="showcase" />
-		</header>
-
-		{
-			categories.length > 1 && (
-				<details class="showcase-filter showcase-gallery-filter" data-gallery-filter>
-					<summary>
-						分类 · <span data-filter-label>全部</span>
-						<span class="rr-count" data-filter-count>
-							{works.length}
-						</span>
-						<i class="ph ph-caret-down" aria-hidden="true" />
-					</summary>
-					<ul aria-label="按分类筛选">
-						<li>
-							<a href="/vibe-coding/showcase/" data-gallery-option="" aria-current="true">
-								<span>全部</span>
-								<span class="showcase-filter-count">{works.length}</span>
-							</a>
-						</li>
+			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Showcase</nav>
+			<h1 class="rr-title" lang="en">Showcase</h1>
+			<p class="rr-lede">别人用 AI 做出来的作品。</p>
+			{
+				categories.length > 1 && (
+					<nav class="rr-filters" aria-label="按分类筛选" data-gallery-filter>
+						<a href="/vibe-coding/showcase/" data-gallery-option="" aria-current="true">
+							<span>全部</span> <span class="rr-count">{works.length}</span>
+						</a>
 						{categories.map((category) => (
-							<li>
-								<a href={`/vibe-coding/showcase/?c=${category.id}`} data-gallery-option={category.id}>
-									<span>{category.title}</span>
-									<span class="showcase-filter-count">{category.count}</span>
-								</a>
-							</li>
+							<a href={`/vibe-coding/showcase/?c=${category.id}`} data-gallery-option={category.id}>
+								<span>{category.title}</span>
+							</a>
 						))}
-					</ul>
-				</details>
-			)
-		}
+					</nav>
+				)
+			}
+		</header>
 
 		<section class="showcase-wall" aria-label="作品">
 			{
@@ -103,9 +76,7 @@ const latest = works[0]?.added.replaceAll('-', '.');
 								/>
 								<span class="showcase-tile__label">
 									<span class="showcase-tile__title">{work.title}</span>
-									<span class="rr-count">
-										{categoryTitle.get(work.category)} · {formatShowcaseDuration(work.duration)}
-									</span>
+									<span class="showcase-tile__time">{formatShowcaseDuration(work.duration)}</span>
 								</span>
 							</a>
 						))}

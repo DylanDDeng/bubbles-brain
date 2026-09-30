@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import VibeSiblings from '../../../components/VibeSiblings.astro';
 import { designBrandGroups, designBrands } from '../../../data/designBrands';
-import '../../../styles/directories.css';
 
 const brandsById = new Map(designBrands.map((brand) => [brand.id, brand]));
 const groups = designBrandGroups.map((group) => ({
@@ -18,35 +16,54 @@ const groups = designBrandGroups.map((group) => ({
 	title="Design · Vibe Coding · Bubble's Brain"
 	description="大公司如何用 DESIGN.md 描述自己的视觉语言：色彩、字体、组件规则与设计哲学。"
 >
-	<div class="rr-page">
+	<div class="rr-page rr-page--wide" data-reading-directory>
 		<header class="rr-head">
-			<div class="rr-head__text">
-				<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Design</nav>
-				<h1 class="rr-title rr-title--latin" lang="en">Design</h1>
-				<p class="rr-lede">
-					从品牌的色彩、字体与界面语言中寻找灵感，看看设计如何写进 AI 的工作方式。
-				</p>
-				<span class="meta-line">{designBrands.length} 个品牌 · {groups.length} 组</span>
+			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Design</nav>
+			<h1 class="rr-title" lang="en">Design</h1>
+			<p class="rr-lede">{designBrands.length} 个品牌的 DESIGN.md：色彩、字体和界面规则，拿来教 AI 审美。</p>
+			<label class="rr-search">
+				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+				<span class="sr-only">搜索品牌</span>
+				<input type="search" placeholder="搜一个品牌" autocomplete="off" data-reading-search />
+			</label>
+			<div class="rr-filters" role="group" aria-label="按分组">
+				<button type="button" data-reading-filter="" aria-pressed="true">全部</button>
+				{
+					groups.map((group) => (
+						<button type="button" data-reading-filter={group.id} aria-pressed="false">
+							{group.label} <span class="rr-count">{group.brands.length}</span>
+						</button>
+					))
+				}
 			</div>
-			<VibeSiblings current="design" />
 		</header>
 
 		{
 			groups.map((group) => (
-				<section class="rr-split" id={group.id} aria-labelledby={`design-${group.id}`}>
-					<div class="rr-split__label">
-						<h2 id={`design-${group.id}`}>{group.label}</h2>
-						<span class="rr-count">{group.brands.length} 个</span>
-						<p>{group.note}</p>
+				<section
+					class="rr-block"
+					id={group.id}
+					data-reading-group={group.id}
+					aria-labelledby={`design-${group.id}`}
+				>
+					<div class="rr-block__head">
+						<h2 class="rr-block__title" id={`design-${group.id}`}>
+							{group.label}
+							<span class="rr-count" data-reading-count>
+								{group.brands.length}
+							</span>
+						</h2>
+						<p class="rr-block__lede">{group.note}</p>
 					</div>
-					<ul class="dir-terms">
+					<ul class="rr-names rr-names--three">
 						{group.brands.map((brand) => (
-							<li>
-								<a class="dir-term" href={`/vibe-coding/design/${brand.id}/`}>
-									<span class="dir-term__name">{brand.name}</span>
-									<span class="dir-brand-line">
-										{brand.category} · {brand.tagline}
-									</span>
+							<li
+								data-reading-item
+								data-search={`${brand.name} ${brand.category} ${brand.tagline}`.toLocaleLowerCase()}
+							>
+								<a class="rr-name rr-name--block" href={`/vibe-coding/design/${brand.id}/`}>
+									<span class="rr-name__main">{brand.name}</span>
+									<span class="rr-name__sub">{brand.category} · {brand.tagline}</span>
 								</a>
 							</li>
 						))}
@@ -54,5 +71,10 @@ const groups = designBrandGroups.map((group) => ({
 				</section>
 			))
 		}
+		<p class="rr-empty" data-reading-empty hidden>没有找到这个品牌。</p>
 	</div>
 </BaseLayout>
+
+<script>
+	import '../../../scripts/readingDirectory';
+</script>

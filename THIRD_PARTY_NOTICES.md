@@ -29,12 +29,9 @@ SOFTWARE.
 
 ## Fonts
 
-Instrument Serif, Inter, Noto Serif SC and JetBrains Mono are distributed under
-the SIL Open Font License,
-Version 1.1. The webfont files are self-hosted so the site can keep its current
-Content Security Policy and avoid third-party font requests. Noto Serif SC is
-split by Unicode range into `static/fonts/noto-serif-sc/`, so a page downloads
-only the slices that contain its characters.
+Instrument Serif, Inter and JetBrains Mono are distributed under the SIL Open
+Font License, Version 1.1. The webfont files are self-hosted so the site can keep
+its current Content Security Policy and avoid third-party font requests.
 
 ## LobeHub Icons
 

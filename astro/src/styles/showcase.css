@@ -385,42 +385,23 @@
 }
 
 /* ---------------------------------------------------------------- gallery page */
-.showcase-gallery-sub {
-	margin-left: 20px;
-	font: 600 clamp(20px, 2vw, 28px) / 1.3 var(--serif);
-	color: var(--ink-soft);
-	vertical-align: 0.4em;
-}
-.showcase-gallery-filter {
-	margin: 48px 0 0 auto;
-	justify-self: end;
-	width: fit-content;
-}
-.showcase-gallery-filter summary {
-	font-size: var(--type-ui);
-}
-.showcase-gallery-filter ul {
-	left: auto;
-	right: -12px;
-}
 .showcase-wall {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 20px;
+	gap: 16px;
 	align-items: start;
-	margin-top: 24px;
 }
 .showcase-wall__column {
 	display: grid;
-	gap: 20px;
+	gap: 16px;
 }
 .showcase-tile {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	border-radius: 2px;
-	background: var(--ink);
-	color: var(--ink);
+	border-radius: 12px;
+	background: var(--paper-muted);
+	color: #fff;
 	text-decoration: none;
 }
 .showcase-tile[hidden] {
@@ -431,7 +412,7 @@
 	width: 100%;
 	height: auto;
 }
-/* The title appears on a paper strip only on hover or focus. */
+/* The title and length show only on hover or focus, over a soft shade. */
 .showcase-tile__label {
 	position: absolute;
 	left: 0;
@@ -441,8 +422,9 @@
 	justify-content: space-between;
 	align-items: baseline;
 	gap: 12px;
-	padding: 14px 16px;
-	background: var(--paper);
+	padding: 32px 16px 12px;
+	background: linear-gradient(transparent, rgb(0 0 0 / 0.6));
+	font-size: 15px;
 	opacity: 0;
 	transform: translateY(8px);
 	transition:
@@ -454,12 +436,12 @@
 	opacity: 1;
 	transform: none;
 }
-.showcase-tile__title {
-	font: 600 16px/1.4 var(--serif);
+.showcase-tile__time {
+	opacity: 0.8;
+	font-variant-numeric: tabular-nums;
 }
 @media (hover: none) {
 	.showcase-tile__label {
-		position: static;
 		opacity: 1;
 		transform: none;
 	}
@@ -479,10 +461,5 @@
 	}
 	.showcase-tile {
 		order: var(--order);
-	}
-	.showcase-gallery-sub {
-		display: block;
-		margin: 12px 0 0;
-		vertical-align: 0;
 	}
 }

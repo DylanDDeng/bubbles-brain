@@ -6,7 +6,6 @@ import {
 	seriesLessons,
 	TUTORIAL_SERIES,
 } from '../../lib/directories';
-import '../../styles/directories.css';
 
 const data = await loadDirectoryData();
 const series = TUTORIAL_SERIES.map((meta) => ({
@@ -23,53 +22,35 @@ const total = series.reduce((sum, item) => sum + item.lessons.length, 0);
 >
 	<div class="rr-page">
 		<header class="rr-head">
-			<div class="rr-head__text">
-				<nav class="rr-crumbs" aria-label="位置"><a href="/">首页</a> / 教程</nav>
-				<h1 class="rr-title">教程</h1>
-				<p class="rr-lede">从一个好问题开始，到让 Agent 替你把项目做出来。四个系列，按顺序读最省力。</p>
-				<span class="meta-line">{total} 篇 · {series.length} 个系列</span>
-			</div>
-			<img
-				class="rr-cat dir-head-cat"
-				src="/images/cat-pose-4.jpg"
-				alt="趴着的猫馆长"
-				width="1100"
-				height="765"
-			/>
+			<h1 class="rr-title">教程</h1>
+			<p class="rr-lede">{series.length} 个系列，{total} 篇。零基础的话，从新手村第一课开始。</p>
 		</header>
 
 		{
-			series.map((item, seriesIndex) => (
-				<section
-					class="rr-split dir-series"
-					id={item.id}
-					aria-labelledby={`series-${item.id}`}
-				>
-					<div class="rr-split__label">
-						<span class:list={['rr-count', { 'rr-kicker': seriesIndex === 0 }]}>
-							{item.level} · {item.lessons.length} {item.id === 'newbie-tutorials' ? '课' : '篇'}
-						</span>
-						<h2 id={`series-${item.id}`}>{item.title}</h2>
-						<p>{item.lede}</p>
+			series.map((item) => (
+				<section class="rr-block" id={item.id} aria-labelledby={`series-${item.id}`}>
+					<div class="rr-block__head">
+						<h2 class="rr-block__title" id={`series-${item.id}`}>
+							{item.title}
+							<span class="rr-count">
+								{item.level} · {item.lessons.length}{' '}
+								{item.id === 'newbie-tutorials' ? '课' : '篇'}
+							</span>
+						</h2>
+						<p class="rr-block__lede">{item.lede}</p>
 					</div>
-					<ol class="dir-lessons">
-						{item.lessons.map((lesson, index) => {
-							const mark = item.id === 'newbie-tutorials' ? newbieMark(lesson) : undefined;
-							return (
-								<li>
-									<a class="dir-lesson" href={lesson.href}>
-										{mark ? (
-											<span class:list={['dir-lesson__mark', { 'is-first': index === 0 }]}>
-												{mark}
-											</span>
-										) : (
-											<span class="dir-lesson__no">{String(index + 1).padStart(2, '0')}</span>
-										)}
-										<span class="dir-lesson__title">{lesson.title}</span>
-									</a>
-								</li>
-							);
-						})}
+					<ol class="rr-rows">
+						{item.lessons.map((lesson, index) => (
+							<li>
+								<a class="rr-lesson" href={lesson.href}>
+									<span class="rr-lesson__mark">
+										{(item.id === 'newbie-tutorials' && newbieMark(lesson)) ||
+											String(index + 1).padStart(2, '0')}
+									</span>
+									<span class="rr-lesson__title">{lesson.title}</span>
+								</a>
+							</li>
+						))}
 					</ol>
 				</section>
 			))

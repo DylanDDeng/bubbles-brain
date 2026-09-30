@@ -1,5 +1,6 @@
 /* Showcase work page: the article layout with a film on top. The way back and the reel sit
-   at the left edge; the film is 720px in the page's centre, the text a 540px column under it. */
+   at the left edge; the film is 640px in the page's centre, the text a 540px column under it,
+   and about 100px of air separates the reel from the film. */
 
 .collection-site .work-page {
 	display: grid;
@@ -20,7 +21,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 32px;
-	max-width: 240px;
+	max-width: 220px;
 	font-size: 14px;
 	line-height: 1.5;
 }
@@ -41,8 +42,6 @@
 }
 .work-reel a {
 	display: flex;
-	justify-content: space-between;
-	gap: 12px;
 	color: var(--ink-faint);
 	text-decoration: none;
 }
@@ -57,10 +56,6 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.work-reel__time {
-	flex-shrink: 0;
-	font-variant-numeric: tabular-nums;
-}
 
 /* ---------------------------------------------------------------- screen */
 .work-screen {
@@ -69,11 +64,11 @@
 	justify-content: center;
 	margin: 0;
 }
-/* Wide screens have room either side: the film steps out to 720px, still clear of the rail. */
+/* Wide screens have room either side: the film steps out 50px past the text, to 640px. */
 @media (min-width: 1280px) {
 	.work-screen {
-		width: calc(100% + 180px);
-		margin: 0 -90px;
+		width: calc(100% + 100px);
+		margin: 0 -50px;
 	}
 }
 .work-screen video {
@@ -201,9 +196,10 @@
 	text-align: right;
 }
 
-@media (min-width: 901px) and (max-width: 1199px) {
+/* Narrower screens: the film matches the text; keep a clear gap from the reel all the same. */
+@media (min-width: 901px) and (max-width: 1279px) {
 	.collection-site .work-page {
-		column-gap: 32px;
+		column-gap: 56px;
 		padding-inline: 40px;
 	}
 }

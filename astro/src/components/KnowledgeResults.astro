@@ -9,6 +9,7 @@ interface Props {
 const { items, filterable = false } = Astro.props;
 ---
 
+{/* Each result is its section, date and title; the summary still counts for the search. */}
 <ol class="rr-rows rr-rows--plain knowledge-results" data-knowledge-results>
 	{
 		items.map((item) => (
@@ -36,7 +37,6 @@ const { items, filterable = false } = Astro.props;
 						{item.title}
 						{item.external && ' ↗'}
 					</span>
-					{item.summary && <span class="knowledge-result__summary">{item.summary}</span>}
 				</a>
 			</li>
 		))

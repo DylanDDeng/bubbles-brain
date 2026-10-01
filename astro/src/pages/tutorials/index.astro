@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+	loadDirectoryData,
+	newbieMark,
+	seriesLessons,
+	TUTORIAL_SERIES,
+} from '../../lib/directories';
+
+const data = await loadDirectoryData();
+const series = TUTORIAL_SERIES.map((meta) => ({
+	...meta,
+	title: data.collection(meta.id)?.title ?? meta.id,
+	lessons: seriesLessons(data, meta.id),
+}));
+---
+
+<BaseLayout
+	title="教程 · Bubble's Brain"
+	description="从一个好问题开始，到让 Agent 替你把项目做出来。新手村、Codex、Pi Agent、WorkBuddy 四个系列。"
+>
+	<div class="rr-page">
+		<header class="rr-head">
+			<h1 class="rr-title">教程</h1>
+		</header>
+
+		{
+			series.map((item) => (
+				<section class="rr-block" id={item.id} aria-labelledby={`series-${item.id}`}>
+					<div class="rr-block__head">
+						<h2 class="rr-block__title" id={`series-${item.id}`}>
+							{item.title}
+							<span class="rr-count">{item.level}</span>
+						</h2>
+						<p class="rr-block__lede">{item.lede}</p>
+					</div>
+					<ol class="rr-rows rr-rows--plain">
+						{item.lessons.map((lesson, index) => (
+							<li>
+								<a class="rr-lesson" href={lesson.href}>
+									<span class="rr-lesson__mark">
+										{(item.id === 'newbie-tutorials' && newbieMark(lesson)) ||
+											String(index + 1).padStart(2, '0')}
+									</span>
+									<span class="rr-lesson__title">{lesson.title}</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				</section>
+			))
+		}
+	</div>
+</BaseLayout>

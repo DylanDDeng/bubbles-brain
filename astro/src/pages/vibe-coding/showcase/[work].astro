@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ShowcaseWork from '../../../components/ShowcaseWork.astro';
+import { showcaseHref, showcaseWorks, type ShowcaseWork as Work } from '../../../data/showcase';
+
+export function getStaticPaths() {
+	return showcaseWorks.map((work) => ({ params: { work: work.id }, props: { work } }));
+}
+
+const { work } = Astro.props as { work: Work };
+---
+
+<BaseLayout
+	title={`${work.title} · Vibe Coding Showcase · Bubble's Brain`}
+	description={`${work.model}：${work.note}`}
+	canonicalPath={showcaseHref(work)}
+	section="vibe-coding"
+>
+	<ShowcaseWork work={work} />
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import type { SourceMark } from '../lib/sourceVendor';
+
+interface Props {
+	mark: SourceMark;
+	/** 14 in lists, 16 on the article page. */
+	size?: number;
+}
+
+const { mark, size = 14 } = Astro.props;
+---
+
+{
+	mark.vendor ? (
+		<img
+			class="source-mark"
+			src={`/images/vendors/${mark.vendor}.svg`}
+			alt=""
+			width={size}
+			height={size}
+			loading="lazy"
+			decoding="async"
+		/>
+	) : (
+		<span class="source-mark source-mark--letter" style={`--mark-size: ${size}px`} aria-hidden="true">
+			{mark.initial}
+		</span>
+	)
+}

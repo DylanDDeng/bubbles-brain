@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/directories.css';
+
+// The hub only sends readers on: each part is its name and one line. What is inside each part
+// is shown on its own page, so there are no previews, rules or counts here.
+const parts = [
+	{ title: '术语', href: '/vibe-coding/terms/', lede: '图解和小实验，把概念一块一块拆开。' },
+	{ title: 'Skills', href: '/vibe-coding/skills/', lede: '装上就能用的 Agent 技能包。' },
+	{ title: 'Design', href: '/vibe-coding/design/', lede: '知名品牌的 DESIGN.md，拿来教 AI 审美。' },
+	{ title: 'Claude Opus 5.5 Video Showcase', href: '/vibe-coding/showcase/', lede: '大家用 Claude Opus 5.5 写代码做出来的视频。' },
+];
+---
+
+<BaseLayout
+	title="Vibe Coding · Bubble's Brain"
+	description="术语图解、好用的 Skills、品牌设计语言，和别人用 AI 做出的作品。"
+>
+	<div class="rr-page rr-page--narrow">
+		<header class="rr-head">
+			<h1 class="rr-title" lang="en">Vibe Coding</h1>
+		</header>
+
+		<nav class="vibe-entries" aria-label="Vibe Coding 的四个部分">
+			{
+				parts.map((part) => (
+					<a class="vibe-entry" href={part.href}>
+						<span class="vibe-entry__title">{part.title}</span>
+						<span class="vibe-entry__lede">{part.lede}</span>
+					</a>
+				))
+			}
+		</nav>
+	</div>
+</BaseLayout>

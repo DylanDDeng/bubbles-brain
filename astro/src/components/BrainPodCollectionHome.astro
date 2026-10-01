@@ -10,6 +10,7 @@ import BrainPodCollectionList from './BrainPodCollectionList.astro';
 import BrainPodCollectionParentLink from './BrainPodCollectionParentLink.astro';
 import BenchmarkDirectory from './BenchmarkDirectory.astro';
 import BrainPodTermsDirectory from './BrainPodTermsDirectory.astro';
+import ShowcaseTheater from './ShowcaseTheater.astro';
 import '../styles/brainpodCollection.css';
 
 const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: 'zh-CN' }));
@@ -97,37 +98,50 @@ const library = buildBrainPodLibrary(await buildKnowledgeSearchIndex({ locale: '
 					))
 			}
 			{
-				library.collections.map((collection) => (
-					<section
-						id={'bc-' + collection.id}
-						class="bc-track-panel"
-						data-room-panel={collection.id}
-						aria-labelledby={'bc-title-' + collection.id}
-					>
-						<div class="bc-cover-art">
-							<CollectionCover
-								section={collection.id === 'vibe-coding-terms' ? 'vibe-coding' : collection.id}
-							/>
-						</div>
-						<div class="bc-panel-content">
-							{collection.id === 'vibe-coding-terms' ? (
-								<BrainPodTermsDirectory />
-							) : collection.id === 'benchmarks' ? (
-								<BenchmarkDirectory locale="zh-CN" embedded />
-							) : (
-								<>
-									<BrainPodCollectionParentLink collection={collection.id} />
-									<header class="bc-panel-heading">
-										<h2 id={'bc-title-' + collection.id} tabindex="-1">
-											{collection.title}
-										</h2>
-									</header>
-									<BrainPodCollectionList collection={collection} />
-								</>
-							)}
-						</div>
-					</section>
-				))
+				library.collections.map((collection) =>
+					collection.id === 'vibe-coding-showcase' ? (
+						<section
+							id={'bc-' + collection.id}
+							class="bc-track-panel showcase-panel"
+							data-room-panel={collection.id}
+							aria-labelledby={'bc-title-' + collection.id}
+						>
+							<ShowcaseTheater context="room">
+								<BrainPodCollectionParentLink slot="back" collection={collection.id} />
+							</ShowcaseTheater>
+						</section>
+					) : (
+						<section
+							id={'bc-' + collection.id}
+							class="bc-track-panel"
+							data-room-panel={collection.id}
+							aria-labelledby={'bc-title-' + collection.id}
+						>
+							<div class="bc-cover-art">
+								<CollectionCover
+									section={collection.id === 'vibe-coding-terms' ? 'vibe-coding' : collection.id}
+								/>
+							</div>
+							<div class="bc-panel-content">
+								{collection.id === 'vibe-coding-terms' ? (
+									<BrainPodTermsDirectory />
+								) : collection.id === 'benchmarks' ? (
+									<BenchmarkDirectory locale="zh-CN" embedded />
+								) : (
+									<>
+										<BrainPodCollectionParentLink collection={collection.id} />
+										<header class="bc-panel-heading">
+											<h2 id={'bc-title-' + collection.id} tabindex="-1">
+												{collection.title}
+											</h2>
+										</header>
+										<BrainPodCollectionList collection={collection} />
+									</>
+								)}
+							</div>
+						</section>
+					),
+				)
 			}
 		</div>
 	</section>

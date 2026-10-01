@@ -1,18 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BrainPodHome from '../components/BrainPodHome.astro';
-import BrainPodCollectionHome from '../components/BrainPodCollectionHome.astro';
-import '../styles/brainpodPortal.css';
-import '../styles/brainpodDevice.css';
+import HomeAsk from '../components/HomeAsk.astro';
 ---
 
 <BaseLayout
 	title="Bubble's Brain · 个人 AI 知识库"
-	description="把好奇心装进口袋。通过 iPod 浏览教程、一手资料与实践笔记。"
+	description="一个人的 AI 知识库：教程、精读、术语和实测，全部亲手整理。"
 	alternateHref="/en/"
-	immersive
+	home
 >
-	<BrainPodHome composition="device" collectionWorld
-		><BrainPodCollectionHome slot="world" /></BrainPodHome
-	>
+	<HomeAsk />
 </BaseLayout>

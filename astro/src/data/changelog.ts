@@ -17,6 +17,21 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-09-29',
+		tag: 'Vibe Coding',
+		type: 'feature',
+		title: '新增 Showcase：收集别人用 AI 做出的酷炫作品',
+		summary:
+			'Vibe Coding 下新开 Showcase 子栏目，按作品类型分类展示，首个分类是 Code to Video。首件作品是 Claude Opus 5.5 复刻自己的发布视频。',
+		links: [
+			{ label: '浏览 Showcase', href: '/vibe-coding/showcase/' },
+			{
+				label: '观看 Claude Opus 5.5 发布视频',
+				href: '/vibe-coding/showcase/claude-opus-5.5-intro/',
+			},
+		],
+	},
+	{
 		date: '2026-09-28',
 		tag: '精选阅读',
 		type: 'content',
@@ -97,7 +112,7 @@ export const changelog: ChangelogItem[] = [
 				label: '阅读 WorkBuddy 飞书实战',
 				href: '/workbuddy-tutorials/workbuddy-feishu-workflow-guide/',
 			},
-			{ label: '浏览教程目录', href: '/#bc-tutorials' },
+			{ label: '浏览教程目录', href: '/tutorials/' },
 		],
 	},
 	{
@@ -114,7 +129,7 @@ export const changelog: ChangelogItem[] = [
 		],
 		links: [
 			{ label: '了解 Date Picker', href: '/vibe-coding/terms/date-picker/' },
-			{ label: '浏览 Benchmarks', href: '/#bc-benchmarks' },
+			{ label: '浏览 Benchmarks', href: '/benchmarks/' },
 		],
 	},
 	{
@@ -131,7 +146,7 @@ export const changelog: ChangelogItem[] = [
 			'界面图鉴新增 Divider，解释分割线如何组织内容层次，以及不同形式的使用场景',
 		],
 		links: [
-			{ label: '探索 Benchmarks', href: '/#bc-benchmarks' },
+			{ label: '探索 Benchmarks', href: '/benchmarks/' },
 			{ label: '了解 Divider', href: '/vibe-coding/terms/divider/' },
 		],
 	},
@@ -242,7 +257,7 @@ export const changelog: ChangelogItem[] = [
 		links: [
 			{
 				label: '前往「新手村」体验',
-				href: '/#bc-newbie-tutorials',
+				href: '/tutorials/#newbie-tutorials',
 			},
 		],
 	},
@@ -287,8 +302,8 @@ export const changelog: ChangelogItem[] = [
 			'提供一键复制的 Prompt 指令，帮助 AI 编码工具输出顶级工程代码',
 		],
 		links: [
-			{ label: '浏览 Design 专区', href: '/#bc-vibe-coding-design' },
-			{ label: '探索 Skills 技能库', href: '/#bc-vibe-coding-skills' },
+			{ label: '浏览 Design 专区', href: '/vibe-coding/design/' },
+			{ label: '探索 Skills 技能库', href: '/vibe-coding/skills/' },
 		],
 	},
 	{

@@ -82,6 +82,8 @@ const setupConceptFlowLabs = () => {
           !isFinished && stepIndex === index ? "true" : "false",
         );
         items[stepIndex]?.setAttribute("data-state", state);
+        // The step on show, even after the last one marks every step complete.
+        items[stepIndex]?.toggleAttribute("data-current", stepIndex === index);
         if (statuses[stepIndex]) {
           statuses[stepIndex].textContent =
             state === "active"

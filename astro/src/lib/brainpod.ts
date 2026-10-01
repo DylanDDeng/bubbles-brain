@@ -81,6 +81,12 @@ const collections = [
 		href: '/vibe-coding/design/',
 	},
 	{
+		id: 'vibe-coding-showcase',
+		title: 'Vibe Coding Showcase',
+		description: '别人用 AI 做出的酷炫作品：用代码生成的视频、网页与更多。',
+		href: '/vibe-coding/showcase/',
+	},
+	{
 		id: 'benchmarks',
 		title: 'Benchmarks',
 		description: '先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。',

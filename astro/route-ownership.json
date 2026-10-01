@@ -12,6 +12,7 @@
 		"/changelog/**",
 		"/benchmarks/**",
 		"/en/benchmarks/**",
+		"/tutorials/**",
 		"/codex-tutorials/**",
 		"/deepseek-harness-tutorials/**",
 		"/pi-agent-tutorials/**",
@@ -72,12 +73,7 @@
 		"/newbie-tutorials/",
 		"/codex-tutorials/",
 		"/pi-agent-tutorials/",
-		"/workbuddy-tutorials/",
-		"/highlights/",
-		"/vibe-coding/terms/",
-		"/vibe-coding/skills/",
-		"/vibe-coding/design/",
-		"/benchmarks/"
+		"/workbuddy-tutorials/"
 	],
 	"removed_directory_patterns": [
 		"^/highlights/\\d{4}/$"

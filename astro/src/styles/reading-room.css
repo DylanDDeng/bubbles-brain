@@ -1,0 +1,598 @@
+/* Pieces shared by the section pages (教程, 精选阅读, Vibe Coding, Benchmarks …).
+   A centred head — title, one line, a search box, text filters — then one narrow column. */
+
+.rr-page {
+	width: min(720px, calc(100% - 40px));
+	margin-inline: auto;
+}
+.rr-page--wide {
+	width: min(960px, calc(100% - 40px));
+}
+.rr-page--gallery {
+	width: min(1040px, calc(100% - 40px));
+}
+
+/* ------------------------------------------------------------------ head */
+.rr-head {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	padding: 88px 0 56px;
+	text-align: center;
+}
+.rr-crumbs {
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+.rr-crumbs a {
+	color: inherit;
+	text-decoration: none;
+}
+.rr-crumbs a:hover {
+	color: var(--ink);
+}
+.rr-title {
+	margin: 0;
+	font-size: 40px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+/* Tightening suits Latin letters; Chinese characters crowd, so only English titles get it. */
+.rr-title:lang(en) {
+	letter-spacing: -0.02em;
+}
+.rr-lede {
+	margin: 0;
+	max-width: 36em;
+	font-size: 17px;
+	line-height: 1.7;
+	color: var(--ink-soft);
+}
+
+/* The in-page search: the same rounded box as the home page, a size smaller. */
+.rr-search {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: min(480px, 100%);
+	height: 46px;
+	box-sizing: border-box;
+	margin-top: 18px;
+	padding: 0 20px;
+	border-radius: 999px;
+	box-shadow: var(--lift);
+	color: var(--ink-faint);
+	font-size: 15px;
+	text-align: left;
+	transition: box-shadow 0.15s ease;
+}
+.rr-search:focus-within {
+	box-shadow:
+		0 0 0 1.5px var(--ink),
+		0 6px 24px rgb(0 0 0 / 0.06);
+}
+.rr-search input {
+	flex-grow: 1;
+	min-width: 0;
+	border: 0;
+	background: none;
+	font: inherit;
+	color: var(--ink);
+	outline: none;
+}
+.rr-search input::placeholder {
+	color: var(--ink-faint);
+}
+
+/* Filters are plain words; the chosen one turns black and bold. */
+.rr-filters {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 4px 22px;
+	margin-top: 6px;
+	font-size: 15px;
+}
+.rr-filters :is(a, button) {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	min-height: 40px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ink-soft);
+	font: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+.rr-filters :is(a, button):hover {
+	color: var(--ink);
+}
+.rr-filters :is([aria-pressed='true'], [aria-current]) {
+	color: var(--ink);
+	font-weight: 600;
+}
+.rr-filters .rr-count {
+	font-weight: 400;
+}
+
+.rr-count {
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--ink-faint);
+}
+
+/* ---------------------------------------------------------------- groups */
+/* A group under a small grey label (a month, a benchmark family). */
+.rr-group {
+	margin-top: 48px;
+}
+.rr-group:first-of-type {
+	margin-top: 0;
+}
+.rr-group[hidden],
+.rr-group li[hidden] {
+	display: none;
+}
+.rr-group__label {
+	margin: 0 0 4px;
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--ink-faint);
+}
+
+/* A titled block (a tutorial series, a term category). */
+.rr-block {
+	display: grid;
+	gap: 18px;
+	margin-top: 72px;
+	scroll-margin-top: 24px;
+}
+.rr-block:first-of-type {
+	margin-top: 0;
+}
+.rr-block[hidden],
+.rr-block li[hidden] {
+	display: none;
+}
+.rr-block__head {
+	display: grid;
+	gap: 6px;
+}
+.rr-block__title {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+.rr-block__title a {
+	color: inherit;
+	text-decoration: none;
+}
+.rr-block__title a:hover {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.rr-block__title .rr-count {
+	margin-left: 6px;
+	font-size: 15px;
+}
+.rr-block__lede {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.7;
+	color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------------ rows */
+.rr-rows {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.rr-rows > li:not(:last-child) {
+	box-shadow: inset 0 -1px 0 var(--rule);
+}
+.rr-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	column-gap: 32px;
+	row-gap: 4px;
+	padding: 18px 0;
+	color: var(--ink);
+	text-decoration: none;
+}
+.rr-row__title {
+	font-size: 17px;
+	line-height: 1.6;
+}
+.rr-row:hover .rr-row__title {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.rr-row__side {
+	font-size: 13px;
+	line-height: 1.95;
+	color: var(--ink-faint);
+	text-align: right;
+	white-space: nowrap;
+}
+.rr-row__deck {
+	font-size: 15px;
+	line-height: 1.7;
+	color: var(--ink-soft);
+}
+.rr-row__source {
+	max-width: 180px;
+	font-size: 13px;
+	line-height: 1.7;
+	color: var(--ink-faint);
+	text-align: right;
+}
+
+/* Numbered lessons: a grey mark or number, then the title. */
+.rr-lesson {
+	display: grid;
+	grid-template-columns: 48px minmax(0, 1fr);
+	padding: 14px 0;
+	font-size: 17px;
+	line-height: 1.6;
+	color: var(--ink);
+	text-decoration: none;
+}
+.rr-lesson__mark {
+	color: var(--ink-faint);
+	font-variant-numeric: tabular-nums;
+}
+.rr-lesson:hover .rr-lesson__title {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+
+/* A grid of names, each with an English name or a short line in grey. */
+.rr-names {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.rr-names--three {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.rr-name {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 2px 6px;
+	font-size: 17px;
+	line-height: 1.5;
+	color: var(--ink);
+	text-decoration: none;
+}
+.rr-name:hover .rr-name__main {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.rr-name__sub {
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+.rr-name--block {
+	display: grid;
+	gap: 2px;
+}
+
+/* Thumbnails with a caption line under them. */
+.rr-thumbs {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 40px 28px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.rr-thumb {
+	display: grid;
+	gap: 12px;
+	color: var(--ink);
+	text-decoration: none;
+}
+.rr-thumb img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	border-radius: 12px;
+	background: var(--paper-muted);
+}
+.rr-thumb__caption {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	font-size: 15px;
+}
+.rr-thumb:hover .rr-thumb__title {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+
+/* --------------------------------------------------------------- endings */
+.rr-more {
+	display: flex;
+	justify-content: center;
+	margin-top: 40px;
+	font-size: 15px;
+	color: var(--ink-soft);
+	text-decoration: none;
+}
+.rr-more:hover {
+	color: var(--ink);
+}
+.rr-empty {
+	margin: 48px 0 0;
+	text-align: center;
+	color: var(--ink-soft);
+}
+.rr-empty[hidden] {
+	display: none;
+}
+
+/* The cat sits at the end of a long list. */
+.rr-end {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	margin: 72px 0 0;
+}
+.rr-end img,
+.rr-cat {
+	display: block;
+	width: 150px;
+	height: auto;
+	/* The drawings carry a faint paper texture; lift it to pure white so no box shows. */
+	filter: brightness(1.03) contrast(1.08);
+	mix-blend-mode: multiply;
+}
+.rr-end figcaption {
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+
+@media (max-width: 800px) {
+	.rr-head {
+		padding: 48px 0 40px;
+	}
+	.rr-title {
+		font-size: 32px;
+	}
+	.rr-lede {
+		font-size: 16px;
+	}
+	.rr-names {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.rr-thumbs {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 28px 16px;
+	}
+	.rr-block {
+		margin-top: 56px;
+	}
+}
+@media (max-width: 520px) {
+	.rr-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.rr-row__side,
+	.rr-row__source {
+		text-align: left;
+	}
+	.rr-names--three {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.rr-thumbs {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* The browser's own clear button, in grey instead of its default blue. */
+:is(.rr-search, .home-search) input::-webkit-search-cancel-button {
+	filter: grayscale(1);
+	cursor: pointer;
+}
+
+/* Detail pages: the way back is a small grey breadcrumb, not an arrow button. */
+.collection-site :is(.collection-back, .concept-detail-back) {
+	display: inline-flex;
+	align-items: center;
+	gap: 0;
+	min-height: 32px;
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ink-faint);
+	font: 400 13px/1.6 var(--sans);
+	letter-spacing: 0;
+	text-decoration: none;
+	text-transform: none;
+}
+.collection-site :is(.collection-back, .concept-detail-back):hover {
+	color: var(--ink);
+}
+.collection-site :is(.collection-back, .concept-detail-back) > i {
+	display: none;
+}
+
+/* Small labels across the older templates read as quiet grey text, not uppercase code. */
+.collection-site
+	:is(
+		.showcase-label,
+		.showcase-count,
+		.showcase-reel-meta,
+		.showcase-prompt-tag,
+		.concept-section-index,
+		.design-kicker,
+		.design-section-index,
+		.article-facts dt,
+		.eval-counter,
+		.command-search-header p,
+		.command-search-footer,
+		.command-search-result-index,
+		.command-search-result-section,
+		.command-search-result-date
+	) {
+	font-family: var(--sans);
+	font-size: 13px;
+	font-weight: 400;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+/* Short one-line lists (tutorial lessons) need no dividers: spacing alone groups them. */
+.rr-rows--plain {
+	margin-top: -6px;
+}
+.rr-rows--plain > li:not(:last-child) {
+	box-shadow: none;
+}
+.rr-rows--plain .rr-lesson {
+	padding: 10px 0;
+}
+
+/* ------------------------------------------------ lists without dividers */
+/* Lists that read as a book list: no lines, only space between entries. */
+.rr-page--narrow {
+	width: min(540px, calc(100% - 40px));
+}
+.rr-group + .rr-group {
+	margin-top: 64px;
+}
+.rr-group__label + .rr-stack {
+	margin-top: 20px;
+}
+.rr-stack {
+	display: grid;
+	gap: var(--stack-gap, 24px);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.rr-stack > li[hidden] {
+	display: none;
+}
+.rr-entry {
+	display: grid;
+	gap: 6px;
+	color: var(--ink);
+	text-decoration: none;
+}
+.rr-entry__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 4px 10px;
+}
+.rr-entry__title {
+	font-size: 17px;
+	line-height: 1.6;
+}
+.rr-entry__title--strong {
+	font-weight: 600;
+	line-height: 1.5;
+}
+.rr-entry:hover .rr-entry__title {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.rr-entry__source {
+	font-size: 13px;
+	color: var(--ink-faint);
+}
+.rr-entry__deck {
+	font-size: 15px;
+	line-height: 1.7;
+	color: var(--ink-soft);
+}
+.rr-entry__meta {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--ink-faint);
+}
+
+/* A company's logo beside a source, in black; a lettered circle when there is none. */
+.source-mark {
+	display: block;
+	flex-shrink: 0;
+}
+.source-mark--letter {
+	display: grid;
+	place-items: center;
+	width: var(--mark-size, 14px);
+	height: var(--mark-size, 14px);
+	border-radius: 50%;
+	background: var(--rule);
+	color: var(--ink-soft);
+	font-size: calc(var(--mark-size, 14px) * 0.64);
+	font-weight: 600;
+	line-height: 1;
+}
+
+/* Tabs between sibling pages of one section (Benchmarks: 评测 / 实测案例). */
+.rr-tabs {
+	display: flex;
+	justify-content: center;
+	gap: 32px;
+	margin-top: 20px;
+	font-size: 17px;
+}
+.rr-tabs a {
+	padding-bottom: 8px;
+	color: var(--ink-soft);
+	text-decoration: none;
+}
+.rr-tabs a:hover {
+	color: var(--ink);
+}
+.rr-tabs a[aria-current] {
+	color: var(--ink);
+	font-weight: 600;
+	box-shadow: inset 0 -2px 0 var(--ink);
+}
+
+/* "More": a round button with a down arrow, no words. */
+.rr-more-icon {
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	margin: 56px auto 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: var(--paper);
+	box-shadow: 0 0 0 1px var(--rule-strong);
+	color: var(--ink);
+	cursor: pointer;
+}
+.rr-more-icon:hover {
+	box-shadow: 0 0 0 1px #cfcfcf;
+}
+.rr-more-icon[hidden] {
+	display: none;
+}

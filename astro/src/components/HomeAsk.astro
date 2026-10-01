@@ -1,0 +1,52 @@
+---
+import { homeQuestions } from '../data/homeQuestions';
+import { siteSections } from '../lib/siteSections';
+import '../styles/home.css';
+
+const sections = siteSections('zh-CN');
+// Every question is rendered as a link so each one is crawlable and checked by verify-site.
+// Without JavaScript the first three show; the script picks a different three and types
+// another question into the box on every visit.
+const shown = 3;
+---
+
+<div class="home home--ask">
+	<h1 class="home-title">Bubble's Brain</h1>
+	<form class="home-search" action="/search/" method="get" role="search" data-home-ask>
+		<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+		<label class="sr-only" for="home-query">搜索知识库</label>
+		<span class="home-search__field">
+			<input
+				id="home-query"
+				name="q"
+				type="search"
+				autocomplete="off"
+				placeholder="想弄懂什么？比如：上下文窗口"
+			/>
+			<span class="home-ask" aria-hidden="true" hidden>
+				<span class="home-ask__text" data-home-ask-text></span><span class="home-ask__caret"
+				></span>
+			</span>
+		</span>
+	</form>
+	<p class="home-try">
+		<span class="home-try__label">试试</span>
+		<span class="home-try__list">
+			{
+				homeQuestions.map((question, index) => (
+					<a href={question.href} hidden={index >= shown} data-home-ask-item>
+						{question.ask}
+					</a>
+				))
+			}
+		</span>
+	</p>
+	<nav class="home-sections" aria-label="栏目">
+		{sections.map((section) => <a href={section.href}>{section.label}</a>)}
+	</nav>
+</div>
+
+<script>
+	import '../scripts/homeRedirects';
+	import '../scripts/homeAsk';
+</script>

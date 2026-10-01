@@ -1,12 +1,13 @@
 ---
 import '../styles/migration.css';
 import '../styles/ricoui-theme.css';
+import '../styles/reading-room.css';
 import '../styles/collection-pages.css';
 import { ClientRouter } from 'astro:transitions';
 import SiteActions from '../components/SiteActions.astro';
 import FooterLinks from '../components/FooterLinks.astro';
 import CommandSearch from '../components/CommandSearch.astro';
-import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import { activeSiteSection, siteSections } from '../lib/siteSections';
 
 interface Props {
 	title: string;
@@ -17,6 +18,8 @@ interface Props {
 	noindex?: boolean;
 	section?: string;
 	immersive?: boolean;
+	/** The home page keeps only the quiet links in its header and has no footer. */
+	home?: boolean;
 }
 
 const {
@@ -27,6 +30,7 @@ const {
 	canonicalPath = Astro.url.pathname,
 	noindex = false,
 	immersive = false,
+	home = false,
 } = Astro.props;
 
 const isEnglish = lang === 'en';
@@ -34,6 +38,10 @@ const homeHref = isEnglish ? '/en/' : '/';
 const languageHref = alternateHref ?? (isEnglish ? '/' : '/en/');
 const canonicalUrl = new URL(canonicalPath, Astro.site);
 const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
+const sections = siteSections(lang);
+const currentSection = activeSiteSection(Astro.url.pathname, lang);
+// The search page has its own search box; a second one in the header would only repeat it.
+const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 ---
 
 <!doctype html>
@@ -76,19 +84,68 @@ const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 		<a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳到正文'}</a>
 		<div class:list={['site-frame', { 'site-frame--immersive': immersive }]}>
 			{
-				!immersive && (
+				!immersive && home && (
+					<header class="site-header site-header--home">
+						<SiteActions locale={lang} languageHref={languageHref} home />
+					</header>
+				)
+			}
+			{
+				!immersive && !home && (
 					<header class="site-header">
 						<a
 							class="site-home"
 							href={homeHref}
 							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
-							<>
-								<img class="site-avatar" src={CAT_CURATOR_AVATAR} alt="" width="36" height="36" />
-								<span>Bubble’s Brain</span>
-							</>
+							<img class="site-avatar" src="/images/cat-curator.jpg" alt="" width="28" height="28" />
+							<span>Bubble's Brain</span>
 						</a>
-						<SiteActions locale={lang} languageHref={languageHref} />
+						{isSearchPage ? (
+							<span aria-hidden="true" />
+						) : (
+							<a
+								class="site-search"
+								href="/search/"
+								data-command-search-trigger
+								aria-label={isEnglish ? 'Search (⌘K)' : '搜索（⌘K）'}
+							>
+								<i class="ph ph-magnifying-glass" aria-hidden="true" />
+								<span>{isEnglish ? 'Search' : '搜索'}</span>
+								<kbd>⌘K</kbd>
+							</a>
+						)}
+						<div class="site-nav">
+							<nav class="site-sections" aria-label={isEnglish ? 'Sections' : '栏目'}>
+								{sections.map((item) => (
+									<a
+										href={item.href}
+										aria-current={item.id === currentSection ? 'page' : undefined}
+									>
+										{item.label}
+									</a>
+								))}
+							</nav>
+							<SiteActions locale={lang} languageHref={languageHref} />
+							<details class="site-menu">
+								<summary aria-label={isEnglish ? 'Sections' : '打开栏目'}>
+									<i class="ph ph-list" aria-hidden="true" />
+								</summary>
+								<nav aria-label={isEnglish ? 'Sections' : '栏目'}>
+									{sections.map((item) => (
+										<a
+											href={item.href}
+											aria-current={item.id === currentSection ? 'page' : undefined}
+										>
+											{item.label}
+										</a>
+									))}
+									<a href="/changelog/">{isEnglish ? 'Updates' : '更新日志'}</a>
+									<a href={isEnglish ? '/en/about/' : '/about/'}>{isEnglish ? 'About' : '关于'}</a>
+									<a href={languageHref}>{isEnglish ? '中文' : 'English'}</a>
+								</nav>
+							</details>
+						</div>
 					</header>
 				)
 			}

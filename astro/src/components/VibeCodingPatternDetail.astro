@@ -2,10 +2,11 @@
 import type { VibeCodingConcept } from '../data/vibeCodingTerms';
 import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingPatternProfile } from '../data/vibeCodingPatternDetails';
-import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import ArticleOutline from './ArticleOutline.astro';
+import '../styles/reading-page.css';
 import '../styles/vibe-coding-term-detail.css';
-import '../styles/cat-curator.css';
 import '../styles/vibe-coding-pattern-detail.css';
+import '../styles/term-page.css';
 
 interface Props {
 	concept: VibeCodingConcept;
@@ -15,6 +16,16 @@ interface Props {
 }
 
 const { concept, profile, previousConcept, nextConcept } = Astro.props;
+// Same reading layout as the other term pages; each heading is the content itself.
+const outline = [
+	{ slug: 'pattern-anatomy-title', text: '这一块由什么组成' },
+	{ slug: 'pattern-variants-title', text: '同一个零件，几种摆法' },
+	...(profile.spot ? [{ slug: 'pattern-spot-title', text: profile.spot.title }] : []),
+	{ slug: 'pattern-usage-title', text: '什么时候该上它' },
+	...(profile.quiz ? [{ slug: 'pattern-quiz-title', text: '想一想' }] : []),
+	{ slug: 'pattern-prompts-title', text: '让 AI 改它时，这样说' },
+	{ slug: 'concept-boundary-title', text: '最容易踩的坑' },
+].map((heading) => ({ ...heading, depth: 2 }));
 const isHero = concept.id === 'hero';
 const isNavbar = concept.id === 'navbar';
 const isFooter = concept.id === 'footer';
@@ -58,53 +69,23 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 );
 ---
 
-<article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
-	<a class="concept-detail-back" href={brainPodTermReturn(concept.id)}>
-		<i class="ph ph-arrow-left" aria-hidden="true"></i>
-		返回术语
-	</a>
+<article class="reading-page term-page term-page--pattern" data-vibe-coding-term-detail={concept.id}>
+	<div class="reading-rail">
+		<a class="reading-back" href={brainPodTermReturn(concept.id)}>← 术语</a>
+		<ArticleOutline headings={outline} locale="zh-CN" />
+	</div>
 
-	<header class="concept-detail-hero">
-		<p>{concept.categoryLabel}</p>
-		<h1>
-			{concept.chineseName}
-			<span>{concept.name}</span>
-		</h1>
-		<div class="concept-detail-qa">
-			<div class="concept-qa-row concept-qa-question">
-				<span class="concept-qa-glyph" aria-hidden="true">Q</span>
-				<div class="concept-qa-body">
-					<span class="concept-qa-label">你可能会问</span>
-					<p>
-						<em>{concept.chineseName}</em>{profile.question}
-					</p>
-				</div>
-			</div>
-			<div class="concept-qa-row concept-qa-answer">
-				<span class="concept-qa-glyph concept-qa-glyph--cat" aria-hidden="true">
-					<img
-						src={CAT_CURATOR_AVATAR}
-						alt=""
-						width="44"
-						height="44"
-						loading="lazy"
-						decoding="async"
-					/>
-				</span>
-				<div class="concept-qa-body">
-					<span class="concept-qa-label">馆长说，简单来说</span>
-					<p>{concept.description}</p>
-				</div>
-			</div>
-		</div>
+	<header class="article-header">
+		<p class="reading-kicker">术语 · {concept.categoryLabel}</p>
+		<h1>{concept.chineseName}</h1>
+		<p class="term-page__name" lang="en">{concept.name}</p>
+		<p class="article-lede">{concept.description}</p>
 	</header>
 
-	<section class="concept-section" aria-labelledby="pattern-anatomy-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">01 · 拆开看看</p>
-			<h2 id="pattern-anatomy-title">这一块由什么组成</h2>
-			<p>{profile.anatomyIntro}</p>
-		</div>
+	<div class="article-main">
+	<section class="term-section" aria-labelledby="pattern-anatomy-title">
+		<h2 class="term-section__title" id="pattern-anatomy-title">这一块由什么组成</h2>
+		<p class="term-section__intro">{profile.anatomyIntro}</p>
 		<div class="pattern-anatomy">
 			{
 				isHero ? (
@@ -1343,11 +1324,8 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 		</div>
 	</section>
 
-	<section class="concept-section" aria-labelledby="pattern-variants-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">02 · 常见变体</p>
-			<h2 id="pattern-variants-title">同一个零件，几种摆法</h2>
-		</div>
+	<section class="term-section" aria-labelledby="pattern-variants-title">
+		<h2 class="term-section__title" id="pattern-variants-title">同一个零件，几种摆法</h2>
 		<div class="pattern-variants">
 			{
 				profile.variants.map((variant) => (
@@ -2359,12 +2337,9 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 
 	{
 		profile.spot ? (
-			<section class="concept-section" aria-labelledby="pattern-spot-title">
-				<div class="concept-section-heading">
-					<p class="concept-section-index">03 · 火眼金睛</p>
-					<h2 id="pattern-spot-title">{profile.spot.title}</h2>
-					<p>{profile.spot.intro}</p>
-				</div>
+			<section class="term-section" aria-labelledby="pattern-spot-title">
+				<h2 class="term-section__title" id="pattern-spot-title">{profile.spot.title}</h2>
+				<p class="term-section__intro">{profile.spot.intro}</p>
 				<div class="pattern-spot" data-pick>
 					{isHero ? (
 						<div class="pattern-spot-mock">
@@ -3804,35 +3779,25 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 		) : null
 	}
 
-	<section class="concept-section" aria-labelledby="pattern-usage-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">04 · 用与不用</p>
-			<h2 id="pattern-usage-title">什么时候该上它</h2>
-		</div>
-		<div class="pattern-usage">
-			<div class="pattern-usage-card is-fit">
-				<span><i class="ph ph-check-circle" aria-hidden="true"></i>适合</span>
-				<ul>
-					{profile.usage.fit.map((item) => <li>{item}</li>)}
-				</ul>
-			</div>
-			<div class="pattern-usage-card is-unfit">
-				<span><i class="ph ph-x-circle" aria-hidden="true"></i>先别用</span>
-				<ul>
-					{profile.usage.unfit.map((item) => <li>{item}</li>)}
-				</ul>
-			</div>
+	<section class="term-section" aria-labelledby="pattern-usage-title">
+		<h2 class="term-section__title" id="pattern-usage-title">什么时候该上它</h2>
+		<div class="term-usage">
+			<h3>适合</h3>
+			<ul>
+				{profile.usage.fit.map((item) => <li>{item}</li>)}
+			</ul>
+			<h3>先别用</h3>
+			<ul>
+				{profile.usage.unfit.map((item) => <li>{item}</li>)}
+			</ul>
 		</div>
 	</section>
 
 	{
 		profile.quiz ? (
-			<section class="concept-section" aria-labelledby="pattern-quiz-title">
-				<div class="concept-section-heading">
-					<p class="concept-section-index">05 · 想一想</p>
-					<h2 id="pattern-quiz-title">一道题，检查眼力</h2>
-					<p>{profile.quiz.question}</p>
-				</div>
+			<section class="term-section" aria-labelledby="pattern-quiz-title">
+				<h2 class="term-section__title" id="pattern-quiz-title">想一想</h2>
+				<p class="term-section__intro">{profile.quiz.question}</p>
 				<div class="pattern-quiz" data-pick>
 					{profile.quiz.options.map((option) => (
 						<input
@@ -3868,12 +3833,9 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 		) : null
 	}
 
-	<section class="concept-section" aria-labelledby="pattern-prompts-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">06 · 说给 AI 听</p>
-			<h2 id="pattern-prompts-title">让 AI 改它时，这样说</h2>
-			<p>{profile.promptTip}</p>
-		</div>
+	<section class="term-section" aria-labelledby="pattern-prompts-title">
+		<h2 class="term-section__title" id="pattern-prompts-title">让 AI 改它时，这样说</h2>
+		<p class="term-section__intro">{profile.promptTip}</p>
 		<div class="pattern-prompts">
 			{
 				profile.prompts.map((prompt) => (
@@ -3889,32 +3851,35 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 		</div>
 	</section>
 
-	<section class="concept-boundary" aria-labelledby="concept-boundary-title">
-		<span>老师提醒</span>
-		<div>
-			<h2 id="concept-boundary-title">最容易踩的坑</h2>
-			<p>{profile.warning}</p>
-		</div>
+	<section class="term-section" aria-labelledby="concept-boundary-title">
+		<h2 class="term-section__title" id="concept-boundary-title">最容易踩的坑</h2>
+		<p class="term-section__intro">{profile.warning}</p>
 	</section>
 
-	<nav class="concept-detail-pagination" aria-label="相邻术语">
-		{
-			previousConcept ? (
-				<a href={`/vibe-coding/terms/${previousConcept.id}/`} rel="prev">
-					<span>上一个</span>
-					<strong>{previousConcept.chineseName}</strong>
-				</a>
-			) : null
-		}
-		{
-			nextConcept ? (
-				<a href={`/vibe-coding/terms/${nextConcept.id}/`} rel="next">
-					<span>下一个</span>
-					<strong>{nextConcept.chineseName}</strong>
-				</a>
-			) : null
-		}
-	</nav>
+	<footer class="article-ending">
+		<nav class="article-pagination" aria-label="相邻术语">
+			{
+				previousConcept && (
+					<a href={`/vibe-coding/terms/${previousConcept.id}/`} class="article-previous" rel="prev">
+						<span>← 上一个</span>
+						<strong class="article-pagination-title">{previousConcept.chineseName}</strong>
+					</a>
+				)
+			}
+			{
+				nextConcept && (
+					<a href={`/vibe-coding/terms/${nextConcept.id}/`} class="article-next" rel="next">
+						<span>下一个 →</span>
+						<strong class="article-pagination-title">{nextConcept.chineseName}</strong>
+					</a>
+				)
+			}
+		</nav>
+	</footer>
+	</div>
 </article>
 
 <script is:inline type="module" src="/js/vibe-coding-pattern-detail.js"></script>
+<script>
+	import '../scripts/article-outline.ts';
+</script>

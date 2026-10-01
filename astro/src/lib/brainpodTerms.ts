@@ -27,7 +27,7 @@ export function brainPodTermReturn(id: string) {
 			category.id === id
 				? category.pages[0]
 				: category.pages.find((page) => page.terms.some((term) => term.id === id));
-		if (page) return `/#bc-${page.id}`;
+		if (page) return `/vibe-coding/terms/#${category.id}`;
 	}
-	return '/#bc-vibe-coding-terms';
+	return '/vibe-coding/terms/';
 }

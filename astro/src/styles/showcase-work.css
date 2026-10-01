@@ -1,0 +1,248 @@
+/* Showcase work page: the article layout with a film on top. The way back and the reel sit
+   at the left edge; the film is 640px in the page's centre, the text a 540px column under it,
+   and about 100px of air separates the reel from the film. */
+
+.collection-site .work-page {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 540px) minmax(0, 1fr);
+	grid-template-areas:
+		'rail screen .'
+		'rail text .';
+	column-gap: 40px;
+	align-items: start;
+	padding: 96px 80px 0;
+}
+
+/* ------------------------------------------------------------------ rail */
+.work-rail {
+	grid-area: rail;
+	position: sticky;
+	top: 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	max-width: 220px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+.work-back {
+	align-self: flex-start;
+	color: var(--ink-faint);
+	text-decoration: none;
+}
+.work-back:hover {
+	color: var(--ink);
+}
+.work-reel ol {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.work-reel a {
+	display: flex;
+	color: var(--ink-faint);
+	text-decoration: none;
+}
+.work-reel a:hover,
+.work-reel a[aria-current] {
+	color: var(--ink);
+}
+/* One line per work, as in the draft: a long title is cut short rather than wrapping. */
+.work-reel__title {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- screen */
+.work-screen {
+	grid-area: screen;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+}
+/* Wide screens have room either side: the film steps out 50px past the text, to 640px. */
+@media (min-width: 1280px) {
+	.work-screen {
+		width: calc(100% + 100px);
+		margin: 0 -50px;
+	}
+}
+.work-screen video {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: 12px;
+	background: #111;
+}
+/* Square and upright films would tower over the page at full width; cap them by height. */
+.work-screen--tall video {
+	width: auto;
+	max-width: 100%;
+	max-height: 72vh;
+}
+
+/* ------------------------------------------------------------------ text */
+.work-text {
+	grid-area: text;
+	min-width: 0;
+	padding-top: 40px;
+}
+.work-kicker {
+	margin: 0;
+	color: var(--ink-faint);
+	font-size: 13px;
+}
+.work-text h1 {
+	margin: 10px 0 0;
+	font-size: 30px;
+	font-weight: 600;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+}
+.work-note {
+	margin: 12px 0 0;
+	color: var(--ink-soft);
+	font-size: 16px;
+	line-height: 1.85;
+}
+.work-source {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 16px;
+	margin: 16px 0 0;
+	color: var(--ink-faint);
+	font-size: 13px;
+}
+.work-source__who {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--ink-soft);
+}
+.work-source a {
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+}
+
+/* The prompt: a quiet grey block with copy at its corner. */
+.collection-site .work-prompt {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 10px;
+	margin-top: 40px;
+	padding: 20px 24px;
+	border-radius: 12px;
+	background: var(--paper-muted);
+}
+.collection-site .work-prompt .showcase-prompt-head h2 {
+	color: var(--ink-faint);
+	font-size: 13px;
+	font-weight: 500;
+}
+.collection-site .work-prompt .showcase-prompt-text {
+	font-size: 15px;
+	line-height: 1.8;
+}
+.collection-site .work-prompt .showcase-link-button {
+	min-height: 0;
+	color: var(--ink);
+	font-size: 13px;
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+}
+.collection-site .work-prompt [data-prompt-toggle] {
+	justify-self: start;
+}
+
+/* ----------------------------------------------------------------- pager */
+.work-pager {
+	display: flex;
+	justify-content: space-between;
+	gap: 24px;
+	margin: 64px 0;
+	font-size: 14px;
+	line-height: 1.6;
+}
+.work-pager a {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	max-width: 48%;
+	color: var(--ink);
+	text-decoration: none;
+}
+.work-pager span {
+	color: var(--ink-faint);
+	font-size: 13px;
+}
+.work-pager strong {
+	font-weight: 400;
+}
+.work-pager a:hover strong {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.work-pager__next {
+	margin-left: auto;
+	text-align: right;
+}
+
+/* Narrower screens: the film matches the text; keep a clear gap from the reel all the same. */
+@media (min-width: 901px) and (max-width: 1279px) {
+	.collection-site .work-page {
+		column-gap: 56px;
+		padding-inline: 40px;
+	}
+}
+
+/* Phones: back link, film, text, then the reel at the end. */
+@media (max-width: 900px) {
+	.collection-site .work-page {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			'back'
+			'screen'
+			'text'
+			'reel';
+		max-width: 588px;
+		margin: 0 auto;
+		padding: 20px 24px 0;
+	}
+	.work-rail {
+		display: contents;
+	}
+	.work-back {
+		grid-area: back;
+		margin-bottom: 20px;
+	}
+	.work-reel {
+		grid-area: reel;
+		margin-bottom: 48px;
+	}
+	.work-screen {
+		width: 100%;
+		margin: 0;
+	}
+	.work-screen video {
+		width: 100%;
+		max-height: none;
+	}
+	.work-text {
+		padding-top: 28px;
+	}
+	.work-text h1 {
+		font-size: 26px;
+	}
+	.work-pager {
+		margin: 48px 0;
+	}
+}

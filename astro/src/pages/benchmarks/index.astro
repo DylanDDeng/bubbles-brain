@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BenchmarksHead from '../../components/BenchmarksHead.astro';
+import { benchmarkLedger, benchmarkRoute, groupedBenchmarks, pick } from '../../lib/benchmarks';
+import '../../styles/directories.css';
+
+const groups = groupedBenchmarks();
+const checked = benchmarkLedger.checked_at.replaceAll('-', '.');
+---
+
+<BaseLayout
+	title="Benchmarks · Bubble's Brain"
+	description="先弄清每个 benchmark 到底在测模型的什么能力，再去看那些分数。"
+	alternateHref="/en/benchmarks/"
+>
+	<div class="rr-page rr-page--narrow">
+		<BenchmarksHead current="benchmarks" />
+
+		{
+			groups.map((group) => (
+				<section class="rr-group" id={group.id} aria-labelledby={`bench-${group.id}`}>
+					<h2 class="rr-group__label" id={`bench-${group.id}`}>
+						{group.name.zh}
+					</h2>
+					<ul class="rr-stack bench-stack">
+						{group.benchmarks.map((benchmark) => (
+							<li>
+								<a class="rr-entry" href={benchmarkRoute(benchmark.id, 'zh-CN')}>
+									<span class="rr-entry__head">
+										<span class="rr-entry__title rr-entry__title--strong">
+											{pick(benchmark.name, 'zh-CN')}
+										</span>
+										{benchmark.source && (
+											<span class="rr-entry__source">{benchmark.source}</span>
+										)}
+									</span>
+									<span class="rr-entry__deck">{pick(benchmark.measures, 'zh-CN')}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			))
+		}
+
+		<p class="bench-checked">数据核对于 {checked}</p>
+	</div>
+</BaseLayout>

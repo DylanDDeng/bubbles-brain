@@ -252,6 +252,7 @@ for (const section of [
   "vibe-coding-terms",
   "vibe-coding-skills",
   "vibe-coding-design",
+  "vibe-coding-showcase",
   "about",
   "x-trending",
 ]) {
@@ -444,15 +445,12 @@ invariant(
 );
 
 const specializedMarkers = new Map([
-  [
-    "index.html",
-    [
-      'id="bc-vibe-coding-terms"',
-      'data-collection-list="highlights"',
-      'data-collection-list="workbuddy-tutorials"',
-      "data-list-pagination",
-    ],
-  ],
+  ["index.html", ['class="home-search"', 'action="/search/"']],
+  ["tutorials/index.html", ['id="newbie-tutorials"', 'id="workbuddy-tutorials"']],
+  ["highlights/index.html", ["data-reading-directory", "data-reading-search"]],
+  ["vibe-coding/terms/index.html", ['id="ai-agent"', 'id="ui-patterns"']],
+  ["vibe-coding/showcase/index.html", ["data-showcase-gallery", "showcase-tile"]],
+  ["benchmarks/index.html", ['id="coding"', "实测案例"]],
   [
     "vibe-coding/terms/frontend/index.html",
     [

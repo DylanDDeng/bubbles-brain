@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {
+	formatShowcaseDuration,
+	showcaseByNewest,
+	showcaseCategories,
+	showcaseHref,
+} from '../../../data/showcase';
+import '../../../styles/showcase.css';
+
+const works = showcaseByNewest();
+const categories = showcaseCategories
+	.map((category) => ({
+		...category,
+		count: works.filter((work) => work.category === category.id).length,
+	}))
+	.filter((category) => category.count);
+
+// Waterfall at each video's own shape: newest first, each into the shortest column.
+const COLUMNS = 3;
+const columns = Array.from({ length: COLUMNS }, () => ({
+	height: 0,
+	works: [] as { work: (typeof works)[number]; order: number }[],
+}));
+works.forEach((work, order) => {
+	const column = columns.reduce((low, next) => (next.height < low.height ? next : low));
+	column.works.push({ work, order });
+	column.height += work.height / work.width + 0.05;
+});
+---
+
+<BaseLayout
+	title="Showcase · Vibe Coding · Bubble's Brain"
+	description="别人用 AI 做出来的作品：用代码生成的视频，以后还有网页与更多。"
+>
+	<div class="rr-page rr-page--gallery" data-showcase-gallery>
+		<header class="rr-head">
+			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Showcase</nav>
+			<h1 class="rr-title" lang="en">Showcase</h1>
+			{
+				categories.length > 1 && (
+					<nav class="rr-filters" aria-label="按分类筛选" data-gallery-filter>
+						<a href="/vibe-coding/showcase/" data-gallery-option="" aria-current="true">
+							<span>全部</span>
+						</a>
+						{categories.map((category) => (
+							<a href={`/vibe-coding/showcase/?c=${category.id}`} data-gallery-option={category.id}>
+								<span>{category.title}</span>
+							</a>
+						))}
+					</nav>
+				)
+			}
+		</header>
+
+		<section class="showcase-wall" aria-label="作品">
+			{
+				columns.map((column) => (
+					<div class="showcase-wall__column">
+						{column.works.map(({ work, order }) => (
+							<a
+								class="showcase-tile"
+								href={showcaseHref(work)}
+								style={`--order: ${order}`}
+								data-category={work.category}
+								data-astro-prefetch="false"
+							>
+								<img
+									src={work.poster}
+									alt=""
+									width={work.width}
+									height={work.height}
+									loading={order < 3 ? 'eager' : 'lazy'}
+									decoding="async"
+								/>
+								<span class="showcase-tile__label">
+									<span class="showcase-tile__title">{work.title}</span>
+									<span class="showcase-tile__time">{formatShowcaseDuration(work.duration)}</span>
+								</span>
+							</a>
+						))}
+					</div>
+				))
+			}
+		</section>
+	</div>
+</BaseLayout>
+
+<script>
+	import '../../../scripts/showcase';
+</script>

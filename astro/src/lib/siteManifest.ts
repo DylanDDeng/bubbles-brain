@@ -2,6 +2,7 @@ import { isRetiredDirectory } from './collectionRoutes';
 import { benchmarkLedger, benchmarkRoute, pick } from './benchmarks';
 import { legacyEntryIsRoutable, loadLegacyContent } from './legacyContent';
 import { designBrands } from '../data/designBrands';
+import { showcaseHref, showcaseWorks } from '../data/showcase';
 import { getVibeCodingConcepts } from '../data/vibeCodingTerms';
 
 export { renderRss } from './siteRss';
@@ -56,6 +57,46 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 			description: '搜索 Codex、Pi Agent、WorkBuddy 教程与知识文章',
 			locale: 'zh-CN',
 			section: 'knowledge',
+			lastmod: null,
+		},
+		{
+			route: '/tutorials/',
+			title: '教程',
+			description: '从一个好问题开始，到让 Agent 替你把项目做出来。新手村、Codex、Pi Agent、WorkBuddy 四个系列。',
+			locale: 'zh-CN',
+			section: 'tutorials',
+			lastmod: null,
+		},
+		{
+			route: '/highlights/',
+			title: '精选阅读',
+			description: '值得反复读的一手资料与深度文章。每篇都是精读或全译，附原文入口。',
+			locale: 'zh-CN',
+			section: 'highlights',
+			lastmod: null,
+		},
+		{
+			route: '/vibe-coding/',
+			title: 'Vibe Coding',
+			description: '术语图解、好用的 Skills、品牌设计语言，和别人用 AI 做出的作品。',
+			locale: 'zh-CN',
+			section: 'vibe-coding',
+			lastmod: null,
+		},
+		{
+			route: '/vibe-coding/skills/',
+			title: 'Vibe Coding Skills',
+			description: '浏览原始 SKILL.md、作者和来源，把好方法带进工作流。',
+			locale: 'zh-CN',
+			section: 'vibe-coding',
+			lastmod: null,
+		},
+		{
+			route: '/vibe-coding/showcase/',
+			title: 'Vibe Coding Showcase',
+			description: '别人用 AI 做出来的作品：用代码生成的视频，以后还有网页与更多。',
+			locale: 'zh-CN',
+			section: 'vibe-coding',
 			lastmod: null,
 		},
 		{
@@ -132,6 +173,17 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 			locale: 'zh-CN',
 			section: 'vibe-coding',
 			lastmod: null,
+		});
+	}
+
+	for (const work of showcaseWorks) {
+		records.push({
+			route: showcaseHref(work),
+			title: `${work.title} · Showcase`,
+			description: work.note,
+			locale: 'zh-CN',
+			section: 'vibe-coding',
+			lastmod: new Date(work.added),
 		});
 	}
 

@@ -1,57 +1,70 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { changelog } from '../../data/changelog';
+import { shortDate } from '../../lib/directories';
 import '../../styles/changelog.css';
 
 const title = "更新日志 · Bubble's Brain";
 const description = "记录 Bubble's Brain 个人 AI 知识库的最新内容收录、功能迭代与体验优化。";
+
+// Newest month first, entries in the order the ledger keeps them.
+const months = changelog.reduce<{ key: string; label: string; entries: typeof changelog }[]>(
+	(groups, entry) => {
+		const key = entry.date.slice(0, 7);
+		let group = groups.find((item) => item.key === key);
+		if (!group) {
+			group = {
+				key,
+				label: `${key.slice(0, 4)} 年 ${Number(key.slice(5, 7))} 月`,
+				entries: [],
+			};
+			groups.push(group);
+		}
+		group.entries.push(entry);
+		return groups;
+	},
+	[],
+);
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/changelog/">
-	<div class="changelog-shell">
-		<header class="changelog-header">
-			<p class="changelog-eyebrow">CHANGELOG</p>
-			<h1>更新日志</h1>
-			<p class="changelog-lede">
-				记录 Bubble's Brain 知识库的每一次内容收录、功能迭代与体验演进。保持更新，持续沉淀。
+	<div class="rr-page rr-page--narrow">
+		<header class="rr-head">
+			<h1 class="rr-title">更新日志</h1>
+			<p class="rr-lede">
+				每一次收录和改动。<a class="changelog-rss" href="/rss.xml">用 RSS 订阅</a>
 			</p>
 		</header>
 
-		<div class="changelog-timeline">
-			{
-				changelog.map((entry) => (
-					<article class="changelog-item">
-						<div class="changelog-marker" aria-hidden="true" />
-						<div class="changelog-meta">
-							<time class="changelog-date" datetime={entry.date}>
-								{entry.date}
-							</time>
-							<span class="changelog-tag" data-type={entry.type}>
-								{entry.tag}
-							</span>
-						</div>
-						<h2 class="changelog-title">{entry.title}</h2>
-						<p class="changelog-summary">{entry.summary}</p>
-						{entry.highlights && entry.highlights.length > 0 && (
-							<ul class="changelog-highlights">
-								{entry.highlights.map((item) => (
-									<li>{item}</li>
-								))}
-							</ul>
-						)}
-						{entry.links && entry.links.length > 0 && (
-							<div class="changelog-links">
-								{entry.links.map((link) => (
-									<a class="changelog-link-btn" href={link.href}>
-										<span>{link.label}</span>
-										<i class="ph ph-arrow-right" aria-hidden="true" />
-									</a>
-								))}
-							</div>
-						)}
-					</article>
-				))
-			}
-		</div>
+		{
+			months.map((month) => (
+				<section class="rr-group" aria-labelledby={`log-${month.key}`}>
+					<h2 class="rr-group__label" id={`log-${month.key}`}>
+						{month.label}
+					</h2>
+					<ol class="rr-stack changelog-stack">
+						{month.entries.map((entry) => (
+							<li>
+								<article class="changelog-entry">
+									<time datetime={entry.date}>{shortDate(entry.date)}</time>
+									<div class="changelog-entry__body">
+										<span class="changelog-entry__tag">{entry.tag}</span>
+										<h3>{entry.title}</h3>
+										<p>{entry.summary}</p>
+										{entry.links && entry.links.length > 0 && (
+											<div class="changelog-entry__links">
+												{entry.links.map((link) => (
+													<a href={link.href}>{link.label}</a>
+												))}
+											</div>
+										)}
+									</div>
+								</article>
+							</li>
+						))}
+					</ol>
+				</section>
+			))
+		}
 	</div>
 </BaseLayout>

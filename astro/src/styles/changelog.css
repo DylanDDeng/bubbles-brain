@@ -1,229 +1,66 @@
-.changelog-shell {
-	width: min(840px, calc(100% - 48px));
-	margin: clamp(40px, 6vw, 72px) auto clamp(80px, 10vw, 120px);
-}
+/* 更新日志: one row per entry, the date on the left. */
 
-.changelog-header {
-	padding-bottom: clamp(32px, 5vw, 48px);
-	border-bottom: 1px solid var(--rule);
-}
-
-.changelog-eyebrow {
-	margin: 0 0 10px;
-	color: var(--blue-strong);
-	font-size: 0.72rem;
-	font-weight: 700;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-}
-
-.changelog-header h1 {
-	margin: 0;
-	font-family: var(--sans);
-	font-size: clamp(2.2rem, 5vw, 3.4rem);
-	font-weight: 750;
-	letter-spacing: -0.04em;
-	line-height: 1.1;
+.changelog-rss {
 	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 4px;
 }
-
-.changelog-lede {
-	max-width: 42em;
-	margin: 16px 0 0;
-	color: var(--ink-soft);
-	font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-	line-height: 1.75;
+/* No dividers: entries sit 32px apart and the date column reads as a timeline. */
+.changelog-stack {
+	--stack-gap: 32px;
 }
-
-/* 时间轴主体 */
-.changelog-timeline {
-	position: relative;
-	margin-top: clamp(36px, 5vw, 56px);
-	padding-left: 28px;
+.changelog-entry {
+	display: grid;
+	grid-template-columns: 72px minmax(0, 1fr);
+	gap: 24px;
 }
-
-.changelog-timeline::before {
-	content: '';
-	position: absolute;
-	left: 5px;
-	top: 10px;
-	bottom: 20px;
-	width: 2px;
-	background: var(--rule);
+.changelog-entry time {
+	font-size: 13px;
+	line-height: 1.9;
+	color: var(--ink-faint);
+	font-variant-numeric: tabular-nums;
 }
-
-.changelog-item {
-	position: relative;
-	padding-bottom: clamp(44px, 6vw, 64px);
+.changelog-entry__body {
+	display: grid;
+	gap: 6px;
 }
-
-.changelog-item:last-child {
-	padding-bottom: 0;
-}
-
-/* 时间轴圆点 */
-.changelog-marker {
-	position: absolute;
-	left: -28px;
-	top: 7px;
-	width: 12px;
-	height: 12px;
-	border-radius: 50%;
-	background: var(--paper);
-	border: 2.5px solid var(--blue-strong);
-	box-shadow: 0 0 0 3px var(--paper);
-}
-
-.changelog-item:first-child .changelog-marker {
-	background: var(--blue-strong);
-	box-shadow: 0 0 0 4px color-mix(in srgb, var(--blue) 25%, transparent);
-}
-
-/* 元信息条：日期 + 分类标签 */
-.changelog-meta {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-bottom: 12px;
-}
-
-.changelog-date {
-	font-family: var(--mono);
-	font-size: 0.85rem;
-	font-weight: 600;
+.changelog-entry__tag {
+	font-size: 13px;
 	color: var(--ink-faint);
 }
-
-.changelog-tag {
-	display: inline-flex;
-	align-items: center;
-	padding: 2px 10px;
-	border-radius: 9999px;
-	font-size: 0.72rem;
-	font-weight: 650;
-	letter-spacing: 0.02em;
-}
-
-.changelog-tag[data-type='feature'] {
-	background: color-mix(in srgb, var(--blue) 12%, transparent);
-	color: var(--blue-strong);
-}
-
-.changelog-tag[data-type='content'] {
-	background: color-mix(in srgb, #10b981 12%, transparent);
-	color: #059669;
-}
-
-.changelog-tag[data-type='polish'] {
-	background: var(--paper-muted);
-	color: var(--ink-soft);
-	border: 1px solid var(--rule);
-}
-
-/* 标题与内容 */
-.changelog-title {
-	margin: 0 0 12px;
-	font-size: clamp(1.2rem, 2.2vw, 1.45rem);
-	font-weight: 700;
-	line-height: 1.35;
-	color: var(--ink);
-	letter-spacing: -0.02em;
-}
-
-.changelog-summary {
-	margin: 0 0 16px;
-	color: var(--ink-soft);
-	font-size: 0.95rem;
-	line-height: 1.7;
-}
-
-/* 亮点清单 */
-.changelog-highlights {
-	margin: 0 0 20px;
-	padding-left: 0;
-	list-style: none;
-	display: grid;
-	gap: 8px;
-}
-
-.changelog-highlights li {
-	position: relative;
-	padding-left: 20px;
-	color: var(--ink-soft);
-	font-size: 0.9rem;
+.changelog-entry h3 {
+	margin: 0;
+	font-size: 17px;
+	font-weight: 600;
 	line-height: 1.6;
 }
-
-.changelog-highlights li::before {
-	content: '';
-	position: absolute;
-	left: 4px;
-	top: 9px;
-	width: 5px;
-	height: 5px;
-	border-radius: 50%;
-	background: var(--rule);
+.changelog-entry p {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.75;
+	color: var(--ink-soft);
 }
-
-.changelog-item:first-child .changelog-highlights li::before {
-	background: var(--blue);
-}
-
-/* 快捷链接卡片 */
-.changelog-links {
+.changelog-entry__links {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 10px;
-	margin-top: 14px;
+	gap: 4px 20px;
+	margin-top: 2px;
+	font-size: 15px;
 }
-
-.changelog-link-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	padding: 6px 14px;
-	border-radius: 8px;
-	border: 1px solid var(--rule);
-	background: var(--paper-raised);
+.changelog-entry__links a {
 	color: var(--ink);
-	font-size: 0.82rem;
-	font-weight: 600;
-	text-decoration: none;
-	transition: all 0.18s ease;
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 4px;
+}
+.changelog-entry__links a:hover {
+	text-decoration-color: var(--ink);
 }
 
-.changelog-link-btn:hover {
-	border-color: var(--blue-strong);
-	color: var(--blue-strong);
-	translate: 0 -1px;
-}
-
-.changelog-link-btn i {
-	font-size: 0.88rem;
-	transition: transform 0.18s ease;
-}
-
-.changelog-link-btn:hover i {
-	transform: translateX(2px);
-}
-
-@media (max-width: 640px) {
-	.changelog-timeline {
-		padding-left: 22px;
-	}
-
-	.changelog-timeline::before {
-		left: 4px;
-	}
-
-	.changelog-marker {
-		left: -22px;
-		width: 10px;
-		height: 10px;
-		top: 6px;
-	}
-
-	.changelog-meta {
-		gap: 8px;
+@media (max-width: 520px) {
+	.changelog-entry {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 4px;
 	}
 }

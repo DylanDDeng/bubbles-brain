@@ -161,7 +161,7 @@
 	border: 1px solid var(--rule);
 	border-radius: 18px;
 	background:
-		radial-gradient(circle at 14% 10%, rgb(255 92 80 / 0.08), transparent 30%),
+		radial-gradient(circle at 14% 10%, rgb(17 17 17 / 0.08), transparent 30%),
 		linear-gradient(145deg, #fff, #fafafa);
 	overflow: hidden;
 }
@@ -291,7 +291,7 @@
 	gap: 9px;
 	margin: 0;
 	padding: 8px 0;
-	border-bottom: 1px solid #f0f0ee;
+	border-bottom: 1px solid var(--rule);
 	color: var(--ink-soft);
 	font-size: 0.66rem;
 }
@@ -302,10 +302,10 @@
 
 .concept-instance-source code {
 	padding: 4px 6px;
-	border: 1px solid #e4e4e0;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #f7f7f4;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -378,7 +378,7 @@
 	justify-content: space-between;
 	gap: 10px;
 	padding: 7px 10px;
-	border: 1px dashed #dcdcd8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 8px;
 }
 
@@ -415,7 +415,7 @@
 
 .concept-props-hole {
 	padding: 3px 7px;
-	border: 1px dashed #d8d8d3;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 6px;
 	color: #a5a5a0;
 	font-size: 0.58rem;
@@ -427,7 +427,7 @@
 	justify-content: space-between;
 	gap: 10px;
 	padding: 7px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
 	background: #fff;
 	animation: concept-props-spot 6s ease-in-out infinite;
@@ -435,7 +435,7 @@
 }
 
 .concept-props-row > code {
-	color: #8b929b;
+	color: var(--ink-faint);
 	font:
 		600 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -469,14 +469,14 @@
 @keyframes concept-props-spot {
 	0%,
 	26% {
-		border-color: color-mix(in srgb, var(--blue) 55%, #ececea);
-		box-shadow: 0 4px 14px rgb(40 103 213 / 0.12);
+		border-color: color-mix(in srgb, var(--blue) 55%, var(--rule));
+		box-shadow: 0 4px 14px rgb(17 17 17 / 0.12);
 		transform: translateX(3px);
 	}
 
 	33%,
 	100% {
-		border-color: #ececea;
+		border-color: var(--rule);
 		box-shadow: none;
 		transform: none;
 	}
@@ -510,7 +510,7 @@
 	width: 5px;
 	height: 5px;
 	border-radius: 50%;
-	background: #d8d8d3;
+	background: var(--rule-strong);
 }
 
 .concept-rd-bar em {
@@ -527,7 +527,7 @@
 .concept-rd-nav {
 	height: 9px;
 	border-radius: 5px;
-	background: #ececea;
+	background: var(--rule);
 }
 
 .concept-rd-cards {
@@ -540,13 +540,13 @@
 	flex: 1 1 30%;
 	min-width: 74px;
 	height: 30px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 7px;
-	background: #f7f7f4;
+	background: #fafafa;
 }
 
 .concept-rd-cards b:first-child {
-	border-color: color-mix(in srgb, var(--blue) 30%, #ececea);
+	border-color: color-mix(in srgb, var(--blue) 30%, var(--rule));
 	background: color-mix(in srgb, var(--blue-soft) 55%, #fff);
 }
 
@@ -578,12 +578,12 @@
 	display: grid;
 	gap: 3px;
 	padding-bottom: 10px;
-	border-bottom: 1px dashed #e4e4e0;
+	border-bottom: 1px dashed var(--rule-strong);
 }
 
 .concept-dom-tree p {
 	margin: 0;
-	color: #737b85;
+	color: var(--ink-faint);
 	font:
 		600 0.62rem ui-monospace,
 		SFMono-Regular,
@@ -617,14 +617,14 @@
 	width: 100%;
 	height: 8px;
 	border-radius: 4px;
-	background: #ececea;
+	background: var(--rule);
 }
 
 .concept-dom-mini-line {
 	width: 62%;
 	height: 7px;
 	border-radius: 4px;
-	background: #f1f1ee;
+	background: #fafafa;
 }
 
 .concept-dom-mini-btn {
@@ -650,7 +650,7 @@
 	28%,
 	100% {
 		background: transparent;
-		color: #737b85;
+		color: var(--ink-faint);
 	}
 }
 
@@ -672,8 +672,8 @@
 	width: max-content;
 	padding: 6px 14px;
 	border-radius: 8px;
-	background: #e8e8e4;
-	color: #a2a29d;
+	background: var(--rule-strong);
+	color: #b5b5b5;
 	font: 650 0.62rem var(--sans);
 	animation: concept-hyd-power 6s ease-in-out infinite;
 	animation-delay: 0.35s;
@@ -693,8 +693,8 @@
 @keyframes concept-hyd-power {
 	0%,
 	45% {
-		background: #e8e8e4;
-		color: #a2a29d;
+		background: var(--rule-strong);
+		color: #b5b5b5;
 		box-shadow: none;
 	}
 
@@ -706,8 +706,8 @@
 	}
 
 	100% {
-		background: #e8e8e4;
-		color: #a2a29d;
+		background: var(--rule-strong);
+		color: #b5b5b5;
 		box-shadow: none;
 	}
 }
@@ -739,7 +739,7 @@
 	gap: 8px;
 	margin: 0;
 	padding: 7px 10px;
-	border: 1px dashed #dcdcd8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 8px;
 	color: var(--ink-soft);
 	font-size: 0.62rem;
@@ -748,10 +748,10 @@
 .concept-ev-count code,
 .concept-st-row code {
 	padding: 3px 6px;
-	border: 1px solid #e4e4e0;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #f7f7f4;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -764,7 +764,7 @@
 	align-items: center;
 	gap: 8px;
 	padding: 8px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
 	background: #fff;
 	color: var(--ink-soft);
@@ -773,13 +773,13 @@
 }
 
 .concept-bk-row > i {
-	color: #8a8a85;
+	color: var(--ink-faint);
 	font-size: 0.78rem;
 }
 
 .concept-bk-row > em {
 	margin-left: auto;
-	color: #2c8a44;
+	color: var(--ink);
 	font-size: 0.8rem;
 	opacity: 0;
 	animation: concept-bk-check 6s ease-in-out infinite;
@@ -789,10 +789,10 @@
 .concept-bk-ok {
 	width: max-content;
 	padding: 6px 11px;
-	border: 1px solid rgb(44 138 68 / 0.35);
+	border: 1px solid rgb(17 17 17 / 0.35);
 	border-radius: 999px;
-	background: rgb(44 138 68 / 0.08);
-	color: #2c8a44;
+	background: rgb(17 17 17 / 0.08);
+	color: var(--ink);
 	font:
 		700 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -895,16 +895,16 @@
 	align-items: center;
 	gap: 4px;
 	padding: 6px 9px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 999px;
-	background: #fafaf8;
+	background: #fafafa;
 }
 
 .concept-rt-addr b {
 	width: 5px;
 	height: 5px;
 	border-radius: 50%;
-	background: #d8d8d3;
+	background: var(--rule-strong);
 }
 
 .concept-rt-addr em {
@@ -937,22 +937,22 @@
 	width: 78%;
 	height: 14px;
 	border-radius: 5px;
-	background: #ececea;
+	background: var(--rule);
 }
 
 .concept-rt-line {
 	width: 56%;
 	height: 7px;
 	border-radius: 4px;
-	background: #f1f1ee;
+	background: #fafafa;
 }
 
 .concept-rt-row {
 	width: 100%;
 	height: 12px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 6px;
-	background: #f7f7f4;
+	background: #fafafa;
 }
 
 .concept-ssr-pair {
@@ -981,7 +981,7 @@
 	width: 108px;
 	min-height: 76px;
 	padding: 9px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 9px;
 	background: #fff;
 }
@@ -994,7 +994,7 @@
 .concept-ssr-spin {
 	width: 16px;
 	height: 16px;
-	border: 2px solid #ececea;
+	border: 2px solid var(--rule);
 	border-top-color: var(--blue-strong);
 	border-radius: 50%;
 	animation: concept-ssr-spin 1s linear infinite;
@@ -1022,7 +1022,7 @@
 	align-items: center;
 	gap: 8px;
 	padding: 8px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
 	background: #fff;
 	color: var(--ink-soft);
@@ -1030,7 +1030,7 @@
 }
 
 .concept-st-row > i {
-	color: #31954a;
+	color: var(--ink);
 	font-size: 0.8rem;
 }
 
@@ -1038,14 +1038,14 @@
 	display: grid;
 	gap: 3px;
 	padding: 10px 12px;
-	border: 1px dashed #e0e0db;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 9px;
-	background: #fafaf8;
+	background: #fafafa;
 }
 
 .concept-api-json p {
 	margin: 0;
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		600 0.62rem ui-monospace,
 		SFMono-Regular,
@@ -1070,7 +1070,7 @@
 	gap: 7px;
 	width: max-content;
 	padding: 7px 12px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 9px;
 	background: #fff;
 	box-shadow: 0 6px 16px rgb(0 0 0 / 0.06);
@@ -1081,7 +1081,7 @@
 }
 
 .concept-api-widget i {
-	color: #e8a13a;
+	color: var(--ink-faint);
 	font-size: 0.85rem;
 }
 
@@ -1103,7 +1103,7 @@
 }
 
 .concept-ep-flip i.is-get {
-	color: #2c8a44;
+	color: var(--ink);
 }
 
 .concept-ep-flip i.is-post {
@@ -1116,7 +1116,7 @@
 	align-items: center;
 	gap: 8px;
 	padding: 8px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
 	background: #fff;
 	font-size: 0.62rem;
@@ -1132,7 +1132,7 @@
 }
 
 .concept-ep-row > b.is-get {
-	color: #2c8a44;
+	color: var(--ink);
 }
 
 .concept-ep-row > b.is-post {
@@ -1140,7 +1140,7 @@
 }
 
 .concept-ep-row > code {
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -1185,13 +1185,13 @@
 	justify-content: space-between;
 	gap: 10px;
 	padding: 8px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
 	background: #fff;
 }
 
 .concept-rtm-row > code {
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -1228,10 +1228,10 @@
 .concept-tk-chips > b,
 .concept-tk-chips > i > b {
 	padding: 2px 5px;
-	border: 1px solid rgb(44 138 68 / 0.35);
+	border: 1px solid rgb(17 17 17 / 0.35);
 	border-radius: 5px;
-	background: rgb(44 138 68 / 0.08);
-	color: #2c8a44;
+	background: rgb(17 17 17 / 0.08);
+	color: var(--ink);
 	font:
 		700 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -1243,7 +1243,7 @@
 .concept-tk-chips > .concept-state-b > b {
 	border-color: rgb(196 66 58 / 0.35);
 	background: rgb(196 66 58 / 0.07);
-	color: #c4423a;
+	color: var(--ink);
 }
 
 .concept-js-preview > p.concept-tk-chips {
@@ -1251,11 +1251,11 @@
 }
 
 .concept-rtm-yes {
-	color: #2c8a44;
+	color: var(--ink);
 }
 
 .concept-rtm-no {
-	color: #c2402a;
+	color: var(--ink);
 }
 
 .concept-state-flip {
@@ -1288,9 +1288,9 @@
 	align-items: center;
 	justify-content: space-between;
 	padding: 7px 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
-	background: #fafaf8;
+	background: #fafafa;
 }
 
 .concept-state-burger {
@@ -1302,12 +1302,12 @@
 	width: 13px;
 	height: 2px;
 	border-radius: 2px;
-	background: #b3b3ae;
+	background: #b5b5b5;
 }
 
 .concept-state-bell {
 	position: relative;
-	color: #8a8a85;
+	color: var(--ink-faint);
 	font-size: 0.82rem;
 	line-height: 1;
 }
@@ -1345,9 +1345,9 @@
 	align-content: start;
 	width: 34px;
 	padding: 7px 6px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
-	background: #fafaf8;
+	background: #fafafa;
 	margin-left: -42px;
 	opacity: 0;
 	animation: concept-state-drawer 6s ease-in-out infinite;
@@ -1357,7 +1357,7 @@
 .concept-state-drawer b {
 	height: 4px;
 	border-radius: 2px;
-	background: #d8d8d3;
+	background: var(--rule-strong);
 }
 
 .concept-state-drawer b:first-child {
@@ -1367,10 +1367,10 @@
 
 .concept-state-content {
 	flex: 1;
-	border: 1px dashed #dcdcd8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 8px;
 	background:
-		repeating-linear-gradient(#0000 0 10px, #f1f1ee 10px 14px) content-box,
+		repeating-linear-gradient(#0000 0 10px, #fafafa 10px 14px) content-box,
 		#fff;
 	padding: 8px;
 }
@@ -1467,7 +1467,7 @@
 	height: 7px;
 	border-radius: 50%;
 	background: var(--blue);
-	box-shadow: 0 0 0 5px rgb(255 92 80 / 0.1);
+	box-shadow: 0 0 0 5px rgb(17 17 17 / 0.1);
 	animation: concept-status-pulse 1.8s ease-in-out infinite;
 }
 
@@ -1632,7 +1632,7 @@
 	display: grid;
 	width: 36px;
 	height: 36px;
-	border: 1px solid rgb(255 92 80 / 0.42);
+	border: 1px solid rgb(17 17 17 / 0.42);
 	border-radius: 50%;
 	background: #fff;
 	color: var(--blue-strong);
@@ -1654,7 +1654,7 @@
 }
 
 .concept-step-list li[data-state='complete'] .concept-step-marker {
-	border-color: rgb(255 92 80 / 0.24);
+	border-color: rgb(17 17 17 / 0.24);
 	background: var(--blue-soft);
 }
 
@@ -1680,7 +1680,7 @@
 	min-width: 0;
 	padding: 26px 30px 30px;
 	border-left: 1px solid var(--rule);
-	background: linear-gradient(145deg, rgb(255 92 80 / 0.035), rgb(255 255 255 / 0.94) 46%);
+	background: linear-gradient(145deg, rgb(17 17 17 / 0.035), rgb(255 255 255 / 0.94) 46%);
 	overflow: hidden;
 }
 
@@ -1864,7 +1864,7 @@
 .concept-flow-lab[data-active-step='2'] .concept-frontend-demo-page button:not(:disabled),
 .concept-flow-lab[data-active-step='3'] .concept-frontend-demo-page button:not(:disabled) {
 	cursor: pointer;
-	box-shadow: 0 0 0 5px rgb(255 92 80 / 0.12);
+	box-shadow: 0 0 0 5px rgb(17 17 17 / 0.12);
 }
 
 .concept-flow-lab[data-active-step='2'] .concept-frontend-demo-page output,
@@ -2039,7 +2039,7 @@
 	border: 1px solid var(--rule);
 	border-radius: 18px;
 	background:
-		radial-gradient(circle at 88% 0%, rgb(255 92 80 / 0.07), transparent 42%),
+		radial-gradient(circle at 88% 0%, rgb(17 17 17 / 0.07), transparent 42%),
 		linear-gradient(145deg, #fff, #fafafa);
 }
 
@@ -2252,8 +2252,8 @@
 	}
 	12%,
 	28% {
-		border-color: rgb(255 92 80 / 0.45);
-		box-shadow: 0 14px 30px rgb(255 92 80 / 0.1);
+		border-color: rgb(17 17 17 / 0.45);
+		box-shadow: 0 14px 30px rgb(17 17 17 / 0.1);
 		transform: translateY(-4px);
 	}
 }
@@ -2277,7 +2277,7 @@
 
 @keyframes concept-status-pulse {
 	50% {
-		box-shadow: 0 0 0 8px rgb(255 92 80 / 0.04);
+		box-shadow: 0 0 0 8px rgb(17 17 17 / 0.04);
 	}
 }
 
@@ -2587,9 +2587,9 @@
 }
 
 .concept-rtm-row i.concept-rtm-yes {
-	color: #2c8a44;
+	color: var(--ink);
 }
 
 .concept-rtm-row i.concept-rtm-no {
-	color: #c2402a;
+	color: var(--ink);
 }

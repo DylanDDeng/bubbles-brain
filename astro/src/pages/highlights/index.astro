@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SourceMark from '../../components/SourceMark.astro';
+import { highlightsByMonth, loadDirectoryData, shortDate } from '../../lib/directories';
+
+const data = await loadDirectoryData();
+const months = highlightsByMonth(data);
+const years = [...new Set(months.map((month) => month.year))];
+---
+
+<BaseLayout
+	title="精选阅读 · Bubble's Brain"
+	description="值得反复读的一手资料与深度文章。每篇都是精读或全译，附原文入口。"
+	alternateHref="/en/highlights/"
+>
+	<div class="rr-page rr-page--narrow" data-reading-directory data-reading-unit="篇">
+		<header class="rr-head">
+			<h1 class="rr-title">精选阅读</h1>
+			<label class="rr-search">
+				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+				<span class="sr-only">搜索精选阅读</span>
+				<input
+					type="search"
+					placeholder="搜索精选阅读"
+					autocomplete="off"
+					data-reading-search
+				/>
+			</label>
+			<div class="rr-filters" role="group" aria-label="按年份">
+				<button type="button" data-reading-filter="" aria-pressed="true">
+					全部
+				</button>
+				{
+					years.map((year) => (
+						<button type="button" data-reading-filter={year} aria-pressed="false">
+							{year}
+						</button>
+					))
+				}
+			</div>
+		</header>
+
+		{
+			months.map((month) => (
+				<section
+					class="rr-group"
+					data-reading-group={month.year}
+					aria-labelledby={`month-${month.key}`}
+				>
+					<h2 class="rr-group__label" id={`month-${month.key}`}>
+						{month.year} 年 {Number(month.month)} 月
+					</h2>
+					<ol class="rr-stack">
+						{month.entries.map(({ item, source, mark }) => (
+							<li
+								data-reading-item
+								data-search={`${item.title} ${item.summary} ${source}`.toLocaleLowerCase()}
+							>
+								<a
+									class="rr-entry"
+									href={item.href}
+									target={item.external ? '_blank' : undefined}
+									rel={item.external ? 'noopener noreferrer' : undefined}
+								>
+									<span class="rr-entry__title">{item.title}</span>
+									<span class="rr-entry__meta">
+										<SourceMark mark={mark} />
+										<span>
+											{[source, shortDate(item.date)].filter(Boolean).join(' · ')}
+											{item.external && ' ↗'}
+										</span>
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				</section>
+			))
+		}
+		<p class="rr-empty" data-reading-empty hidden>没有找到匹配的文章，换个词试试。</p>
+		<figure class="rr-end">
+			<img src="/images/cat-pose-1.jpg" alt="坐着的猫馆长" width="1100" height="765" loading="lazy" />
+			<figcaption>就这些了，下个月见。</figcaption>
+		</figure>
+	</div>
+</BaseLayout>
+
+<script>
+	import '../../scripts/readingDirectory';
+</script>

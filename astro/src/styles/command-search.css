@@ -5,17 +5,18 @@
 	margin: auto;
 	padding: 0;
 	overflow: hidden;
-	border: 1px solid var(--ink);
-	border-top: 3px solid var(--blue);
-	border-radius: 4px;
+	border: 0;
+	border-radius: 16px;
 	background: var(--paper);
-	box-shadow: 12px 16px 0 rgb(18 18 18 / 0.08);
+	box-shadow:
+		0 0 0 1px rgb(0 0 0 / 0.06),
+		0 24px 80px rgb(0 0 0 / 0.16);
 	color: var(--ink);
 }
 
 .command-search-dialog::backdrop {
-	background: rgb(18 18 18 / 0.2);
-	backdrop-filter: blur(3px);
+	background: rgb(255 255 255 / 0.55);
+	backdrop-filter: blur(6px);
 }
 
 .command-search-header,
@@ -69,11 +70,11 @@
 	align-items: center;
 	gap: 16px;
 	padding: 18px 20px;
-	border-bottom: 1px solid var(--ink);
+	border-bottom: 1px solid var(--rule);
 }
 
 .command-search-form i {
-	color: var(--blue-strong);
+	color: var(--ink-faint);
 	font-size: 1.25rem;
 }
 
@@ -145,8 +146,8 @@
 
 .command-search-result:hover,
 .command-search-result.is-active {
-	background: var(--blue-soft);
-	box-shadow: inset 3px 0 0 var(--blue);
+	background: var(--paper-muted);
+	box-shadow: none;
 	color: inherit;
 }
 
@@ -201,7 +202,7 @@
 }
 
 .command-search-footer {
-	border-top: 1px solid var(--ink);
+	border-top: 1px solid var(--rule);
 	color: var(--ink-faint);
 }
 
@@ -249,7 +250,7 @@
 	.command-search-dialog {
 		width: calc(100% - 20px);
 		max-height: calc(100dvh - 20px);
-		box-shadow: 6px 8px 0 rgb(18 18 18 / 0.08);
+		box-shadow: 0 24px 80px rgb(0 0 0 / 0.16);
 	}
 
 	.command-search-header,

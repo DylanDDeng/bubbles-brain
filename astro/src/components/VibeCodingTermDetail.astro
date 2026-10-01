@@ -2,12 +2,14 @@
 import type { VibeCodingConcept } from '../data/vibeCodingTerms';
 import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingDetailProfile } from '../data/vibeCodingTermDetails';
+import { vibeCodingLabTitle } from '../data/vibeCodingLabTitles';
+import ArticleOutline from './ArticleOutline.astro';
 import VibeCodingConceptVisual from './VibeCodingConceptVisual.astro';
 import VibeCodingFlowLab from './VibeCodingFlowLab.astro';
 import ConfidenceIntervalExample from './ConfidenceIntervalExample.astro';
-import { CAT_CURATOR_AVATAR } from '../data/catCurator';
+import '../styles/reading-page.css';
 import '../styles/vibe-coding-term-detail.css';
-import '../styles/cat-curator.css';
+import '../styles/term-page.css';
 
 interface Props {
 	concept: VibeCodingConcept;
@@ -17,137 +19,114 @@ interface Props {
 }
 
 const { concept, profile, previousConcept, nextConcept } = Astro.props;
+const isConfidence = concept.id === 'confidence-interval';
+const labTitle = vibeCodingLabTitle(concept, profile.visualTitle);
+// The same reading layout as a tutorial: the way back and this page's sections on the left,
+// a 540px column in the middle. Each heading is the content itself, not a numbered label.
+const outline = [
+	{ slug: 'term-analogy', text: '换个角度想' },
+	{ slug: 'term-lab', text: labTitle },
+	{ slug: 'term-scenes', text: '什么时候会遇到它' },
+	{ slug: 'term-practice', text: '想一想' },
+	{ slug: 'term-warning', text: '最容易踩的坑' },
+].map((heading) => ({ ...heading, depth: 2 }));
 ---
 
-<article class="concept-detail" data-vibe-coding-term-detail={concept.id}>
-	<a class="concept-detail-back" href={brainPodTermReturn(concept.id)}>
-		<i class="ph ph-arrow-left" aria-hidden="true"></i>
-		返回术语
-	</a>
+<article class="reading-page term-page" data-vibe-coding-term-detail={concept.id}>
+	<div class="reading-rail">
+		<a class="reading-back" href={brainPodTermReturn(concept.id)}>← 术语</a>
+		<ArticleOutline headings={outline} locale="zh-CN" />
+	</div>
 
-	<header class="concept-detail-hero">
-		<p>{concept.isCategory ? '术语分类' : concept.categoryLabel}</p>
-		<h1>
-			{concept.chineseName}
-			{concept.name !== concept.chineseName ? <span>{concept.name}</span> : null}
-		</h1>
-		<div class="concept-detail-qa">
-			<div class="concept-qa-row concept-qa-question">
-				<span class="concept-qa-glyph" aria-hidden="true">Q</span>
-				<div class="concept-qa-body">
-					<span class="concept-qa-label">你可能会问</span>
-					<p>
-						<em>{concept.chineseName}</em>{
-							profile.question ?? '到底是什么？它在一条完整的开发流程里，负责哪一段？'
-						}
-					</p>
-				</div>
-			</div>
-			<div class="concept-qa-row concept-qa-answer">
-				<span class="concept-qa-glyph concept-qa-glyph--cat" aria-hidden="true">
-					<img
-						src={CAT_CURATOR_AVATAR}
-						alt=""
-						width="44"
-						height="44"
-						loading="lazy"
-						decoding="async"
-					/>
-				</span>
-				<div class="concept-qa-body">
-					<span class="concept-qa-label">馆长说，简单来说</span>
-					<p>{concept.description}</p>
-				</div>
-			</div>
-		</div>
+	<header class="article-header">
+		<p class="reading-kicker">
+			{concept.isCategory ? '术语' : `术语 · ${concept.categoryLabel}`}
+		</p>
+		<h1>{concept.chineseName}</h1>
+		{concept.name !== concept.chineseName && <p class="term-page__name" lang="en">{concept.name}</p>}
+		<p class="article-lede">{concept.description}</p>
 	</header>
 
-	{
-		concept.id === 'confidence-interval' ? (
-			<ConfidenceIntervalExample mode="overview" />
-		) : (
-			<VibeCodingConceptVisual concept={concept} profile={profile} />
-		)
-	}
+	<div class="article-main">
+		{
+			isConfidence ? (
+				<ConfidenceIntervalExample mode="overview" />
+			) : (
+				<VibeCodingConceptVisual concept={concept} profile={profile} />
+			)
+		}
 
-	<section class="concept-explanation" aria-labelledby="concept-understand-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">01 · 先这样理解</p>
-			<h2 id="concept-understand-title">把抽象概念放进真实场景</h2>
-		</div>
-		<div class="concept-explanation-copy">
-			<p class="concept-explanation-lead">{concept.description}</p>
-			<blockquote>
-				<span><i class="ph ph-lightbulb" aria-hidden="true"></i>换个角度想</span>
-				{profile.analogy.split('\n\n').map((paragraph) => <p>{paragraph}</p>)}
-			</blockquote>
-		</div>
-	</section>
+		<div class="article-content term-page__body">
+			<h2 id="term-analogy">换个角度想</h2>
+			{profile.analogy.split('\n\n').map((paragraph) => <p>{paragraph}</p>)}
 
-	{
-		concept.id === 'confidence-interval' ? (
-			<ConfidenceIntervalExample mode="lab" />
-		) : (
-			<VibeCodingFlowLab concept={concept} profile={profile} />
-		)
-	}
+			<h2 id="term-lab">{labTitle}</h2>
+		</div>
+		{/* Outside .article-content, so the article's paragraph and code styles stay out of the demo. */}
+		{
+			isConfidence ? (
+				<ConfidenceIntervalExample mode="lab" />
+			) : (
+				<VibeCodingFlowLab concept={concept} profile={profile} />
+			)
+		}
 
-	<section class="concept-section" aria-labelledby="concept-scenes-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">03 · 放进真实任务</p>
-			<h2 id="concept-scenes-title">什么时候会遇到它</h2>
-		</div>
-		<div class="concept-scene-list">
-			{
-				profile.scenes.map((scene, index) => (
-					<article>
-						<span aria-hidden="true">{index + 1}</span>
-						<h3>{scene.title}</h3>
-						<p>{scene.description}</p>
-					</article>
-				))
-			}
-		</div>
-	</section>
+		<div class="article-content term-page__body">
+			<h2 id="term-scenes">什么时候会遇到它</h2>
+			<ol class="term-scenes">
+				{
+					profile.scenes.map((scene, index) => (
+						<li>
+							<span class="term-scenes__mark" aria-hidden="true">
+								{index + 1}
+							</span>
+							<h3>{scene.title}</h3>
+							<p>{scene.description}</p>
+						</li>
+					))
+				}
+			</ol>
 
-	<section class="concept-practice" aria-labelledby="concept-practice-title">
-		<div class="concept-section-heading">
-			<p class="concept-section-index">04 · 想一想</p>
-			<h2 id="concept-practice-title">用一个问题检查理解</h2>
-		</div>
-		<div class="concept-practice-body">
+			<h2 id="term-practice">想一想</h2>
 			<p>{profile.practice.question}</p>
-			<details>
-				<summary>查看答案</summary>
+			<details class="term-answer">
+				<summary>
+					看答案 <i class="ph ph-caret-down" aria-hidden="true"></i>
+				</summary>
 				<p>{profile.practice.answer}</p>
 			</details>
-		</div>
-	</section>
 
-	<section class="concept-boundary" aria-labelledby="concept-boundary-title">
-		<span>老师提醒</span>
-		<div>
-			<h2 id="concept-boundary-title">最容易踩的坑</h2>
+			<h2 id="term-warning">最容易踩的坑</h2>
 			<p>{profile.warning}</p>
 		</div>
-	</section>
 
-	<nav class="concept-detail-pagination" aria-label="相邻术语">
-		{
-			previousConcept ? (
-				<a href={`/vibe-coding/terms/${previousConcept.id}/`} rel="prev">
-					<span>上一个</span>
-					<strong>{previousConcept.chineseName}</strong>
-				</a>
-			) : null
-		}
-		{
-			nextConcept ? (
-				<a href={`/vibe-coding/terms/${nextConcept.id}/`} rel="next">
-					<span>下一个</span>
-					<strong>{nextConcept.chineseName}</strong>
-				</a>
-			) : null
-		}
-	</nav>
+		<footer class="article-ending">
+			{
+				(previousConcept || nextConcept) && (
+					<nav class="article-pagination" aria-label="相邻术语">
+						{previousConcept && (
+							<a
+								href={`/vibe-coding/terms/${previousConcept.id}/`}
+								class="article-previous"
+								rel="prev"
+							>
+								<span>← 上一个</span>
+								<strong class="article-pagination-title">{previousConcept.chineseName}</strong>
+							</a>
+						)}
+						{nextConcept && (
+							<a href={`/vibe-coding/terms/${nextConcept.id}/`} class="article-next" rel="next">
+								<span>下一个 →</span>
+								<strong class="article-pagination-title">{nextConcept.chineseName}</strong>
+							</a>
+						)}
+					</nav>
+				)
+			}
+		</footer>
+	</div>
 </article>
+
+<script>
+	import '../scripts/article-outline.ts';
+</script>

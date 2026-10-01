@@ -40,6 +40,8 @@ const canonicalUrl = new URL(canonicalPath, Astro.site);
 const alternateUrl = alternateHref ? new URL(alternateHref, Astro.site) : null;
 const sections = siteSections(lang);
 const currentSection = activeSiteSection(Astro.url.pathname, lang);
+// The search page has its own search box; a second one in the header would only repeat it.
+const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 ---
 
 <!doctype html>
@@ -99,16 +101,20 @@ const currentSection = activeSiteSection(Astro.url.pathname, lang);
 							<img class="site-avatar" src="/images/cat-curator.jpg" alt="" width="28" height="28" />
 							<span>Bubble's Brain</span>
 						</a>
-						<a
-							class="site-search"
-							href="/search/"
-							data-command-search-trigger
-							aria-label={isEnglish ? 'Search (⌘K)' : '搜索（⌘K）'}
-						>
-							<i class="ph ph-magnifying-glass" aria-hidden="true" />
-							<span>{isEnglish ? 'Search' : '搜索'}</span>
-							<kbd>⌘K</kbd>
-						</a>
+						{isSearchPage ? (
+							<span aria-hidden="true" />
+						) : (
+							<a
+								class="site-search"
+								href="/search/"
+								data-command-search-trigger
+								aria-label={isEnglish ? 'Search (⌘K)' : '搜索（⌘K）'}
+							>
+								<i class="ph ph-magnifying-glass" aria-hidden="true" />
+								<span>{isEnglish ? 'Search' : '搜索'}</span>
+								<kbd>⌘K</kbd>
+							</a>
+						)}
 						<div class="site-nav">
 							<nav class="site-sections" aria-label={isEnglish ? 'Sections' : '栏目'}>
 								{sections.map((item) => (

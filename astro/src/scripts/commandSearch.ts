@@ -190,6 +190,13 @@ function initCommandSearch(): void {
 			}
 			if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase() === 'k') {
 				event.preventDefault();
+				// On the search page the shortcut goes to the page's own box instead of the pop-up.
+				const pageQuery = document.querySelector<HTMLInputElement>('#knowledge-query');
+				if (pageQuery && !dialog.open) {
+					pageQuery.focus();
+					pageQuery.select();
+					return;
+				}
 				if (dialog.open) dialog.close();
 				else open();
 			}

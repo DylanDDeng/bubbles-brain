@@ -9,7 +9,7 @@ interface Props {
 const { items, filterable = false } = Astro.props;
 ---
 
-{/* Each result is its section, date and title; the summary still counts for the search. */}
+{/* Each result is its section and title; the summary still counts for the search. */}
 <ol class="rr-rows rr-rows--plain knowledge-results" data-knowledge-results>
 	{
 		items.map((item) => (
@@ -24,15 +24,7 @@ const { items, filterable = false } = Astro.props;
 					target={item.external ? '_blank' : undefined}
 					rel={item.external ? 'noopener noreferrer' : undefined}
 				>
-					<span class="knowledge-result__meta">
-						{item.section_label}
-						{item.date && (
-							<>
-								{' · '}
-								<time datetime={item.date}>{item.date.slice(0, 10).replaceAll('-', '.')}</time>
-							</>
-						)}
-					</span>
+					<span class="knowledge-result__meta">{item.section_label}</span>
 					<span class="knowledge-result__title">
 						{item.title}
 						{item.external && ' ↗'}

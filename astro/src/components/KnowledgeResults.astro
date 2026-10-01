@@ -9,7 +9,7 @@ interface Props {
 const { items, filterable = false } = Astro.props;
 ---
 
-<ol class="rr-rows knowledge-results" data-knowledge-results>
+<ol class="rr-rows rr-rows--plain knowledge-results" data-knowledge-results>
 	{
 		items.map((item) => (
 			<li

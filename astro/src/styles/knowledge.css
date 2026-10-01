@@ -113,13 +113,14 @@
 	font-weight: 600;
 }
 
-.knowledge-results {
+/* No lines between results, only space, like the other lists. */
+.knowledge-results.rr-rows--plain {
 	margin-top: 32px;
 }
 .knowledge-result {
 	display: grid;
 	gap: 4px;
-	padding: 20px 0;
+	padding: 16px 0;
 	color: var(--ink);
 	text-decoration: none;
 }

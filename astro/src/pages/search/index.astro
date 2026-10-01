@@ -60,7 +60,8 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 						}
 					</div>
 				</details>
-				<span class="knowledge-count" aria-live="polite">
+				{/* Not shown on the page; screen readers still hear how many results there are. */}
+				<span class="sr-only" aria-live="polite">
 					<span data-search-result-count>{index.item_count}</span> 条结果
 				</span>
 			</div>

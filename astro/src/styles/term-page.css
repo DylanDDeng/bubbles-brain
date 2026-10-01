@@ -340,7 +340,216 @@
 	color: var(--ink-soft);
 }
 
+/* ---------------------------------------------------- UI pattern pages */
+/* 界面图鉴 terms have their own sections (parts, variants, find-it, quiz, prompts) but the same
+   reading column, headings and grey drawing boxes as the other terms. */
+.collection-site .reading-page.term-page .term-section__title {
+	margin: 64px 0 16px;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.45;
+}
+.collection-site .reading-page.term-page .term-section:first-child .term-section__title {
+	margin-top: 0;
+}
+.collection-site .reading-page.term-page .term-section__intro {
+	margin: 0 0 20px;
+	color: var(--ink);
+	font-size: 16px;
+	line-height: 1.9;
+}
+.collection-site .reading-page.term-page :is(.pattern-anatomy, .pattern-variants, .pattern-spot, .pattern-quiz, .pattern-prompts) {
+	max-width: none;
+	margin-top: 0;
+}
+/* The drawings of each part: a grey box, no border, shadow or tint. */
+.collection-site .reading-page.term-page :is(.pattern-anatomy-mock, .pattern-spot-mock, .pattern-variant-sketch) {
+	border: 0;
+	border-radius: 12px;
+	background: var(--paper-muted);
+	box-shadow: none;
+}
+.collection-site .reading-page.term-page :is(.pattern-anatomy-mock, .pattern-spot-mock) {
+	padding: 24px;
+}
+.collection-site .reading-page.term-page .pattern-anatomy {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 24px;
+}
+.collection-site .reading-page.term-page .pattern-part-list {
+	gap: 16px;
+}
+.collection-site .reading-page.term-page .pattern-part-list li {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr);
+	gap: 0;
+	padding: 0;
+	border-radius: 0;
+	background: none;
+}
+.collection-site .reading-page.term-page .pattern-part-num {
+	display: block;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	color: var(--ink-faint);
+	font: 400 17px/1.6 var(--sans);
+}
+.collection-site .reading-page.term-page .pattern-part-list h3 {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin: 0;
+	font-size: 17px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+.collection-site .reading-page.term-page .pattern-part-list h3 small {
+	color: var(--ink-faint);
+	font-size: 13px;
+	font-weight: 400;
+	letter-spacing: 0;
+}
+.collection-site .reading-page.term-page .pattern-part-list p {
+	margin: 4px 0 0;
+	color: var(--ink-soft);
+	font-size: 15px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-variants {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+}
+.collection-site .reading-page.term-page .pattern-variants figcaption strong {
+	font-size: 15px;
+	font-weight: 600;
+}
+.collection-site .reading-page.term-page .pattern-variants figcaption p {
+	margin: 4px 0 0;
+	color: var(--ink-soft);
+	font-size: 13px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-spot {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 16px;
+}
+.collection-site .reading-page.term-page .pattern-spot-panel {
+	position: static;
+}
+.collection-site .reading-page.term-page :is(.pattern-spot-hint, .pattern-spot-note) {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+}
+.collection-site .reading-page.term-page .pattern-spot-hint {
+	color: var(--ink-faint);
+	font-size: 15px;
+}
+.collection-site .reading-page.term-page .pattern-spot-hint i {
+	color: inherit;
+	font-size: 15px;
+}
+.collection-site .reading-page.term-page .pattern-spot-note strong {
+	font-size: 15px;
+	font-weight: 600;
+}
+.collection-site .reading-page.term-page .pattern-spot-note strong small {
+	font-size: 13px;
+	font-weight: 400;
+}
+.collection-site .reading-page.term-page .pattern-spot-note p {
+	margin: 4px 0 0;
+	font-size: 15px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-quiz {
+	gap: 8px;
+}
+.collection-site .reading-page.term-page .pattern-quiz-option {
+	gap: 12px;
+	padding: 12px 16px;
+	border: 1px solid var(--rule-strong);
+	border-radius: 8px;
+	font-size: 15px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-quiz-option b {
+	display: inline;
+	width: auto;
+	height: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	color: var(--ink-faint);
+	font: 400 15px/1.7 var(--sans);
+}
+.collection-site .reading-page.term-page .pattern-quiz-feedback {
+	padding: 12px 16px;
+	border: 0;
+	border-radius: 8px;
+	background: var(--paper-muted);
+	color: var(--ink-soft);
+	font-size: 15px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-prompts {
+	gap: 8px;
+}
+.collection-site .reading-page.term-page .pattern-prompt-bubble {
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	border-radius: 8px;
+	font-size: 15px;
+	line-height: 1.7;
+}
+.collection-site .reading-page.term-page .pattern-prompt-bubble > i {
+	display: none;
+}
+.collection-site .reading-page.term-page .pattern-prompt-bubble span {
+	flex: 1;
+}
+.collection-site .reading-page.term-page .pattern-prompt-bubble button {
+	flex: none;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+	color: var(--ink-faint);
+	font: 400 13px/1.6 var(--sans);
+	cursor: pointer;
+}
+.collection-site .reading-page.term-page .pattern-prompt-bubble button:hover {
+	color: var(--ink);
+}
+.collection-site .reading-page.term-page .term-usage h3 {
+	margin: 0 0 4px;
+	font-size: 17px;
+	font-weight: 600;
+	line-height: 1.6;
+}
+.collection-site .reading-page.term-page .term-usage ul {
+	margin: 0 0 24px;
+	padding-left: 1.2em;
+	font-size: 16px;
+	line-height: 1.9;
+}
+.collection-site .reading-page.term-page .term-section > .term-section__intro:last-child,
+.collection-site .reading-page.term-page .term-usage ul:last-child {
+	margin-bottom: 0;
+}
+
 @media (max-width: 600px) {
+	.collection-site .reading-page.term-page .pattern-variants {
+		grid-template-columns: minmax(0, 1fr);
+	}
 	.collection-site .reading-page.term-page :is(.concept-visual-box, .concept-process-demo) {
 		padding: 16px;
 	}

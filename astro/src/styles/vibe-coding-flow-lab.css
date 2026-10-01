@@ -27,10 +27,10 @@
 	width: 100%;
 	min-height: 300px;
 	padding: 0;
-	border: 1px solid #e4e7eb;
+	border: 1px solid var(--rule-strong);
 	border-radius: 14px;
 	background: rgb(255 255 255 / 0.88);
-	box-shadow: 0 7px 20px rgb(23 30 38 / 0.035);
+	box-shadow: 0 7px 20px rgb(0 0 0 / 0.035);
 	color: var(--ink);
 	cursor: pointer;
 	flex-direction: column;
@@ -42,21 +42,21 @@
 }
 
 .concept-process-panels > li:not([data-state='active']) .concept-process-panel:hover {
-	border-color: #cbd2d9;
-	box-shadow: 0 10px 26px rgb(23 30 38 / 0.065);
+	border-color: #c4c4c4;
+	box-shadow: 0 10px 26px rgb(0 0 0 / 0.065);
 	transform: translateY(-2px);
 }
 
 .concept-process-panels > li[data-state='active'] .concept-process-panel {
 	border-color: var(--blue-strong);
 	box-shadow:
-		0 0 0 2px rgb(255 92 80 / 0.1),
-		0 18px 36px rgb(255 92 80 / 0.09);
+		0 0 0 2px rgb(17 17 17 / 0.1),
+		0 18px 36px rgb(17 17 17 / 0.09);
 	transform: translateY(-4px);
 }
 
 .concept-process-panels > li[data-state='complete'] .concept-process-panel {
-	border-color: rgb(66 171 91 / 0.32);
+	border-color: rgb(17 17 17 / 0.32);
 }
 
 .concept-process-panel-select {
@@ -76,7 +76,7 @@
 	align-items: center;
 	gap: 9px;
 	padding: 14px 14px 13px;
-	border-bottom: 1px solid #edf0f2;
+	border-bottom: 1px solid var(--rule);
 }
 
 .concept-process-panel-select > header span {
@@ -119,8 +119,8 @@
 	gap: 7px;
 	min-height: 42px;
 	padding: 10px 14px;
-	border-top: 1px solid #edf0f2;
-	color: #9ba1a9;
+	border-top: 1px solid var(--rule);
+	color: #b5b5b5;
 	font-size: 0.62rem;
 }
 
@@ -129,13 +129,13 @@
 }
 
 .concept-process-panels > li[data-state='active'] .concept-process-panel > footer {
-	background: rgb(255 92 80 / 0.055);
+	background: rgb(17 17 17 / 0.055);
 	color: var(--blue-strong);
 }
 
 .concept-process-panels > li[data-state='complete'] .concept-process-panel > footer {
-	background: rgb(66 171 91 / 0.07);
-	color: #31954a;
+	background: rgb(17 17 17 / 0.07);
+	color: var(--ink);
 }
 
 .concept-process-arrow {
@@ -165,7 +165,7 @@
 	align-items: center;
 	margin: 0;
 	padding: 10px 0;
-	border-bottom: 1px solid #edf0f2;
+	border-bottom: 1px solid var(--rule);
 	font-size: 0.66rem;
 }
 
@@ -176,10 +176,10 @@
 
 .concept-html-preview code {
 	padding: 5px 6px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #f7f8fa;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -190,7 +190,7 @@
 .concept-html-preview input,
 .concept-css-preview output,
 .concept-spacing-editor {
-	color: #8b929b;
+	color: var(--ink-faint);
 	font-size: 0.62rem;
 	font-weight: 550;
 }
@@ -199,9 +199,9 @@
 	width: 100%;
 	min-width: 0;
 	padding: 6px 7px;
-	border: 1px solid #e4e8ec;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #fafbfc;
+	background: #fafafa;
 	cursor: text;
 	font-family: var(--sans);
 	outline: none;
@@ -212,16 +212,16 @@
 }
 
 .concept-html-preview input:hover {
-	border-color: #d5dbe1;
+	border-color: #c4c4c4;
 	background: #fff;
 	color: #5d6570;
 }
 
 .concept-html-preview input:focus {
-	border-color: rgb(255 92 80 / 0.36);
+	border-color: rgb(17 17 17 / 0.36);
 	background: #fff;
 	color: var(--ink);
-	box-shadow: 0 0 0 2px rgb(255 92 80 / 0.08);
+	box-shadow: 0 0 0 2px rgb(17 17 17 / 0.08);
 }
 
 .concept-css-preview p {
@@ -232,7 +232,7 @@
 	width: 16px;
 	height: 16px;
 	padding: 0;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 50%;
 	background: transparent;
 	cursor: pointer;
@@ -264,9 +264,9 @@
 	gap: 3px;
 	width: max-content;
 	padding: 3px 5px;
-	border: 1px solid #e4e8ec;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #fafbfc;
+	background: #fafafa;
 }
 
 .concept-spacing-editor input {
@@ -274,7 +274,7 @@
 	padding: 0;
 	border: 0;
 	background: transparent;
-	color: #68717c;
+	color: var(--ink-soft);
 	font: inherit;
 	outline: none;
 }
@@ -296,9 +296,9 @@
 	gap: 7px;
 	margin: 0;
 	padding: 9px 12px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
-	background: #f7f8fa;
+	background: #fafafa;
 	font:
 		650 0.68rem ui-monospace,
 		SFMono-Regular,
@@ -307,13 +307,13 @@
 }
 
 .concept-js-preview > i {
-	color: #a5abb3;
+	color: #b5b5b5;
 }
 
 .concept-js-preview button,
 .concept-browser-preview button {
 	padding: 8px 11px;
-	border: 1px solid rgb(255 92 80 / 0.3);
+	border: 1px solid rgb(17 17 17 / 0.3);
 	border-radius: 8px;
 	background: var(--blue-strong);
 	color: #fff;
@@ -323,34 +323,34 @@
 
 .concept-js-preview button:disabled,
 .concept-browser-preview button:disabled {
-	border-color: #e2e5e9;
-	background: #f0f2f4;
-	color: #a0a6ae;
+	border-color: var(--rule-strong);
+	background: var(--rule);
+	color: #b5b5b5;
 	cursor: not-allowed;
 }
 
 .concept-js-preview output,
 .concept-browser-preview output {
-	color: #737b85;
+	color: var(--ink-faint);
 	font-size: 0.59rem;
 }
 
 .concept-browser-preview {
 	padding: var(--preview-spacing, 16px);
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 10px;
 	background: #fff;
-	box-shadow: 0 10px 24px rgb(23 30 38 / 0.06);
+	box-shadow: 0 10px 24px rgb(0 0 0 / 0.06);
 	transition:
 		border-color 180ms ease,
 		box-shadow 180ms ease;
 }
 
 .concept-browser-preview[data-preview-updated='true'] {
-	border-color: rgb(255 92 80 / 0.32);
+	border-color: rgb(17 17 17 / 0.32);
 	box-shadow:
-		0 0 0 3px rgb(255 92 80 / 0.07),
-		0 10px 24px rgb(23 30 38 / 0.06);
+		0 0 0 3px rgb(17 17 17 / 0.07),
+		0 10px 24px rgb(0 0 0 / 0.06);
 }
 
 .concept-browser-preview small {
@@ -367,7 +367,7 @@
 
 .concept-browser-preview p {
 	margin: 6px 0 12px;
-	color: var(--preview-text, #7d858e);
+	color: var(--preview-text, var(--ink-faint));
 	font-size: 0.58rem;
 	line-height: 1.45;
 	opacity: 0.58;
@@ -408,7 +408,7 @@
 
 .concept-generic-process-preview p {
 	margin: 0;
-	color: #7d858e;
+	color: var(--ink-faint);
 	font-size: 0.66rem;
 	line-height: 1.55;
 }
@@ -430,7 +430,7 @@
 	gap: 7px;
 	min-height: 38px;
 	padding: 8px 11px;
-	border: 1px solid #d9dde2;
+	border: 1px solid var(--rule-strong);
 	border-radius: 9px;
 	background: #fff;
 	color: var(--ink);
@@ -568,8 +568,8 @@
 	align-items: center;
 	margin: 0;
 	padding: 9px 0;
-	border-bottom: 1px solid #edf0f2;
-	color: #737b85;
+	border-bottom: 1px solid var(--rule);
+	color: var(--ink-faint);
 	font-size: 0.62rem;
 }
 
@@ -579,10 +579,10 @@
 
 .concept-component-def code {
 	padding: 5px 6px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #f7f8fa;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -605,9 +605,9 @@
 	justify-content: space-between;
 	margin: 0;
 	padding: 9px 11px;
-	border: 1px dashed #d9dee3;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 8px;
-	color: #8b929b;
+	color: var(--ink-faint);
 	font-size: 0.6rem;
 }
 
@@ -630,13 +630,13 @@
 	justify-content: space-between;
 	gap: 8px;
 	padding: 6px 8px;
-	border: 1px solid #eef1f3;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
-	background: #fafbfc;
+	background: #fafafa;
 }
 
 .concept-component-preview > div span {
-	color: #8b929b;
+	color: var(--ink-faint);
 	font-size: 0.56rem;
 }
 
@@ -661,13 +661,13 @@
 	gap: 9px;
 	margin: 0;
 	padding: 9px 12px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
-	background: #f7f8fa;
+	background: #fafafa;
 }
 
 .concept-state-update code {
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		650 0.62rem ui-monospace,
 		SFMono-Regular,
@@ -688,7 +688,7 @@
 
 .concept-state-update button {
 	padding: 8px 11px;
-	border: 1px solid rgb(255 92 80 / 0.3);
+	border: 1px solid rgb(17 17 17 / 0.3);
 	border-radius: 8px;
 	background: var(--blue-strong);
 	color: #fff;
@@ -697,14 +697,14 @@
 }
 
 .concept-state-update button:disabled {
-	border-color: #e2e5e9;
-	background: #f0f2f4;
-	color: #a0a6ae;
+	border-color: var(--rule-strong);
+	background: var(--rule);
+	color: #b5b5b5;
 	cursor: not-allowed;
 }
 
 .concept-state-update small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 }
 
@@ -719,16 +719,16 @@
 	justify-content: space-between;
 	gap: 8px;
 	padding: 7px 9px;
-	border: 1px solid #eef1f3;
+	border: 1px solid var(--rule);
 	border-radius: 8px;
-	background: #fafbfc;
+	background: #fafafa;
 }
 
 .concept-state-render-row > span {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
-	color: #8b929b;
+	color: var(--ink-faint);
 	font-size: 0.56rem;
 }
 
@@ -750,7 +750,7 @@
 }
 
 .concept-state-render-row em {
-	color: #55606c;
+	color: var(--ink-soft);
 	font-size: 0.6rem;
 	font-style: normal;
 }
@@ -779,10 +779,10 @@
 .concept-props-choices code {
 	margin-right: 3px;
 	padding: 5px 6px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 6px;
-	background: #f7f8fa;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -792,10 +792,10 @@
 
 .concept-props-choices button {
 	padding: 6px 10px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 999px;
 	background: #fff;
-	color: #68717c;
+	color: var(--ink-soft);
 	cursor: pointer;
 	font: 650 0.6rem var(--sans);
 	transition:
@@ -851,7 +851,7 @@
 
 .concept-props-stage > code {
 	max-width: 100%;
-	color: #8b929b;
+	color: var(--ink-faint);
 	font:
 		600 0.56rem ui-monospace,
 		SFMono-Regular,
@@ -867,7 +867,7 @@
 
 .concept-props-editor > small {
 	padding-top: 9px;
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 	text-align: center;
 }
@@ -886,7 +886,7 @@
 }
 
 .concept-rd-layouts figcaption {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 	font-weight: 650;
 }
@@ -895,7 +895,7 @@
 	display: grid;
 	gap: 4px;
 	padding: 7px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
 	background: #fff;
 }
@@ -903,7 +903,7 @@
 .concept-rd-thumb span {
 	height: 6px;
 	border-radius: 3px;
-	background: #ececea;
+	background: var(--rule);
 }
 
 .concept-rd-thumb > div {
@@ -912,14 +912,14 @@
 }
 
 .concept-rd-thumb b {
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 4px;
-	background: #f7f7f4;
+	background: #fafafa;
 }
 
 .concept-rd-thumb b:first-child {
-	border-color: rgb(255 77 46 / 0.3);
-	background: #fff3f0;
+	border-color: rgb(17 17 17 / 0.3);
+	background: #fafafa;
 }
 
 .concept-rd-thumb.is-wide {
@@ -969,7 +969,7 @@
 
 .concept-rd-slider output {
 	min-width: 30px;
-	color: #737b85;
+	color: var(--ink-faint);
 	font:
 		650 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -980,7 +980,7 @@
 
 .concept-rd-slider output::after {
 	content: 'px';
-	color: #a5abb3;
+	color: #b5b5b5;
 }
 
 .concept-rd-play .concept-rd-frame-live {
@@ -1009,10 +1009,10 @@
 .concept-dom-play-tree {
 	margin: 0;
 	padding: 7px 9px;
-	border: 1px dashed #dfe4e8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 7px;
-	background: #fafbfc;
-	color: #737b85;
+	background: #fafafa;
+	color: var(--ink-faint);
 	font:
 		600 0.58rem ui-monospace,
 		SFMono-Regular,
@@ -1035,13 +1035,13 @@
 }
 
 .concept-hyd-stage small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 }
 
 .concept-rt-404 b {
 	font: 750 0.95rem var(--sans);
-	color: #b3b3ae;
+	color: #b5b5b5;
 }
 
 .concept-rt-play {
@@ -1061,7 +1061,7 @@
 	display: grid;
 	min-height: 78px;
 	padding: 10px;
-	border: 1px solid #ececea;
+	border: 1px solid var(--rule);
 	border-radius: 9px;
 	background: #fff;
 }
@@ -1088,7 +1088,7 @@
 }
 
 .concept-rt-view.is-404 span {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 }
 
@@ -1097,10 +1097,10 @@
 	align-items: center;
 	gap: 5px;
 	padding: 9px 12px;
-	border: 1px solid rgb(255 77 46 / 0.35);
+	border: 1px solid rgb(17 17 17 / 0.35);
 	border-radius: 8px;
-	background: #fff0ec;
-	color: #d9341c;
+	background: #fafafa;
+	color: var(--ink);
 	font: 650 0.62rem var(--sans);
 	text-decoration: none;
 	transition:
@@ -1119,7 +1119,7 @@
 }
 
 .concept-storage-write > small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 	text-align: center;
 }
@@ -1135,7 +1135,7 @@
 	align-items: center;
 	gap: 5px;
 	margin: 0;
-	color: #737b85;
+	color: var(--ink-faint);
 	font-size: 0.6rem;
 }
 
@@ -1151,8 +1151,8 @@
 
 .concept-st-row.is-empty {
 	border-style: dashed;
-	background: #fafaf8;
-	color: #a5abb3;
+	background: #fafafa;
+	color: #b5b5b5;
 }
 
 .concept-ev-bind {
@@ -1164,9 +1164,9 @@
 .concept-ev-bind-code {
 	margin: 0;
 	padding: 9px 12px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
-	background: #f7f8fa;
+	background: #fafafa;
 	font:
 		650 0.64rem ui-monospace,
 		SFMono-Regular,
@@ -1175,7 +1175,7 @@
 }
 
 .concept-ev-bind > small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 	text-align: center;
 }
@@ -1204,15 +1204,15 @@
 }
 
 .concept-ev-listen-row.is-on {
-	border: 1px solid rgb(66 171 91 / 0.35);
-	background: rgb(66 171 91 / 0.08);
-	color: #31954a;
+	border: 1px solid rgb(17 17 17 / 0.35);
+	background: rgb(17 17 17 / 0.08);
+	color: var(--ink);
 }
 
 .concept-ev-listen-row.is-off {
-	border: 1px dashed #d9dde2;
-	background: #fafbfc;
-	color: #a0a6ae;
+	border: 1px dashed var(--rule-strong);
+	background: #fafafa;
+	color: #b5b5b5;
 }
 
 .concept-ev-react[data-choice-listen='off'] .concept-ev-listen-row.is-on,
@@ -1222,7 +1222,7 @@
 
 .concept-ev-react > button {
 	padding: 8px 18px;
-	border: 1px solid rgb(255 92 80 / 0.3);
+	border: 1px solid rgb(17 17 17 / 0.3);
 	border-radius: 8px;
 	background: var(--blue-strong);
 	color: #fff;
@@ -1231,9 +1231,9 @@
 }
 
 .concept-ev-react > button:disabled {
-	border-color: #e2e5e9;
-	background: #f0f2f4;
-	color: #a0a6ae;
+	border-color: var(--rule-strong);
+	background: var(--rule);
+	color: #b5b5b5;
 	cursor: not-allowed;
 }
 
@@ -1243,13 +1243,13 @@
 	gap: 8px;
 	margin: 0;
 	padding: 7px 11px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
-	background: #f7f8fa;
+	background: #fafafa;
 }
 
 .concept-ev-count-row code {
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		650 0.6rem ui-monospace,
 		SFMono-Regular,
@@ -1269,7 +1269,7 @@
 }
 
 .concept-ev-status {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 	text-align: center;
 }
@@ -1293,7 +1293,7 @@
 }
 
 .bk-missing {
-	color: #c2402a;
+	color: var(--ink);
 	font-weight: 650;
 }
 
@@ -1319,22 +1319,22 @@
 }
 
 .concept-bk-verdict.is-pass {
-	border: 1.5px dashed rgb(44 138 68 / 0.4);
-	background: rgb(44 138 68 / 0.07);
-	color: #2c8a44;
+	border: 1.5px dashed rgb(17 17 17 / 0.4);
+	background: rgb(17 17 17 / 0.07);
+	color: var(--ink);
 }
 
 .concept-bk-verdict.is-block {
-	border: 1.5px dashed rgb(212 85 63 / 0.45);
-	background: rgb(212 85 63 / 0.07);
-	color: #c2402a;
+	border: 1.5px dashed rgb(17 17 17 / 0.45);
+	background: rgb(17 17 17 / 0.07);
+	color: var(--ink);
 }
 
 .concept-bk-skip {
 	padding: 14px 16px;
-	border: 1.5px dashed #d9dde2;
+	border: 1.5px dashed var(--rule-strong);
 	border-radius: 10px;
-	color: #a0a6ae;
+	color: #b5b5b5;
 	font-size: 0.6rem;
 	line-height: 1.7;
 	text-align: center;
@@ -1363,28 +1363,28 @@
 }
 
 .concept-bk-resp small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.54rem;
 }
 
 .concept-bk-resp.is-200 {
-	border: 1.5px dashed rgb(44 138 68 / 0.4);
-	background: rgb(44 138 68 / 0.06);
+	border: 1.5px dashed rgb(17 17 17 / 0.4);
+	background: rgb(17 17 17 / 0.06);
 }
 
 .concept-bk-resp.is-200 b,
 .concept-bk-resp.is-200 span {
-	color: #2c8a44;
+	color: var(--ink);
 }
 
 .concept-bk-resp.is-400 {
-	border: 1.5px dashed rgb(212 85 63 / 0.45);
-	background: rgb(212 85 63 / 0.06);
+	border: 1.5px dashed rgb(17 17 17 / 0.45);
+	background: rgb(17 17 17 / 0.06);
 }
 
 .concept-bk-resp.is-400 b,
 .concept-bk-resp.is-400 span {
-	color: #c2402a;
+	color: var(--ink);
 }
 
 .concept-api-code {
@@ -1392,14 +1392,14 @@
 	gap: 3px;
 	justify-self: center;
 	padding: 12px 16px;
-	border: 1px dashed #dfe4e8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 9px;
-	background: #fafbfc;
+	background: #fafafa;
 }
 
 .concept-api-code p {
 	margin: 0;
-	color: #55606c;
+	color: var(--ink-soft);
 	font:
 		600 0.62rem ui-monospace,
 		SFMono-Regular,
@@ -1418,7 +1418,7 @@
 
 .concept-api-code small {
 	margin-top: 6px;
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 	text-align: center;
 }
@@ -1460,23 +1460,23 @@
 }
 
 .concept-api-widget-live.is-ok {
-	border: 1.5px dashed rgb(44 138 68 / 0.4);
-	background: rgb(44 138 68 / 0.06);
-	color: #2c8a44;
+	border: 1.5px dashed rgb(17 17 17 / 0.4);
+	background: rgb(17 17 17 / 0.06);
+	color: var(--ink);
 }
 
 .concept-api-widget-live.is-ok i {
-	color: #e8a13a;
+	color: var(--ink-faint);
 }
 
 .concept-api-widget-live.is-bad {
-	border: 1.5px dashed rgb(212 85 63 / 0.45);
-	background: rgb(212 85 63 / 0.06);
-	color: #c2402a;
+	border: 1.5px dashed rgb(17 17 17 / 0.45);
+	background: rgb(17 17 17 / 0.06);
+	color: var(--ink);
 }
 
 .concept-api-use > small {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 	text-align: center;
 }
@@ -1507,10 +1507,10 @@
 .concept-ep-meaning {
 	margin: 0;
 	padding: 9px 13px;
-	border: 1px dashed #dfe4e8;
+	border: 1px dashed var(--rule-strong);
 	border-radius: 8px;
-	background: #fafbfc;
-	color: #68717c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font-size: 0.62rem;
 	font-weight: 650;
 }
@@ -1524,10 +1524,10 @@
 .concept-ep-req {
 	margin: 0;
 	padding: 8px 12px;
-	border: 1px solid #dfe4e8;
+	border: 1px solid var(--rule-strong);
 	border-radius: 8px;
-	background: #f7f8fa;
-	color: #55606c;
+	background: #fafafa;
+	color: var(--ink-soft);
 	font:
 		650 0.64rem ui-monospace,
 		SFMono-Regular,
@@ -1553,7 +1553,7 @@
 }
 
 .concept-lab-hint {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.58rem;
 	text-align: center;
 }
@@ -1727,9 +1727,9 @@
 	gap: 9px;
 	justify-self: center;
 	padding: 12px 16px;
-	border: 1.5px dashed color-mix(in srgb, var(--blue) 45%, #dfe4e8);
+	border: 1.5px dashed color-mix(in srgb, var(--blue) 45%, var(--rule-strong));
 	border-radius: 12px;
-	background: #fff7f4;
+	background: #fafafa;
 }
 
 .concept-auth-token i {
@@ -1746,7 +1746,7 @@
 }
 
 .concept-auth-token span {
-	color: #9ba1a9;
+	color: #b5b5b5;
 	font-size: 0.56rem;
 	font-weight: 650;
 }

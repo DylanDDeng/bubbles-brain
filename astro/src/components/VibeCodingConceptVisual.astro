@@ -58,11 +58,8 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 ---
 
 <figure class="concept-visual" data-concept-animation={concept.categoryId}>
-	<header class="concept-visual-header">
-		<span>动态说明</span>
-		<strong>{profile.visualTitle}</strong>
-		<small>{concept.name}</small>
-	</header>
+	<div class="concept-visual-box">
+	<p class="concept-visual-title">{profile.visualTitle}</p>
 
 	{
 		isGit ? (
@@ -1501,7 +1498,7 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 					</p>
 					<p>
 						<code>凭证</code>
-						<span>🎫 有效</span>
+						<span>有效</span>
 					</p>
 					<strong>不管去哪，都走这条道</strong>
 				</div>
@@ -1559,7 +1556,7 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 						<em class="ph ph-check-circle" />
 					</div>
 					<div class="concept-bk-ok" aria-hidden="true">
-						之后每次请求：带上 🎫 即可通行
+						之后每次请求：带上凭证即可通行
 					</div>
 					<strong>凭证在手，不用回回输密码</strong>
 				</div>
@@ -1589,8 +1586,8 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 					<div class="concept-rtm-row" aria-hidden="true">
 						<code>DB_URL</code>
 						<span class="concept-state-flip">
-							<i class="concept-state-a">test_db 🧪</i>
-							<i class="concept-state-b">live_db 🚀</i>
+							<i class="concept-state-a">test_db</i>
+							<i class="concept-state-b">live_db</i>
 						</span>
 					</div>
 					<div class="concept-rtm-row" aria-hidden="true">
@@ -2107,9 +2104,7 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 			</div>
 		)
 	}
+	</div>
 
-	<figcaption>
-		<i aria-hidden="true"></i>
-		{profile.visualCaption}
-	</figcaption>
+	<figcaption>{profile.visualCaption}</figcaption>
 </figure>

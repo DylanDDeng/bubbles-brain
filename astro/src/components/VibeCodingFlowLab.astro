@@ -107,57 +107,7 @@ const customLabIds = new Set([
 ]);
 const isFrontend = !customLabIds.has(concept.id) && concept.categoryId === 'frontend';
 
-const labTitles: Record<string, string> = {
-	component: '一个按钮组件，怎样复用出整个页面？',
-	state: '点一下按钮，状态经历了什么？',
-	props: '同一个按钮，怎么被传成不同样子？',
-	'responsive-design': '拖一拖屏宽，页面怎么变？',
-	dom: '改一个节点，页面哪里会动？',
-	hydration: '同一个按钮，水合前后差在哪？',
-	api: '调一次天气 API，会发生什么？',
-	endpoint: '一个地址，怎么装下查和建？',
-	runtime: '同一行代码，插在哪个运行时上？',
-	middleware: '一个请求，要过几道公用的关？',
-	authentication: '登录之后，系统凭什么一直认得你？',
-	'environment-variable': '一份代码，怎么在两个环境各连各的库？',
-	event: '点一下按钮，谁在听？',
-	routing: '换一个地址，会打开哪一页？',
-	ssr: 'CSR 和 SSR，首屏差在哪？',
-	'browser-storage': '存一条数据，刷新后还在吗？',
-	prompt: '同一个愿望，怎么说才不跑偏？',
-	frontend: '一个页面是怎样做出来的？',
-	backend: '一次请求会经过哪些部分？',
-	agent: 'Model 和 Harness，怎样搭档完成任务？',
-	'vibe-coding': '同样的需求，一口气说完还是一轮轮调？',
-	'context-window': '聊到第 60 轮，开头的约定还在吗？',
-	token: '「帮我总结这份报告」发出去，模型收到的是什么？',
-	harness: '模型说「删了它」，框架照做吗？',
-	mcp: '接入一个工单系统，要写几遍代码？',
-	skill: '每周都要发的周报，怎么不用每次重新教？',
-	rag: '模型没学过的问题，怎么答对？',
-	database: '重启服务器，注册的用户还在吗？',
-	schema: '同一批数据，为什么有结构才算得动？',
-	migration: 'users 表要加一列，怎么改才不出事故？',
-	cache: '同一个榜单被打开一万次，都要现算吗？',
-	'vector-database': '换个说法提问，库里的答案还找得到吗？',
-	git: '让 AI 大改代码之前，你的退路在哪？',
-	diff: 'AI 说「只改了按钮」，事实是吗？',
-	commit: '一天的修改，怎么提交才不给自己埋雷？',
-	branch: 'AI 重构到一半，线上要修急 bug，怎么办？',
-	worktree: '你和 Agent 同时要改代码，一个目录够用吗？',
-	fork: '别人的仓库你没有写权限，想改怎么办？',
-	'pull-request': 'AI 的大改动，直接进主线还是先过评审？',
-	checkpoint: '让 Agent 连干三小时，你最多会亏掉多少？',
-	build: '写好的代码，怎么变成线上能跑的东西？',
-	'ci-cd': '每次发布五道工序，漏一步就出事，怎么办？',
-	serverless: '一个小工具要上线，服务器谁来操心？',
-	'edge-runtime': '同一个网站，东京用户为什么慢出两秒？',
-	observability: '凌晨两点支付挂了，你什么时候能知道？',
-	'ai-agent': 'AI 工具怎样把目标变成结果？',
-	'data-storage': '一杯拿铁的订单，怎样被存进去、又取回来？',
-	'engineering-workflow': 'AI 修了一个登录 bug，这笔改动怎样安全进入主线？',
-	'deployment-runtime': '一个作品集网站，怎样从你的电脑走到线上？',
-};
+
 
 const stageNames: Record<string, string[]> = {
 	component: ['定义', '配置', '组合', '复用'],
@@ -209,6 +159,7 @@ const stageNames: Record<string, string[]> = {
 	'data-storage': ['定义', '写入', '查询', '返回'],
 	'engineering-workflow': ['编辑', '差异', '测试', '提交'],
 	'deployment-runtime': ['源码', '构建', '部署', '观察'],
+	'ui-patterns': ['认出', '叫名', '拆解', '指挥'],
 };
 
 const labels =
@@ -217,25 +168,21 @@ const labels =
 	profile.steps.map((step) => step.label);
 ---
 
-<section class="concept-section" aria-labelledby="concept-flow-title">
-	<div class="concept-section-heading">
-		<p class="concept-section-index">02 · 点击演示</p>
-		<h2 id="concept-flow-title">
-			{labTitles[concept.id] ?? labTitles[concept.categoryId] ?? profile.visualTitle}
-		</h2>
-		<p>突出显示的部分，就是当前概念在整条流程中负责的位置。</p>
-	</div>
-
-	<div
+{/* The heading above the demo is rendered by the page (VibeCodingTermDetail), which also lists it in the outline. */}
+<div
 		class="concept-process-demo"
 		data-concept-flow-lab
 		data-active-step="0"
 		style="--flow-progress: 0%"
 	>
-		<ol class="concept-process-panels">
+		<ol class="concept-process-panels" style={`--steps: ${profile.steps.length}`}>
 			{
 				profile.steps.map((step, index) => (
-					<li data-flow-step-item data-state={index === 0 ? 'active' : 'idle'}>
+					<li
+						data-flow-step-item
+						data-state={index === 0 ? 'active' : 'idle'}
+						data-current={index === 0 ? '' : undefined}
+					>
 						<article class="concept-process-panel">
 							<button
 								type="button"
@@ -246,12 +193,9 @@ const labels =
 								data-step-detail={step.detail}
 								aria-pressed={index === 0 ? 'true' : 'false'}
 							>
-								<header>
-									<span>{String(index + 1).padStart(2, '0')}</span>
-									<strong>
-										{step.label} · {labels[index]}
-									</strong>
-								</header>
+								<span class="concept-process-step">
+									<span>{index + 1}</span> {labels[index]}
+								</span>
 							</button>
 
 							<div class="concept-process-panel-body">
@@ -2941,7 +2885,7 @@ const labels =
 												data-flow-choice-group="mw"
 												aria-pressed="true"
 											>
-												带凭证 🎫
+												带凭证
 											</button>
 											<button
 												type="button"
@@ -2956,7 +2900,7 @@ const labels =
 											<small>GET /orders</small>
 											<p>
 												<code>凭证</code>
-												<span class="mw-when-ok">🎫 有效</span>
+												<span class="mw-when-ok">有效</span>
 												<span class="mw-when-bad bk-missing">（没有）</span>
 											</p>
 										</div>
@@ -3132,12 +3076,12 @@ const labels =
 								{isEnvLab && index === 3 ? (
 									<div class="concept-lab-pick" data-flow-choice-target="ev" data-choice-ev="local">
 										<div class="ev-when-local concept-bk-resp is-200">
-											<b>🧪</b>
+											<b>测试环境</b>
 											<span>连上了测试库</span>
 											<small>随便折腾，坏了也不心疼</small>
 										</div>
 										<div class="ev-when-prod concept-bk-resp is-200">
-											<b>🚀</b>
+											<b>正式环境</b>
 											<span>连上了正式库</span>
 											<small>同一份代码，一行没改</small>
 										</div>
@@ -4068,12 +4012,12 @@ const labels =
 											<p>
 												<input
 													type="color"
-													value="#ff5c50"
+													value="#111111"
 													aria-label="修改按钮主色"
 													data-flow-style-editor="--preview-accent"
 												/>
 												<span>color</span>
-												<output data-flow-style-value="--preview-accent">#FF5C50</output>
+												<output data-flow-style-value="--preview-accent">#111111</output>
 											</p>
 										</div>
 									</div>
@@ -4100,7 +4044,7 @@ const labels =
 									<div
 										class="concept-browser-preview concept-component-preview"
 										data-flow-browser-preview
-										style="--preview-text: #151515; --preview-accent: #ff5c50; --preview-spacing: 14px"
+										style="--preview-text: #151515; --preview-accent: #111111; --preview-spacing: 14px"
 									>
 										<small>同一个 Button · 三个位置</small>
 										<div>
@@ -4196,12 +4140,12 @@ const labels =
 										<p>
 											<input
 												type="color"
-												value="#ff5c50"
+												value="#111111"
 												aria-label="修改强调颜色"
 												data-flow-style-editor="--preview-accent"
 											/>
 											<span>强调</span>
-											<output data-flow-style-value="--preview-accent">#FF5C50</output>
+											<output data-flow-style-value="--preview-accent">#111111</output>
 										</p>
 										<p>
 											<span class="concept-spacing-symbol" aria-hidden="true">
@@ -4242,7 +4186,7 @@ const labels =
 									<div
 										class="concept-browser-preview"
 										data-flow-browser-preview
-										style="--preview-text: #151515; --preview-accent: #ff5c50; --preview-spacing: 16px"
+										style="--preview-text: #151515; --preview-accent: #111111; --preview-spacing: 16px"
 									>
 										<small>Bubble's Lab</small>
 										<h4 data-flow-preview="heading">欢迎来到知识库</h4>
@@ -4272,38 +4216,21 @@ const labels =
 								) : null}
 							</div>
 
-							<footer>
-								<i class="ph ph-check-circle" aria-hidden="true" />
-								<span data-flow-panel-status>{index === 0 ? '当前步骤' : '等待进入'}</span>
-							</footer>
 						</article>
-						{index < profile.steps.length - 1 ? (
-							<i class="ph ph-arrow-right concept-process-arrow" aria-hidden="true" />
-						) : null}
 					</li>
 				))
 			}
 		</ol>
 
 		<div class="concept-process-controls">
-			<button type="button" data-flow-previous disabled>
-				<i class="ph ph-arrow-left" aria-hidden="true"></i>
-				上一步
+			<p data-flow-detail aria-live="polite">{profile.steps[0].detail}</p>
+			<button type="button" class="concept-process-turn" data-flow-previous aria-label="上一步" disabled>
+				<i class="ph ph-caret-left" aria-hidden="true"></i>
 			</button>
-			<div>
-				<strong><span data-flow-current>1</span> / {profile.steps.length}</strong>
-				<p>
-					<span data-flow-title>{profile.steps[0].label}</span> · <span data-flow-detail
-						>{profile.steps[0].detail}</span
-					>
-				</p>
-			</div>
-			<button type="button" data-flow-next>
-				下一步
-				<i class="ph ph-arrow-right" aria-hidden="true"></i>
+			<button type="button" class="concept-process-turn" data-flow-next aria-label="下一步">
+				<i class="ph ph-caret-right" aria-hidden="true"></i>
 			</button>
 		</div>
 	</div>
-</section>
 
 <script is:inline type="module" src="/js/vibe-coding-flow-lab.js"></script>

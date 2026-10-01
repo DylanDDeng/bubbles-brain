@@ -41,7 +41,7 @@ works.forEach((work, order) => {
 				categories.length > 1 && (
 					<nav class="rr-filters" aria-label="按分类筛选" data-gallery-filter>
 						<a href="/vibe-coding/showcase/" data-gallery-option="" aria-current="true">
-							<span>全部</span> <span class="rr-count">{works.length}</span>
+							<span>全部</span>
 						</a>
 						{categories.map((category) => (
 							<a href={`/vibe-coding/showcase/?c=${category.id}`} data-gallery-option={category.id}>

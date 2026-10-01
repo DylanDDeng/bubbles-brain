@@ -30,7 +30,7 @@ const groups = vibeCodingSkillCategories
 				<span class="sr-only">搜索 Skills</span>
 				<input
 					type="search"
-					placeholder={`在 ${skills.length} 个 Skills 里搜索`}
+					placeholder="搜索 Skills"
 					autocomplete="off"
 					data-reading-search
 				/>
@@ -40,7 +40,7 @@ const groups = vibeCodingSkillCategories
 				{
 					groups.map((group) => (
 						<button type="button" data-reading-filter={group.id} aria-pressed="false">
-							{group.label} <span class="rr-count">{group.skills.length}</span>
+							{group.label}
 						</button>
 					))
 				}
@@ -58,9 +58,6 @@ const groups = vibeCodingSkillCategories
 					<div class="rr-block__head">
 						<h2 class="rr-block__title" id={`skills-${group.id}`}>
 							{group.label}
-							<span class="rr-count" data-reading-count>
-								{group.skills.length}
-							</span>
 						</h2>
 						<p class="rr-block__lede">{group.description}</p>
 					</div>

@@ -5,13 +5,7 @@ import { highlightsByMonth, loadDirectoryData, shortDate } from '../../lib/direc
 
 const data = await loadDirectoryData();
 const months = highlightsByMonth(data);
-const total = months.reduce((sum, month) => sum + month.entries.length, 0);
-const years = [...new Set(months.map((month) => month.year))].map((year) => ({
-	year,
-	count: months
-		.filter((month) => month.year === year)
-		.reduce((sum, month) => sum + month.entries.length, 0),
-}));
+const years = [...new Set(months.map((month) => month.year))];
 ---
 
 <BaseLayout
@@ -27,19 +21,19 @@ const years = [...new Set(months.map((month) => month.year))].map((year) => ({
 				<span class="sr-only">搜索精选阅读</span>
 				<input
 					type="search"
-					placeholder={`在 ${total} 篇里搜索`}
+					placeholder="搜索精选阅读"
 					autocomplete="off"
 					data-reading-search
 				/>
 			</label>
 			<div class="rr-filters" role="group" aria-label="按年份">
 				<button type="button" data-reading-filter="" aria-pressed="true">
-					全部 <span class="rr-count">{total}</span>
+					全部
 				</button>
 				{
-					years.map(({ year, count }) => (
+					years.map((year) => (
 						<button type="button" data-reading-filter={year} aria-pressed="false">
-							{year} <span class="rr-count">{count}</span>
+							{year}
 						</button>
 					))
 				}

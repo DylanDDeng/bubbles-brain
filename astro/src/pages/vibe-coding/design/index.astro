@@ -30,7 +30,7 @@ const groups = designBrandGroups.map((group) => ({
 				{
 					groups.map((group) => (
 						<button type="button" data-reading-filter={group.id} aria-pressed="false">
-							{group.label} <span class="rr-count">{group.brands.length}</span>
+							{group.label}
 						</button>
 					))
 				}
@@ -48,9 +48,6 @@ const groups = designBrandGroups.map((group) => ({
 					<div class="rr-block__head">
 						<h2 class="rr-block__title" id={`design-${group.id}`}>
 							{group.label}
-							<span class="rr-count" data-reading-count>
-								{group.brands.length}
-							</span>
 						</h2>
 						<p class="rr-block__lede">{group.note}</p>
 					</div>

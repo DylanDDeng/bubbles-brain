@@ -159,6 +159,72 @@ Dribbble 级别的 UI 动态。一个形状，永不切割：每个状态都是�
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-every-frame-is-code',
+		title: '每一帧都是代码',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-every-frame-is-code.mp4',
+		poster: '/media/showcase/claude-opus-5.5-every-frame-is-code.webp',
+		width: 1920,
+		height: 1080,
+		duration: 12,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 用一个 seek(t) 函数逐帧画出弹球翻页动画，音效也是代码合成的。',
+		prompt: {
+			en: `Make a 12s motion video in code (1920x1080, 30fps, one HTML file drawing every frame from a single seek(t) function, rendered with Playwright + ffmpeg, with original synthesized sound).
+
+Story: a dark prompt pill on an off-white page types "make a launch video" with a real keystroke rhythm → enter, the button flashes orange and the pill slides up → a 12-frame filmstrip stamps in left to right, one frame per beat at 120 BPM; each frame shows one pose of an orange ball's bounce (squash on contact, stretch mid-air, real arcs) → a playhead sweeps the strip while a big viewer above plays the poses as a flipbook, twice, faster the second time → the strip slides away, "every frame is code." fills the screen, and the ball arcs over and lands as the period.
+
+Rules: arrive fast, land soft (cover 12–19% of the remaining distance per frame); nothing ever freezes (slow push on every hold); stagger 2–4 frames; blur only on fast moves; big and readable on a phone; off-white, ink and one orange only. Sound: a tick per key, a click on enter, a rising note per frame stamp, a thump when the ball lands.
+
+Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame), critique them like a harsh motion director, fix the 3 worst problems, then render.`,
+		},
+		source: {
+			author: '@notdwd',
+			url: 'https://x.com/notdwd/status/2105031774904766641',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-qingming-rainbow-bridge',
+		title: '清明上河图里的虹桥',
+		category: 'explainer',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-qingming-rainbow-bridge.mp4',
+		poster: '/media/showcase/claude-opus-5.5-qingming-rainbow-bridge.webp',
+		width: 720,
+		height: 1280,
+		duration: 151,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 用 3D 动画讲《清明上河图》里的虹桥：几十根短木头互相托着，编成一座没有桥墩的拱桥。',
+		source: {
+			author: '@AndyL5cc',
+			url: 'https://x.com/AndyL5cc/status/2105159074136596698',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-fifteen-mg-styles',
+		title: '十五种 MG 动画风格',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-fifteen-mg-styles.mp4',
+		poster: '/media/showcase/claude-opus-5.5-fifteen-mg-styles.webp',
+		width: 1280,
+		height: 720,
+		duration: 179,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 用代码做出十五种 MG 动画风格，从逐帧手绘、扁平矢量到赛博朋克 HUD 和复古 Synthwave。',
+		source: {
+			author: '@VincentWei93',
+			url: 'https://x.com/VincentWei93/status/2104957548797604116',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

@@ -191,11 +191,63 @@ function setupGallery(root: HTMLElement) {
 	apply(new URL(location.href).searchParams.get('c') ?? '', false);
 }
 
+/**
+ * Gallery tiles play their film while the pointer is over them (or the tile has keyboard focus)
+ * and pause when it leaves, keeping that frame. The video is silent and loops, and it loads
+ * nothing until the first hover. Touch screens have no hover, and readers who ask for reduced
+ * motion get no autoplay: both keep the poster, and a tap opens the work.
+ */
+function setupHoverPlay(root: HTMLElement) {
+	if (root.dataset.hoverReady) return;
+	root.dataset.hoverReady = 'true';
+	if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+	if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+	for (const tile of root.querySelectorAll<HTMLElement>('.showcase-tile')) {
+		const video = tile.querySelector<HTMLVideoElement>('.showcase-tile__video');
+		if (!video?.dataset.src) continue;
+		video.muted = true;
+		let wanted = false;
+
+		const start = () => {
+			wanted = true;
+			if (!video.getAttribute('src')) video.src = video.dataset.src!;
+			video
+				.play()
+				.then(() => {
+					// The pointer may have left while the first frames were loading.
+					if (!wanted) return video.pause();
+					tile.classList.remove('is-paused');
+					tile.classList.add('is-playing');
+				})
+				.catch(() => {
+					// Blocked or failed: the poster stays, which is the same as no hover play.
+				});
+		};
+		const stop = () => {
+			wanted = false;
+			video.pause();
+			if (tile.classList.contains('is-playing')) {
+				tile.classList.remove('is-playing');
+				tile.classList.add('is-paused');
+			}
+		};
+
+		tile.addEventListener('pointerenter', start);
+		tile.addEventListener('pointerleave', stop);
+		tile.addEventListener('focus', start);
+		tile.addEventListener('blur', stop);
+	}
+}
+
 function initShowcase() {
 	reviveVideos();
 	document.querySelectorAll<HTMLElement>('[data-showcase-prompt]').forEach(setupPrompt);
 	document.querySelectorAll<HTMLElement>('[data-showcase-theater]').forEach(setupFilter);
-	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach(setupGallery);
+	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach((root) => {
+		setupGallery(root);
+		setupHoverPlay(root);
+	});
 }
 
 document.addEventListener('astro:page-load', initShowcase);

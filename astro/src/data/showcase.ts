@@ -206,6 +206,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-fifteen-mg-styles',
+		title: '十五种 MG 动画风格',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-fifteen-mg-styles.mp4',
+		poster: '/media/showcase/claude-opus-5.5-fifteen-mg-styles.webp',
+		width: 1280,
+		height: 720,
+		duration: 179,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 用代码做出十五种 MG 动画风格，从逐帧手绘、扁平矢量到赛博朋克 HUD 和复古 Synthwave。',
+		source: {
+			author: '@VincentWei93',
+			url: 'https://x.com/VincentWei93/status/2104957548797604116',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

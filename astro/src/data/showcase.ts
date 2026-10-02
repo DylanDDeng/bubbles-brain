@@ -187,6 +187,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-qingming-rainbow-bridge',
+		title: '清明上河图里的虹桥',
+		category: 'explainer',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-qingming-rainbow-bridge.mp4',
+		poster: '/media/showcase/claude-opus-5.5-qingming-rainbow-bridge.webp',
+		width: 720,
+		height: 1280,
+		duration: 151,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 用 3D 动画讲《清明上河图》里的虹桥：几十根短木头互相托着，编成一座没有桥墩的拱桥。',
+		source: {
+			author: '@AndyL5cc',
+			url: 'https://x.com/AndyL5cc/status/2105159074136596698',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

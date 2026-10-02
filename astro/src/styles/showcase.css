@@ -412,9 +412,26 @@
 	width: 100%;
 	height: auto;
 }
+/* The video sits over the poster and fades in once it is actually playing. When the pointer
+   leaves it pauses where it was, so the tile keeps that frame instead of jumping back. */
+.showcase-tile__video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0;
+	transition: opacity 160ms;
+	pointer-events: none;
+}
+.showcase-tile.is-playing .showcase-tile__video,
+.showcase-tile.is-paused .showcase-tile__video {
+	opacity: 1;
+}
 /* The title and length show only on hover or focus, over a soft shade. */
 .showcase-tile__label {
 	position: absolute;
+	z-index: 1;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -447,7 +464,8 @@
 	}
 }
 @media (prefers-reduced-motion: reduce) {
-	.showcase-tile__label {
+	.showcase-tile__label,
+	.showcase-tile__video {
 		transition: none;
 	}
 }

@@ -73,6 +73,17 @@ works.forEach((work, order) => {
 									loading={order < 3 ? 'eager' : 'lazy'}
 									decoding="async"
 								/>
+								{/* Plays on hover, silent and looping; nothing loads until then (scripts/showcase.ts). */}
+								<video
+									class="showcase-tile__video"
+									data-src={work.video}
+									muted
+									loop
+									playsinline
+									preload="none"
+									aria-hidden="true"
+									tabindex="-1"
+								/>
 								<span class="showcase-tile__label">
 									<span class="showcase-tile__title">{work.title}</span>
 									<span class="showcase-tile__time">{formatShowcaseDuration(work.duration)}</span>

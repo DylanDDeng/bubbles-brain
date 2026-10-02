@@ -295,6 +295,9 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 		duration: 74,
 		added: '2026-10-02',
 		note: 'Claude Fable 5.5 用代码画的短片：一个人走过二十种艺术风格，从洞穴壁画一路走进机器的潜空间，配乐也是代码写的。',
+		prompt: {
+			en: 'One person crosses 30,000 years of art in 74 seconds. 20 plates, and at every border the style changes: from a cave wall to the latent space of a machine.',
+		},
 		source: {
 			author: '@l_mejiaC',
 			url: 'https://x.com/l_mejiaC/status/2105801379956850793',

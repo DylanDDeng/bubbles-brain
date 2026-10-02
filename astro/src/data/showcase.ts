@@ -282,6 +282,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-humanity-walks',
+		title: '人类走过三万年',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-humanity-walks.mp4',
+		poster: '/media/showcase/claude-fable-5.5-humanity-walks.webp',
+		width: 1920,
+		height: 1080,
+		duration: 74,
+		added: '2026-10-02',
+		note: 'Claude Fable 5.5 用代码画的短片：一个人走过二十种艺术风格，从洞穴壁画一路走进机器的潜空间，配乐也是代码写的。',
+		source: {
+			author: '@l_mejiaC',
+			url: 'https://x.com/l_mejiaC/status/2105801379956850793',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

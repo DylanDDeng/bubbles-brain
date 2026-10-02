@@ -27,6 +27,8 @@ const isMwLab = concept.id === 'middleware';
 const isAuthLab = concept.id === 'authentication';
 const isEnvLab = concept.id === 'environment-variable';
 const isPromptLab = concept.id === 'prompt';
+const isZeroShotLab = concept.id === 'zero-shot';
+const isFewShotLab = concept.id === 'few-shot';
 const isAgentLab = concept.id === 'agent';
 const isVibeLab = concept.id === 'vibe-coding';
 const isWindowLab = concept.id === 'context-window';
@@ -58,6 +60,8 @@ const isEngLab = concept.id === 'engineering-workflow';
 const isDeployLab = concept.id === 'deployment-runtime';
 const customLabIds = new Set([
 	'prompt',
+	'zero-shot',
+	'few-shot',
 	'agent',
 	'vibe-coding',
 	'context-window',
@@ -127,6 +131,8 @@ const stageNames: Record<string, string[]> = {
 	ssr: ['请求', '拼装', '送达', '接力'],
 	'browser-storage': ['写入', '留存', '读取', '边界'],
 	prompt: ['目标', '上下文', '约束', '验收'],
+	'zero-shot': ['说明', '调用', '作答', '检查'],
+	'few-shot': ['挑例', '成对', '模仿', '调整'],
 	frontend: ['结构', '样式', '交互', '呈现'],
 	backend: ['请求', '校验', '处理', '响应'],
 	agent: ['目标', '模型', '框架', '循环'],
@@ -281,6 +287,189 @@ const labels =
 											<b>通过</b>
 											<span>开关生效，刷新后保持</span>
 											<small>验收写在提示词里，结果可以被检查</small>
+										</div>
+									</div>
+								) : null}
+
+								{isZeroShotLab && index === 0 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="zs" data-choice-zs="common">
+										<div class="concept-props-choices" role="group" aria-label="选择任务类型">
+											<button
+												type="button"
+												data-flow-choice="common"
+												data-flow-choice-group="zs"
+												aria-pressed="true"
+											>
+												常见任务
+											</button>
+											<button
+												type="button"
+												data-flow-choice="custom"
+												data-flow-choice-group="zs"
+												aria-pressed="false"
+											>
+												自定义规则
+											</button>
+										</div>
+										<div class="zs-when-common concept-component-def">
+											<small>你发给 AI 的话（没有示例）</small>
+											<p>
+												<code>任务</code>
+												<span>判断这条评论是好评还是差评</span>
+											</p>
+											<p>
+												<code>评论</code>
+												<span>「用了三天就坏了」</span>
+											</p>
+										</div>
+										<div class="zs-when-custom concept-component-def">
+											<small>你发给 AI 的话（没有示例）</small>
+											<p>
+												<code>任务</code>
+												<span>按我们的规则给工单分 P0–P3</span>
+											</p>
+											<p>
+												<code>工单</code>
+												<span>「支付页白屏」</span>
+											</p>
+										</div>
+									</div>
+								) : null}
+
+								{isZeroShotLab && index === 1 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="zs" data-choice-zs="common">
+										<div class="zs-when-common concept-js-preview">
+											<p>评论分类，模型见过无数次</p>
+											<i class="ph ph-arrow-down" aria-hidden="true" />
+											<p>它知道「坏了」通常意味着差评</p>
+										</div>
+										<div class="zs-when-custom concept-js-preview">
+											<p>P0–P3 各指什么？</p>
+											<i class="ph ph-arrow-down" aria-hidden="true" />
+											<p>没人告诉过它你们的分级标准</p>
+										</div>
+									</div>
+								) : null}
+
+								{isZeroShotLab && index === 2 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="zs" data-choice-zs="common">
+										<div class="zs-when-common concept-bk-verdict is-pass">
+											<i class="ph ph-check-circle" aria-hidden="true" />
+											回答「差评」：一次就对
+										</div>
+										<div class="zs-when-custom concept-bk-verdict is-block">
+											<i class="ph ph-warning" aria-hidden="true" />
+											回答「P2」：在你们的规矩里，支付故障是 P0
+										</div>
+									</div>
+								) : null}
+
+								{isZeroShotLab && index === 3 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="zs" data-choice-zs="common">
+										<div class="zs-when-common concept-bk-resp is-200">
+											<b>够用</b>
+											<span>常见任务，零样本就行</span>
+											<small>说清楚任务和输出格式，不必给例子</small>
+										</div>
+										<div class="zs-when-custom concept-bk-resp is-400">
+											<b>补例子</b>
+											<span>附上两三条分好级的工单</span>
+											<small>模型没见过的口径要靠示例教，也就是少样本</small>
+										</div>
+									</div>
+								) : null}
+
+								{isFewShotLab && index === 0 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="fs" data-choice-fs="mixed">
+										<div class="concept-props-choices" role="group" aria-label="选择示例的组成">
+											<button
+												type="button"
+												data-flow-choice="mixed"
+												data-flow-choice-group="fs"
+												aria-pressed="true"
+											>
+												各类都有
+											</button>
+											<button
+												type="button"
+												data-flow-choice="same"
+												data-flow-choice-group="fs"
+												aria-pressed="false"
+											>
+												全是同一类
+											</button>
+										</div>
+										<div class="fs-when-mixed concept-component-def">
+											<small>附在提示词里的 3 条示例</small>
+											<p>
+												<code>示例 1</code>
+												<span>「很好用」→ 好评</span>
+											</p>
+											<p>
+												<code>示例 2</code>
+												<span>「三天就坏了」→ 差评</span>
+											</p>
+											<p>
+												<code>示例 3</code>
+												<span>「好看但太贵」→ 中评</span>
+											</p>
+										</div>
+										<div class="fs-when-same concept-component-def">
+											<small>附在提示词里的 3 条示例</small>
+											<p>
+												<code>示例 1</code>
+												<span>「很好用」→ 好评</span>
+											</p>
+											<p>
+												<code>示例 2</code>
+												<span>「超出预期」→ 好评</span>
+											</p>
+											<p>
+												<code>示例 3</code>
+												<span>「物流很快」→ 好评</span>
+											</p>
+										</div>
+									</div>
+								) : null}
+
+								{isFewShotLab && index === 1 ? (
+									<div class="concept-component-def">
+										<small>每条都写成同一种格式</small>
+										<p>
+											<code>输入</code>
+											<span>一条评论原文</span>
+										</p>
+										<p>
+											<code>输出</code>
+											<span>好评 / 中评 / 差评，只写标签</span>
+										</p>
+									</div>
+								) : null}
+
+								{isFewShotLab && index === 2 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="fs" data-choice-fs="mixed">
+										<div class="fs-when-mixed concept-bk-verdict is-pass">
+											<i class="ph ph-check-circle" aria-hidden="true" />
+											新评论「屏幕碎了」→ 差评
+										</div>
+										<div class="fs-when-same concept-bk-verdict is-block">
+											<i class="ph ph-warning" aria-hidden="true" />
+											新评论「屏幕碎了」→ 好评：它照着示例的样子答
+										</div>
+									</div>
+								) : null}
+
+								{isFewShotLab && index === 3 ? (
+									<div class="concept-lab-pick" data-flow-choice-target="fs" data-choice-fs="mixed">
+										<div class="fs-when-mixed concept-bk-resp is-200">
+											<b>稳定</b>
+											<span>三类答案都有示例</span>
+											<small>哪类常错，就针对那类再补一条</small>
+										</div>
+										<div class="fs-when-same concept-bk-resp is-400">
+											<b>偏了</b>
+											<span>示例全是好评，它就爱说好评</span>
+											<small>示例要覆盖每一类答案，模型会照着示例的分布来</small>
 										</div>
 									</div>
 								) : null}

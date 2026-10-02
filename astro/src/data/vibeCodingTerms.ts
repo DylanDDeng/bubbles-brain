@@ -148,6 +148,18 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				description: '交给 AI 的任务说明。清晰的提示词通常包含目标、上下文、约束和验收标准。',
 			},
 			{
+				id: 'zero-shot',
+				name: 'Zero-shot',
+				chineseName: '零样本',
+				description: '不给任何示例，只用文字说明让 AI 完成任务。适合翻译、总结、分类这类 AI 本来就熟悉的常见任务。',
+			},
+			{
+				id: 'few-shot',
+				name: 'Few-shot',
+				chineseName: '少样本',
+				description: '在提示词里附上几条「输入 → 输出」示例，让 AI 照着示例的格式和口径完成同类任务。',
+			},
+			{
 				id: 'context-window',
 				name: 'Context Window',
 				chineseName: '上下文窗口',

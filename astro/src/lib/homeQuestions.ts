@@ -16,6 +16,7 @@ export const homeQuestions: HomeQuestion[] = [
 	{ ask: '知识库到底是什么？', href: '/newbie-tutorials/what-is-a-knowledge-base/' },
 	{ ask: 'MCP 到底是什么？', href: '/vibe-coding/terms/mcp/' },
 	{ ask: 'Skill 和提示词有什么不同？', href: '/vibe-coding/terms/skill/' },
+	{ ask: '零样本和少样本差在哪？', href: '/vibe-coding/terms/few-shot/' },
 	{ ask: '智能体和聊天机器人差在哪？', href: '/vibe-coding/terms/agent/' },
 	{ ask: 'RAG 是怎么查资料的？', href: '/vibe-coding/terms/rag/' },
 	{ ask: '一个 token 有多长？', href: '/vibe-coding/terms/token/' },

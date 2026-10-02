@@ -263,6 +263,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-fall-watercolor',
+		title: '水彩里的秋天',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-fall-watercolor.mp4',
+		poster: '/media/showcase/claude-fable-5.5-fall-watercolor.webp',
+		width: 1080,
+		height: 1920,
+		duration: 25,
+		added: '2026-10-02',
+		note: 'Claude Fable 5.5 用代码画的水彩动画：一片枫叶落进湖里，晕开成一整幅秋景。',
+		source: {
+			author: '@ishuagra02',
+			url: 'https://x.com/ishuagra02/status/2106000055706784118',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

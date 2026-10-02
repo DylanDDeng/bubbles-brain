@@ -1582,6 +1582,10 @@
 	display: none;
 }
 
+[data-choice-zs='common'] .zs-when-custom,
+[data-choice-zs='custom'] .zs-when-common,
+[data-choice-fs='mixed'] .fs-when-same,
+[data-choice-fs='same'] .fs-when-mixed,
 [data-choice-pr='vague'] .pr-when-clear,
 [data-choice-pr='clear'] .pr-when-vague {
 	display: none;

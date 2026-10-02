@@ -181,6 +181,11 @@ Rules: arrive fast, land soft (cover 12–19% of the remaining distance per fram
 
 Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame), critique them like a harsh motion director, fix the 3 worst problems, then render.`,
 		},
+		source: {
+			author: '@notdwd',
+			url: 'https://x.com/notdwd/status/2105031774904766641',
+			platform: 'X',
+		},
 	},
 ];
 

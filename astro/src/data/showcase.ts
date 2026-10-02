@@ -304,6 +304,28 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-sonnet-5.5-muse-trailer',
+		title: 'MUSE 预告片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Sonnet 5.5',
+		video: '/media/showcase/claude-sonnet-5.5-muse-trailer.mp4',
+		poster: '/media/showcase/claude-sonnet-5.5-muse-trailer.webp',
+		width: 1920,
+		height: 1080,
+		duration: 74,
+		added: '2026-10-02',
+		note: 'Claude Sonnet 5.5 为本地 AI 陪伴应用 MUSE 做的预告片，作者只给了一句很笼统的要求。',
+		prompt: {
+			en: 'fully create a beautiful and amazing and suitable looking trailer video for it',
+		},
+		source: {
+			author: '@VulKan42069',
+			url: 'https://x.com/VulKan42069/status/2105965465776590851',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

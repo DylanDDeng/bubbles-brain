@@ -244,6 +244,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-clips-clipboard-promo',
+		title: 'Clips 剪贴板宣传片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-clips-clipboard-promo.mp4',
+		poster: '/media/showcase/claude-opus-5.5-clips-clipboard-promo.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 为 Windows 剪贴板工具 Clips 做的 3D 宣传片：复制、归类、粘贴，一镜到底。',
+		source: {
+			author: '@okooo5km',
+			url: 'https://x.com/okooo5km/status/2104884349841846515',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

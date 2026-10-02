@@ -360,6 +360,15 @@
 	width: 100%;
 	min-width: 0;
 }
+/* The first column usually holds a short label (编引用, 编细节). Chinese may otherwise break
+   between any two characters, so keep a label whole and let the longer columns wrap instead;
+   a long first cell can still break at its punctuation or spaces. */
+.collection-site .reading-page .article-content :is(th, td):first-child {
+	word-break: keep-all;
+	/* Cells elsewhere use overflow-wrap: anywhere, which lets the table squeeze a label
+	   letter by letter; break-word still rescues a label that cannot fit at all. */
+	overflow-wrap: break-word;
+}
 @media (max-width: 600px) {
 	.collection-site .reading-page .article-content .article-table-scroll table {
 		min-width: 480px;

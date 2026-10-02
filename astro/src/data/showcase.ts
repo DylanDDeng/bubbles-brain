@@ -326,6 +326,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-art-history-cat',
+		title: '一只猫的艺术史速通',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-art-history-cat.mp4',
+		poster: '/media/showcase/claude-fable-5.5-art-history-cat.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-02',
+		note: 'Claude Fable 5.5 用 15 秒把四万年艺术史画了一遍：从洞穴壁画到梵高、包豪斯，每个时代都有同一只猫。',
+		source: {
+			author: '@cherry_mx_reds',
+			url: 'https://x.com/cherry_mx_reds/status/2106095190285144331',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

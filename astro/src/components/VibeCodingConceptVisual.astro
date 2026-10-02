@@ -26,6 +26,8 @@ const isMiddleware = concept.id === 'middleware';
 const isAuth = concept.id === 'authentication';
 const isEnvVar = concept.id === 'environment-variable';
 const isPrompt = concept.id === 'prompt';
+const isZeroShot = concept.id === 'zero-shot';
+const isFewShot = concept.id === 'few-shot';
 const isAgentTerm = concept.id === 'agent';
 const isVibeCoding = concept.id === 'vibe-coding';
 const isContextWindow = concept.id === 'context-window';
@@ -1384,6 +1386,100 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 						✓ 测试通过 · 任务完成
 					</div>
 					<strong>一个出主意，一个动手，循环到做完</strong>
+				</div>
+			</div>
+		) : isZeroShot ? (
+			<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+				<div class="concept-instance-source">
+					<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+						<i class="concept-state-a">只给说明 · 常见任务</i>
+						<i class="concept-state-b">只给说明 · 自定义规则</i>
+					</em>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>任务</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a">判断好评还是差评</i>
+							<i class="concept-state-b">按内部规则分 P0–P3</i>
+						</span>
+					</div>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>示例</code>
+						<span class="concept-rtm-no">（一条都没有）</span>
+					</div>
+					<strong>任务越常见，越不需要例子</strong>
+				</div>
+				<i class="concept-instance-wire" aria-hidden="true">
+					<b />
+				</i>
+				<div class="concept-instance-page">
+					<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+						<i class="concept-state-a">凭常识就会</i>
+						<i class="concept-state-b">没见过，只能猜</i>
+					</em>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>输入</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a">「三天就坏了」</i>
+							<i class="concept-state-b">「支付页白屏」</i>
+						</span>
+					</div>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>回答</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a concept-rtm-yes">✓ 差评</i>
+							<i class="concept-state-b concept-rtm-no">✗ P2（应为 P0）</i>
+						</span>
+					</div>
+					<strong>它没学过的口径，要靠例子教</strong>
+				</div>
+			</div>
+		) : isFewShot ? (
+			<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+				<div class="concept-instance-source">
+					<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+						<i class="concept-state-a">零样本 · 只有说明</i>
+						<i class="concept-state-b">少样本 · 说明 + 示例</i>
+					</em>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>任务</code>
+						<span>按内部规则分 P0–P3</span>
+					</div>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>示例 1</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a concept-rtm-no">（没有）</i>
+							<i class="concept-state-b">「登录失败」→ P0</i>
+						</span>
+					</div>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>示例 2</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a concept-rtm-no">（没有）</i>
+							<i class="concept-state-b">「按钮错位」→ P2</i>
+						</span>
+					</div>
+					<strong>示例把口径讲清楚了</strong>
+				</div>
+				<i class="concept-instance-wire" aria-hidden="true">
+					<b />
+				</i>
+				<div class="concept-instance-page">
+					<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+						<i class="concept-state-a">只能猜你的分级</i>
+						<i class="concept-state-b">照着示例分级</i>
+					</em>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>新工单</code>
+						<span>「支付页白屏」</span>
+					</div>
+					<div class="concept-rtm-row" aria-hidden="true">
+						<code>回答</code>
+						<span class="concept-state-flip">
+							<i class="concept-state-a concept-rtm-no">✗ P2</i>
+							<i class="concept-state-b concept-rtm-yes">✓ P0 · 和登录失败同级</i>
+						</span>
+					</div>
+					<strong>几个例子，胜过一段形容词</strong>
 				</div>
 			</div>
 		) : isPrompt ? (

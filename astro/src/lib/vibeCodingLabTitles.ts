@@ -18,6 +18,8 @@ export const vibeCodingLabTitles: Record<string, string> = {
 	ssr: 'CSR 和 SSR，首屏差在哪？',
 	'browser-storage': '存一条数据，刷新后还在吗？',
 	prompt: '同一个愿望，怎么说才不跑偏？',
+	'zero-shot': '一个例子都不给，AI 能做对吗？',
+	'few-shot': '给三个例子，AI 就会照着做吗？',
 	frontend: '一个页面是怎样做出来的？',
 	backend: '一次请求会经过哪些部分？',
 	agent: 'Model 和 Harness，怎样搭档完成任务？',

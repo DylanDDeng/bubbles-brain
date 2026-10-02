@@ -225,6 +225,25 @@ Show me 5 stills first (typing, strip half-built, flipbook, headline, last frame
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-pocketsflow-promo',
+		title: 'Pocketsflow 宣传片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-pocketsflow-promo.mp4',
+		poster: '/media/showcase/claude-opus-5.5-pocketsflow-promo.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-02',
+		note: 'Claude Opus 5.5 为创作者收款平台 Pocketsflow 做的宣传片，一个半调网点小人串起开店、结账和订阅。',
+		source: {
+			author: '@achxvi',
+			url: 'https://x.com/achxvi/status/2103918792845963545',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

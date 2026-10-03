@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1092 600" role="img" aria-labelledby="title desc">
+  <title id="title">同一个实习生，两种交代方式</title>
+  <desc id="desc">动画分四幕：第一幕，你只说「帮我写个周报」，实习生脑子里冒出三个问号——你哪个岗位、周报给谁看、本周做了什么。第二幕，他只好交出一份「放到哪家公司都成立」的万能周报。第三幕，你把背景、任务、要求三张卡片递过去。第四幕，他交回一份成果、问题、下周计划清清楚楚的周报，改个称呼就能交。</desc>
+  <style>
+    .sans{font-family:-apple-system,'PingFang SC','Noto Sans SC',system-ui,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .eyebrow{font-size:14px;letter-spacing:4px;font-weight:700;fill:#d9341c}
+    .headline{font-size:36px;font-weight:720;letter-spacing:-1px;fill:#111}
+    .ptitle{font-size:13.5px;letter-spacing:3px;font-weight:700;fill:#6c6c6c}
+    .bubble-t{font-size:20px;font-weight:650;fill:#111}
+    .q-t{font-size:17px;font-weight:600;fill:#6c6c6c}
+    .doc-t{font-size:17px;fill:#333}
+    .doc-dim{font-size:17px;fill:#9c9c98}
+    .stamp{font-size:15px;letter-spacing:2px;font-weight:700;fill:#9c9c98}
+    .stamp-good{font-size:15px;letter-spacing:2px;font-weight:700;fill:#d9341c}
+    .card-h{font-size:14px;letter-spacing:3px;font-weight:700;fill:#d9341c}
+    .card-t{font-size:15.5px;fill:#333}
+    .caption{font-size:16px;font-weight:600;fill:#333}
+    .caption-warn{font-size:16px;font-weight:700;fill:#d9341c}
+    .bubble{fill:#fff;stroke:#dedede;stroke-width:1.5}
+    .doc{fill:#f5f5f2;stroke:#b9b9b5;stroke-width:2}
+    .card{fill:#fff0ec;stroke:#ff4d2e;stroke-width:1.8}
+    .doc-good{fill:#fff;stroke:#ff4d2e;stroke-width:1.8}
+    .qmark{font-size:15px;font-weight:700;fill:#d9341c}
+    .a1{animation:s1 20s linear infinite}
+    .a2{animation:s2 20s linear infinite}
+    .a3{animation:s3 20s linear infinite}
+    .a4{animation:s4 20s linear infinite}
+    .a1,.a2,.a3,.a4{opacity:0}
+    @keyframes s1{0%,1%{opacity:0}3%,23%{opacity:1}26%,100%{opacity:0}}
+    @keyframes s2{0%,26%{opacity:0}28%,48%{opacity:1}51%,100%{opacity:0}}
+    @keyframes s3{0%,51%{opacity:0}53%,73%{opacity:1}76%,100%{opacity:0}}
+    @keyframes s4{0%,76%{opacity:0}78%,98%{opacity:1}100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){
+      .a1,.a2,.a3{animation:none;opacity:0}
+      .a4{animation:none;opacity:1}
+    }
+  </style>
+
+  <g class="sans">
+    <text x="40" y="46" class="mono eyebrow">PROMPT</text>
+    <text x="40" y="92" class="headline">同一个实习生，两种交代方式</text>
+
+    <!-- 第一幕：随口一句，全是问号 -->
+    <g class="a1">
+      <text x="40" y="150" class="mono ptitle">你只说了这一句</text>
+      <rect class="bubble" x="40" y="170" width="380" height="72" rx="12"/>
+      <text x="70" y="214" class="bubble-t">「帮我写个周报。」</text>
+      <rect class="bubble" x="560" y="150" width="472" height="66" rx="12"/>
+      <text x="590" y="191" class="q-t">你做什么岗位？</text>
+      <rect class="bubble" x="560" y="236" width="472" height="66" rx="12"/>
+      <text x="590" y="277" class="q-t">周报给谁看？要多正式？</text>
+      <rect class="bubble" x="560" y="322" width="472" height="66" rx="12"/>
+      <text x="590" y="363" class="q-t">你这周到底做了什么？</text>
+      <text x="796" y="452" text-anchor="middle" class="caption">他没有答案，又不能显得无能</text>
+    </g>
+
+    <!-- 第二幕：万能周报 -->
+    <g class="a2">
+      <text x="40" y="150" class="mono ptitle">于是他只能交出这个</text>
+      <rect class="doc" x="40" y="170" width="1012" height="230"/>
+      <text x="80" y="222" class="doc-dim">本周工作顺利推进，各项任务有序开展，</text>
+      <text x="80" y="262" class="doc-dim">团队协作良好。下一步将继续努力，</text>
+      <text x="80" y="302" class="doc-dim">确保各项指标圆满完成……</text>
+      <rect x="742" y="332" width="270" height="44" rx="6" fill="none" stroke="#9c9c98" stroke-width="2" transform="rotate(-4 877 354)"/>
+      <text x="877" y="361" text-anchor="middle" class="stamp" transform="rotate(-4 877 354)">放到哪家公司都成立</text>
+      <text x="546" y="452" text-anchor="middle" class="caption">没有一个字是错的，也没有一个字是非你不可的</text>
+    </g>
+
+    <!-- 第三幕：三张卡片递过去 -->
+    <g class="a3">
+      <text x="40" y="150" class="mono ptitle">换一种交代：把三张卡片递过去</text>
+      <rect class="card" x="40" y="180" width="310" height="200" rx="10"/>
+      <text x="70" y="218" class="mono card-h">背景</text>
+      <text x="70" y="256" class="card-t">我是电商运营，</text>
+      <text x="70" y="286" class="card-t">周报给直属领导看</text>
+      <rect class="card" x="390" y="180" width="310" height="200" rx="10"/>
+      <text x="420" y="218" class="mono card-h">任务</text>
+      <text x="420" y="256" class="card-t">写本周周报，素材：</text>
+      <text x="420" y="286" class="card-t">直播 3 场，GMV 42 万，</text>
+      <text x="420" y="316" class="card-t">退货率 8% 是主要问题</text>
+      <rect class="card" x="740" y="180" width="312" height="200" rx="10"/>
+      <text x="770" y="218" class="mono card-h">要求</text>
+      <text x="770" y="256" class="card-t">分「成果 / 问题 / 计划」三段，</text>
+      <text x="770" y="286" class="card-t">每段不超过三行，</text>
+      <text x="770" y="316" class="card-t">语气务实</text>
+      <text x="546" y="452" text-anchor="middle" class="caption">凡是他不该猜、又必须知道的，你都说清楚了</text>
+    </g>
+
+    <!-- 第四幕：合格的周报 -->
+    <g class="a4">
+      <text x="40" y="150" class="mono ptitle">这次他交回来的是</text>
+      <rect class="doc-good" x="40" y="170" width="1012" height="230"/>
+      <text x="80" y="218" class="doc-t">【成果】直播 3 场，GMV 42 万，环比 +15%</text>
+      <text x="80" y="260" class="doc-t">【问题】退货率升至 8%，主因是爆款 L 码缺货导致误拍</text>
+      <text x="80" y="302" class="doc-t">【下周计划】跟供应链对齐补货节奏，试播一场午间场</text>
+      <rect x="752" y="332" width="250" height="44" rx="6" fill="none" stroke="#ff4d2e" stroke-width="2" transform="rotate(-4 877 354)"/>
+      <text x="877" y="361" text-anchor="middle" class="stamp-good" transform="rotate(-4 877 354)">改个称呼就能交</text>
+      <text x="546" y="452" text-anchor="middle" class="caption-warn">差别不在模型，在你给的那段话</text>
+    </g>
+  </g>
+</svg>

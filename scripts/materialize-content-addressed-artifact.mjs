@@ -49,17 +49,26 @@ export function isPreviewVerificationBaselinePath(path) {
   );
 }
 
+// After the first failure no new entries start, and the pool waits for the ones already running
+// before rethrowing. Otherwise a caller cleaning up on error would race workers still writing
+// into the same directory (rm then fails with ENOTEMPTY, or a late write recreates it).
 async function runPool(entries, concurrency, worker) {
   let cursor = 0;
-  await Promise.all(
+  let failure = null;
+  await Promise.allSettled(
     Array.from({ length: Math.min(concurrency, entries.length) }, async () => {
-      while (cursor < entries.length) {
+      while (!failure && cursor < entries.length) {
         const index = cursor;
         cursor += 1;
-        await worker(entries[index], index);
+        try {
+          await worker(entries[index], index);
+        } catch (error) {
+          failure ??= { error };
+        }
       }
     }),
   );
+  if (failure) throw failure.error;
 }
 
 function validateDescriptor(descriptor, expected) {

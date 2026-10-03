@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { setTimeout as sleep } from "node:timers/promises";
 import { afterEach, describe, expect, it } from "vitest";
 import { createContentAddressedArtifact } from "../../scripts/create-content-addressed-artifact.mjs";
 import {
@@ -188,6 +189,41 @@ describe("content-addressed artifact materialization", () => {
     expect(await readFile(join(value.target, "keep.txt"), "utf8")).toBe(
       "last known good\n",
     );
+  });
+
+  it("waits for in-flight asset writes before cleaning up after a failure", async () => {
+    const value = await fixture();
+    const index = value.artifact.manifest.files.find(
+      (file) => file.path === "index.html",
+    );
+    value.store.objects.set(index.object_key, Buffer.from("corrupt"));
+    // The corrupt asset fails at once while the healthy ones arrive later, so
+    // other workers are still writing when the first failure is raised.
+    const read = value.store.get.bind(value.store);
+    value.store.get = async (key) => {
+      if (key !== index.object_key && key !== value.descriptor.object_key)
+        await sleep(30);
+      return read(key);
+    };
+
+    await expect(
+      materializeContentAddressedArtifact({
+        descriptor: value.descriptor,
+        expectedSiteReleaseId: RELEASE_ID,
+        expectedCodeSha: CODE_SHA,
+        expectedContentSha256: CONTENT_SHA,
+        targetRoot: value.target,
+        store: value.store,
+        concurrency: 3,
+      }),
+    ).rejects.toThrow("asset identity mismatch");
+    // Give any straggling writer time to land; nothing may be left behind.
+    await sleep(60);
+    expect(
+      (await readdir(value.root)).filter((name) =>
+        name.startsWith("target.materializing-"),
+      ),
+    ).toEqual([]);
   });
 
   it("rejects a descriptor for a different release identity", async () => {

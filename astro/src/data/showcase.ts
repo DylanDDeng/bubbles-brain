@@ -531,6 +531,25 @@ extra notes:
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-neural-networks-80-years',
+		title: '神经网络的 80 年',
+		category: 'explainer',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-neural-networks-80-years.mp4',
+		poster: '/media/showcase/claude-opus-5.5-neural-networks-80-years.webp',
+		width: 720,
+		height: 1280,
+		duration: 161,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 做的竖屏科普：从 1943 年的第一个神经元模型，讲到会先思考再回答的模型，神经网络八十年的几起几落。',
+		source: {
+			author: '@threeaus',
+			url: 'https://x.com/threeaus/status/2105933518819967458',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

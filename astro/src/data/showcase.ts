@@ -569,6 +569,28 @@ extra notes:
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-calligraphy',
+		title: '直而温：Claude 的一幅书法',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-calligraphy.mp4',
+		poster: '/media/showcase/claude-opus-5.5-calligraphy.webp',
+		width: 1080,
+		height: 1920,
+		duration: 45,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 为自己写的一幅行书：《尚书》里的「直而温，宽而栗，刚而无虐，简而无傲」。字形取自开源毛笔字体，墨色、纸纹、印章和配乐都是代码做的。',
+		prompt: {
+			zh: '让Claude写一幅书法描述自己，恰当的书法风格和文字内容。',
+		},
+		source: {
+			author: '@feigaobox',
+			url: 'https://x.com/feigaobox/status/2106042539744862690',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

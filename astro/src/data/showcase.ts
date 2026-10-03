@@ -490,6 +490,28 @@ extra notes:
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-biggest-scam',
+		title: '人类最大的骗局',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-biggest-scam.mp4',
+		poster: '/media/showcase/claude-opus-5.5-biggest-scam.webp',
+		width: 1280,
+		height: 720,
+		duration: 104,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 一个字不用讲完「人类最大的骗局」：一个人在传送带上追着海滩的梦，等终于坐上躺椅，已经老了。',
+		prompt: {
+			en: 'visualize the biggest scam in humanity, no words allowed',
+		},
+		source: {
+			author: '@twoclipping',
+			url: 'https://x.com/twoclipping/status/2106004647651737829',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

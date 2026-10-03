@@ -571,7 +571,7 @@ extra notes:
 	},
 	{
 		id: 'claude-opus-5.5-calligraphy',
-		title: '直而温：Claude 的一幅书法',
+		title: 'Claude 写书法',
 		category: 'demo',
 		medium: 'code-to-video',
 		model: 'Claude Opus 5.5',

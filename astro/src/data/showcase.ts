@@ -423,6 +423,25 @@ Ask me for the inputs, then show me the beat map and 6 stills (open, box, brief,
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-pixar-dot',
+		title: '一个小红点的冒险',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-pixar-dot.mp4',
+		poster: '/media/showcase/claude-fable-5.5-pixar-dot.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-03',
+		note: '作者只要了一个点，Claude Fable 5.5 给了一段皮克斯式的小冒险：红点落地、上天、摘星，最后成了 Fable 5.5 里的那个点。',
+		source: {
+			author: '@cherry_mx_reds',
+			url: 'https://x.com/cherry_mx_reds/status/2105825930799432073',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

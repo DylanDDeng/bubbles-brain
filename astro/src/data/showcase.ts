@@ -550,6 +550,25 @@ extra notes:
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-spider-man-ten-eras',
+		title: '十个时代的蜘蛛侠',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-spider-man-ten-eras.mp4',
+		poster: '/media/showcase/claude-fable-5.5-spider-man-ten-eras.webp',
+		width: 1920,
+		height: 1080,
+		duration: 38,
+		added: '2026-10-03',
+		note: 'Claude Fable 5.5 把蜘蛛侠画进十个漫画时代：从 1963 年的网点漫画，到像素游戏、黑白默片和水彩，一镜到底。',
+		source: {
+			author: '@chetaslua',
+			url: 'https://x.com/chetaslua/status/2106248621519978867',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

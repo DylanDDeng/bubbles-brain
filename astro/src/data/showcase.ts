@@ -404,6 +404,25 @@ Ask me for the inputs, then show me the beat map and 6 stills (open, box, brief,
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-intro',
+		title: 'Claude Fable 5.5 自我介绍',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-intro.mp4',
+		poster: '/media/showcase/claude-fable-5.5-intro.webp',
+		width: 1920,
+		height: 1080,
+		duration: 30,
+		added: '2026-10-02',
+		note: 'Claude Fable 5.5 给自己做的介绍视频：只用了一条提示词，画面和配乐都是它自己完成的。',
+		source: {
+			author: '@devteamdrew',
+			url: 'https://x.com/devteamdrew/status/2106155815707021549',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

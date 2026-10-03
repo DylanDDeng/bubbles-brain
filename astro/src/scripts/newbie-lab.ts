@@ -870,6 +870,216 @@ function setupRankLab(lab: HTMLElement): void {
 	renderRound();
 }
 
+// LAB (prompt) 01 — the same "intern", briefed two ways: one vague line vs
+// background + task + requirements. The reader flips between the two briefs.
+interface PromptFixCase {
+	label: string;
+	badPrompt: string;
+	badOutput: string;
+	badVerdict: string;
+	goodPrompt: string;
+	goodOutput: string;
+	goodVerdict: string;
+}
+const PROMPT_FIX_CASES: PromptFixCase[] = [
+	{
+		label: '写周报',
+		badPrompt: '帮我写个周报。',
+		badOutput:
+			'本周工作顺利推进，各项任务有序开展，团队协作良好。下一步将继续努力，确保各项指标圆满完成……',
+		badVerdict:
+			'没有一个字是错的，也没有一个字是非你不可的。它不知道你的岗位、你的领导、你本周做过什么，只能交出一份「万能周报」——万能的另一面，就是没用。',
+		goodPrompt:
+			'我是电商运营，给直属领导写周报。本周直播 3 场，GMV 42 万、比上周涨 15%，退货率升到 8% 是主要问题。分「成果 / 问题 / 下周计划」三段，每段不超过三行，语气务实。',
+		goodOutput:
+			'【成果】直播 3 场，GMV 42 万，环比 +15%。【问题】退货率升至 8%，主因是爆款 L 码缺货导致误拍。【下周计划】跟供应链对齐补货节奏，试播一场午间场。',
+		goodVerdict:
+			'背景（电商运营、给领导看）、任务（素材：直播、GMV、退货率）、要求（三段式、每段三行、务实）——三样齐了，交回来的就是改个称呼能直接发的东西。',
+	},
+	{
+		label: '问旅行建议',
+		badPrompt: '周末去哪玩好？',
+		badOutput:
+			'推荐几个热门目的地：杭州西湖风景秀丽，成都美食众多，厦门文艺清新，西安历史底蕴深厚……',
+		badVerdict:
+			'「好」是谁的好？和谁去、从哪出发、玩几天、预算多少——它一概不知，只能背一份大众榜单。',
+		goodPrompt:
+			'我和爸妈（60 多岁）从上海出发，周末两天。想要高铁 2 小时内、走路少、能吃本帮或江浙菜的地方，预算人均 800。',
+		goodOutput:
+			'首选苏州：高铁 25 分钟，拙政园有电瓶车、少走路，平江路吃苏帮菜，住观前街附近出行方便；备选无锡，鼋头渚坐船省脚力。两天人均 700 左右够用。',
+		goodVerdict:
+			'「和谁去、从哪出发、几天、预算」是背景，「推荐地方」是任务，「高铁 2 小时内、走路少」是要求。约束够清楚，它甚至主动给了备选。',
+	},
+	{
+		label: '改文案',
+		badPrompt: '帮我把这段话改得好一点。',
+		badOutput:
+			'改好啦：「这款保温杯采用先进技术，保温性能出色，设计精美，是您生活的好伴侣。」',
+		badVerdict:
+			'「好一点」是哪一点？它只能按最大公约数改——结果是同义改写，还顺手加了句广告腔。',
+		goodPrompt:
+			'这是保温杯电商详情页的文案，目标用户是 25–35 岁通勤女性。改得更口语，突出「12 小时保温」这个卖点，控制在 80 字以内。',
+		goodOutput:
+			'早八灌的热美式，加班到九点还是烫的。这只杯子能扛 12 小时——通勤路上、会议室里、健身房更衣室，热水自由，一只就够。',
+		goodVerdict:
+			'用途（详情页）、读者（通勤女性）、卖点（12 小时）、限制（80 字、口语）——要求越具体，它的发挥越对你的胃口。',
+	},
+];
+
+function setupPromptFixLab(lab: HTMLElement): void {
+	const cases = lab.querySelector<HTMLElement>('[data-nb-pf-cases]');
+	const out = lab.querySelector<HTMLElement>('[data-nb-pf-out]');
+	const verdict = lab.querySelector<HTMLElement>('[data-nb-pf-verdict]');
+	const modes = lab.querySelectorAll<HTMLInputElement>('input[name="nb-pf-mode"]');
+	if (!cases || !out || !verdict) return;
+
+	let active = 0;
+	const buttons: HTMLButtonElement[] = [];
+
+	const render = () => {
+		const current = PROMPT_FIX_CASES[active]!;
+		const mode = [...modes].find((radio) => radio.checked)?.value ?? 'bad';
+		buttons.forEach((button, index) =>
+			button.setAttribute('aria-pressed', String(index === active)),
+		);
+		out.replaceChildren();
+		const q = document.createElement('p');
+		q.textContent = `你：${mode === 'bad' ? current.badPrompt : current.goodPrompt}`;
+		const a = document.createElement('p');
+		a.textContent = `它：${mode === 'bad' ? current.badOutput : current.goodOutput}`;
+		out.append(q, a);
+		verdict.textContent = mode === 'bad' ? current.badVerdict : current.goodVerdict;
+	};
+
+	PROMPT_FIX_CASES.forEach((item, index) => {
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'nb-pill';
+		button.textContent = item.label;
+		button.addEventListener('click', () => {
+			active = index;
+			render();
+		});
+		buttons.push(button);
+		cases.append(button);
+	});
+	for (const radio of modes) radio.addEventListener('change', render);
+	render();
+}
+
+// LAB (prompt) 02 — prompt clinic: pick the stronger brief in each pair,
+// then the diagnosis is revealed.
+interface ClinicOption {
+	text: string;
+	better: boolean;
+}
+const CLINIC_ROUNDS: Array<{ q: string; a: ClinicOption; b: ClinicOption; reveal: string }> = [
+	{
+		q: '想让 AI 帮忙定一份健身计划',
+		a: { text: '帮我制定一个健身计划。', better: false },
+		b: {
+			text: '我 28 岁，办公室久坐，想三个月减掉 5 公斤。每周能练 3 次、每次 40 分钟，家里只有一副哑铃。帮我排一份训练计划。',
+			better: true,
+		},
+		reveal:
+			'B 把背景（28 岁、久坐、只有哑铃）、任务（三个月减 5 公斤）、要求（每周 3 次、每次 40 分钟）全交代了。A 只会换回一份「适用于所有人」的模板——适用于所有人，等于不适用于你。',
+	},
+	{
+		q: '想让 AI 检查一份租房合同',
+		a: {
+			text: '你是资深法务顾问。我会贴一份房屋租赁合同，请逐条找出对租客不利的条款，按风险从高到低列出来，每条说明理由。',
+			better: true,
+		},
+		b: { text: '看看这个合同有没有问题。', better: false },
+		reveal:
+			'「资深法务顾问」这个角色只是锦上添花，真正起作用的是后面三个要求：逐条、从高到低、说明理由。光给角色不派活，等于只告诉实习生职称、不交代工作。',
+	},
+	{
+		q: '第一次的回答不满意，接下来怎么做更好',
+		a: { text: '删掉这个对话，重开一个，把提示词写得更长更详细。', better: false },
+		b: {
+			text: '直接回复：「方向对了，但语气太正式；我们没有线下门店，第二点改掉。」',
+			better: true,
+		},
+		reveal:
+			'提示词是聊出来的。一条具体反馈，比重写整段提示词省力得多、也准得多——它最擅长的就是照着你的反馈修正。',
+	},
+];
+
+function setupPromptClinicLab(lab: HTMLElement): void {
+	const stage = lab.querySelector<HTMLElement>('[data-nb-clinic]');
+	const result = lab.querySelector<HTMLElement>('[data-nb-result]');
+	const reset = lab.querySelector<HTMLButtonElement>('[data-nb-reset]');
+	if (!stage || !result || !reset) return;
+
+	let picks: Array<'a' | 'b'> = [];
+
+	const renderRound = () => {
+		const round = CLINIC_ROUNDS[picks.length];
+		stage.replaceChildren();
+		if (!round) return;
+		const hint = document.createElement('p');
+		hint.className = 'nb-lab-hint';
+		hint.textContent = `第 ${picks.length + 1} / ${CLINIC_ROUNDS.length} 题 · 哪句交代更管用？`;
+		const q = document.createElement('p');
+		q.className = 'nb-rank-q';
+		q.textContent = round.q;
+		stage.append(hint, q);
+		(['a', 'b'] as const).forEach((key) => {
+			const option = round[key];
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'nb-rank-option';
+			const tag = document.createElement('span');
+			tag.className = 'nb-rank-tag';
+			tag.textContent = key.toUpperCase();
+			const text = document.createElement('span');
+			text.textContent = option.text;
+			button.append(tag, text);
+			button.addEventListener('click', () => {
+				picks.push(key);
+				if (picks.length >= CLINIC_ROUNDS.length) finish();
+				else renderRound();
+			});
+			stage.append(button);
+		});
+	};
+
+	const finish = () => {
+		stage.replaceChildren();
+		result.replaceChildren();
+		let right = 0;
+		CLINIC_ROUNDS.forEach((round, index) => {
+			const pick = picks[index]!;
+			const picked = round[pick];
+			if (picked.better) right += 1;
+			const row = document.createElement('p');
+			const head = document.createElement('b');
+			head.textContent = `第 ${index + 1} 题你选了 ${pick.toUpperCase()}${picked.better ? ' ✓ ' : ' ⚠ '}`;
+			row.append(head, round.reveal);
+			result.append(row);
+		});
+		const verdict = document.createElement('p');
+		verdict.className = 'nb-kb-verdict';
+		verdict.textContent =
+			right === CLINIC_ROUNDS.length
+				? '三题全对——你已经掌握了核心判断：凡是它必须知道又不该猜的，都说出来；不满意就给反馈，而不是推倒重来。'
+				: `你选对了 ${right} / ${CLINIC_ROUNDS.length} 题。回头看选错的那道：差的提示词往往只差一句话——把背景、任务、要求补上，或者把「重来」换成「给反馈」。`;
+		result.dataset.tone = right === CLINIC_ROUNDS.length ? 'good' : 'meh';
+		result.append(verdict);
+		result.hidden = false;
+		reset.hidden = false;
+	};
+
+	reset.addEventListener('click', () => {
+		picks = [];
+		result.hidden = true;
+		reset.hidden = true;
+		renderRound();
+	});
+	renderRound();
+}
+
 function setupNewbieLabs(): void {
 	for (const lab of document.querySelectorAll<HTMLElement>('[data-nb-lab]')) {
 		if (lab.dataset.nbReady === 'true') continue;
@@ -886,6 +1096,8 @@ function setupNewbieLabs(): void {
 		else if (kind === 'fill') setupFillLab(lab);
 		else if (kind === 'basevs') setupBasevsLab(lab);
 		else if (kind === 'rank') setupRankLab(lab);
+		else if (kind === 'promptfix') setupPromptFixLab(lab);
+		else if (kind === 'promptclinic') setupPromptClinicLab(lab);
 	}
 }
 

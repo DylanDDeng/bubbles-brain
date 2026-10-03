@@ -43,6 +43,19 @@ const chapters = [
 		],
 	},
 	{
+		route: '/newbie-tutorials/how-to-talk-to-ai/',
+		weight: 5,
+		visuals: ['prompt-intern.svg'],
+		labs: ['promptfix', 'promptclinic'],
+		phrases: [
+			'提示词',
+			'Prompt Engineering',
+			'背景',
+			'/newbie-tutorials/why-ai-forgets/',
+			'/newbie-tutorials/how-llms-are-trained/',
+		],
+	},
+	{
 		route: '/newbie-tutorials/what-is-a-knowledge-base/',
 		weight: 2,
 		visuals: ['kb-pipeline.svg', 'kb-chunks-and-embeddings.svg', 'kb-failure-points.svg'],

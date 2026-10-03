@@ -423,6 +423,114 @@ Ask me for the inputs, then show me the beat map and 6 stills (open, box, brief,
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-pixar-dot',
+		title: '一个小红点的冒险',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-pixar-dot.mp4',
+		poster: '/media/showcase/claude-fable-5.5-pixar-dot.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-03',
+		note: '作者只要了一个点，Claude Fable 5.5 给了一段皮克斯式的小冒险：红点落地、上天、摘星，最后成了 Fable 5.5 里的那个点。',
+		source: {
+			author: '@cherry_mx_reds',
+			url: 'https://x.com/cherry_mx_reds/status/2105825930799432073',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-claude-ad',
+		title: 'Claude 品牌广告',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-claude-ad.mp4',
+		poster: '/media/showcase/claude-opus-5.5-claude-ad.webp',
+		width: 1080,
+		height: 1920,
+		duration: 15,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 给 Claude 自己做的竖屏广告：版画、老照片和衬线字快速切换，最后落在 Claude 标志上。',
+		prompt: {
+			en: `Make a fast-paced ad for Claude, about 10–15 s (closer to 15). Reference video attached.
+
+1. research:
+- Study Claude's earlier brand designs first.
+- Find every photo and asset that fits: artistic, editorial, whatever the idea needs.
+
+2. design/direction
+- An art reimagine: bold, light mode.
+- Clean and perfect: no beige "artsy" look, no eyebrow labels.
+- Paint elements on top of the images.
+- Above all: fast-paced and very creative.
+
+3. rules
+- No slop. Study the reference closely: smoothness, timing, shot durations, fonts, elements.
+- Take some inspiration and borrow techniques, but change the design overall, it should look like something you did completely on yourself with your own taste
+- Every morph has to be perfect.
+
+ideas: (since everything moves fast)
+- Clean, varied Claude SVG animations
+- Images small, bigger, several at once
+- Morphing text
+- Clean 3D animation
+- Zooms
+
+extra notes:
+- Feel free to work 10+ hours
+- Give me the final video, ending on the Claude logo.`,
+		},
+		source: {
+			author: '@LexnLin',
+			url: 'https://x.com/LexnLin/status/2106101651010449796',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-biggest-scam',
+		title: '人类最大的骗局',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-biggest-scam.mp4',
+		poster: '/media/showcase/claude-opus-5.5-biggest-scam.webp',
+		width: 1280,
+		height: 720,
+		duration: 104,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 一个字不用讲完「人类最大的骗局」：一个人在传送带上追着海滩的梦，等终于坐上躺椅，已经老了。',
+		prompt: {
+			en: 'visualize the biggest scam in humanity, no words allowed',
+		},
+		source: {
+			author: '@twoclipping',
+			url: 'https://x.com/twoclipping/status/2106004647651737829',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-x-tech-feed',
+		title: 'X 实时科技宣传片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-x-tech-feed.mp4',
+		poster: '/media/showcase/claude-opus-5.5-x-tech-feed.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 在 Claude Code 里用一条提示词做的宣传片：约 3,800 行代码、46,305 个 three.js 粒子，最后聚成 X 标志。',
+		source: {
+			author: '@QibazX',
+			url: 'https://x.com/QibazX/status/2106116277936787516',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

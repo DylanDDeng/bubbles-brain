@@ -512,6 +512,25 @@ extra notes:
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-x-tech-feed',
+		title: 'X 实时科技宣传片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-x-tech-feed.mp4',
+		poster: '/media/showcase/claude-opus-5.5-x-tech-feed.webp',
+		width: 1920,
+		height: 1080,
+		duration: 15,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 在 Claude Code 里用一条提示词做的宣传片：约 3,800 行代码、46,305 个 three.js 粒子，最后聚成 X 标志。',
+		source: {
+			author: '@QibazX',
+			url: 'https://x.com/QibazX/status/2106116277936787516',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

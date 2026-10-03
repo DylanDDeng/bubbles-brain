@@ -442,6 +442,54 @@ Ask me for the inputs, then show me the beat map and 6 stills (open, box, brief,
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-claude-ad',
+		title: 'Claude 品牌广告',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-claude-ad.mp4',
+		poster: '/media/showcase/claude-opus-5.5-claude-ad.webp',
+		width: 1080,
+		height: 1920,
+		duration: 15,
+		added: '2026-10-03',
+		note: 'Claude Opus 5.5 给 Claude 自己做的竖屏广告：版画、老照片和衬线字快速切换，最后落在 Claude 标志上。',
+		prompt: {
+			en: `Make a fast-paced ad for Claude, about 10–15 s (closer to 15). Reference video attached.
+
+1. research:
+- Study Claude's earlier brand designs first.
+- Find every photo and asset that fits: artistic, editorial, whatever the idea needs.
+
+2. design/direction
+- An art reimagine: bold, light mode.
+- Clean and perfect: no beige "artsy" look, no eyebrow labels.
+- Paint elements on top of the images.
+- Above all: fast-paced and very creative.
+
+3. rules
+- No slop. Study the reference closely: smoothness, timing, shot durations, fonts, elements.
+- Take some inspiration and borrow techniques, but change the design overall, it should look like something you did completely on yourself with your own taste
+- Every morph has to be perfect.
+
+ideas: (since everything moves fast)
+- Clean, varied Claude SVG animations
+- Images small, bigger, several at once
+- Morphing text
+- Clean 3D animation
+- Zooms
+
+extra notes:
+- Feel free to work 10+ hours
+- Give me the final video, ending on the Claude logo.`,
+		},
+		source: {
+			author: '@LexnLin',
+			url: 'https://x.com/LexnLin/status/2106101651010449796',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

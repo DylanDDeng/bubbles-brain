@@ -17,6 +17,9 @@ export default defineConfig({
 	site: 'https://bubblenews.today',
 	output: 'static',
 	trailingSlash: 'always',
+	// src/scripts/instantNavigation.ts prefetches into memory instead; Astro's prefetch fills
+	// the HTTP cache, which our max-age=0 HTML cannot be served from.
+	prefetch: false,
 	markdown: {
 		processor: unified({
 			rehypePlugins: [rehypeCollectionLinks, [rehypeArticleFigures, { staticRoot }]],

@@ -96,9 +96,16 @@ const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 						<a
 							class="site-home"
 							href={homeHref}
+							data-nav-prefetch
 							aria-label={isEnglish ? "Bubble's Brain home" : "Bubble's Brain 首页"}
 						>
-							<img class="site-avatar" src="/images/cat-curator.jpg" alt="" width="28" height="28" />
+							<img
+								class="site-avatar"
+								src="/images/cat-curator.jpg"
+								alt=""
+								width="28"
+								height="28"
+							/>
 							<span>Bubble's Brain</span>
 						</a>
 						{isSearchPage ? (
@@ -121,6 +128,7 @@ const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 									<a
 										href={item.href}
 										aria-current={item.id === currentSection ? 'page' : undefined}
+										data-nav-prefetch
 									>
 										{item.label}
 									</a>
@@ -162,6 +170,7 @@ const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 		</div>
 		<CommandSearch locale={lang} />
 		<script>
+			import '../scripts/instantNavigation';
 			import '../scripts/readingUpdates';
 		</script>
 		<script is:inline type="module" src="/js/site-shell.js"></script>

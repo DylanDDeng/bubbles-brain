@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
 	loadDirectoryData,
-	newbieMark,
 	seriesLessons,
 	TUTORIAL_SERIES,
 } from '../../lib/directories';
@@ -32,16 +31,12 @@ const series = TUTORIAL_SERIES.map((meta) => ({
 							{item.title}
 							<span class="rr-count">{item.level}</span>
 						</h2>
-						<p class="rr-block__lede">{item.lede}</p>
 					</div>
 					<ol class="rr-rows rr-rows--plain">
 						{item.lessons.map((lesson, index) => (
 							<li>
 								<a class="rr-lesson" href={lesson.href}>
-									<span class="rr-lesson__mark">
-										{(item.id === 'newbie-tutorials' && newbieMark(lesson)) ||
-											String(index + 1).padStart(2, '0')}
-									</span>
+									<span class="rr-lesson__mark">{String(index + 1).padStart(2, '0')}</span>
 									<span class="rr-lesson__title">{lesson.title}</span>
 								</a>
 							</li>

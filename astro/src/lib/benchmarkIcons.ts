@@ -23,6 +23,7 @@ import aaLiquidAi from '../components/benchmark-icons/aa-liquid-ai.svg?url';
 import aaNanbeige from '../components/benchmark-icons/aa-nanbeige.png?url';
 import aaMicrosoft from '../components/benchmark-icons/aa-microsoft.svg?url';
 import inception from '../components/benchmark-icons/inception.svg?url';
+import fireworks from '../components/benchmark-icons/fireworks.svg?url';
 import poolside from '../components/benchmark-icons/poolside.svg?url';
 import ant from '../components/benchmark-icons/ant.svg?url';
 import thinkingmachines from '../components/benchmark-icons/thinking-machines.svg?url';
@@ -78,6 +79,7 @@ export const benchmarkIcons: Readonly<Record<string, string>> = {
 	'Ant Group': ant,
 	Poolside: poolside,
 	Inception: inception,
+	'Fireworks AI': fireworks,
 	Anthropic: claude,
 	OpenAI: openai,
 	Google: gemini,

@@ -180,12 +180,6 @@
 	margin-left: 6px;
 	font-size: 15px;
 }
-.rr-block__lede {
-	margin: 0;
-	font-size: 15px;
-	line-height: 1.7;
-	color: var(--ink-soft);
-}
 
 /* ------------------------------------------------------------------ rows */
 .rr-rows {

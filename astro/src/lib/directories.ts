@@ -20,24 +20,11 @@ export async function loadDirectoryData() {
 export type DirectoryData = Awaited<ReturnType<typeof loadDirectoryData>>;
 
 export const TUTORIAL_SERIES = [
-	{ id: 'newbie-tutorials', level: '零基础', lede: '一课只回答一个问题，先有直觉再讲术语。' },
-	{ id: 'codex-tutorials', level: '上手', lede: '从第一次打开 Codex，到让它帮你完成一个项目。' },
-	{ id: 'pi-agent-tutorials', level: '原理', lede: '读一个极简 Agent 的源码，看它如何工作。' },
-	{ id: 'workbuddy-tutorials', level: '办公', lede: '从办公协作走向自动化。' },
+	{ id: 'newbie-tutorials', level: '零基础' },
+	{ id: 'codex-tutorials', level: '上手' },
+	{ id: 'pi-agent-tutorials', level: '原理' },
+	{ id: 'workbuddy-tutorials', level: '办公' },
 ] as const;
-
-/** The four 新手村 lessons each carry one character: 编 / 念 / 忘 / 造. */
-export const NEWBIE_MARKS: Record<string, string> = {
-	'why-llms-hallucinate': '编',
-	'what-is-a-knowledge-base': '念',
-	'why-ai-forgets': '忘',
-	'how-llms-are-trained': '造',
-};
-
-export function newbieMark(item: Pick<BrainPodItem, 'href'>) {
-	const slug = item.href.split('/').filter(Boolean).at(-1) ?? '';
-	return NEWBIE_MARKS[slug];
-}
 
 /** Series lessons in reading order: frontmatter weight first, then oldest first. */
 export function seriesLessons(data: DirectoryData, id: string): BrainPodItem[] {

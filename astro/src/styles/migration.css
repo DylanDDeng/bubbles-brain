@@ -160,6 +160,36 @@ iframe {
 	transform: translateY(0);
 }
 
+/* Shown when a page change takes longer than a moment (scripts/instantNavigation.ts). It
+   creeps towards the end and never claims to finish; the next page replaces it. */
+.nav-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	width: 100%;
+	height: 2px;
+	background: var(--blue);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 3s cubic-bezier(0.1, 0.7, 0.2, 1);
+	pointer-events: none;
+}
+
+.nav-progress.is-running {
+	transform: scaleX(0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.nav-progress {
+		transition: none;
+	}
+
+	.nav-progress.is-running {
+		transform: none;
+	}
+}
+
 .site-frame {
 	display: grid;
 	grid-template-columns: var(--rail-width) minmax(0, 1fr);

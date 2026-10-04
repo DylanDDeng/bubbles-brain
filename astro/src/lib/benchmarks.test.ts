@@ -27,15 +27,21 @@ describe('benchmark ledger', () => {
 			]),
 		).toEqual([
 			['GPT-6 Astra', 65.5, 1029.65],
+			['Claude Opus 5.5', 62.3, 98.87],
+			['Claude Sonnet 5.5', 61.9, 110.45],
 			['Claude Fable 5.1', 56.3, 138.55],
+			['Gemini 4 Argon', 55.0, 129.36],
 			['Claude Opus 5', 52.0, 196.71],
 			['Claude Fable 5', 47.0, 301.28],
-			['GPT-5.6', 32.2, 179.64],
+			['GPT-5.6 Sol', 32.2, 179.64],
 			['GLM-5.3', 30.2, 97.22],
+			['Grok 4.7', 29.5, 318.77],
 			['Kimi K3', 25.9, 109.71],
 			['Grok 4.6', 25.3, 243.43],
 			['Gemini 3.7 Flash', 20.3, 34.14],
 			['Gemini 3.8 Flash', 19.6, 38.75],
+			['GLM-5.3 Flash', 18.1, 11.03],
+			['Qwen3.8-Max-0902', 17.8, 51.27],
 			['Qwen3.8-Max', 15.8, 55.14],
 			['DeepSeek V4 Flash Vision Exp', 14.8, 8.57],
 			['Muse Spark 1.2', 12.0, 27.81],
@@ -140,28 +146,33 @@ describe('benchmark ledger', () => {
 		expect(benchmarkRoute('tbench-4', 'en')).toBe('/en/benchmarks/tbench-4/');
 	});
 
-	it('preserves the full GDPval-AA v2 Elo scale and explicit evaluation configurations', () => {
+	it('preserves the full GDPval-AA v2.1 Elo scale, its anchor and explicit evaluation configurations', () => {
 		const rows = rankedScores('gdpval-aa');
-		expect(rows).toHaveLength(247);
+		expect(rows).toHaveLength(282);
 		expect(rows[0]).toMatchObject({
-			model: { name: 'Claude Fable 5.1 (Adaptive Reasoning, Max Effort, Default Fallback)' },
-			score: { value: 1764, ci: 19, agent: 'Stirrup' },
+			model: { name: 'Claude Opus 5.5 (Max, Default Fallback)' },
+			score: { value: 1867, ci: 26, agent: 'Stirrup' },
 		});
 		expect(rows.at(-1)).toMatchObject({
 			model: { name: 'K2 Horizon 0.9B' },
-			score: { value: -174, ci: 17 },
+			score: { value: -406, ci: 22 },
 		});
-		expect(rows.filter(({ score }) => score.value < 0)).toHaveLength(12);
+		expect(rows.filter(({ score }) => score.value < 0)).toHaveLength(28);
+		const anchors = rows.filter(({ score }) => score.ci === undefined);
+		expect(anchors.map(({ model, score }) => [model.name, score.value])).toEqual([
+			['DeepSeek V4.1 Flash (Max)', 1600],
+		]);
+		expect(anchors[0]!.score.note?.en).toContain('anchor');
 		for (const { model, score } of rows) {
 			expect(score.source_model).toBe(model.name);
 			expect(benchmarkIcons[model.creator]).toBeTruthy();
-			expect(score.ci).toBeGreaterThan(0);
+			if (score.ci !== undefined) expect(score.ci).toBeGreaterThan(0);
 			expect(formatScore(score, 'integer')).not.toContain('%');
 		}
 		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'gdpval-aa')!;
 		expect(benchmark).toMatchObject({
 			category: 'general',
-			checked_at: '2026-09-17',
+			checked_at: '2026-10-04',
 			url: 'https://artificialanalysis.ai/evaluations/gdpval-aa',
 			format: 'integer',
 			score_label: { zh: 'Elo 评分', en: 'Elo rating' },
@@ -190,31 +201,45 @@ describe('benchmark ledger', () => {
 	it('keeps the DeepSWE v1.1 snapshot separate from older benchmark checks', () => {
 		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'deepswe');
 		expect(benchmark).toMatchObject({
-			checked_at: '2026-09-15',
+			checked_at: '2026-10-04',
 			url: 'https://deepswe.datacurve.ai/',
 			format: 'percent',
 		});
-		expect(benchmarkLedger.checked_at).toBe('2026-09-07');
+		expect(benchmarkLedger.checked_at).toBe('2026-10-04');
 		const rows = rankedScores('deepswe');
-		expect(rows).toHaveLength(21);
-		expect(rows[0]).toMatchObject({
+		const isSelfReported = (score: { note?: { en: string } }) =>
+			score.note?.en.startsWith('Self-reported') ?? false;
+		const official = rows.filter(({ score }) => !isSelfReported(score));
+		expect(official).toHaveLength(21);
+		expect(official[0]).toMatchObject({
 			model: { id: 'gpt-6-astra-xhigh' },
 			score: { value: 74.1, ci: 2.9, agent: 'mini-swe-agent' },
 		});
-		expect(rows.at(-1)).toMatchObject({
+		expect(official.at(-1)).toMatchObject({
 			model: { id: 'gemini-3-5-flash-high' },
 			score: { value: 36.1 },
 		});
-		for (const { score } of rows) {
+		for (const { score } of official) {
 			expect(score.agent).toBe('mini-swe-agent');
 			expect(score.value).toBeLessThanOrEqual(100);
 			expect(score.ci).toBeGreaterThan(0);
+		}
+		// Vendor numbers the official board has not listed yet carry a footnote and no CI.
+		const selfReported = rows.filter(({ score }) => isSelfReported(score));
+		expect(selfReported.map(({ model, score }) => [model.id, score.value])).toEqual([
+			['claude-opus-5-5-max', 74.2],
+		]);
+		for (const { score } of selfReported) {
+			expect(score.ci).toBeUndefined();
+			expect(score.note_url).toContain('anthropic.com');
 		}
 	});
 
 	it('preserves the complete ProgramBench snapshot and its official tie-breaking order', () => {
 		const expected = [
 			['claude-opus-5-xhigh', 4.5, 37.0, 74.7],
+			['muse-spark-1-3-max', 2.5, 25.0, 70.8],
+			['muse-spark-1-3-xhigh', 1.0, 16.5, 68.6],
 			['gpt-5-6-sol-xhigh', 1.0, 15.5, 69.9],
 			['gpt-5-5-xhigh', 0.5, 13.5, 69.5],
 			['gpt-5-5-high', 0.5, 5.0, 66.5],
@@ -223,7 +248,9 @@ describe('benchmark ledger', () => {
 			['claude-opus-4-8-xhigh', 0.0, 16.5, 70.9],
 			['glm-5-2', 0.0, 8.5, 64.6],
 			['gemini-3-7-flash', 0.0, 5.5, 61.2],
+			['muse-spark-1-2-xhigh', 0.0, 4.5, 57.2],
 			['claude-opus-4-7-xhigh', 0.0, 4.5, 55.1],
+			['muse-spark-1-1-xhigh', 0.0, 4.0, 47.0],
 			['gemini-3-5-flash', 0.0, 3.0, 53.6],
 			['claude-opus-4-7', 0.0, 3.0, 50.9],
 			['claude-opus-4-6', 0.0, 2.5, 52.1],
@@ -256,7 +283,7 @@ describe('benchmark ledger', () => {
 		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'programbench')!;
 		expect(benchmark).toMatchObject({
 			category: 'coding',
-			checked_at: '2026-09-16',
+			checked_at: '2026-10-04',
 			url: 'https://programbench.com/',
 		});
 		expect(benchmark.description.zh).toContain('9 个');
@@ -265,6 +292,7 @@ describe('benchmark ledger', () => {
 
 	it('preserves Finance Agent v2 metrics, model settings and provenance', () => {
 		const expected = [
+			['gemini-4-argon-high', 'google/gemini-4-argon', 65.401, 55.789],
 			['gemini-3-8-flash-high', 'google/gemini-3.8-flash', 61.435, 49.694],
 			['muse-spark-1-2-xhigh', 'meta/muse_spark_1_2', 60.599, 50.881],
 			['muse-spark-1-3-max-max', 'meta/muse_spark_1_3_max', 59.958, 49.514],
@@ -272,28 +300,40 @@ describe('benchmark ledger', () => {
 			['muse-spark-1-3-xhigh', 'meta/muse_spark_1_3', 58.901, 48.737],
 			['claude-fable-5-1-max', 'anthropic/claude-fable-5-1', 58.877, 47.773],
 			['claude-opus-5-max', 'anthropic/claude-opus-5', 58.633, 47.708],
+			['claude-opus-5-5-max', 'anthropic/claude-opus-5-5', 58.587, 48.111],
+			['claude-sonnet-5-5-max', 'anthropic/claude-sonnet-5-5', 58.103, 47.59],
 			['gemini-3-5-flash-high', 'google/gemini-3.5-flash', 57.861, 45.706],
 			['glm-5-3-flash-max', 'zai/glm-5.3-flash', 57.85, 46.259],
+			['mimo-v2-6-pro-vals-index', 'xiaomi/mimo-v2.6-pro', 57.339, 45.837],
 			['muse-spark-1-1-xhigh', 'meta/muse_spark_1_1', 57.207, 44.919],
 			['claude-fable-5-max', 'anthropic/claude-fable-5', 56.314, 45.694],
 			['gemini-3-6-flash-high', 'google/gemini-3.6-flash', 56.296, 44.634],
+			['mimo-v2-6-flash-vals-index', 'xiaomi/mimo-v2.6-flash', 56.277, 44.427],
 			['glm-5-3-max', 'zai/glm-5.3', 55.84, 44.874],
+			['hy4-preview', 'tencent/hy4-preview', 55.063, 44.017],
 			['gpt-5-6-luna-max', 'openai/gpt-5.6-luna', 55.044, 43.285],
+			['ling-3-0-flash-fin-finance-agent', 'ant/ling-3.0-flash-af-rc3', 54.927, 43.361],
 			['gpt-5-6-terra-max', 'openai/gpt-5.6-terra', 54.436, 42.756],
-			['kimi-k3', 'kimi/kimi-k3', 54.36, 41.69],
 			['claude-opus-4-8-max', 'anthropic/claude-opus-4-8', 53.918, 43.517],
 			['claude-sonnet-5-max', 'anthropic/claude-sonnet-5', 53.909, 42.084],
 			['gpt-5-6-sol-max', 'openai/gpt-5.6-sol', 53.756, 41.362],
 			['grok-4-6-high', 'grok/grok-4.6', 53.682, 42.901],
 			['gpt-6-astra-max', 'openai/gpt-6-astra', 53.54, 40.252],
 			['deepseek-v4-1-flash-high', 'deepseek/deepseek-v4.1-flash', 53.481, 41.052],
+			['kimi-k3', 'kimi/kimi-k3', 53.114, 41.837],
+			['grok-4-7-xhigh-tbench-4', 'grok/grok-4.7', 52.251, 42.137],
+			['gpt-6-1-sol-max', 'openai/gpt-6.1-sol', 52.033, 39.906],
+			['ember-1', 'fireworks/ember-1', 51.853, 39.26],
 			['gpt-5-5-xhigh', 'openai/gpt-5.5', 51.76, 39.562],
 			['claude-opus-4-7-high', 'anthropic/claude-opus-4-7', 51.509, 38.647],
 			['claude-sonnet-4-6-max', 'anthropic/claude-sonnet-4-6', 51.035, 38.795],
+			['step-5-preview', 'stepfun/step-5-preview', 50.671, 38.809],
 			['qwen-3-8-max', 'alibaba/qwen3.8-max', 50.593, 38.229],
 			['deepseek-v4-pro-0813-max', 'deepseek/deepseek-v4-pro-0813', 50.393, 38.507],
+			['gpt-6-luna-max-vals-index', 'openai/gpt-6-luna', 49.873, 38.433],
 			['glm-5-2', 'zai/glm-5.2', 49.699, 38.006],
 			['deepseek-v4-flash-0731-high', 'deepseek/deepseek-v4-flash-0731', 49.517, 36.75],
+			['gpt-6-sol-max-vals-index', 'openai/gpt-6-sol', 49.05, 35.981],
 			['qwen-3-8-27b-xhigh', 'alibaba/qwen3.8-27b', 48.553, 36.837],
 			['grok-4-5-high', 'grok/grok-4.5', 48.349, 36.743],
 			['minimax-m3', 'minimax/MiniMax-M3', 48.269, 36.693],
@@ -327,9 +367,10 @@ describe('benchmark ledger', () => {
 			['grok-4-20-reasoning', 'grok/grok-4.20-0309-reasoning', 28.492, 17.492],
 			['minimax-m2-7', 'minimax/MiniMax-M2.7', 27.887, 17.135],
 			['laguna-m-1', 'poolside/laguna-m.1', 25.026, 14.419],
-			['mercury-2-5-high', 'inception/mercury-2.5', 18.556, 9.112],
+			['mercury-2-5-high', 'inception/mercury-2.5', 18.894, 9.369],
 			['nemotron-3-5-lightning', 'fireworks/nemotron-lightning-3p5-30b-a3b', 18.5, 10.289],
 			['laguna-xs-2', 'poolside/laguna-xs.2', 15.601, 6.794],
+			['command-a', 'cohere/command-a-plus-05-2026', 9.044, 2.761],
 		];
 		const rows = rankedScores('finance-agent');
 		expect(
@@ -345,7 +386,7 @@ describe('benchmark ledger', () => {
 		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'finance-agent')!;
 		expect(benchmark).toMatchObject({
 			category: 'finance',
-			checked_at: '2026-09-16',
+			checked_at: '2026-10-04',
 			url: 'https://www.vals.ai/benchmarks/fabv2',
 			score_label: { zh: '部分得分', en: 'Partial Credit' },
 		});
@@ -353,65 +394,51 @@ describe('benchmark ledger', () => {
 		expect(benchmark.description.zh).toContain('标准误');
 	});
 
-	it('keeps the complete Vals Index v2 snapshot in the general category', () => {
+	it('keeps the complete Vals Index v2.1 snapshot in the general category', () => {
 		const expected = [
-			['anthropic/claude-fable-5-1', 68.825],
-			['anthropic/claude-opus-5', 67.213],
-			['openai/gpt-6-astra', 66.608],
-			['anthropic/claude-fable-5', 66.036],
-			['meta/muse_spark_1_3_max', 64.526],
-			['openai/gpt-5.6-sol', 63.709],
-			['google/gemini-3.8-flash', 62.252],
-			['anthropic/claude-opus-4-8', 60.908],
-			['meta/muse_spark_1_3', 60.31],
-			['openai/gpt-5.6-luna', 59.881],
-			['anthropic/claude-sonnet-5', 59.61],
-			['openai/gpt-5.6-terra', 59.588],
-			['google/gemini-3.7-flash', 59.307],
-			['grok/grok-4.6', 59.167],
-			['deepseek/deepseek-v4.1-flash', 57.86],
-			['kimi/kimi-k3', 57.813],
-			['openai/gpt-5.5', 57.411],
-			['meta/muse_spark_1_2', 57.053],
-			['zai/glm-5.3', 56.97],
-			['anthropic/claude-opus-4-7', 56.114],
-			['google/gemini-3.6-flash', 55.354],
-			['meta/muse_spark_1_1', 54.754],
-			['deepseek/deepseek-v4-flash-0731', 53.568],
-			['zai/glm-5.2', 53.122],
-			['google/gemini-3.5-flash', 53.079],
-			['deepseek/deepseek-v4-pro-0813', 52.368],
-			['alibaba/qwen3.8-max', 51.844],
-			['grok/grok-4.5', 51.528],
-			['anthropic/claude-sonnet-4-6', 50.593],
-			['alibaba/qwen3.8-27b', 48.485],
-			['zai/glm-5.3-flash', 47.216],
-			['alibaba/qwen3.7-max', 44.769],
-			['kimi/kimi-k2.6', 43.465],
-			['deepseek/deepseek-v4-pro', 42.888],
-			['minimax/MiniMax-M3', 42.719],
-			['google/gemini-3.1-pro-preview', 41.903],
-			['xiaomi/mimo-v2.5-pro', 40.974],
-			['xiaomi/mimo-v2.5', 39.91],
-			['openai/gpt-5.4-mini-2026-03-17', 39.632],
-			['alibaba/qwen3.7-plus', 38.645],
-			['google/gemini-3.5-flash-lite', 36.711],
-			['thinkingmachines/inkling', 34.102],
-			['openai/gpt-5.4-nano-2026-03-17', 32.997],
-			['alibaba/qwen3.6-plus', 31.979],
-			['thinkingmachines/inkling-small', 31.862],
-			['google/gemini-3-flash-preview', 29.444],
-			['nvidia/nemotron-3-ultra-550b-a55b', 27.395],
-			['kimi/kimi-k2.5-thinking', 26.301],
-			['minimax/MiniMax-M2.7', 24.556],
-			['grok/grok-4.3', 24.294],
-			['anthropic/claude-haiku-4-5-20251001-thinking', 22.898],
-			['ant/ling-3.0-flash-2607', 21.699],
-			['mistralai/mistral-medium-3.5', 17.947],
-			['grok/grok-4.20-0309-reasoning', 17.552],
-			['google/gemini-3.1-flash-lite-preview', 15.457],
-			['inception/mercury-2.5', 12.952],
-			['fireworks/nemotron-lightning-3p5-30b-a3b', 11.494],
+			['google/gemini-4-argon', 68.896],
+			['anthropic/claude-sonnet-5-5', 67.037],
+			['anthropic/claude-opus-5-5', 66.972],
+			['anthropic/claude-fable-5-1', 65.827],
+			['anthropic/claude-opus-5', 63.674],
+			['openai/gpt-6-astra', 63.125],
+			['anthropic/claude-fable-5', 61.388],
+			['openai/gpt-6.1-sol', 61.154],
+			['meta/muse_spark_1_3_max', 58.162],
+			['openai/gpt-5.6-sol', 58.005],
+			['openai/gpt-6-sol', 57.536],
+			['xiaomi/mimo-v2.6-pro', 55.199],
+			['anthropic/claude-opus-4-8', 55.1],
+			['grok/grok-4.7', 54.947],
+			['google/gemini-3.8-flash', 54.825],
+			['zai/glm-5.3', 53.514],
+			['xiaomi/mimo-v2.6-flash', 53.231],
+			['meta/muse_spark_1_3', 53.197],
+			['openai/gpt-5.6-terra', 53.085],
+			['grok/grok-4.6', 52.092],
+			['anthropic/claude-sonnet-5', 51.775],
+			['openai/gpt-5.6-luna', 51.687],
+			['deepseek/deepseek-v4.1-flash', 51.32],
+			['google/gemini-3.7-flash', 51.273],
+			['openai/gpt-6-luna', 51.216],
+			['fireworks/ember-1', 50.811],
+			['kimi/kimi-k3', 50.297],
+			['tencent/hy4-preview', 49.942],
+			['stepfun/step-5-preview', 49.354],
+			['meta/muse_spark_1_2', 49.287],
+			['alibaba/qwen3.8-max', 48.27],
+			['deepseek/deepseek-v4-flash-0731', 47.963],
+			['deepseek/deepseek-v4-pro-0813', 47.628],
+			['google/gemini-3.5-flash', 44.786],
+			['grok/grok-4.5', 44.723],
+			['deepseek/deepseek-v4-pro', 38.63],
+			['minimax/MiniMax-M3', 36.535],
+			['xiaomi/mimo-v2.5-pro', 33.842],
+			['google/gemini-3.1-pro-preview', 33.442],
+			['openai/gpt-5.4-mini-2026-03-17', 33.169],
+			['thinkingmachines/inkling', 28.668],
+			['thinkingmachines/inkling-small', 25.459],
+			['inception/mercury-2.5', 8.855],
 		];
 		const rows = rankedScores('vals-index');
 		expect(rows.map(({ score }) => [score.source_model, score.value])).toEqual(expected);
@@ -424,7 +451,7 @@ describe('benchmark ledger', () => {
 		const benchmark = benchmarkLedger.benchmarks.find((entry) => entry.id === 'vals-index')!;
 		expect(benchmark).toMatchObject({
 			category: 'general',
-			checked_at: '2026-09-16',
+			checked_at: '2026-10-04',
 			url: 'https://www.vals.ai/benchmarks/vals_index',
 			score_label: { zh: '综合指数', en: 'Index' },
 		});
@@ -470,6 +497,10 @@ describe('benchmark ledger', () => {
 
 	it('numbers footnotes in table order', () => {
 		const notes = collectNotes(rankedScores('tbench-4'));
-		expect(notes.map((note) => note.key)).toEqual(['claude-fable-5-1-max', 'claude-fable-5']);
+		expect(notes.map((note) => note.key)).toEqual([
+			'claude-opus-5-5-xhigh',
+			'claude-fable-5-1-max',
+			'claude-fable-5',
+		]);
 	});
 });

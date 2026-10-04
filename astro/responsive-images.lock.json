@@ -1609,6 +1609,368 @@
 				"/_responsive/media/highlights/what-is-reasoning/gpt-5.6-terra-spell-check-1430.webp"
 			]
 		},
+		"/media/showcase/claude-fable-5.5-art-history-cat.webp": {
+			"source_sha256": "1cc5760828a5f01904c141c68fdb2bcb18bd68aba4cea3594e9616062f18eb3e",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-art-history-cat-1280.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-claude-beat.webp": {
+			"source_sha256": "df53bde54d758b878fe9ec6d1fd6fa13d220a0e78bd7bf8cab158f5f8d014bb8",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-1440.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-claude-beat-1440.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-day-in-the-life.webp": {
+			"source_sha256": "8c31aed4978a5b578c0561f838a980403053665750aadb4d377bc6382671b646",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-day-in-the-life-1280.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-fall-watercolor.webp": {
+			"source_sha256": "7525842eece8dce990d1bb816f21f476d65eeb19643388d7fc88a8c087dda21f",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-fall-watercolor-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-fall-watercolor-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-fall-watercolor-720.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-fall-watercolor-720.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-frame-2847.webp": {
+			"source_sha256": "1e59add43d6782dd7f84461543e1f7b84355c9fe17805e91a8bbb1064c6e8e37",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-1440.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-frame-2847-1440.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-humanity-walks.webp": {
+			"source_sha256": "340a4b4425e10d29d9786305be134ec9b5f7be047bb6064607bf413e7dafc19d",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-humanity-walks-1280.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-intro.webp": {
+			"source_sha256": "bdf1413216ea2b0068e963e62fbfe9eeaed2664dd269b1ed828f7839cd8961e7",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-intro-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-intro-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-intro-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-intro-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-intro-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-intro-1280.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-pixar-dot.webp": {
+			"source_sha256": "530b5fa6920320c2fdf310e99163078b7cf8b5a45c0992a4bfa27e77bfc3261f",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-pixar-dot-1280.webp"
+			]
+		},
+		"/media/showcase/claude-fable-5.5-spider-man-ten-eras.webp": {
+			"source_sha256": "81a4ae0770d682064f70331dc678a441de9625d5efe40db978f374aa14d38d2c",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-1280.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-80000-particles.webp": {
+			"source_sha256": "df2520895e0a0c2bd4b82af607247df02098cf0838d981fafb2687d10288d430",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-1080.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-biggest-scam.webp": {
+			"source_sha256": "52ea92d422805117b69d1dd177d1394b9dc854740ae02b75318dc701dff4a6a7",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-biggest-scam-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-calligraphy.webp": {
+			"source_sha256": "9a905c0b873812b890aaf9014718b08ae4b102f6e394b1b9edb3838f5084f36a",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-calligraphy-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-calligraphy-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-calligraphy-720.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-calligraphy-720.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-castr-launch-trailer.webp": {
+			"source_sha256": "239972b59b9b61bd4dbdfc13a5d61639510101c6ecb89611e64a53a4925761c5",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-castr-launch-trailer-1080.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-claude-ad.webp": {
+			"source_sha256": "9b92d4735e77045aa28c710a59fdc393525166676f2acc93e83d87144d91e05e",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-claude-ad-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-claude-ad-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-claude-ad-720.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-claude-ad-720.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-clips-clipboard-promo.webp": {
+			"source_sha256": "b062968fc53b13b7ea9013bb7281a05063923292d7c634f5bad539a28c74a111",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-clips-clipboard-promo-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-code-animation-short.webp": {
+			"source_sha256": "fc9910496c63ba13f42fa8e23239913626cb2f1dea0e1404dcac754210693b6d",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-every-frame-is-code.webp": {
+			"source_sha256": "06d0041ce7416c81498542182ba40b42a98daebdb68c2614cd41e67291ed5fe7",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-every-frame-is-code-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-fifteen-mg-styles.webp": {
+			"source_sha256": "ac4f8efa796df87d855094bf7f99d22cfae11700571df659170f81a40fa7c2f0",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-fifteen-mg-styles-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-hongmen-banquet.webp": {
+			"source_sha256": "45b1a97b09314b9f182b6e84a23ca5c4d64e702f217916bddb3efce43fd392ae",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-inside-its-mind.webp": {
+			"source_sha256": "653c835fcf58aabd3ffcd90784b32f2a65a527db8f78444dca73482b43498956",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-inside-its-mind-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-intro.webp": {
+			"source_sha256": "fb8af1b0deef94ab258e8e221395efc7e87e7676d7f591e515cf616bc8c93c6d",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-intro-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-intro-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-intro-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-intro-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-intro-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-intro-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture.webp": {
+			"source_sha256": "585e5ee05a7d92728f09c2d35b52fca5b31eff204939128c141eaba57ed88715",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-neural-networks-80-years.webp": {
+			"source_sha256": "83097feded43dc60f079a4819ddb8e5d531589b1482c5d3caaee2bb110e4b6d9",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-neural-networks-80-years-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-neural-networks-80-years-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-neural-networks-80-years-720.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-neural-networks-80-years-720.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-pocketsflow-promo.webp": {
+			"source_sha256": "0dbe88387d04e48ac216ad6aa0fc3b8c419476179e8ffd97ea9851f59680771a",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pocketsflow-promo-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-prettiest-apocalypse.webp": {
+			"source_sha256": "b8f51685b9402347dca03a101b57bf5a100fd8a88982ff57b7b3874aa2168d39",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-prettiest-apocalypse-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-product-ui-motion.webp": {
+			"source_sha256": "3d00f622c855eb594d8dfcbc62d0f94b04a52bd4acfc68f2128fb76712e7c707",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-product-ui-motion-1080.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-qingming-rainbow-bridge.webp": {
+			"source_sha256": "40db860f084c0aa0d84d2c66d822b755aff5f8e5becbffd14ee9613042cc0a34",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-720.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-720.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-twelve-principles-ball.webp": {
+			"source_sha256": "7cb0c3679b426e913a464eb398efe11d233e59a5312f856f20a266a88b98d6ed",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-1440.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-x-tech-feed.webp": {
+			"source_sha256": "3b47dd2232cc1cdc4dc37071965b802814ba5a067afc7d42a4b1af6761f53a46",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-x-tech-feed-1280.webp"
+			]
+		},
+		"/media/showcase/claude-sonnet-5.5-doodle-chess.webp": {
+			"source_sha256": "c887eddefbe1b6241caabbebe6f8bfcbfef45571427b220c430432e27ff49628",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-640.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-640.webp",
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-960.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-960.webp",
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-1440.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-doodle-chess-1440.webp"
+			]
+		},
+		"/media/showcase/claude-sonnet-5.5-muse-trailer.webp": {
+			"source_sha256": "baa8cf4511ecc2ae20c8338e7c1fc06eb271d60b9375aba5dc29b964be909989",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-640.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-640.webp",
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-960.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-960.webp",
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-1280.avif",
+				"/_responsive/media/showcase/claude-sonnet-5.5-muse-trailer-1280.webp"
+			]
+		},
 		"/media/workbuddy-tutorials/workbuddy-advanced-workflow-guide/img_001.png": {
 			"source_sha256": "5003736fda6e7efb76e76b1ffee0d8140125d9e5413c6f58db63967436811c56",
 			"width": 1080,

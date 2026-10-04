@@ -462,6 +462,7 @@ function classifyCodeReleasePath(
       "astro/src/data/catCurator.ts",
       "astro/src/data/designBrands.ts",
       "astro/src/data/showcase.ts",
+      "astro/src/data/showcaseMedia.json",
       "astro/src/data/vibeCodingPatternDetails.ts",
       "astro/src/data/vibeCodingSkills.ts",
       "astro/src/data/vibeCodingTermDetails.ts",

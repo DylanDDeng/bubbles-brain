@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 
+import { showcaseWorks } from '../src/data/showcase';
 import { checkResponsiveImages, generateResponsiveImages } from '../src/lib/responsiveImages';
 
 const astroRoot = resolve(import.meta.dirname, '..');
@@ -7,6 +8,8 @@ const roots = {
 	contentRoot: resolve(astroRoot, '../content'),
 	staticRoot: resolve(astroRoot, '../static'),
 	lockPath: resolve(astroRoot, 'responsive-images.lock.json'),
+	// Gallery tiles show these posters at a third of the page width.
+	extraSources: showcaseWorks.map((work) => work.poster),
 };
 
 if (process.argv.includes('--check')) {

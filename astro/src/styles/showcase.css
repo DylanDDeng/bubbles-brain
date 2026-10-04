@@ -407,6 +407,7 @@
 .showcase-tile[hidden] {
 	display: none;
 }
+.showcase-tile picture,
 .showcase-tile img {
 	display: block;
 	width: 100%;

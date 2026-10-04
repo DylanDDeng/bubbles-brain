@@ -7,6 +7,7 @@ import {
 	showcaseMedium,
 	type ShowcaseWork,
 } from '../data/showcase';
+import { showcaseMediaUrl } from '../lib/showcaseMedia';
 import '../styles/showcase.css';
 
 interface Props {
@@ -54,10 +55,19 @@ const wide = work.width / work.height >= 16 / 9 - 0.01;
 			}
 		</div>
 		<figure class:list={['showcase-screen', { 'showcase-screen--framed': !wide }]}>
-			{!wide && <img class="showcase-screen-fill" src={work.poster} alt="" aria-hidden="true" />}
+			{
+				!wide && (
+					<img
+						class="showcase-screen-fill"
+						src={showcaseMediaUrl(work.poster)}
+						alt=""
+						aria-hidden="true"
+					/>
+				)
+			}
 			<video
-				src={work.video}
-				poster={work.poster}
+				src={showcaseMediaUrl(work.video)}
+				poster={showcaseMediaUrl(work.poster)}
 				width={work.width}
 				height={work.height}
 				controls
@@ -219,7 +229,7 @@ const wide = work.width / work.height >= 16 / 9 - 0.01;
 								>
 									<span class="showcase-reel-thumb">
 										<img
-											src={item.poster}
+											src={showcaseMediaUrl(item.poster)}
 											alt=""
 											width={item.width}
 											height={item.height}

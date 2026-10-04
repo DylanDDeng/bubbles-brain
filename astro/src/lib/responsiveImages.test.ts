@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { checkResponsiveImages, generateResponsiveImages } from './responsiveImages';
 
 let root: string;
-let roots: { contentRoot: string; staticRoot: string; lockPath: string };
+let roots: { contentRoot: string; staticRoot: string; lockPath: string; extraSources?: string[] };
 
 async function writeSource(name: string, width: number, color: string): Promise<void> {
 	await sharp({ create: { width, height: 100, channels: 3, background: color } })
@@ -88,6 +88,19 @@ describe('responsive image lock', () => {
 		const pruned = await generateResponsiveImages(roots, 2);
 		expect(pruned).toEqual({ referenced: 0, generated: 0, current: 0, pruned: 6 });
 		await expect(checkResponsiveImages(roots)).resolves.toEqual([]);
+	});
+
+	it('also cuts and keeps variants for extra sources that no markdown references', async () => {
+		await writeSource('poster.png', 700, '#00ffff');
+		roots.extraSources = ['/media/poster.png'];
+		const first = await generateResponsiveImages(roots, 2);
+		expect(first.referenced).toBe(2);
+		await expect(checkResponsiveImages(roots)).resolves.toEqual([]);
+
+		roots.extraSources = [];
+		await expect(checkResponsiveImages(roots)).resolves.toEqual([
+			'stale lock entry for unreferenced /media/poster.png',
+		]);
 	});
 
 	it('rejects a lock written with different encoder parameters', async () => {

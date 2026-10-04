@@ -6,6 +6,11 @@ import {
 	showcaseCategories,
 	showcaseHref,
 } from '../../../data/showcase';
+import {
+	showcaseMediaUrl,
+	showcasePosterSrcset,
+	showcasePreviewPath,
+} from '../../../lib/showcaseMedia';
 import '../../../styles/showcase.css';
 
 const works = showcaseByNewest();
@@ -15,6 +20,9 @@ const categories = showcaseCategories
 		count: works.filter((work) => work.category === category.id).length,
 	}))
 	.filter((category) => category.count);
+
+// One column under 800px, otherwise a third of the 1040px gallery.
+const TILE_SIZES = '(max-width: 800px) calc(100vw - 40px), 336px';
 
 // Waterfall at each video's own shape: newest first, each into the shortest column.
 const COLUMNS = 3;
@@ -35,7 +43,9 @@ works.forEach((work, order) => {
 >
 	<div class="rr-page rr-page--gallery" data-showcase-gallery>
 		<header class="rr-head">
-			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Showcase</nav>
+			<nav class="rr-crumbs" aria-label="位置">
+				<a href="/vibe-coding/">Vibe Coding</a> / Showcase
+			</nav>
 			<h1 class="rr-title" lang="en">Showcase</h1>
 			{
 				categories.length > 1 && (
@@ -65,18 +75,30 @@ works.forEach((work, order) => {
 								data-category={work.category}
 								data-astro-prefetch="false"
 							>
-								<img
-									src={work.poster}
-									alt=""
-									width={work.width}
-									height={work.height}
-									loading={order < 3 ? 'eager' : 'lazy'}
-									decoding="async"
-								/>
-								{/* Plays on hover, silent and looping; nothing loads until then (scripts/showcase.ts). */}
+								<picture>
+									<source
+										type="image/avif"
+										srcset={showcasePosterSrcset(work.poster, 'avif')}
+										sizes={TILE_SIZES}
+									/>
+									<source
+										type="image/webp"
+										srcset={showcasePosterSrcset(work.poster, 'webp')}
+										sizes={TILE_SIZES}
+									/>
+									<img
+										src={showcaseMediaUrl(work.poster)}
+										alt=""
+										width={work.width}
+										height={work.height}
+										loading={order < 3 ? 'eager' : 'lazy'}
+										decoding="async"
+									/>
+								</picture>
+								{/* A 6-second, 640px silent preview plays on hover; nothing loads until then (scripts/showcase.ts). */}
 								<video
 									class="showcase-tile__video"
-									data-src={work.video}
+									data-src={showcaseMediaUrl(showcasePreviewPath(work.video))}
 									muted
 									loop
 									playsinline

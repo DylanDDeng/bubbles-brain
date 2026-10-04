@@ -30,6 +30,8 @@ export interface ResponsiveImageRoots {
 	contentRoot: string;
 	staticRoot: string;
 	lockPath: string;
+	/** Images outside markdown that also get variants (e.g. Showcase posters). */
+	extraSources?: string[];
 }
 
 export interface ResponsiveImageSummary {
@@ -70,18 +72,20 @@ export function localImageReferences(markdown: string): string[] {
 export async function referencedRasterImages(
 	contentRoot: string,
 	staticRoot: string,
+	extraSources: string[] = [],
 ): Promise<string[]> {
 	const markdownFiles = (await filesUnder(contentRoot)).filter((path) => path.endsWith('.md'));
+	const references = [...extraSources];
+	for (const file of markdownFiles)
+		references.push(...localImageReferences(await readFile(file, 'utf8')));
 	const referenced = new Set<string>();
-	for (const file of markdownFiles) {
-		for (const reference of localImageReferences(await readFile(file, 'utf8'))) {
-			if (!rasterExtensions.has(extname(reference).toLowerCase())) continue;
-			try {
-				await access(resolve(staticRoot, `.${reference}`));
-				referenced.add(reference);
-			} catch {
-				// Missing sources render as ordinary images without responsive variants.
-			}
+	for (const reference of references) {
+		if (!rasterExtensions.has(extname(reference).toLowerCase())) continue;
+		try {
+			await access(resolve(staticRoot, `.${reference}`));
+			referenced.add(reference);
+		} catch {
+			// Missing sources render as ordinary images without responsive variants.
 		}
 	}
 	return [...referenced].sort();
@@ -127,7 +131,11 @@ export async function generateResponsiveImages(
 	roots: ResponsiveImageRoots,
 	concurrency = 4,
 ): Promise<ResponsiveImageSummary> {
-	const referenced = await referencedRasterImages(roots.contentRoot, roots.staticRoot);
+	const referenced = await referencedRasterImages(
+		roots.contentRoot,
+		roots.staticRoot,
+		roots.extraSources,
+	);
 	const previous = (await readLock(roots.lockPath))?.sources ?? {};
 	const sources: Record<string, ResponsiveImageLockEntry> = {};
 	const totals: ResponsiveImageSummary = {
@@ -199,7 +207,11 @@ export async function generateResponsiveImages(
 export async function checkResponsiveImages(roots: ResponsiveImageRoots): Promise<string[]> {
 	const lock = await readLock(roots.lockPath);
 	if (!lock) return [`responsive image lock is missing or outdated: ${roots.lockPath}`];
-	const referenced = await referencedRasterImages(roots.contentRoot, roots.staticRoot);
+	const referenced = await referencedRasterImages(
+		roots.contentRoot,
+		roots.staticRoot,
+		roots.extraSources,
+	);
 	const problems: string[] = [];
 	for (const publicPath of referenced) {
 		const entry = lock.sources[publicPath];

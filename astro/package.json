@@ -12,6 +12,7 @@
 		"build:renderer": "astro build && tsx scripts/generate-redirects.ts && node scripts/generate-site-contract.mjs",
 		"images:generate": "tsx scripts/generate-responsive-images.ts",
 		"images:check": "tsx scripts/generate-responsive-images.ts --check",
+		"showcase:media": "tsx scripts/generate-showcase-media.ts",
 		"preview": "astro preview",
 		"astro": "astro",
 		"check": "astro check",

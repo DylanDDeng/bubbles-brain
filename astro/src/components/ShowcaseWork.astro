@@ -7,6 +7,7 @@ import {
 	showcaseHref,
 	type ShowcaseWork,
 } from '../data/showcase';
+import { showcaseMediaUrl } from '../lib/showcaseMedia';
 import { sourceMark } from '../lib/sourceVendor';
 import '../styles/showcase.css';
 import '../styles/showcase-work.css';
@@ -54,8 +55,8 @@ const promptLines = (text: string) =>
 
 	<figure class:list={['work-screen', { 'work-screen--tall': work.height / work.width > 0.8 }]}>
 		<video
-			src={work.video}
-			poster={work.poster}
+			src={showcaseMediaUrl(work.video)}
+			poster={showcaseMediaUrl(work.poster)}
 			width={work.width}
 			height={work.height}
 			controls

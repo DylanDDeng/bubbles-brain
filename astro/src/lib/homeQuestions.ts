@@ -14,6 +14,7 @@ export const homeQuestions: HomeQuestion[] = [
 	{ ask: 'AI 为什么聊着聊着就忘了？', href: '/newbie-tutorials/why-ai-forgets/' },
 	{ ask: '大模型是怎么训练出来的？', href: '/newbie-tutorials/how-llms-are-trained/' },
 	{ ask: '知识库到底是什么？', href: '/newbie-tutorials/what-is-a-knowledge-base/' },
+	{ ask: 'AI 这么多，我该用哪个？', href: '/newbie-tutorials/which-ai-should-i-use/' },
 	{ ask: 'MCP 到底是什么？', href: '/vibe-coding/terms/mcp/' },
 	{ ask: 'Skill 和提示词有什么不同？', href: '/vibe-coding/terms/skill/' },
 	{ ask: '零样本和少样本差在哪？', href: '/vibe-coding/terms/few-shot/' },

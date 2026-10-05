@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1092 500" role="img" aria-labelledby="title desc">
+  <title id="title">往 AI 输入框里贴东西之前，先过一遍红绿灯</title>
+  <desc id="desc">三栏红绿灯。绿灯，放心贴：公开的新闻和网页、你自己写的草稿、已经去掉姓名和金额的数据。黄灯，处理后再贴：工作文件先删掉客户名、金额和内部代号；合同先遮住身份证号和住址；体检报告先隐去姓名。红灯，别贴：身份证号、银行卡号、密码和验证码；公司明确规定不能外传的资料；别人的隐私，比如聊天截图里朋友的手机号。</desc>
+  <style>
+    .sans{font-family:-apple-system,'PingFang SC','Noto Sans SC',system-ui,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .eyebrow{font-size:14px;letter-spacing:4px;font-weight:700;fill:#d9341c}
+    .headline{font-size:36px;font-weight:720;letter-spacing:-1px;fill:#111}
+    .col{fill:#fff;stroke:#dedede;stroke-width:1.5}
+    .col-red{fill:#fff0ec;stroke:#ff4d2e;stroke-width:1.8}
+    .lamp-g{fill:#2f8f5b}
+    .lamp-y{fill:#d99a1c}
+    .lamp-r{fill:#d9341c}
+    .col-h{font-size:22px;font-weight:720;fill:#111}
+    .col-sub{font-size:15px;font-weight:600;fill:#6c6c6c}
+    .item{font-size:16.5px;fill:#333}
+    .item-dim{font-size:14.5px;fill:#6c6c6c}
+    .rule{stroke:#e6e6e2;stroke-width:1.2}
+  </style>
+
+  <g class="sans">
+    <text x="40" y="46" class="mono eyebrow">PRIVACY</text>
+    <text x="40" y="92" class="headline">贴进输入框之前，先过一遍红绿灯</text>
+
+    <!-- 绿灯 -->
+    <rect class="col" x="40" y="128" width="320" height="340" rx="14"/>
+    <circle class="lamp-g" cx="78" cy="170" r="14"/>
+    <text x="104" y="178" class="col-h">放心贴</text>
+    <text x="70" y="214" class="col-sub">本来就能公开的东西</text>
+    <line class="rule" x1="70" y1="234" x2="330" y2="234"/>
+    <text x="70" y="270" class="item">公开的新闻、网页、论文</text>
+    <text x="70" y="318" class="item">你自己写的草稿、笔记</text>
+    <text x="70" y="366" class="item">去掉了姓名和金额的数据</text>
+    <text x="70" y="414" class="item">菜谱、旅行、学习问题</text>
+
+    <!-- 黄灯 -->
+    <rect class="col" x="386" y="128" width="320" height="340" rx="14"/>
+    <circle class="lamp-y" cx="424" cy="170" r="14"/>
+    <text x="450" y="178" class="col-h">处理后再贴</text>
+    <text x="416" y="214" class="col-sub">内容可以给，身份别给</text>
+    <line class="rule" x1="416" y1="234" x2="676" y2="234"/>
+    <text x="416" y="270" class="item">工作文件</text>
+    <text x="416" y="294" class="item-dim">先删客户名、金额、内部代号</text>
+    <text x="416" y="342" class="item">租房、劳动合同</text>
+    <text x="416" y="366" class="item-dim">先遮住身份证号和住址</text>
+    <text x="416" y="414" class="item">体检报告、病历</text>
+    <text x="416" y="438" class="item-dim">先隐去姓名和就诊号</text>
+
+    <!-- 红灯 -->
+    <rect class="col-red" x="732" y="128" width="320" height="340" rx="14"/>
+    <circle class="lamp-r" cx="770" cy="170" r="14"/>
+    <text x="796" y="178" class="col-h">别贴</text>
+    <text x="762" y="214" class="col-sub">泄露了就收不回来</text>
+    <line class="rule" x1="762" y1="234" x2="1022" y2="234"/>
+    <text x="762" y="270" class="item">身份证号、银行卡号</text>
+    <text x="762" y="318" class="item">密码、验证码、密钥</text>
+    <text x="762" y="366" class="item">公司规定不能外传的资料</text>
+    <text x="762" y="414" class="item">别人的隐私</text>
+    <text x="762" y="438" class="item-dim">比如截图里朋友的手机号</text>
+  </g>
+</svg>

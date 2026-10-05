@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1092 600" role="img" aria-labelledby="title desc">
+  <title id="title">同一个模型，装进不同的 App</title>
+  <desc id="desc">动画分三幕：第一幕，单独一个模型，它只会理解、思考和写字，不会自己上网、不会看你的文件、不会开口说话。第二幕，同一个模型被装进三个 App：甲只能聊天；乙多了联网搜索和读文件；丙多了语音通话和画图。第三幕，你问三个 App「今天上海下雨吗」，只有能联网的乙答得上来——你感受到的差别，很多来自外壳，不是大脑。</desc>
+  <style>
+    .sans{font-family:-apple-system,'PingFang SC','Noto Sans SC',system-ui,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .eyebrow{font-size:14px;letter-spacing:4px;font-weight:700;fill:#d9341c}
+    .headline{font-size:36px;font-weight:720;letter-spacing:-1px;fill:#111}
+    .engine{fill:#fff0ec;stroke:#ff4d2e;stroke-width:2}
+    .engine-big{font-size:34px;font-weight:720;fill:#d9341c}
+    .engine-t{font-size:17px;fill:#333}
+    .engine-chip{font-size:16px;font-weight:700;fill:#d9341c}
+    .no-t{font-size:16px;fill:#9c9c98}
+    .card{fill:#fff;stroke:#dedede;stroke-width:1.5}
+    .card-h{font-size:20px;font-weight:700;fill:#111}
+    .slot-on{font-size:16px;font-weight:600;fill:#111}
+    .slot-off{font-size:16px;fill:#b9b9b5}
+    .dot-on{fill:#ff4d2e}
+    .dot-off{fill:none;stroke:#c9c9c5;stroke-width:1.5}
+    .ans-good{font-size:15px;font-weight:700;fill:#d9341c}
+    .ans-bad{font-size:15px;fill:#9c9c98}
+    .bubble{fill:#111}
+    .bubble-t{font-size:18px;font-weight:600;fill:#fff}
+    .caption{font-size:17px;font-weight:600;fill:#333}
+    .caption-warn{font-size:17px;font-weight:700;fill:#d9341c}
+    .a1{animation:s1 18s linear infinite}
+    .a2{animation:s2 18s linear infinite}
+    .a3{animation:s3 18s linear infinite}
+    .c2{animation:t2 18s linear infinite}
+    .a1,.a2,.a3,.c2{opacity:0}
+    @keyframes s1{0%,1%{opacity:0}3%,29%{opacity:1}32%,100%{opacity:0}}
+    @keyframes s2{0%,32%{opacity:0}35%,97%{opacity:1}100%{opacity:0}}
+    @keyframes t2{0%,32%{opacity:0}35%,61%{opacity:1}64%,100%{opacity:0}}
+    @keyframes s3{0%,64%{opacity:0}67%,97%{opacity:1}100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){
+      .a1,.c2{animation:none;opacity:0}
+      .a2,.a3{animation:none;opacity:1}
+    }
+  </style>
+
+  <g class="sans">
+    <text x="40" y="46" class="mono eyebrow">MODEL ≠ APP</text>
+    <text x="40" y="92" class="headline">选 AI 更像选车，不是选发动机</text>
+
+    <!-- 第一幕：光秃秃的模型 -->
+    <g class="a1">
+      <rect class="engine" x="346" y="160" width="400" height="190" rx="16"/>
+      <text x="546" y="232" text-anchor="middle" class="engine-big">模型</text>
+      <text x="546" y="276" text-anchor="middle" class="engine-t">发动机：负责理解、思考、写字</text>
+      <text x="546" y="310" text-anchor="middle" class="engine-t">「DeepSeek」「GPT」「Claude」说的是它</text>
+      <text x="546" y="410" text-anchor="middle" class="no-t">它自己不会上网　·　不会看你的文件　·　不会开口说话</text>
+      <text x="546" y="560" text-anchor="middle" class="caption">光有发动机，车还开不起来</text>
+    </g>
+
+    <!-- 第二幕：同一个模型，三副外壳 -->
+    <g class="a2">
+      <!-- App 甲 -->
+      <rect class="card" x="40" y="130" width="312" height="300" rx="14"/>
+      <text x="70" y="172" class="card-h">App 甲</text>
+      <rect class="engine" x="70" y="190" width="252" height="44" rx="10"/>
+      <text x="196" y="218" text-anchor="middle" class="engine-chip">同一个模型</text>
+      <circle class="dot-off" cx="80" cy="268" r="6"/><text x="98" y="274" class="slot-off">联网搜索</text>
+      <circle class="dot-off" cx="80" cy="302" r="6"/><text x="98" y="308" class="slot-off">读文件</text>
+      <circle class="dot-off" cx="80" cy="336" r="6"/><text x="98" y="342" class="slot-off">语音通话</text>
+      <circle class="dot-off" cx="80" cy="370" r="6"/><text x="98" y="376" class="slot-off">画图</text>
+
+      <!-- App 乙 -->
+      <rect class="card" x="390" y="130" width="312" height="300" rx="14"/>
+      <text x="420" y="172" class="card-h">App 乙</text>
+      <rect class="engine" x="420" y="190" width="252" height="44" rx="10"/>
+      <text x="546" y="218" text-anchor="middle" class="engine-chip">同一个模型</text>
+      <circle class="dot-on" cx="430" cy="268" r="6"/><text x="448" y="274" class="slot-on">联网搜索</text>
+      <circle class="dot-on" cx="430" cy="302" r="6"/><text x="448" y="308" class="slot-on">读文件</text>
+      <circle class="dot-off" cx="430" cy="336" r="6"/><text x="448" y="342" class="slot-off">语音通话</text>
+      <circle class="dot-off" cx="430" cy="370" r="6"/><text x="448" y="376" class="slot-off">画图</text>
+
+      <!-- App 丙 -->
+      <rect class="card" x="740" y="130" width="312" height="300" rx="14"/>
+      <text x="770" y="172" class="card-h">App 丙</text>
+      <rect class="engine" x="770" y="190" width="252" height="44" rx="10"/>
+      <text x="896" y="218" text-anchor="middle" class="engine-chip">同一个模型</text>
+      <circle class="dot-off" cx="780" cy="268" r="6"/><text x="798" y="274" class="slot-off">联网搜索</text>
+      <circle class="dot-off" cx="780" cy="302" r="6"/><text x="798" y="308" class="slot-off">读文件</text>
+      <circle class="dot-on" cx="780" cy="336" r="6"/><text x="798" y="342" class="slot-on">语音通话</text>
+      <circle class="dot-on" cx="780" cy="370" r="6"/><text x="798" y="376" class="slot-on">画图</text>
+    </g>
+    <text x="546" y="560" text-anchor="middle" class="caption c2">同一台发动机，装进三辆车，能干的活不一样</text>
+
+    <!-- 第三幕：问同一个问题 -->
+    <g class="a3">
+      <text x="70" y="412" class="ans-bad">「我查不到实时天气」</text>
+      <text x="420" y="412" class="ans-good">「下午有雨，来源：气象台」</text>
+      <text x="770" y="412" class="ans-bad">「我查不到实时天气」</text>
+      <rect class="bubble" x="306" y="456" width="480" height="50" rx="25"/>
+      <text x="546" y="488" text-anchor="middle" class="bubble-t">你问三个 App：「今天上海下雨吗？」</text>
+      <text x="546" y="560" text-anchor="middle" class="caption-warn">你感受到的差别，很多来自外壳，不是大脑</text>
+    </g>
+  </g>
+</svg>

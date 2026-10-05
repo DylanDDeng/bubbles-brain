@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1092 600" role="img" aria-labelledby="title desc">
+  <title id="title">用你自己的三件真活，给两个 AI 试驾</title>
+  <desc id="desc">一张三行两列的打分表：三行是你自己生活里的三件真活——把一份 20 页的 PDF 总结成五条、给房东写一条措辞得体的退租消息、查一下这周末北京的展览。两列是两个候选 AI。动画逐格亮起评分：第一件活甲更好，第二件差不多，第三件乙能联网所以更好。最后结论：哪个顺手留哪个，榜单只能参考，你的活才是考题。</desc>
+  <style>
+    .sans{font-family:-apple-system,'PingFang SC','Noto Sans SC',system-ui,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .eyebrow{font-size:14px;letter-spacing:4px;font-weight:700;fill:#d9341c}
+    .headline{font-size:36px;font-weight:720;letter-spacing:-1px;fill:#111}
+    .col-h{font-size:18px;font-weight:700;fill:#111}
+    .row-k{font-size:13px;letter-spacing:2px;font-weight:700;fill:#d9341c}
+    .row-t{font-size:17px;font-weight:600;fill:#111}
+    .grid{stroke:#dedede;stroke-width:1.5}
+    .cell{fill:#f5f5f2}
+    .win{fill:#fff0ec;stroke:#ff4d2e;stroke-width:1.8}
+    .tie{fill:#fff;stroke:#b9b9b5;stroke-width:1.5}
+    .mark-win{font-size:16px;font-weight:700;fill:#d9341c}
+    .mark-tie{font-size:16px;font-weight:600;fill:#6c6c6c}
+    .mark-lose{font-size:16px;fill:#9c9c98}
+    .caption{font-size:17px;font-weight:600;fill:#333}
+    .caption-warn{font-size:17px;font-weight:700;fill:#d9341c}
+    .r1{animation:p1 16s linear infinite}
+    .r2{animation:p2 16s linear infinite}
+    .r3{animation:p3 16s linear infinite}
+    .fin{animation:pf 16s linear infinite}
+    .r1,.r2,.r3,.fin{opacity:0}
+    @keyframes p1{0%,8%{opacity:0}11%,96%{opacity:1}100%{opacity:0}}
+    @keyframes p2{0%,28%{opacity:0}31%,96%{opacity:1}100%{opacity:0}}
+    @keyframes p3{0%,48%{opacity:0}51%,96%{opacity:1}100%{opacity:0}}
+    @keyframes pf{0%,68%{opacity:0}71%,96%{opacity:1}100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){
+      .r1,.r2,.r3,.fin{animation:none;opacity:1}
+    }
+  </style>
+
+  <g class="sans">
+    <text x="40" y="46" class="mono eyebrow">TEST DRIVE</text>
+    <text x="40" y="92" class="headline">别看别人的考卷，用你自己的活来考</text>
+
+    <!-- 表头 -->
+    <text x="40" y="152" class="col-h">你这周本来就要干的活</text>
+    <text x="760" y="152" text-anchor="middle" class="col-h">AI 甲</text>
+    <text x="960" y="152" text-anchor="middle" class="col-h">AI 乙</text>
+    <line class="grid" x1="40" y1="170" x2="1052" y2="170"/>
+
+    <!-- 第一件活 -->
+    <text x="40" y="208" class="mono row-k">真活 1</text>
+    <text x="40" y="236" class="row-t">把孩子学校发的 20 页 PDF 总结成五条</text>
+    <rect class="cell" x="670" y="186" width="180" height="64" rx="10"/>
+    <rect class="cell" x="870" y="186" width="180" height="64" rx="10"/>
+    <line class="grid" x1="40" y1="268" x2="1052" y2="268"/>
+    <g class="r1">
+      <rect class="win" x="670" y="186" width="180" height="64" rx="10"/>
+      <text x="760" y="224" text-anchor="middle" class="mark-win">✓ 五条都准</text>
+      <text x="960" y="224" text-anchor="middle" class="mark-lose">漏了缴费日期</text>
+    </g>
+
+    <!-- 第二件活 -->
+    <text x="40" y="306" class="mono row-k">真活 2</text>
+    <text x="40" y="334" class="row-t">给房东写一条客气但坚定的退租消息</text>
+    <rect class="cell" x="670" y="284" width="180" height="64" rx="10"/>
+    <rect class="cell" x="870" y="284" width="180" height="64" rx="10"/>
+    <line class="grid" x1="40" y1="366" x2="1052" y2="366"/>
+    <g class="r2">
+      <rect class="tie" x="670" y="284" width="180" height="64" rx="10"/>
+      <rect class="tie" x="870" y="284" width="180" height="64" rx="10"/>
+      <text x="760" y="322" text-anchor="middle" class="mark-tie">能用</text>
+      <text x="960" y="322" text-anchor="middle" class="mark-tie">也能用</text>
+    </g>
+
+    <!-- 第三件活 -->
+    <text x="40" y="404" class="mono row-k">真活 3</text>
+    <text x="40" y="432" class="row-t">查一下这周末北京有什么展览</text>
+    <rect class="cell" x="670" y="382" width="180" height="64" rx="10"/>
+    <rect class="cell" x="870" y="382" width="180" height="64" rx="10"/>
+    <line class="grid" x1="40" y1="464" x2="1052" y2="464"/>
+    <g class="r3">
+      <rect class="win" x="870" y="382" width="180" height="64" rx="10"/>
+      <text x="760" y="420" text-anchor="middle" class="mark-lose">列了去年的展</text>
+      <text x="960" y="420" text-anchor="middle" class="mark-win">✓ 附了链接</text>
+    </g>
+
+    <text x="546" y="530" text-anchor="middle" class="caption">每件活两边都问一遍，问法一字不改</text>
+    <g class="fin">
+      <rect x="40" y="500" width="1012" height="50" fill="#fff"/>
+      <text x="546" y="532" text-anchor="middle" class="caption-warn">哪个在你的活上更顺手，就留哪个——榜单只能参考，你的活才是考题</text>
+    </g>
+  </g>
+</svg>

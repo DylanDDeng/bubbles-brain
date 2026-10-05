@@ -56,6 +56,20 @@ const chapters = [
 		],
 	},
 	{
+		route: '/newbie-tutorials/which-ai-should-i-use/',
+		weight: 6,
+		visuals: ['pick-model-vs-app.svg', 'pick-privacy-lights.svg', 'pick-test-drive.svg'],
+		labs: ['capmatch', 'aipick'],
+		phrases: [
+			'模型',
+			'深度思考',
+			'备案',
+			'/newbie-tutorials/how-to-talk-to-ai/',
+			'/vibe-coding/terms/context-window/',
+			'/benchmarks/',
+		],
+	},
+	{
 		route: '/newbie-tutorials/what-is-a-knowledge-base/',
 		weight: 2,
 		visuals: ['kb-pipeline.svg', 'kb-chunks-and-embeddings.svg', 'kb-failure-points.svg'],

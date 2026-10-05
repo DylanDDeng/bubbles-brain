@@ -913,10 +913,8 @@ const PROMPT_FIX_CASES: PromptFixCase[] = [
 	{
 		label: '改文案',
 		badPrompt: '帮我把这段话改得好一点。',
-		badOutput:
-			'改好啦：「这款保温杯采用先进技术，保温性能出色，设计精美，是您生活的好伴侣。」',
-		badVerdict:
-			'「好一点」是哪一点？它只能按最大公约数改——结果是同义改写，还顺手加了句广告腔。',
+		badOutput: '改好啦：「这款保温杯采用先进技术，保温性能出色，设计精美，是您生活的好伴侣。」',
+		badVerdict: '「好一点」是哪一点？它只能按最大公约数改——结果是同义改写，还顺手加了句广告腔。',
 		goodPrompt:
 			'这是保温杯电商详情页的文案，目标用户是 25–35 岁通勤女性。改得更口语，突出「12 小时保温」这个卖点，控制在 80 字以内。',
 		goodOutput:
@@ -1080,6 +1078,231 @@ function setupPromptClinicLab(lab: HTMLElement): void {
 	renderRound();
 }
 
+// LAB (pick) 02 — four questions narrow the field to a first pick and a
+// backup. A snapshot as of the article's lastmod; brands change, the
+// questions don't.
+type PickNet = 'cn' | 'global';
+type PickUse = 'chat' | 'docs' | 'reason' | 'create';
+const AI_PICKS: Record<PickNet, Record<PickUse, { first: string; backup: string; why: string }>> = {
+	cn: {
+		chat: {
+			first: '豆包',
+			backup: '腾讯元宝',
+			why: '国内用户最多，免费版就有联网搜索、读文件、画图和语音通话，什么都能先试一下。元宝能搜公众号和视频号里的内容，常在微信里找资料的话更顺手。',
+		},
+		docs: {
+			first: 'Kimi',
+			backup: '腾讯元宝',
+			why: 'Kimi 一直主打长文本，新模型 K3 的上下文窗口有 100 万 token，一本书也放得下。元宝能读几十种格式的文件，可以当备选对照着用。',
+		},
+		reason: {
+			first: 'DeepSeek',
+			backup: '千问',
+			why: 'DeepSeek 靠「深度思考」出圈，算账、比较方案、写代码这类要先想再答的题是它的老本行。千问 App 新开放了旗舰模型，还带办公助手，可以拿同一道题对比。',
+		},
+		create: {
+			first: '豆包',
+			backup: '千问',
+			why: '豆包免费就能画图，还接入了字节的视频模型，能直接生成短视频。千问也能画图，画同一张图时可以多一个选择。',
+		},
+	},
+	global: {
+		chat: {
+			first: 'ChatGPT',
+			backup: 'Gemini',
+			why: '功能最全的综合型选手，语音对话做得成熟。Gemini 和谷歌全家桶打通，平时用 Gmail、谷歌文档的人会觉得顺手。',
+		},
+		docs: {
+			first: 'Claude',
+			backup: 'Gemini',
+			why: 'Claude 读长材料、改文章、写东西的口碑很好，语气也克制。Gemini 能直接读谷歌云盘里的文件，长文档也是强项。',
+		},
+		reason: {
+			first: 'Claude',
+			backup: 'ChatGPT',
+			why: '写代码和复杂推理是 Claude 的招牌，公开榜单上前排也常见它的名字。ChatGPT 的新旗舰模型可以拿来做第二意见。',
+		},
+		create: {
+			first: 'ChatGPT',
+			backup: 'Gemini',
+			why: '两家的画图都是第一梯队，改图的时候直接用一句话描述要改哪里就行。不过它们的免费额度都不多，画得勤就得付费。',
+		},
+	},
+};
+
+function setupAiPickLab(lab: HTMLElement): void {
+	const out = lab.querySelector<HTMLElement>('[data-nb-ap-out]');
+	if (!out) return;
+	const value = (name: string) =>
+		lab.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value;
+
+	const render = () => {
+		const net = (value('nb-ap-net') ?? 'cn') as PickNet;
+		const use = (value('nb-ap-use') ?? 'chat') as PickUse;
+		const paid = value('nb-ap-budget') === 'paid';
+		const careful = value('nb-ap-privacy') === 'high';
+		const pick = AI_PICKS[net][use];
+
+		const line = (label: string, text: string) => {
+			const p = document.createElement('p');
+			const b = document.createElement('b');
+			b.textContent = `${label}\u3000`;
+			p.append(b, text);
+			return p;
+		};
+		const rows = [
+			line('先试', `${pick.first}\u3000\u3000备选：${pick.backup}`),
+			line('为什么', pick.why),
+			line(
+				'花不花钱',
+				paid
+					? net === 'cn'
+						? '先用免费版跑满一个月，真撞到额度再升级：豆包专业版 68 元／月起，Kimi 会员 49 元／月起。'
+						: '海外几家的主力付费档都在 20 美元／月上下（Claude Pro、Gemini AI Pro、ChatGPT Plus），一次只订一家，用满一个月再决定续不续。'
+					: net === 'cn'
+						? '国内几家的日常功能基本免费，先别花钱。'
+						: '海外几家免费版都有，但最新的旗舰模型多半只给付费用户——免费版用着不满意，不代表付费版也不行。',
+			),
+			line(
+				'资料安全',
+				careful
+					? '先在设置里关掉「用对话改进模型」一类的开关；公司资料先问公司有没有指定的 AI 工具；身份证号、密码这类红灯区的东西，哪个 AI 都别贴。'
+					: '日常问题放心问。只要记住：身份证号、银行卡、密码这类东西，哪个 AI 都别贴。',
+			),
+		];
+		if (net === 'global')
+			rows.push(
+				line(
+					'别忘了',
+					'这几家都没有面向中国大陆的个人用户开放，也没有在国内备案。国内那几个照样能用，海外的不是必需品。',
+				),
+			);
+		out.replaceChildren(...rows);
+	};
+
+	for (const input of lab.querySelectorAll<HTMLInputElement>('input[type="radio"]'))
+		input.addEventListener('change', render);
+	render();
+}
+
+// LAB (pick) 01 — match an everyday request to the capability it needs.
+// The point: what you shop for is a capability, not a brand.
+const CAPABILITIES = ['联网搜索', '读文件', '看图', '深度思考', '画图'] as const;
+type Capability = (typeof CAPABILITIES)[number];
+const CAP_ROUNDS: Array<{ q: string; answer: Capability; why: string }> = [
+	{
+		q: '「这周六杭州会下雨吗？我要不要改期？」',
+		answer: '联网搜索',
+		why: '天气是今天才有的信息，模型的知识停在训练那天。没有联网搜索，它要么说不知道，要么照着「杭州秋天常下雨」编一个。',
+	},
+	{
+		q: '「帮我看看这份 40 页的租房合同，哪几条对我不利？」',
+		answer: '读文件',
+		why: '合同在你手里，不在它的记忆里。能直接上传 PDF 或 Word 的 App，省掉你一页页复制粘贴，也不容易漏页。',
+	},
+	{
+		q: '「（拍了一张阳台植物的照片）这是什么花？叶子发黄怎么办？」',
+		answer: '看图',
+		why: '描述「一种绿叶开白花的植物」很难说清，拍给它更快。能看懂照片的模型叫多模态模型——不只读字，还能读图。',
+	},
+	{
+		q: '「等额本息和等额本金，贷 100 万、30 年，我该选哪个？」',
+		answer: '深度思考',
+		why: '要算账、要比较、还要结合你的收入情况——这种题让它先想再答更稳。各家叫法不同：深度思考、推理模式、思考模式，都是这个开关。',
+	},
+	{
+		q: '「给我的咖啡店做一张国庆开业海报」',
+		answer: '画图',
+		why: '聊天模型本身只会写字。能出图的 App，是在外壳里另接了一个画图模型——所以有的 App 能画、有的不能。',
+	},
+];
+
+function setupCapMatchLab(lab: HTMLElement): void {
+	const stage = lab.querySelector<HTMLElement>('[data-nb-cap]');
+	const result = lab.querySelector<HTMLElement>('[data-nb-result]');
+	const reset = lab.querySelector<HTMLButtonElement>('[data-nb-reset]');
+	if (!stage || !result || !reset) return;
+
+	let round = 0;
+	let right = 0;
+
+	const renderRound = () => {
+		const current = CAP_ROUNDS[round];
+		stage.replaceChildren();
+		if (!current) return;
+		const hint = document.createElement('p');
+		hint.className = 'nb-lab-hint';
+		hint.textContent = `第 ${round + 1} / ${CAP_ROUNDS.length} 题 · 这句话最需要 App 有哪项本事？`;
+		const q = document.createElement('p');
+		q.className = 'nb-rank-q';
+		q.textContent = current.q;
+		const choices = document.createElement('div');
+		choices.className = 'nb-choices nb-choices-inline';
+		choices.setAttribute('role', 'group');
+		choices.setAttribute('aria-label', '能力');
+		const verdict = document.createElement('p');
+		verdict.className = 'nb-verdict';
+		verdict.setAttribute('aria-live', 'polite');
+		const actions = document.createElement('div');
+		actions.className = 'nb-lab-actions';
+
+		for (const cap of CAPABILITIES) {
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'nb-pill';
+			button.textContent = cap;
+			button.addEventListener('click', () => {
+				const ok = cap === current.answer;
+				if (ok) right += 1;
+				for (const other of choices.querySelectorAll('button')) {
+					other.disabled = true;
+					other.setAttribute('aria-pressed', String(other.textContent === current.answer));
+				}
+				const head = document.createElement('b');
+				head.textContent = ok ? '✓ 对。' : `其实是「${current.answer}」。`;
+				verdict.replaceChildren(head, current.why);
+				const next = document.createElement('button');
+				next.type = 'button';
+				next.className = 'nb-btn';
+				next.textContent = round + 1 < CAP_ROUNDS.length ? '下一题' : '看结果';
+				next.addEventListener('click', () => {
+					round += 1;
+					if (round >= CAP_ROUNDS.length) finish();
+					else renderRound();
+				});
+				actions.replaceChildren(next);
+				next.focus();
+			});
+			choices.append(button);
+		}
+		stage.append(hint, q, choices, verdict, actions);
+	};
+
+	const finish = () => {
+		stage.replaceChildren();
+		result.replaceChildren();
+		const verdict = document.createElement('p');
+		verdict.className = 'nb-kb-verdict';
+		verdict.textContent =
+			right === CAP_ROUNDS.length
+				? `五题全对。你已经会用「能力」而不是「牌子」来挑 AI 了：先想清楚这活要哪项本事，再去看哪个 App 有。`
+				: `你答对了 ${right} / ${CAP_ROUNDS.length} 题。记住这五项本事：联网搜索管「新」，读文件管「你的资料」，看图管「说不清的东西」，深度思考管「要算要比的」，画图管「要出图的」。挑 App 时，先对照你最常干的活需要哪几项。`;
+		result.dataset.tone = right === CAP_ROUNDS.length ? 'good' : 'meh';
+		result.append(verdict);
+		result.hidden = false;
+		reset.hidden = false;
+	};
+
+	reset.addEventListener('click', () => {
+		round = 0;
+		right = 0;
+		result.hidden = true;
+		reset.hidden = true;
+		renderRound();
+	});
+	renderRound();
+}
+
 function setupNewbieLabs(): void {
 	for (const lab of document.querySelectorAll<HTMLElement>('[data-nb-lab]')) {
 		if (lab.dataset.nbReady === 'true') continue;
@@ -1098,6 +1321,8 @@ function setupNewbieLabs(): void {
 		else if (kind === 'rank') setupRankLab(lab);
 		else if (kind === 'promptfix') setupPromptFixLab(lab);
 		else if (kind === 'promptclinic') setupPromptClinicLab(lab);
+		else if (kind === 'aipick') setupAiPickLab(lab);
+		else if (kind === 'capmatch') setupCapMatchLab(lab);
 	}
 }
 

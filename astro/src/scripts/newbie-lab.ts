@@ -1078,55 +1078,62 @@ function setupPromptClinicLab(lab: HTMLElement): void {
 	renderRound();
 }
 
-// LAB (pick) 02 — four questions narrow the field to a first pick and a
-// backup. A snapshot as of the article's lastmod; brands change, the
-// questions don't.
+// LAB (pick) 01 — three questions lead to a first pick and a backup,
+// following the article's conclusions. A snapshot as of the article's
+// lastmod; the brands will change, the questions won't.
 type PickNet = 'cn' | 'global';
-type PickUse = 'chat' | 'docs' | 'reason' | 'create';
-const AI_PICKS: Record<PickNet, Record<PickUse, { first: string; backup: string; why: string }>> = {
+type PickUse = 'daily' | 'code' | 'docs';
+interface AiPick {
+	first: string;
+	backup: string;
+	why: string;
+}
+const PAID_PICKS: Record<PickNet, Record<PickUse, AiPick>> = {
+	global: {
+		daily: {
+			first: 'ChatGPT',
+			backup: 'Claude',
+			why: 'ChatGPT 的 App 功能最全，语音、画图、联网、读文件都有，日常什么都能交给它；想要更克制的文风、写长文章，就换 Claude。',
+		},
+		code: {
+			first: 'Claude',
+			backup: 'ChatGPT',
+			why: '本站收录的 8 个榜单里，Claude 在 5 个上排第一，包括综合智力、职场任务和三个编程榜；GPT-6 Astra 在写代码的 DeepSWE 上只差 0.1 分，适合拿来要第二意见。',
+		},
+		docs: {
+			first: 'Claude',
+			backup: 'ChatGPT',
+			why: '把一堆材料整理成一份能交的东西，是 Claude 的强项：GDPval 职场任务（交付文档、表格、幻灯片）它排第一。ChatGPT 做备选，两边对照着看。',
+		},
+	},
 	cn: {
-		chat: {
-			first: '豆包',
-			backup: '腾讯元宝',
-			why: '国内用户最多，免费版就有联网搜索、读文件、画图和语音通话，什么都能先试一下。元宝能搜公众号和视频号里的内容，常在微信里找资料的话更顺手。',
+		daily: {
+			first: 'GLM（智谱清言）',
+			backup: 'Kimi',
+			why: '在主流聊天 App 用得到的国产模型里，GLM-5.3 的成绩最均衡，综合干活分排第一；Kimi 写东西、读材料也很强，可以对照着用。',
+		},
+		code: {
+			first: 'GLM（智谱清言）',
+			backup: 'Kimi',
+			why: 'GLM-5.3 主打编程和 Agent，是终端编程榜上唯一进榜的国产模型；Kimi K3 在写代码的 DeepSWE 上只比它低 0.5 分。',
 		},
 		docs: {
 			first: 'Kimi',
-			backup: '腾讯元宝',
-			why: 'Kimi 一直主打长文本，新模型 K3 的上下文窗口有 100 万 token，一本书也放得下。元宝能读几十种格式的文件，可以当备选对照着用。',
-		},
-		reason: {
-			first: 'DeepSeek',
-			backup: '千问',
-			why: 'DeepSeek 靠「深度思考」出圈，算账、比较方案、写代码这类要先想再答的题是它的老本行。千问 App 新开放了旗舰模型，还带办公助手，可以拿同一道题对比。',
-		},
-		create: {
-			first: '豆包',
-			backup: '千问',
-			why: '豆包免费就能画图，还接入了字节的视频模型，能直接生成短视频。千问也能画图，画同一张图时可以多一个选择。',
+			backup: 'GLM（智谱清言）',
+			why: 'Kimi 一直主打长文本，K3 能一次读进约 100 万 token，一整本书都放得下；GLM 做备选，成绩更均衡。',
 		},
 	},
+};
+const FREE_PICK: Record<PickNet, AiPick> = {
+	cn: {
+		first: 'DeepSeek',
+		backup: 'GLM（智谱清言）',
+		why: 'DeepSeek 的 App 不收会员费，深度思考、联网、读文件、看图都能直接用，综合干活分在主流国产模型里仅次于 GLM。智谱清言也能免费用，可以当备选。',
+	},
 	global: {
-		chat: {
-			first: 'ChatGPT',
-			backup: 'Gemini',
-			why: '功能最全的综合型选手，语音对话做得成熟。Gemini 和谷歌全家桶打通，平时用 Gmail、谷歌文档的人会觉得顺手。',
-		},
-		docs: {
-			first: 'Claude',
-			backup: 'Gemini',
-			why: 'Claude 读长材料、改文章、写东西的口碑很好，语气也克制。Gemini 能直接读谷歌云盘里的文件，长文档也是强项。',
-		},
-		reason: {
-			first: 'Claude',
-			backup: 'ChatGPT',
-			why: '写代码和复杂推理是 Claude 的招牌，公开榜单上前排也常见它的名字。ChatGPT 的新旗舰模型可以拿来做第二意见。',
-		},
-		create: {
-			first: 'ChatGPT',
-			backup: 'Gemini',
-			why: '两家的画图都是第一梯队，改图的时候直接用一句话描述要改哪里就行。不过它们的免费额度都不多，画得勤就得付费。',
-		},
+		first: 'DeepSeek',
+		backup: 'Claude 免费版',
+		why: 'ChatGPT 和 Claude 的最强型号都要付费，免费版用的是次一档的模型。只想免费的话，不收会员费的 DeepSeek 更划算；Claude 免费版也能用，适合写东西时对照。',
 	},
 };
 
@@ -1138,10 +1145,9 @@ function setupAiPickLab(lab: HTMLElement): void {
 
 	const render = () => {
 		const net = (value('nb-ap-net') ?? 'cn') as PickNet;
-		const use = (value('nb-ap-use') ?? 'chat') as PickUse;
+		const use = (value('nb-ap-use') ?? 'daily') as PickUse;
 		const paid = value('nb-ap-budget') === 'paid';
-		const careful = value('nb-ap-privacy') === 'high';
-		const pick = AI_PICKS[net][use];
+		const pick = paid ? PAID_PICKS[net][use] : FREE_PICK[net];
 
 		const line = (label: string, text: string) => {
 			const p = document.createElement('p');
@@ -1151,30 +1157,22 @@ function setupAiPickLab(lab: HTMLElement): void {
 			return p;
 		};
 		const rows = [
-			line('先试', `${pick.first}\u3000\u3000备选：${pick.backup}`),
+			line('首选', `${pick.first}\u3000\u3000备选：${pick.backup}`),
 			line('为什么', pick.why),
 			line(
-				'花不花钱',
+				'花多少钱',
 				paid
 					? net === 'cn'
-						? '先用免费版跑满一个月，真撞到额度再升级：豆包专业版 68 元／月起，Kimi 会员 49 元／月起。'
-						: '海外几家的主力付费档都在 20 美元／月上下（Claude Pro、Gemini AI Pro、ChatGPT Plus），一次只订一家，用满一个月再决定续不续。'
-					: net === 'cn'
-						? '国内几家的日常功能基本免费，先别花钱。'
-						: '海外几家免费版都有，但最新的旗舰模型多半只给付费用户——免费版用着不满意，不代表付费版也不行。',
-			),
-			line(
-				'资料安全',
-				careful
-					? '先在设置里关掉「用对话改进模型」一类的开关；公司资料先问公司有没有指定的 AI 工具；身份证号、密码这类红灯区的东西，哪个 AI 都别贴。'
-					: '日常问题放心问。只要记住：身份证号、银行卡、密码这类东西，哪个 AI 都别贴。',
+						? '智谱清言免费下载，有付费会员可选；Kimi 会员每月 49 元起。先用免费额度跑一周，再决定开不开。'
+						: 'Claude Pro 每月 20 美元，ChatGPT Plus 约 20 美元。一次只订一家，用满一个月再决定续不续。'
+					: 'DeepSeek 不收会员费。哪天免费的不够用了，再回到上面的问题 3 选「愿意付费」。',
 			),
 		];
 		if (net === 'global')
 			rows.push(
 				line(
 					'别忘了',
-					'这几家都没有面向中国大陆的个人用户开放，也没有在国内备案。国内那几个照样能用，海外的不是必需品。',
+					'Claude、ChatGPT 都没有面向中国大陆开放，账号和网络要自己解决；国内首选 GLM 和 Kimi 照样够用。',
 				),
 			);
 		out.replaceChildren(...rows);
@@ -1183,124 +1181,6 @@ function setupAiPickLab(lab: HTMLElement): void {
 	for (const input of lab.querySelectorAll<HTMLInputElement>('input[type="radio"]'))
 		input.addEventListener('change', render);
 	render();
-}
-
-// LAB (pick) 01 — match an everyday request to the capability it needs.
-// The point: what you shop for is a capability, not a brand.
-const CAPABILITIES = ['联网搜索', '读文件', '看图', '深度思考', '画图'] as const;
-type Capability = (typeof CAPABILITIES)[number];
-const CAP_ROUNDS: Array<{ q: string; answer: Capability; why: string }> = [
-	{
-		q: '「这周六杭州会下雨吗？我要不要改期？」',
-		answer: '联网搜索',
-		why: '天气是今天才有的信息，模型的知识停在训练那天。没有联网搜索，它要么说不知道，要么照着「杭州秋天常下雨」编一个。',
-	},
-	{
-		q: '「帮我看看这份 40 页的租房合同，哪几条对我不利？」',
-		answer: '读文件',
-		why: '合同在你手里，不在它的记忆里。能直接上传 PDF 或 Word 的 App，省掉你一页页复制粘贴，也不容易漏页。',
-	},
-	{
-		q: '「（拍了一张阳台植物的照片）这是什么花？叶子发黄怎么办？」',
-		answer: '看图',
-		why: '描述「一种绿叶开白花的植物」很难说清，拍给它更快。能看懂照片的模型叫多模态模型——不只读字，还能读图。',
-	},
-	{
-		q: '「等额本息和等额本金，贷 100 万、30 年，我该选哪个？」',
-		answer: '深度思考',
-		why: '要算账、要比较、还要结合你的收入情况——这种题让它先想再答更稳。各家叫法不同：深度思考、推理模式、思考模式，都是这个开关。',
-	},
-	{
-		q: '「给我的咖啡店做一张国庆开业海报」',
-		answer: '画图',
-		why: '聊天模型本身只会写字。能出图的 App，是在外壳里另接了一个画图模型——所以有的 App 能画、有的不能。',
-	},
-];
-
-function setupCapMatchLab(lab: HTMLElement): void {
-	const stage = lab.querySelector<HTMLElement>('[data-nb-cap]');
-	const result = lab.querySelector<HTMLElement>('[data-nb-result]');
-	const reset = lab.querySelector<HTMLButtonElement>('[data-nb-reset]');
-	if (!stage || !result || !reset) return;
-
-	let round = 0;
-	let right = 0;
-
-	const renderRound = () => {
-		const current = CAP_ROUNDS[round];
-		stage.replaceChildren();
-		if (!current) return;
-		const hint = document.createElement('p');
-		hint.className = 'nb-lab-hint';
-		hint.textContent = `第 ${round + 1} / ${CAP_ROUNDS.length} 题 · 这句话最需要 App 有哪项本事？`;
-		const q = document.createElement('p');
-		q.className = 'nb-rank-q';
-		q.textContent = current.q;
-		const choices = document.createElement('div');
-		choices.className = 'nb-choices nb-choices-inline';
-		choices.setAttribute('role', 'group');
-		choices.setAttribute('aria-label', '能力');
-		const verdict = document.createElement('p');
-		verdict.className = 'nb-verdict';
-		verdict.setAttribute('aria-live', 'polite');
-		const actions = document.createElement('div');
-		actions.className = 'nb-lab-actions';
-
-		for (const cap of CAPABILITIES) {
-			const button = document.createElement('button');
-			button.type = 'button';
-			button.className = 'nb-pill';
-			button.textContent = cap;
-			button.addEventListener('click', () => {
-				const ok = cap === current.answer;
-				if (ok) right += 1;
-				for (const other of choices.querySelectorAll('button')) {
-					other.disabled = true;
-					other.setAttribute('aria-pressed', String(other.textContent === current.answer));
-				}
-				const head = document.createElement('b');
-				head.textContent = ok ? '✓ 对。' : `其实是「${current.answer}」。`;
-				verdict.replaceChildren(head, current.why);
-				const next = document.createElement('button');
-				next.type = 'button';
-				next.className = 'nb-btn';
-				next.textContent = round + 1 < CAP_ROUNDS.length ? '下一题' : '看结果';
-				next.addEventListener('click', () => {
-					round += 1;
-					if (round >= CAP_ROUNDS.length) finish();
-					else renderRound();
-				});
-				actions.replaceChildren(next);
-				next.focus();
-			});
-			choices.append(button);
-		}
-		stage.append(hint, q, choices, verdict, actions);
-	};
-
-	const finish = () => {
-		stage.replaceChildren();
-		result.replaceChildren();
-		const verdict = document.createElement('p');
-		verdict.className = 'nb-kb-verdict';
-		verdict.textContent =
-			right === CAP_ROUNDS.length
-				? `五题全对。你已经会用「能力」而不是「牌子」来挑 AI 了：先想清楚这活要哪项本事，再去看哪个 App 有。`
-				: `你答对了 ${right} / ${CAP_ROUNDS.length} 题。记住这五项本事：联网搜索管「新」，读文件管「你的资料」，看图管「说不清的东西」，深度思考管「要算要比的」，画图管「要出图的」。挑 App 时，先对照你最常干的活需要哪几项。`;
-		result.dataset.tone = right === CAP_ROUNDS.length ? 'good' : 'meh';
-		result.append(verdict);
-		result.hidden = false;
-		reset.hidden = false;
-	};
-
-	reset.addEventListener('click', () => {
-		round = 0;
-		right = 0;
-		result.hidden = true;
-		reset.hidden = true;
-		renderRound();
-	});
-	renderRound();
 }
 
 function setupNewbieLabs(): void {
@@ -1322,7 +1202,6 @@ function setupNewbieLabs(): void {
 		else if (kind === 'promptfix') setupPromptFixLab(lab);
 		else if (kind === 'promptclinic') setupPromptClinicLab(lab);
 		else if (kind === 'aipick') setupAiPickLab(lab);
-		else if (kind === 'capmatch') setupCapMatchLab(lab);
 	}
 }
 

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1092 640" role="img" aria-labelledby="title desc">
+  <title id="title">两张成绩单：干活和写代码</title>
+  <desc id="desc">两张横向柱状图，数据来自本站 2026 年 10 月 4 日的模型榜单。左边 Vals Index（金融、法律、编程等真实行业任务）：Gemini 4 Argon 68.9（尚未全面开放）、Claude Sonnet 5.5 67.0、GPT-6 Astra 63.1、GLM-5.3 53.5、DeepSeek V4.1 Flash 51.3、Kimi K3 50.3、腾讯混元 Hy4 49.9、Qwen 3.8 Max 48.3。右边 DeepSWE（在真实代码库里完成多文件开发）：Claude Opus 5.5 74.2、GPT-6 Astra 74.1、Gemini 3.8 Flash 73.8、GLM-5.3 69.0、Kimi K3 68.5、DeepSeek V4 Pro 62.8、Qwen 3.8 Max 57.5。海外 Claude、GPT 在两张榜上都在最前排；国内 GLM 和 Kimi 写代码最接近第一梯队；DeepSeek 免费，综合分在图中的国产模型里仅次于 GLM。图里只放了在主流聊天 App 里用得到的模型。</desc>
+  <style>
+    .sans{font-family:-apple-system,'PingFang SC','Noto Sans SC',system-ui,sans-serif}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .eyebrow{font-size:14px;letter-spacing:4px;font-weight:700;fill:#d9341c}
+    .headline{font-size:36px;font-weight:720;letter-spacing:-1px;fill:#111}
+    .ptitle{font-size:20px;font-weight:720;fill:#111}
+    .psub{font-size:14.5px;fill:#6c6c6c}
+    .name{font-size:14.5px;font-weight:600}
+    .global-t{fill:#111}
+    .cn-t,.free-t{fill:#d9341c}
+    .other-t{fill:#9c9c98}
+    .val{font-size:14px;font-weight:600;fill:#333}
+    .global{fill:#111}
+    .cn{fill:#ff4d2e}
+    .free{fill:#fff0ec;stroke:#ff4d2e;stroke-width:1.8}
+    .other{fill:#d6d6d2}
+    .key{font-size:14px;fill:#333}
+    .caption{font-size:16px;font-weight:600;fill:#333}
+    .bar{transform-box:fill-box;transform-origin:0 50%;animation:grow 1.1s cubic-bezier(.2,.7,.2,1) both}
+    @keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    @media(prefers-reduced-motion:reduce){.bar{animation:none}}
+  </style>
+  <g class="sans">
+    <text x="40" y="46" class="mono eyebrow">SCOREBOARD · 2026-10-04</text>
+    <text x="40" y="92" class="headline">两张成绩单：干活和写代码</text>
+    <rect x="40" y="118" width="14" height="14" rx="2" class="global"/><text x="62" y="130" class="key">海外首选</text>
+    <rect x="152" y="118" width="14" height="14" rx="2" class="cn"/><text x="174" y="130" class="key">国内首选</text>
+    <rect x="264" y="118" width="14" height="14" rx="2" class="free"/><text x="286" y="130" class="key">免费首选</text>
+    <rect x="376" y="118" width="14" height="14" rx="2" class="other"/><text x="398" y="130" class="key">其他</text>
+    <text x="40" y="176" class="ptitle">Vals Index</text>
+    <text x="40" y="200" class="psub">金融、法律、编程等真实行业任务</text>
+    <text x="200" y="241" text-anchor="end" class="name other-t">Gemini 4 Argon</text>
+    <rect x="210" y="225" width="206.7" height="22" rx="3" class="bar other" style="animation-delay:0.10s"/>
+    <text x="424.7" y="241" class="val">68.9　未全面开放</text>
+    <text x="200" y="281" text-anchor="end" class="name global-t">Claude Sonnet 5.5</text>
+    <rect x="210" y="265" width="201.0" height="22" rx="3" class="bar global" style="animation-delay:0.22s"/>
+    <text x="419.0" y="281" class="val">67.0</text>
+    <text x="200" y="321" text-anchor="end" class="name global-t">GPT-6 Astra</text>
+    <rect x="210" y="305" width="189.3" height="22" rx="3" class="bar global" style="animation-delay:0.34s"/>
+    <text x="407.3" y="321" class="val">63.1</text>
+    <text x="200" y="361" text-anchor="end" class="name cn-t">GLM-5.3</text>
+    <rect x="210" y="345" width="160.5" height="22" rx="3" class="bar cn" style="animation-delay:0.46s"/>
+    <text x="378.5" y="361" class="val">53.5</text>
+    <text x="200" y="401" text-anchor="end" class="name free-t">DeepSeek V4.1 Flash</text>
+    <rect x="210" y="385" width="153.9" height="22" rx="3" class="bar free" style="animation-delay:0.58s"/>
+    <text x="371.9" y="401" class="val">51.3</text>
+    <text x="200" y="441" text-anchor="end" class="name cn-t">Kimi K3</text>
+    <rect x="210" y="425" width="150.9" height="22" rx="3" class="bar cn" style="animation-delay:0.70s"/>
+    <text x="368.9" y="441" class="val">50.3</text>
+    <text x="200" y="481" text-anchor="end" class="name other-t">腾讯混元 Hy4</text>
+    <rect x="210" y="465" width="149.7" height="22" rx="3" class="bar other" style="animation-delay:0.82s"/>
+    <text x="367.7" y="481" class="val">49.9</text>
+    <text x="200" y="521" text-anchor="end" class="name other-t">Qwen 3.8 Max</text>
+    <rect x="210" y="505" width="144.9" height="22" rx="3" class="bar other" style="animation-delay:0.94s"/>
+    <text x="362.9" y="521" class="val">48.3</text>
+    <text x="566" y="176" class="ptitle">DeepSWE</text>
+    <text x="566" y="200" class="psub">在真实代码库里完成多文件开发</text>
+    <text x="726" y="241" text-anchor="end" class="name global-t">Claude Opus 5.5</text>
+    <rect x="736" y="225" width="222.6" height="22" rx="3" class="bar global" style="animation-delay:0.50s"/>
+    <text x="966.6" y="241" class="val">74.2</text>
+    <text x="726" y="281" text-anchor="end" class="name global-t">GPT-6 Astra</text>
+    <rect x="736" y="265" width="222.3" height="22" rx="3" class="bar global" style="animation-delay:0.62s"/>
+    <text x="966.3" y="281" class="val">74.1</text>
+    <text x="726" y="321" text-anchor="end" class="name other-t">Gemini 3.8 Flash</text>
+    <rect x="736" y="305" width="221.4" height="22" rx="3" class="bar other" style="animation-delay:0.74s"/>
+    <text x="965.4" y="321" class="val">73.8</text>
+    <text x="726" y="361" text-anchor="end" class="name cn-t">GLM-5.3</text>
+    <rect x="736" y="345" width="207.0" height="22" rx="3" class="bar cn" style="animation-delay:0.86s"/>
+    <text x="951.0" y="361" class="val">69.0</text>
+    <text x="726" y="401" text-anchor="end" class="name cn-t">Kimi K3</text>
+    <rect x="736" y="385" width="205.5" height="22" rx="3" class="bar cn" style="animation-delay:0.98s"/>
+    <text x="949.5" y="401" class="val">68.5</text>
+    <text x="726" y="441" text-anchor="end" class="name free-t">DeepSeek V4 Pro</text>
+    <rect x="736" y="425" width="188.4" height="22" rx="3" class="bar free" style="animation-delay:1.10s"/>
+    <text x="932.4" y="441" class="val">62.8</text>
+    <text x="726" y="481" text-anchor="end" class="name other-t">Qwen 3.8 Max</text>
+    <rect x="736" y="465" width="172.5" height="22" rx="3" class="bar other" style="animation-delay:1.22s"/>
+    <text x="916.5" y="481" class="val">57.5</text>
+    <line x1="40" y1="566" x2="1052" y2="566" stroke="#dedede" stroke-width="1.5"/>
+    <text x="40" y="598" class="caption">海外两强在两张榜上都排最前；国内 GLM、Kimi 写代码离第一梯队最近</text>
+    <text x="40" y="626" class="caption">DeepSeek 不收会员费，综合分在图中国产模型里仅次于 GLM</text>
+  </g>
+</svg>

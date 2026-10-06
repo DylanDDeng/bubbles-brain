@@ -1,11 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import {
-	formatShowcaseDuration,
-	showcaseByNewest,
-	showcaseCategories,
-	showcaseHref,
-} from '../../../data/showcase';
+import { formatShowcaseDuration, showcaseByNewest, showcaseHref } from '../../../data/showcase';
 import {
 	showcaseMediaUrl,
 	showcasePosterSrcset,
@@ -14,12 +9,6 @@ import {
 import '../../../styles/showcase.css';
 
 const works = showcaseByNewest();
-const categories = showcaseCategories
-	.map((category) => ({
-		...category,
-		count: works.filter((work) => work.category === category.id).length,
-	}))
-	.filter((category) => category.count);
 
 // One column under 800px, otherwise a third of the 1040px gallery.
 const TILE_SIZES = '(max-width: 800px) calc(100vw - 40px), 336px';
@@ -47,20 +36,6 @@ works.forEach((work, order) => {
 				<a href="/vibe-coding/">Vibe Coding</a> / Showcase
 			</nav>
 			<h1 class="rr-title" lang="en">Showcase</h1>
-			{
-				categories.length > 1 && (
-					<nav class="rr-filters" aria-label="按分类筛选" data-gallery-filter>
-						<a href="/vibe-coding/showcase/" data-gallery-option="" aria-current="true">
-							<span>全部</span>
-						</a>
-						{categories.map((category) => (
-							<a href={`/vibe-coding/showcase/?c=${category.id}`} data-gallery-option={category.id}>
-								<span>{category.title}</span>
-							</a>
-						))}
-					</nav>
-				)
-			}
 		</header>
 
 		<section class="showcase-wall" aria-label="作品">
@@ -72,7 +47,6 @@ works.forEach((work, order) => {
 								class="showcase-tile"
 								href={showcaseHref(work)}
 								style={`--order: ${order}`}
-								data-category={work.category}
 								data-astro-prefetch="false"
 							>
 								<picture>

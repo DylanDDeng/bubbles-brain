@@ -1795,6 +1795,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-code-animation-short-1280.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-develop-launch.webp": {
+			"source_sha256": "13984ba2cbd37e6669a57aa13c94c69f5014689cd4c911e159d1f35d2aa13c20",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-1440.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-every-frame-is-code.webp": {
 			"source_sha256": "06d0041ce7416c81498542182ba40b42a98daebdb68c2614cd41e67291ed5fe7",
 			"width": 1280,
@@ -1865,6 +1877,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-960.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-1280.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-negroni-recipe.webp": {
+			"source_sha256": "cab772c69b306a0c7cac2c2b2b0b6031372ddf5ed2c4700f4d9dc2f24d5ff1e7",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-negroni-recipe-1080.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-neural-networks-80-years.webp": {

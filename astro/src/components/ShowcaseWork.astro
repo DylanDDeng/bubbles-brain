@@ -3,7 +3,6 @@ import SourceMark from './SourceMark.astro';
 import {
 	formatShowcaseDuration,
 	showcaseByNewest,
-	showcaseCategory,
 	showcaseHref,
 	type ShowcaseWork,
 } from '../data/showcase';
@@ -21,7 +20,6 @@ interface Props {
 const { work } = Astro.props;
 const works = showcaseByNewest();
 const next = works[works.indexOf(work) + 1];
-const category = showcaseCategory(work.category)?.title;
 const prompt = work.prompt;
 const promptLangs = (['zh', 'en'] as const).filter((lang) => prompt?.[lang]);
 // Section tags such as <inputs> in a structured prompt are set quieter than the instructions.
@@ -67,9 +65,7 @@ const promptLines = (text: string) =>
 	</figure>
 
 	<div class="work-text">
-		<p class="work-kicker">
-			{[category, formatShowcaseDuration(work.duration)].filter(Boolean).join(' · ')}
-		</p>
+		<p class="work-kicker">{formatShowcaseDuration(work.duration)}</p>
 		<h1>{work.title}</h1>
 		<p class="work-note">{work.note}</p>
 		{

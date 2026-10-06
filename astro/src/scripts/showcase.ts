@@ -56,9 +56,11 @@ function setupPrompt(section: HTMLElement) {
  * state survives the swap, so the film will not play until a full reload. Restart its loading.
  */
 function reviveVideos() {
-	document.querySelectorAll<HTMLVideoElement>('[data-showcase-theater] video, video[data-showcase-video]').forEach((video) => {
-		if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) video.load();
-	});
+	document
+		.querySelectorAll<HTMLVideoElement>('[data-showcase-theater] video, video[data-showcase-video]')
+		.forEach((video) => {
+			if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) video.load();
+		});
 }
 
 /**
@@ -145,52 +147,6 @@ function setupFilter(theater: HTMLElement) {
 	apply(requested && current?.dataset.category === requested ? requested : '');
 }
 
-/** Showcase gallery: the category links filter tiles in place and keep ?c= in the address. */
-function setupGallery(root: HTMLElement) {
-	if (root.dataset.ready) return;
-	root.dataset.ready = 'true';
-	const menu = root.querySelector<HTMLElement>('[data-gallery-filter]');
-	if (!menu) return;
-	const options = Array.from(menu.querySelectorAll<HTMLAnchorElement>('[data-gallery-option]'));
-	const tiles = Array.from(root.querySelectorAll<HTMLElement>('.showcase-tile'));
-	const label = menu.querySelector<HTMLElement>('[data-filter-label]');
-	const count = menu.querySelector<HTMLElement>('[data-filter-count]');
-
-	function apply(category: string, push: boolean) {
-		const known = options.some((option) => option.dataset.galleryOption === category);
-		if (!known) category = '';
-		let shown = 0;
-		for (const tile of tiles) {
-			tile.hidden = Boolean(category) && tile.dataset.category !== category;
-			if (!tile.hidden) shown += 1;
-		}
-		for (const option of options) {
-			if (option.dataset.galleryOption === category) option.setAttribute('aria-current', 'true');
-			else option.removeAttribute('aria-current');
-		}
-		if (label)
-			label.textContent =
-				options.find((option) => option.dataset.galleryOption === category)?.firstElementChild
-					?.textContent ?? '全部';
-		if (count) count.textContent = String(shown);
-		if (push) {
-			const url = new URL(location.href);
-			if (category) url.searchParams.set('c', category);
-			else url.searchParams.delete('c');
-			history.replaceState(history.state, '', url);
-		}
-	}
-
-	options.forEach((option) =>
-		option.addEventListener('click', (event) => {
-			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-			event.preventDefault();
-			apply(option.dataset.galleryOption ?? '', true);
-		}),
-	);
-	apply(new URL(location.href).searchParams.get('c') ?? '', false);
-}
-
 /**
  * Gallery tiles play their film while the pointer is over them (or the tile has keyboard focus)
  * and pause when it leaves, keeping that frame. The video is silent and loops, and it loads
@@ -244,10 +200,7 @@ function initShowcase() {
 	reviveVideos();
 	document.querySelectorAll<HTMLElement>('[data-showcase-prompt]').forEach(setupPrompt);
 	document.querySelectorAll<HTMLElement>('[data-showcase-theater]').forEach(setupFilter);
-	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach((root) => {
-		setupGallery(root);
-		setupHoverPlay(root);
-	});
+	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach(setupHoverPlay);
 }
 
 document.addEventListener('astro:page-load', initShowcase);

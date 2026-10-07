@@ -1751,6 +1751,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-1080.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-ajustacv-candidaturas.webp": {
+			"source_sha256": "a8c145d95aaaf4fba5ab53e68b53e20d78561fd5b8825b9d59adc6689b70ed3f",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-candidaturas-1440.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-ajustacv-promo.webp": {
 			"source_sha256": "59eaac4a913cc8a79c3ec8e5cd39c612f4b820decb68cc7d04a6cdd2cb38a31f",
 			"width": 1920,

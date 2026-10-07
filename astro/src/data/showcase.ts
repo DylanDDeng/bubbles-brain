@@ -965,6 +965,25 @@ Ask me for the inputs, then show me the beat map and 4 stills (open, glass, stag
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-ajustacv-candidaturas',
+		title: 'AjustaCV 投递记录功能片',
+		category: 'product-motion',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-ajustacv-candidaturas.mp4',
+		poster: '/media/showcase/claude-opus-5.5-ajustacv-candidaturas.webp',
+		width: 1920,
+		height: 1080,
+		duration: 30,
+		added: '2026-10-07',
+		note: 'AjustaCV 新功能「我的投递」的 30 秒介绍：从周一记下岗位、周三看板挪卡片、周五进入面试，到周日一键打卡，连续天数一格格点亮，最后落在「结果不取决于公司回不回你，只取决于你做了什么」。由 Claude Opus 5.5（max）制作。',
+		source: {
+			author: '@thayto_dev',
+			url: 'https://x.com/thayto_dev/status/2107582000639136156',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

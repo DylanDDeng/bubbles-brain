@@ -1,6 +1,5 @@
-/* Showcase work page: the article layout with a film on top. The way back and the reel sit
-   at the left edge; the film is 640px in the page's centre, the text a 540px column under it,
-   and about 100px of air separates the reel from the film. */
+/* Showcase work page: the article layout with a film on top. The way back sits at the left
+   edge; the film is 640px in the page's centre and the text a 540px column under it. */
 
 .collection-site .work-page {
 	display: grid;
@@ -32,29 +31,6 @@
 }
 .work-back:hover {
 	color: var(--ink);
-}
-.work-reel ol {
-	display: grid;
-	gap: 12px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-.work-reel a {
-	display: flex;
-	color: var(--ink-faint);
-	text-decoration: none;
-}
-.work-reel a:hover,
-.work-reel a[aria-current] {
-	color: var(--ink);
-}
-/* One line per work, as in the draft: a long title is cut short rather than wrapping. */
-.work-reel__title {
-	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 /* ---------------------------------------------------------------- screen */
@@ -196,7 +172,7 @@
 	text-align: right;
 }
 
-/* Narrower screens: the film matches the text; keep a clear gap from the reel all the same. */
+/* Narrower screens: the film matches the text; keep a clear gap from the back link. */
 @media (min-width: 901px) and (max-width: 1279px) {
 	.collection-site .work-page {
 		column-gap: 56px;
@@ -204,15 +180,14 @@
 	}
 }
 
-/* Phones: back link, film, text, then the reel at the end. */
+/* Phones: back link, film, then text. */
 @media (max-width: 900px) {
 	.collection-site .work-page {
 		grid-template-columns: minmax(0, 1fr);
 		grid-template-areas:
 			'back'
 			'screen'
-			'text'
-			'reel';
+			'text';
 		max-width: 588px;
 		margin: 0 auto;
 		padding: 20px 24px 0;
@@ -223,10 +198,6 @@
 	.work-back {
 		grid-area: back;
 		margin-bottom: 20px;
-	}
-	.work-reel {
-		grid-area: reel;
-		margin-bottom: 48px;
 	}
 	.work-screen {
 		width: 100%;

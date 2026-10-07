@@ -15,8 +15,8 @@ interface Props {
 	work: ShowcaseWork;
 }
 
-// One work, laid out like an article: the way back and the reel at the left edge,
-// the film in the middle, and a narrow text column under it.
+// One work, laid out like an article: the way back at the left edge, the film in the
+// middle, and a narrow text column under it.
 const { work } = Astro.props;
 const works = showcaseByNewest();
 const next = works[works.indexOf(work) + 1];
@@ -30,25 +30,6 @@ const promptLines = (text: string) =>
 <article class="work-page">
 	<div class="work-rail">
 		<a class="work-back" href="/vibe-coding/showcase/">← Showcase</a>
-		<nav class="work-reel" aria-label="片单">
-			<ol>
-				{
-					works.map((item) => (
-						<li>
-							<a
-								href={showcaseHref(item)}
-								aria-current={item.id === work.id ? 'page' : undefined}
-								data-astro-prefetch="false"
-							>
-								<span class="work-reel__title" title={item.title}>
-									{item.title}
-								</span>
-							</a>
-						</li>
-					))
-				}
-			</ol>
-		</nav>
 	</div>
 
 	<figure class:list={['work-screen', { 'work-screen--tall': work.height / work.width > 0.8 }]}>

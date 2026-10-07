@@ -1691,6 +1691,18 @@
 				"/_responsive/media/showcase/claude-fable-5.5-intro-1280.webp"
 			]
 		},
+		"/media/showcase/claude-fable-5.5-jade-valley.webp": {
+			"source_sha256": "e2fd7cc2fdda1f4e4347d93262db395fbfbe6ae5b2d1fae94a38b93e2080f6fc",
+			"width": 1984,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-640.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-640.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-960.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-960.webp",
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-1440.avif",
+				"/_responsive/media/showcase/claude-fable-5.5-jade-valley-1440.webp"
+			]
+		},
 		"/media/showcase/claude-fable-5.5-pixar-dot.webp": {
 			"source_sha256": "530b5fa6920320c2fdf310e99163078b7cf8b5a45c0992a4bfa27e77bfc3261f",
 			"width": 1280,

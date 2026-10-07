@@ -883,6 +883,25 @@ Ask me for the inputs, then show me the beat map and 4 stills (open, glass, stag
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-fable-5.5-jade-valley',
+		title: '翡翠谷',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Fable 5.5',
+		video: '/media/showcase/claude-fable-5.5-jade-valley.mp4',
+		poster: '/media/showcase/claude-fable-5.5-jade-valley.webp',
+		width: 1984,
+		height: 1080,
+		duration: 44,
+		added: '2026-10-06',
+		note: '先用代码画线稿，再一笔笔上色，最后让整幅青绿山水动起来：春天离开翡翠谷，一只翠鸟衔着花瓣飞过河、越过池塘，送到等了一整个冬天的人手边。由 Claude Fable 5.5 完成。',
+		source: {
+			author: '@chetaslua',
+			url: 'https://x.com/chetaslua/status/2106833074302710023',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

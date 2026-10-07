@@ -1973,6 +1973,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-1280.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-pixel-heat-film.webp": {
+			"source_sha256": "a371bf9a2812915e9f9665cbf2bfdc4aeb60a254dad4c3f9274eb116c7b743d4",
+			"width": 1440,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-pixel-heat-film-1440.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-pocketsflow-promo.webp": {
 			"source_sha256": "0dbe88387d04e48ac216ad6aa0fc3b8c419476179e8ffd97ea9851f59680771a",
 			"width": 1280,
@@ -2053,6 +2065,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-960.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-1440.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-twelve-principles-ball-1440.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-watercolor-owl.webp": {
+			"source_sha256": "003f2adf8785cf36c32e6c82e6c7706af0ea80908ee3b8d7e552f2be95d113b8",
+			"width": 1646,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-1440.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-x-tech-feed.webp": {

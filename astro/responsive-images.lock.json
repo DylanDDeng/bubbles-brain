@@ -1751,6 +1751,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-80000-particles-1080.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-ajustacv-promo.webp": {
+			"source_sha256": "59eaac4a913cc8a79c3ec8e5cd39c612f4b820decb68cc7d04a6cdd2cb38a31f",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ajustacv-promo-1440.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-biggest-scam.webp": {
 			"source_sha256": "52ea92d422805117b69d1dd177d1394b9dc854740ae02b75318dc701dff4a6a7",
 			"width": 1280,
@@ -1903,6 +1915,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-iphone-18-pro-variable-aperture-1280.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-lightspark-promo.webp": {
+			"source_sha256": "cae2411897a579a1a3affdb13680e05dffffb1ed416bb9f04c1ed2369304740b",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-lightspark-promo-1080.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-negroni-recipe.webp": {
 			"source_sha256": "cab772c69b306a0c7cac2c2b2b0b6031372ddf5ed2c4700f4d9dc2f24d5ff1e7",
 			"width": 1080,
@@ -1993,6 +2017,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-960.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-1080.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-1080.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-shin-majin-pv.webp": {
+			"source_sha256": "3a42efc89832946f4a0590c2556fd07704f048581eee09d2e5e9ee11594845d2",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-1440.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-1440.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-twelve-principles-ball.webp": {

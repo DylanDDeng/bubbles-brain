@@ -1715,6 +1715,18 @@
 				"/_responsive/media/showcase/claude-fable-5.5-spider-man-ten-eras-1280.webp"
 			]
 		},
+		"/media/showcase/claude-fable-figure-study.webp": {
+			"source_sha256": "3ec6987999b04cc4dd4ecd9967693debd1d2bc1a5c5326e0499b78722f1d5ab3",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-fable-figure-study-640.avif",
+				"/_responsive/media/showcase/claude-fable-figure-study-640.webp",
+				"/_responsive/media/showcase/claude-fable-figure-study-960.avif",
+				"/_responsive/media/showcase/claude-fable-figure-study-960.webp",
+				"/_responsive/media/showcase/claude-fable-figure-study-1440.avif",
+				"/_responsive/media/showcase/claude-fable-figure-study-1440.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-80000-particles.webp": {
 			"source_sha256": "df2520895e0a0c2bd4b82af607247df02098cf0838d981fafb2687d10288d430",
 			"width": 1080,
@@ -1901,6 +1913,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-neural-networks-80-years-720.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-ozymandias.webp": {
+			"source_sha256": "e84bfe2079ba453fb696a5f5614b582fc3cd47442cedae6644ce0392b4720fd3",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-ozymandias-1280.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-pocketsflow-promo.webp": {
 			"source_sha256": "0dbe88387d04e48ac216ad6aa0fc3b8c419476179e8ffd97ea9851f59680771a",
 			"width": 1280,
@@ -1945,6 +1969,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-640.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-720.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-qingming-rainbow-bridge-720.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-self-portraits.webp": {
+			"source_sha256": "f80c8d80de09e65c580fcfac164ef7d52e26e6bf077e1becdbda55e8dc19f9ae",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-self-portraits-1080.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-twelve-principles-ball.webp": {

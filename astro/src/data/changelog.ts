@@ -17,6 +17,15 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-10-08',
+		tag: 'AI 动态',
+		type: 'feature',
+		title: '新增 AI 动态：每小时更新的 AI 新闻',
+		summary:
+			'新开 AI 动态栏目。每条新闻一句话讲清发生了什么，配原文封面，点开直接读原文；左边按天切换，也能搜索最近 30 天。',
+		links: [{ label: 'AI 动态', href: '/ai-news/' }],
+	},
+	{
 		date: '2026-09-29',
 		tag: 'Vibe Coding',
 		type: 'feature',

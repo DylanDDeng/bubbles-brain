@@ -1,0 +1,27 @@
+name = "bubble-ai-news"
+main = "index.ts"
+compatibility_date = "2026-07-15"
+workers_dev = false
+preview_urls = false
+
+routes = [
+  { pattern = "news-api.bubblenews.today", custom_domain = true }
+]
+
+# Created once with `npx wrangler kv namespace create bubble-ai-news`; paste the id it prints.
+kv_namespaces = [
+  { binding = "NEWS", id = "9acf30d2336846d78f573d91fb5b4a45" }
+]
+
+# The bot writes once an hour; reading every 15 minutes keeps the page at most a quarter hour behind.
+[triggers]
+crons = ["*/15 * * * *"]
+
+[vars]
+# https://qxs9ymhwwgc.feishu.cn/base/VeAHb1KBJaC376sPK9kcqWtKnIh, table 选题
+FEISHU_BASE_TOKEN = "VeAHb1KBJaC376sPK9kcqWtKnIh"
+FEISHU_TABLE_ID = "tbllnXUeB6wHLgBJ"
+
+# Secrets (wrangler secret put … --config workers/ai-news/wrangler.toml):
+#   FEISHU_APP_ID, FEISHU_APP_SECRET — a Feishu custom app with bitable:app:readonly,
+#   added to the Base as a collaborator.

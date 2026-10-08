@@ -62,7 +62,8 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 		{
 			route: '/tutorials/',
 			title: '教程',
-			description: '从一个好问题开始，到让 Agent 替你把项目做出来。新手村、Codex、Pi Agent、WorkBuddy 四个系列。',
+			description:
+				'从一个好问题开始，到让 Agent 替你把项目做出来。新手村、Codex、Pi Agent、WorkBuddy 四个系列。',
 			locale: 'zh-CN',
 			section: 'tutorials',
 			lastmod: null,
@@ -121,6 +122,14 @@ export async function loadSiteManifest(): Promise<SiteRecord[]> {
 			description: "记录 Bubble's Brain 知识库的每一次内容收录、功能迭代与体验演进",
 			locale: 'zh-CN',
 			section: 'changelog',
+			lastmod: null,
+		},
+		{
+			route: '/ai-news/',
+			title: 'AI 动态',
+			description: '每小时更新的 AI 新闻：一句话讲清发生了什么，点开读原文。',
+			locale: 'zh-CN',
+			section: 'ai-news',
 			lastmod: null,
 		},
 		{

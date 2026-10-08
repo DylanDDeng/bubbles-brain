@@ -103,13 +103,15 @@
 	object-fit: cover;
 }
 
+/* Card type follows the site's other card grid (实测案例): a 15px semibold title, small grey text
+   under it. 17px is for list rows, which get the whole column width. */
 .news-card__body {
 	display: block;
-	padding: 16px 18px 18px;
+	padding: 14px 16px 16px;
 }
 .news-card__title {
 	display: block;
-	font-size: 17px;
+	font-size: 15px;
 	font-weight: 600;
 	line-height: 1.5;
 }
@@ -118,7 +120,7 @@
 	margin-top: 6px;
 	overflow: hidden;
 	color: var(--ink-soft);
-	font-size: 15px;
+	font-size: 13px;
 	line-height: 1.7;
 	-webkit-line-clamp: 3;
 	line-clamp: 3;
@@ -126,9 +128,9 @@
 }
 .news-card__time {
 	display: block;
-	margin-top: 10px;
+	margin-top: 8px;
 	color: var(--ink-faint);
-	font-size: 13px;
+	font-size: 12.5px;
 }
 
 .news-next {

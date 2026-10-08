@@ -151,13 +151,15 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				id: 'zero-shot',
 				name: 'Zero-shot',
 				chineseName: '零样本',
-				description: '不给任何示例，只用文字说明让 AI 完成任务。适合翻译、总结、分类这类 AI 本来就熟悉的常见任务。',
+				description:
+					'不给任何示例，只用文字说明让 AI 完成任务。适合翻译、总结、分类这类 AI 本来就熟悉的常见任务。',
 			},
 			{
 				id: 'few-shot',
 				name: 'Few-shot',
 				chineseName: '少样本',
-				description: '在提示词里附上几条「输入 → 输出」示例，让 AI 照着示例的格式和口径完成同类任务。',
+				description:
+					'在提示词里附上几条「输入 → 输出」示例，让 AI 照着示例的格式和口径完成同类任务。',
 			},
 			{
 				id: 'context-window',
@@ -172,6 +174,27 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				chineseName: '词元',
 				description:
 					'模型切分和处理文本的最小单位，并非每个字就是一个词元：英文约 4 个字符合一个词元，中文一个字通常要占一到两个，视模型而定。上下文窗口容量和调用费用都按词元数计算。',
+			},
+			{
+				id: 'multimodal',
+				name: 'Multimodal',
+				chineseName: '多模态',
+				description:
+					'不只能读文字，还能看图片、听声音、看视频的模型。截图、照片、录音可以直接发给它，不用先自己转成文字。',
+			},
+			{
+				id: 'moe',
+				name: 'MoE',
+				chineseName: '混合专家',
+				description:
+					'Mixture of Experts。把模型拆成很多组「专家」，每个词元只交给其中几组来算。总参数很大，每次真正参与计算的只有一小部分，所以更省算力。',
+			},
+			{
+				id: 'open-source',
+				name: 'Open vs Closed Models',
+				chineseName: '开源和闭源',
+				description:
+					'开源模型公开了权重，任何人都能下载、在自己的机器上运行和修改；闭源模型只能通过官方的 App 或 API 使用。大多数「开源」模型只公开权重，不公开训练数据。',
 			},
 			{
 				id: 'rag',

@@ -1582,6 +1582,12 @@
 	display: none;
 }
 
+[data-choice-mm='text'] .mm-when-image,
+[data-choice-mm='image'] .mm-when-text,
+[data-choice-mo='dense'] .mo-when-moe,
+[data-choice-mo='moe'] .mo-when-dense,
+[data-choice-os='closed'] .os-when-open,
+[data-choice-os='open'] .os-when-closed,
 [data-choice-zs='common'] .zs-when-custom,
 [data-choice-zs='custom'] .zs-when-common,
 [data-choice-fs='mixed'] .fs-when-same,

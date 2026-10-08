@@ -21,6 +21,7 @@ const { work } = Astro.props;
 const works = showcaseByNewest();
 const next = works[works.indexOf(work) + 1];
 const prompt = work.prompt;
+const movements = work.movements?.length ? work.movements : undefined;
 const promptLangs = (['zh', 'en'] as const).filter((lang) => prompt?.[lang]);
 // Section tags such as <inputs> in a structured prompt are set quieter than the instructions.
 const promptLines = (text: string) =>
@@ -41,7 +42,9 @@ const promptLines = (text: string) =>
 			controls
 			playsinline
 			preload="metadata"
-			aria-label={work.title}
+			aria-label={movements
+				? `${work.title} · ${movements[0]!.numeral}. ${movements[0]!.title}`
+				: work.title}
 			data-showcase-video></video>
 	</figure>
 
@@ -49,6 +52,45 @@ const promptLines = (text: string) =>
 		<p class="work-kicker">{formatShowcaseDuration(work.duration)}</p>
 		<h1>{work.title}</h1>
 		<p class="work-note">{work.note}</p>
+		{
+			movements && (
+				<section class="work-movements" aria-labelledby={`work-movements-${work.id}`}>
+					<h2 id={`work-movements-${work.id}`}>乐章</h2>
+					{/* Without JavaScript each row opens its file; scripts/showcase.ts plays it in place. */}
+					<ol data-showcase-movements>
+						{movements.map((movement, i) => (
+							<li>
+								<a
+									class="work-movement"
+									href={showcaseMediaUrl(movement.video)}
+									aria-current={i === 0 ? 'true' : undefined}
+									data-movement-video={showcaseMediaUrl(movement.video)}
+									data-movement-poster={showcaseMediaUrl(movement.poster)}
+									data-movement-label={`${work.title} · ${movement.numeral}. ${movement.title}`}
+								>
+									<img
+										src={showcaseMediaUrl(movement.poster)}
+										alt=""
+										width="44"
+										height="44"
+										loading="lazy"
+										decoding="async"
+									/>
+									<span class="work-movement__name">
+										<span class="work-movement__numeral">{movement.numeral}.</span>
+										<span lang="en">{movement.title}</span>
+										{movement.titleZh && <span class="work-movement__zh">{movement.titleZh}</span>}
+									</span>
+									<span class="work-movement__time">
+										{formatShowcaseDuration(movement.duration)}
+									</span>
+								</a>
+							</li>
+						))}
+					</ol>
+				</section>
+			)
+		}
 		{
 			work.source && (
 				<p class="work-source">

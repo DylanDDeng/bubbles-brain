@@ -1,0 +1,146 @@
+/* Skill pages use the term pages' reading layout (reading-page.css). This file adds the skill's
+   own parts: the install line, the SKILL.md original and the rest of its suite, all in the quiet
+   grey blocks the Showcase prompt uses. */
+
+.collection-site .reading-page .skill-page__name {
+	margin: 2px 0 0;
+	color: var(--ink-faint);
+	font-size: 17px;
+	line-height: 1.6;
+}
+.collection-site .reading-page.skill-page .article-lede {
+	margin-top: 20px;
+}
+.collection-site .reading-page.skill-page .article-main {
+	margin-top: 48px;
+}
+/* The body is split around the install line and the original, so each heading keeps its space. */
+.collection-site .reading-page.skill-page .article-content h2 {
+	margin-top: 64px;
+}
+.collection-site .reading-page.skill-page .article-main > .article-content:first-child h2 {
+	margin-top: 0;
+}
+
+/* ------------------------------------------------------------- install */
+.collection-site .reading-page.skill-page .skill-install-box {
+	display: flex;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 16px 20px;
+	border-radius: 12px;
+	background: var(--paper-muted);
+}
+.collection-site .reading-page.skill-page .skill-install-box code {
+	flex: 1;
+	min-width: 0;
+	padding: 0;
+	background: none;
+	color: var(--ink);
+	font: 13px/1.7 var(--mono);
+	overflow-wrap: anywhere;
+}
+.skill-page .skill-copy {
+	flex: none;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ink);
+	font: 400 13px/1.7 var(--sans);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+	cursor: pointer;
+}
+.skill-page .skill-copy:hover {
+	text-decoration-color: currentColor;
+}
+
+/* ------------------------------------------------------------ original */
+.collection-site .reading-page.skill-page .skill-raw {
+	margin: 0 0 20px;
+	border-radius: 12px;
+	background: var(--paper-muted);
+}
+.skill-page .skill-raw summary {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	padding: 16px 20px;
+	color: var(--ink-faint);
+	font-size: 13px;
+	line-height: 1.6;
+	cursor: pointer;
+	list-style: none;
+}
+.skill-page .skill-raw summary::-webkit-details-marker {
+	display: none;
+}
+.collection-site .reading-page.skill-page .skill-raw summary code {
+	min-width: 0;
+	padding: 0;
+	background: none;
+	color: var(--ink-soft);
+	font: 13px/1.6 var(--mono);
+	overflow-wrap: anywhere;
+}
+.skill-page .skill-raw__toggle {
+	margin-left: auto;
+	color: var(--ink);
+	text-decoration: underline;
+	text-decoration-color: #c4c4c4;
+	text-underline-offset: 3px;
+}
+.skill-page .skill-raw[open] .skill-raw__toggle {
+	font-size: 0;
+}
+.skill-page .skill-raw[open] .skill-raw__toggle::after {
+	content: '收起';
+	font-size: 13px;
+}
+.skill-page .skill-raw__tools {
+	display: flex;
+	justify-content: flex-end;
+	padding: 0 20px 8px;
+}
+.collection-site .reading-page.skill-page .skill-raw pre {
+	max-height: 560px;
+	margin: 0;
+	padding: 4px 20px 20px;
+	overflow: auto;
+	border: 0;
+	border-radius: 0 0 12px 12px;
+	background: none;
+	color: var(--ink);
+	font: 13px/1.75 var(--mono);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------- the suite */
+.collection-site .reading-page.skill-page .skill-companions {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.collection-site .reading-page.skill-page .skill-companions li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0;
+	padding: 6px 0;
+}
+.collection-site .reading-page.skill-page .skill-companions a {
+	color: var(--ink);
+	text-decoration: none;
+}
+.collection-site .reading-page.skill-page .skill-companions a:hover {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+.collection-site .reading-page.skill-page .skill-companions span {
+	color: var(--ink-faint);
+	font-size: 13px;
+}

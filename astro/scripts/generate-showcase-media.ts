@@ -13,7 +13,7 @@ import { access, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import { showcaseWorks } from '../src/data/showcase';
-import { showcasePreviewPath } from '../src/lib/showcaseMedia';
+import { showcaseFiles, showcasePreviewPath } from '../src/lib/showcaseMedia';
 
 const astroRoot = resolve(import.meta.dirname, '..');
 const staticRoot = resolve(astroRoot, '../static');
@@ -101,7 +101,7 @@ for (const work of showcaseWorks) {
 		console.log(`cut ${preview} from ${start.toFixed(1)}s`);
 		cut += 1;
 	}
-	for (const path of [work.video, preview, work.poster]) versions[path] = await hash(local(path));
+	for (const path of showcaseFiles(work)) versions[path] = await hash(local(path));
 }
 
 const sorted = Object.fromEntries(

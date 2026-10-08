@@ -107,6 +107,66 @@
 	text-underline-offset: 3px;
 }
 
+/* Movements of a multi-part work: a numbered list under the note; the row on screen is ink. */
+.work-movements {
+	margin-top: 32px;
+}
+.work-movements h2 {
+	margin: 0 0 8px;
+	color: var(--ink-faint);
+	font-size: 13px;
+	font-weight: 500;
+}
+.work-movements ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.work-movement {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 8px 0;
+	color: var(--ink-faint);
+	font-size: 15px;
+	text-decoration: none;
+}
+.work-movement img {
+	flex: none;
+	width: 44px;
+	height: 44px;
+	border-radius: 6px;
+	object-fit: cover;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+.work-movement__name {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+.work-movement__numeral {
+	min-width: 2.2em;
+	font-variant-numeric: tabular-nums;
+}
+.work-movement__zh {
+	font-size: 13px;
+}
+.work-movement__time {
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+}
+.work-movement:hover,
+.work-movement[aria-current] {
+	color: var(--ink);
+}
+.work-movement:hover img,
+.work-movement[aria-current] img {
+	opacity: 1;
+}
+
 /* The prompt: a quiet grey block with copy at its corner. */
 .collection-site .work-prompt {
 	display: grid;

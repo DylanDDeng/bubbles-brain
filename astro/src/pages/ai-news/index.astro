@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AI_NEWS_FEED_URL } from '../../lib/aiNews';
+import '../../styles/ai-news.css';
+---
+
+<BaseLayout
+	title="AI 动态 · Bubble's Brain"
+	description="每小时更新的 AI 新闻：一句话讲清发生了什么，点开读原文。"
+>
+	<div class="news-page" data-ai-news data-feed-url={AI_NEWS_FEED_URL}>
+		<header class="rr-head">
+			<h1 class="rr-title">AI 动态</h1>
+			<p class="news-updated" data-news-updated aria-live="polite"></p>
+			<label class="rr-search">
+				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+				<span class="sr-only">搜索 AI 动态</span>
+				<input type="search" placeholder="搜索 AI 动态" autocomplete="off" data-news-search />
+			</label>
+		</header>
+
+		<div class="news-body">
+			<nav class="news-rail" aria-label="日期" data-news-rail></nav>
+
+			<div class="news-main" aria-busy="true" data-news-main>
+				<h2 class="news-day" data-news-title></h2>
+				<div class="news-grid" data-news-grid></div>
+				<p class="rr-empty" data-news-status>正在读取最新动态…</p>
+				<noscript
+					><p class="rr-empty">AI 动态每小时更新，需要打开 JavaScript 才能看到。</p></noscript
+				>
+				<div class="news-next">
+					<button type="button" data-news-older hidden>
+						<span data-news-older-label></span>
+						<i class="ph ph-arrow-right" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<script>
+	import '../../scripts/aiNews';
+</script>

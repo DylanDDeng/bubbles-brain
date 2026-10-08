@@ -51,6 +51,7 @@ jobs:
           npm run content:deployer:check
           npm run content:broker:check
           npx wrangler deploy --dry-run --config workers/retired-collections/wrangler.toml
+          npm run ai-news:check
 
   astro-verify:
     runs-on: ubuntu-latest

@@ -18,6 +18,7 @@
     "worker:check": "wrangler deploy --dry-run --outdir .wrangler-dry-run",
     "worker:check:staging": "wrangler deploy --dry-run --config wrangler.staging.toml --outdir .wrangler-dry-run-staging",
     "community:check": "wrangler deploy --dry-run --config wrangler.community.toml --outdir .wrangler-dry-run-community",
+    "ai-news:check": "wrangler deploy --dry-run --config workers/ai-news/wrangler.toml --outdir .wrangler-dry-run-ai-news",
     "admin:check": "wrangler deploy --dry-run --config wrangler.admin.toml --outdir .wrangler-dry-run-admin",
     "content:api:check": "wrangler deploy --dry-run --config wrangler.content-api.toml --outdir .wrangler-dry-run-content-api",
     "content:attestation:check": "wrangler deploy --dry-run --config wrangler.content-attestation.toml --outdir .wrangler-dry-run-content-attestation",

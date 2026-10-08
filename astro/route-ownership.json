@@ -10,6 +10,7 @@
 		"/en/auth/**",
 		"/about/**",
 		"/changelog/**",
+		"/ai-news/**",
 		"/benchmarks/**",
 		"/en/benchmarks/**",
 		"/tutorials/**",

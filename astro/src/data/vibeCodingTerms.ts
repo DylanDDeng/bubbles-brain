@@ -191,7 +191,7 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 			},
 			{
 				id: 'open-source',
-				name: 'Open vs Closed Models',
+				name: 'Open vs Closed',
 				chineseName: '开源和闭源',
 				description:
 					'开源模型公开了权重，任何人都能下载、在自己的机器上运行和修改；闭源模型只能通过官方的 App 或 API 使用。大多数「开源」模型只公开权重，不公开训练数据。',

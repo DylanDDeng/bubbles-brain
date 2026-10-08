@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import worker from './index';
 import * as entry from './index';
-import { FEED_KEY, lookUpCover, sync, type Env } from './sync';
+import { FEED_KEY, lookUpCover, requestSync, SYNC_LOCK_KEY, sync, TOKEN_KEY, type Env } from './sync';
 import type { Feed } from './feed';
 
 class MemoryKV {
@@ -102,14 +102,14 @@ describe('lookUpCover', () => {
 });
 
 describe('GET /v1/feed', () => {
-	it('serves the stored feed to any origin, cached for five minutes', async () => {
+	it('serves the stored feed to any origin, cached for a minute', async () => {
 		const e = env();
 		const feed: Feed = { updatedAt: '2026-10-08T03:00:00.000Z', days: [] };
 		e.NEWS.store.set(FEED_KEY, JSON.stringify(feed));
 		const response = await worker.fetch(new Request('https://news-api.test/v1/feed'), e);
 		expect(response.status).toBe(200);
 		expect(response.headers.get('access-control-allow-origin')).toBe('*');
-		expect(response.headers.get('cache-control')).toContain('max-age=300');
+		expect(response.headers.get('cache-control')).toContain('max-age=60');
 		expect(await response.json()).toEqual(feed);
 	});
 
@@ -125,5 +125,79 @@ describe('entry module', () => {
 	it('exports nothing but the handlers (workerd refuses other exports)', () => {
 		expect(Object.keys(entry)).toEqual(['default']);
 		expect(Object.keys(worker).sort()).toEqual(['fetch', 'scheduled']);
+	});
+});
+
+describe('tenant token', () => {
+	it('is reused from KV instead of fetched every run', async () => {
+		const e = env();
+		await sync(e, new Date('2026-10-08T03:00:00Z'), fakeFeishu([]));
+		expect(e.NEWS.store.get(TOKEN_KEY)).toBe('t-123');
+		const calls: { url: string }[] = [];
+		await sync(e, new Date('2026-10-08T04:00:00Z'), fakeFeishu(calls));
+		expect(calls.some((call) => call.url.endsWith('/tenant_access_token/internal'))).toBe(false);
+	});
+
+	it('is replaced once when Feishu says the cached one has expired', async () => {
+		const e = env();
+		e.NEWS.store.set(TOKEN_KEY, 't-old');
+		const calls: { url: string; auth?: string }[] = [];
+		const feishu = fakeFeishu([]);
+		const stale = (async (input: RequestInfo | URL, init?: RequestInit) => {
+			const auth = new Headers(init?.headers).get('authorization') ?? undefined;
+			calls.push({ url: String(input), auth });
+			if (String(input).includes('/records/search') && auth === 'Bearer t-old') {
+				return Response.json({ code: 99991663, msg: 'tenant access token invalid' }, { status: 400 });
+			}
+			return feishu(input, init);
+		}) as typeof fetch;
+		const feed = await sync(e, new Date('2026-10-08T03:00:00Z'), stale);
+		expect(feed.days).toHaveLength(1);
+		expect(calls.filter((call) => call.url.includes('/records/search')).map((call) => call.auth)).toEqual([
+			'Bearer t-old',
+			'Bearer t-123',
+		]);
+		expect(e.NEWS.store.get(TOKEN_KEY)).toBe('t-123');
+	});
+});
+
+describe('POST /v1/sync', () => {
+	const post = (token?: string) =>
+		new Request('https://news-api.test/v1/sync', {
+			method: 'POST',
+			headers: token ? { authorization: `Bearer ${token}` } : {},
+		});
+	const withToken = () => ({ ...env(), SYNC_TOKEN: 'bot-secret' }) as Env & { NEWS: MemoryKV };
+
+	it('refuses callers without the shared token', async () => {
+		const waits: Promise<unknown>[] = [];
+		const ctx = { waitUntil: (p: Promise<unknown>) => waits.push(p) };
+		const e = withToken();
+		expect((await worker.fetch(post(), e, ctx)).status).toBe(401);
+		expect((await worker.fetch(post('bot-secreT'), e, ctx)).status).toBe(401);
+		expect((await worker.fetch(post('bot-secret-and-more'), e, ctx)).status).toBe(401);
+		expect((await worker.fetch(new Request('https://news-api.test/v1/sync'), e, ctx)).status).toBe(405);
+		expect((await worker.fetch(post('anything'), env(), ctx)).status).toBe(503);
+		expect(waits).toHaveLength(0);
+	});
+
+	it('answers at once, syncs in the background, and folds repeat calls within a minute', async () => {
+		vi.stubGlobal('fetch', fakeFeishu([]));
+		const waits: Promise<unknown>[] = [];
+		const ctx = { waitUntil: (p: Promise<unknown>) => waits.push(p) };
+		const e = withToken();
+
+		const first = await requestSync(post('bot-secret'), e, ctx, 0);
+		expect(first.status).toBe(202);
+		expect(await first.json()).toEqual({ status: 'queued' });
+		expect(e.NEWS.store.has(SYNC_LOCK_KEY)).toBe(true);
+
+		const second = await requestSync(post('bot-secret'), e, ctx, 0);
+		expect(await second.json()).toEqual({ status: 'already_queued' });
+
+		expect(waits).toHaveLength(1);
+		await Promise.all(waits);
+		expect(JSON.parse(e.NEWS.store.get(FEED_KEY)!).days[0].items[0].id).toBe('rec1');
+		vi.unstubAllGlobals();
 	});
 });

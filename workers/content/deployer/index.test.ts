@@ -1058,6 +1058,18 @@ describe("automatic code release boundary", () => {
     }
   });
 
+  it("accepts prompt library pages, including removals", () => {
+    expect(
+      validateCodeReleaseChangeSet(
+        comparison([
+          { filename: "content/prompts/NSFW_Prompt.md", status: "removed" },
+          { filename: "content/prompts/knowledge-ask.md", status: "modified" },
+        ]),
+        { baseCodeSha, targetCodeSha, structuredCutoverDate: "2026-07-16" },
+      ),
+    ).toHaveLength(2);
+  });
+
   it("accepts the eval case ledger, demos, thumbnails and vendor logos only", () => {
     const releasePaths = [
       "data/eval-cases/cases.json",

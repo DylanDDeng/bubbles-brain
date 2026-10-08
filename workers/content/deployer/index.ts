@@ -442,6 +442,7 @@ function classifyCodeReleasePath(
       "content/highlights/",
       "content/pi-agent-tutorials/",
       "content/newbie-tutorials/",
+      "content/prompts/",
       "content/skills/",
       "astro/src/data/design-md/",
       "astro/src/data/brainpod-art/",

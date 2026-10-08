@@ -1961,6 +1961,459 @@ function pullDemo(stage: HTMLElement): Demo {
 	);
 }
 
+/* ---------- 骨架屏闪光 ---------- */
+
+function shimmerDemo(stage: HTMLElement): Demo {
+	const root = stage.querySelector<HTMLElement>('[data-motion-target]')!;
+	const ghosts = [...root.querySelectorAll<HTMLElement>('.ms-skel__ghost')];
+	const reals = [...root.querySelectorAll<HTMLElement>('.ms-skel__real')];
+	let timer = 0;
+	return {
+		prepare(values) {
+			root.dataset.kind = String(values.kind);
+			root.style.setProperty('--dur', `${values.dur}ms`);
+		},
+		play(values) {
+			window.clearTimeout(timer);
+			this.prepare!(values);
+			const fade = values.swap === 'fade';
+			const loading = () => {
+				cancelAll([...ghosts, ...reals]);
+				root.classList.remove('is-loaded');
+				timer = window.setTimeout(loaded, 2600);
+			};
+			const loaded = () => {
+				root.classList.add('is-loaded');
+				if (fade) {
+					for (const ghost of ghosts)
+						ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250 });
+					for (const real of reals)
+						real.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350 });
+				}
+				timer = window.setTimeout(loading, 2400);
+			};
+			loading();
+		},
+		stop() {
+			window.clearTimeout(timer);
+		},
+	};
+}
+
+/* ---------- 浮层进出：点「打开」出现，点「关闭」消失 ---------- */
+
+interface OverlayParts {
+	open: Element;
+	close?: () => Element[];
+	isOpen: () => boolean;
+	onOpen: () => void;
+	onClose: () => void;
+	/** 打开状态下，点到其他地方时的处理（比如选中菜单项） */
+	onPick?: (x: number, y: number) => boolean;
+}
+
+function overlayClicks(parts: OverlayParts): PointerHandlers {
+	let x = 0;
+	let y = 0;
+	let pressed: 'open' | 'close' | 'pick' | null = null;
+	const hit = () => {
+		if (!parts.isOpen()) return inside(parts.open, x, y) ? 'open' : null;
+		if (parts.close?.().some((element) => inside(element, x, y))) return 'close';
+		return 'pick';
+	};
+	return {
+		move(nextX, nextY) {
+			x = nextX;
+			y = nextY;
+			parts.open.classList.toggle('is-hover', !parts.isOpen() && inside(parts.open, x, y));
+		},
+		leave() {
+			pressed = null;
+		},
+		down() {
+			pressed = hit();
+		},
+		up() {
+			const now = hit();
+			if (pressed && pressed === now) {
+				if (now === 'open') parts.onOpen();
+				else if (now === 'close') parts.onClose();
+				else if (parts.onPick && !parts.onPick(x, y)) parts.onClose();
+			}
+			pressed = null;
+		},
+	};
+}
+
+const OVERLAY_ENTER: Record<string, Keyframe[]> = {
+	scale: [
+		{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.95)' },
+		{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
+	],
+	rise: [
+		{ opacity: 0, transform: 'translate(-50%, calc(-50% + 24px))' },
+		{ opacity: 1, transform: 'translate(-50%, -50%)' },
+	],
+	fade: [
+		{ opacity: 0, transform: 'translate(-50%, -50%)' },
+		{ opacity: 1, transform: 'translate(-50%, -50%)' },
+	],
+};
+
+function modalDemo(stage: HTMLElement): Demo {
+	const app = stage.querySelector<HTMLElement>('[data-motion-app]')!;
+	const open = app.querySelector<HTMLElement>('[data-motion-open]')!;
+	const backdrop = app.querySelector<HTMLElement>('[data-motion-backdrop]')!;
+	const panel = app.querySelector<HTMLElement>('[data-motion-panel]')!;
+	const cancel = app.querySelector<HTMLElement>('[data-motion-close]')!;
+	let kind = 'scale';
+	let duration = 220;
+	const show = () => {
+		app.classList.add('is-open');
+		backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: EASE.out });
+		panel.animate(OVERLAY_ENTER[kind], { duration, easing: EASE.out });
+	};
+	const hide = () => {
+		const quick = duration * 0.7;
+		backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: quick, easing: EASE.in });
+		panel
+			.animate([...OVERLAY_ENTER[kind]].reverse(), { duration: quick, easing: EASE.in })
+			.finished.then(() => app.classList.remove('is-open'))
+			.catch(() => app.classList.remove('is-open'));
+	};
+	return pointerDemo(
+		stage,
+		overlayClicks({
+			open,
+			close: () => [cancel, backdrop],
+			isOpen: () => app.classList.contains('is-open'),
+			onOpen: show,
+			onClose: hide,
+			onPick: (x, y) => inside(panel, x, y),
+		}),
+		() => {
+			const a = centerOf(stage, open);
+			const b = centerOf(stage, cancel);
+			return [
+				{ x: 0.88, y: 0.94, move: 0, hold: 400 },
+				...click(a.x, a.y, 800, 1600),
+				...click(b.x, b.y, 600, 1200),
+				{ x: 0.88, y: 0.94, move: 700, hold: 400 },
+			];
+		},
+		(values) => {
+			cancelAll([backdrop, panel]);
+			app.classList.remove('is-open');
+			kind = String(values.kind);
+			duration = Number(values.dur);
+			app.classList.toggle('has-blur', values.backdrop === 'blur');
+		},
+	);
+}
+
+function drawerDemo(stage: HTMLElement): Demo {
+	const app = stage.querySelector<HTMLElement>('[data-motion-app]')!;
+	const open = app.querySelector<HTMLElement>('[data-motion-open]')!;
+	const backdrop = app.querySelector<HTMLElement>('[data-motion-backdrop]')!;
+	const panel = app.querySelector<HTMLElement>('[data-motion-panel]')!;
+	let side = 'left';
+	let duration = 300;
+	let easing = EASE.out;
+	const away = () =>
+		side === 'left'
+			? 'translateX(-100%)'
+			: side === 'right'
+				? 'translateX(100%)'
+				: 'translateY(100%)';
+	const show = () => {
+		app.classList.add('is-open');
+		backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration, easing: EASE.out });
+		panel.animate([{ transform: away() }, { transform: 'none' }], { duration, easing });
+	};
+	const hide = () => {
+		backdrop.animate([{ opacity: 1 }, { opacity: 0 }], {
+			duration: duration * 0.8,
+			easing: EASE.in,
+		});
+		panel
+			.animate([{ transform: 'none' }, { transform: away() }], {
+				duration: duration * 0.8,
+				easing: EASE.in,
+			})
+			.finished.then(() => app.classList.remove('is-open'))
+			.catch(() => app.classList.remove('is-open'));
+	};
+	return pointerDemo(
+		stage,
+		overlayClicks({
+			open,
+			isOpen: () => app.classList.contains('is-open'),
+			onOpen: show,
+			onClose: hide,
+			onPick: (x, y) => inside(panel, x, y),
+		}),
+		() => {
+			const a = centerOf(stage, open);
+			const box = app.getBoundingClientRect();
+			const base = stage.getBoundingClientRect();
+			const at = (fx: number, fy: number) => ({
+				x: (box.left + box.width * fx - base.left) / base.width,
+				y: (box.top + box.height * fy - base.top) / base.height,
+			});
+			const shade =
+				side === 'left' ? at(0.88, 0.5) : side === 'right' ? at(0.12, 0.5) : at(0.5, 0.15);
+			return [
+				{ x: 0.9, y: 0.94, move: 0, hold: 400 },
+				...click(a.x, a.y, 800, 1700),
+				...click(shade.x, shade.y, 600, 1200),
+				{ x: 0.9, y: 0.94, move: 700, hold: 400 },
+			];
+		},
+		(values) => {
+			cancelAll([backdrop, panel]);
+			app.classList.remove('is-open');
+			side = String(values.side);
+			app.dataset.side = side;
+			duration = Number(values.dur);
+			easing = values.ease === 'back' ? EASE.back : EASE.out;
+		},
+	);
+}
+
+const TOAST_ENTER: Record<string, Keyframe[]> = {
+	rise: [
+		{ opacity: 0, transform: 'translateY(16px)' },
+		{ opacity: 1, transform: 'none' },
+	],
+	slide: [
+		{ opacity: 0, transform: 'translateX(40px)' },
+		{ opacity: 1, transform: 'none' },
+	],
+	pop: [
+		{ opacity: 0, transform: 'scale(0.6)' },
+		{ opacity: 1, transform: 'scale(1.05)', offset: 0.7 },
+		{ opacity: 1, transform: 'none' },
+	],
+};
+
+function toastDemo(stage: HTMLElement): Demo {
+	const app = stage.querySelector<HTMLElement>('[data-motion-app]')!;
+	const save = app.querySelector<HTMLElement>('[data-motion-open]')!;
+	const toast = app.querySelector<HTMLElement>('[data-motion-panel]')!;
+	const bar = app.querySelector<HTMLElement>('[data-motion-timer]')!;
+	let kind = 'rise';
+	let hold = 3000;
+	let countdown: Animation | null = null;
+	const hide = () => {
+		toast
+			.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, easing: EASE.in })
+			.finished.then(() => app.classList.remove('is-open'))
+			.catch(() => {});
+	};
+	const show = () => {
+		countdown?.cancel();
+		cancelAll([toast]);
+		app.classList.add('is-open');
+		toast.animate(TOAST_ENTER[kind], { duration: 320, easing: EASE.out });
+		countdown = bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], {
+			duration: hold,
+			easing: 'linear',
+		});
+		countdown.finished.then(hide).catch(() => {});
+	};
+	// 鼠标停在提示上时暂停倒计时
+	toast.addEventListener('pointerenter', () => countdown?.pause());
+	toast.addEventListener('pointerleave', () => {
+		if (countdown?.playState === 'paused') countdown.play();
+	});
+	return pointerDemo(
+		stage,
+		clicker(save, { onClick: show }),
+		() => {
+			const a = centerOf(stage, save);
+			return [
+				{ x: 0.9, y: 0.3, move: 0, hold: 400 },
+				...click(a.x, a.y, 800, hold + 1300),
+				{ x: 0.9, y: 0.3, move: 700, hold: 400 },
+			];
+		},
+		(values) => {
+			countdown?.cancel();
+			cancelAll([toast]);
+			app.classList.remove('is-open');
+			app.dataset.pos = String(values.pos);
+			kind = String(values.kind);
+			hold = Number(values.hold);
+		},
+	);
+}
+
+const MENU_ENTER: Record<string, Keyframe[]> = {
+	scale: [
+		{ opacity: 0, transform: 'scale(0.92)' },
+		{ opacity: 1, transform: 'none' },
+	],
+	slide: [
+		{ opacity: 0, transform: 'translateY(-8px)' },
+		{ opacity: 1, transform: 'none' },
+	],
+	fade: [{ opacity: 0 }, { opacity: 1 }],
+};
+
+function dropdownDemo(stage: HTMLElement): Demo {
+	const app = stage.querySelector<HTMLElement>('[data-motion-app]')!;
+	const button = app.querySelector<HTMLElement>('[data-motion-open]')!;
+	const label = app.querySelector<HTMLElement>('[data-motion-label]')!;
+	const menu = app.querySelector<HTMLElement>('[data-motion-panel]')!;
+	const options = [...menu.querySelectorAll<HTMLElement>('[data-motion-option]')];
+	let kind = 'scale';
+	let duration = 160;
+	let stagger = false;
+	const show = () => {
+		app.classList.add('is-open');
+		menu.animate(MENU_ENTER[kind], { duration, easing: EASE.out });
+		if (stagger) {
+			options.forEach((option, index) =>
+				option.animate(
+					[
+						{ opacity: 0, transform: 'translateY(-4px)' },
+						{ opacity: 1, transform: 'none' },
+					],
+					{ duration, delay: 40 + index * 30, easing: EASE.out, fill: 'backwards' },
+				),
+			);
+		}
+	};
+	const hide = () => {
+		menu
+			.animate([...MENU_ENTER[kind]].reverse(), { duration: duration * 0.7, easing: EASE.in })
+			.finished.then(() => app.classList.remove('is-open'))
+			.catch(() => app.classList.remove('is-open'));
+	};
+	return pointerDemo(
+		stage,
+		overlayClicks({
+			open: button,
+			isOpen: () => app.classList.contains('is-open'),
+			onOpen: show,
+			onClose: hide,
+			onPick: (x, y) => {
+				const option = options.find((item) => inside(item, x, y));
+				if (option) {
+					label.textContent = option.textContent;
+					for (const item of options) item.classList.toggle('is-active', item === option);
+				}
+				return false;
+			},
+		}),
+		() => {
+			const a = centerOf(stage, button);
+			const pick = centerOf(stage, options[2]);
+			const back = centerOf(stage, options[0]);
+			return [
+				{ x: 0.5, y: 0.94, move: 0, hold: 400 },
+				...click(a.x, a.y, 800, 900),
+				...click(pick.x, pick.y, 500, 1300),
+				...click(a.x, a.y, 500, 900),
+				...click(back.x, back.y, 500, 1200),
+				{ x: 0.5, y: 0.94, move: 700, hold: 400 },
+			];
+		},
+		(values) => {
+			cancelAll([menu, ...options]);
+			app.classList.remove('is-open');
+			label.textContent = options[0].textContent;
+			options.forEach((item, index) => item.classList.toggle('is-active', index === 0));
+			kind = String(values.kind);
+			duration = Number(values.dur);
+			stagger = values.items === 'stagger';
+		},
+	);
+}
+
+const TIP_ENTER: Record<string, Keyframe[]> = {
+	fade: [{ opacity: 0 }, { opacity: 1 }],
+	rise: [
+		{ opacity: 0, transform: 'translate(-50%, 4px)' },
+		{ opacity: 1, transform: 'translate(-50%, 0)' },
+	],
+	scale: [
+		{ opacity: 0, transform: 'translate(-50%, 0) scale(0.9)' },
+		{ opacity: 1, transform: 'translate(-50%, 0) scale(1)' },
+	],
+};
+
+function tooltipDemo(stage: HTMLElement): Demo {
+	const tools = [...stage.querySelectorAll<HTMLElement>('[data-motion-tool]')];
+	const tip = stage.querySelector<HTMLElement>('[data-motion-panel]')!;
+	const bar = tip.parentElement!;
+	let delay = 400;
+	let kind = 'rise';
+	let chain = true;
+	let current: HTMLElement | null = null;
+	let timer = 0;
+	let warm = false;
+	let cool = 0;
+	const place = (tool: HTMLElement) => {
+		const base = bar.getBoundingClientRect();
+		const rect = tool.getBoundingClientRect();
+		tip.textContent = tool.dataset.tip ?? '';
+		tip.style.left = `${rect.left + rect.width / 2 - base.left}px`;
+		tip.classList.add('is-shown');
+		cancelAll([tip]);
+		tip.animate(TIP_ENTER[kind], { duration: 150, easing: EASE.out });
+		warm = true;
+		window.clearTimeout(cool);
+	};
+	const hide = () => {
+		window.clearTimeout(timer);
+		current = null;
+		tip.classList.remove('is-shown');
+		// 离开工具栏一小会儿后，下一次又要重新等待
+		window.clearTimeout(cool);
+		cool = window.setTimeout(() => (warm = false), 300);
+	};
+	return pointerDemo(
+		stage,
+		{
+			move(x, y) {
+				const tool = tools.find((item) => inside(item, x, y)) ?? null;
+				if (tool === current) return;
+				window.clearTimeout(timer);
+				if (!tool) return hide();
+				current = tool;
+				for (const item of tools) item.classList.toggle('is-hover', item === tool);
+				if (warm && chain) return place(tool);
+				tip.classList.remove('is-shown');
+				timer = window.setTimeout(() => place(tool), delay);
+			},
+			leave() {
+				for (const item of tools) item.classList.remove('is-hover');
+				hide();
+			},
+			down() {},
+			up() {},
+		},
+		() => {
+			const points = tools.slice(0, 3).map((tool) => centerOf(stage, tool));
+			return [
+				{ x: 0.5, y: 0.9, move: 0, hold: 400 },
+				{ ...points[0], move: 800, hold: delay + 1100 },
+				{ ...points[1], move: 350, hold: delay + 700 },
+				{ ...points[2], move: 350, hold: delay + 700 },
+				{ x: 0.5, y: 0.9, move: 600, hold: 900 },
+			];
+		},
+		(values) => {
+			delay = Number(values.delay);
+			kind = String(values.kind);
+			chain = values.chain === 'instant';
+			tip.classList.remove('is-shown');
+			warm = false;
+		},
+	);
+}
+
 const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	duration: durationDemo,
 	easing: easingDemo,
@@ -1993,6 +2446,12 @@ const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	drag: dragDemo,
 	swipe: swipeDemo,
 	pull: pullDemo,
+	modal: modalDemo,
+	drawer: drawerDemo,
+	toast: toastDemo,
+	dropdown: dropdownDemo,
+	tooltip: tooltipDemo,
+	shimmer: shimmerDemo,
 };
 
 function setupTuner(root: HTMLElement): () => void {

@@ -2120,6 +2120,418 @@
 	background: color-mix(in srgb, var(--cat-models) 8%, var(--paper));
 }
 
+/* 骨架屏闪光 */
+.ms-skel__row {
+	display: grid;
+}
+
+.ms-skel__row > * {
+	grid-area: 1 / 1;
+}
+
+.ms-skel__ghost {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	padding: 10px;
+}
+
+.ms-skel__ghost i,
+.ms-skel__ghost b {
+	display: block;
+	border-radius: 6px;
+	background: var(--paper-muted);
+}
+
+.ms-skel__ghost i {
+	flex: none;
+	width: 34px;
+	height: 34px;
+	border-radius: 10px;
+}
+
+.ms-skel__ghost > span {
+	display: grid;
+	flex: 1;
+	gap: 6px;
+}
+
+.ms-skel__ghost b {
+	height: 10px;
+}
+
+.ms-skel__ghost b.is-short {
+	width: 50%;
+}
+
+.ms-skel[data-kind='sweep'] .ms-skel__ghost i,
+.ms-skel[data-kind='sweep'] .ms-skel__ghost b {
+	background: linear-gradient(
+			90deg,
+			transparent 0%,
+			color-mix(in srgb, var(--paper) 80%, transparent) 50%,
+			transparent 100%
+		)
+		var(--paper-muted);
+	background-size: 200% 100%;
+	animation: ms-sweep var(--dur, 1500ms) linear infinite;
+}
+
+.ms-skel[data-kind='pulse'] .ms-skel__ghost {
+	animation: ms-pulse var(--dur, 1500ms) ease-in-out infinite;
+}
+
+.ms-skel__real,
+.ms-skel.is-loaded .ms-skel__ghost {
+	visibility: hidden;
+}
+
+.ms-skel.is-loaded .ms-skel__real {
+	visibility: visible;
+}
+
+@keyframes ms-sweep {
+	from {
+		background-position: 150% 0;
+	}
+
+	to {
+		background-position: -50% 0;
+	}
+}
+
+@keyframes ms-pulse {
+	50% {
+		opacity: 0.45;
+	}
+}
+
+/* 浮层进出：遮罩、弹窗、抽屉、Toast、下拉菜单 */
+.ms-backdrop,
+.ms-modal,
+.ms-drawer,
+.ms-toast,
+.ms-menu {
+	position: absolute;
+	z-index: 2;
+	visibility: hidden;
+}
+
+.ms-overlay.is-open .ms-backdrop,
+.ms-overlay.is-open .ms-modal,
+.ms-overlay.is-open .ms-drawer,
+.ms-overlay.is-open .ms-toast,
+.ms-overlay.is-open .ms-menu {
+	visibility: visible;
+}
+
+.ms-backdrop {
+	inset: 0;
+	background: rgb(0 0 0 / 0.35);
+}
+
+.ms-overlay.has-blur .ms-backdrop {
+	backdrop-filter: blur(3px);
+}
+
+.ms-modal {
+	top: 50%;
+	left: 50%;
+	display: grid;
+	gap: 8px;
+	width: 82%;
+	padding: 18px;
+	border-radius: 14px;
+	background: var(--paper);
+	box-shadow: 0 18px 40px rgb(0 0 0 / 0.2);
+	transform: translate(-50%, -50%);
+}
+
+.ms-modal strong {
+	color: var(--ink);
+	font-size: 0.95rem;
+}
+
+.ms-modal p {
+	margin: 0;
+	color: var(--ink-soft);
+	font-size: 0.8rem;
+	line-height: 1.6;
+}
+
+.ms-modal__actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	margin-top: 6px;
+}
+
+.ms-modal__actions > span {
+	padding: 6px 14px;
+	border-radius: 8px;
+	font-size: 0.82rem;
+	cursor: pointer;
+}
+
+.ms-modal__cancel {
+	background: var(--paper-muted);
+	color: var(--ink);
+}
+
+.ms-modal__ok {
+	background: var(--red);
+	color: #fff;
+}
+
+.ms-danger {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	justify-self: start;
+	margin-top: 8px;
+	padding: 8px 14px;
+	border: 1px solid color-mix(in srgb, var(--red) 40%, transparent);
+	border-radius: 8px;
+	color: var(--red);
+	font-size: 0.85rem;
+	cursor: pointer;
+}
+
+.ms-danger.is-hover {
+	background: color-mix(in srgb, var(--red) 8%, var(--paper));
+}
+
+.ms-app__menu {
+	display: grid;
+	place-items: center;
+	justify-self: start;
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	color: var(--ink);
+	font-size: 1.2rem;
+	cursor: pointer;
+}
+
+.ms-app__menu.is-hover {
+	background: var(--paper-muted);
+}
+
+.ms-drawer {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	display: grid;
+	gap: 2px;
+	align-content: start;
+	width: 64%;
+	padding: 16px 10px;
+	background: var(--paper);
+	box-shadow: 8px 0 24px rgb(0 0 0 / 0.15);
+}
+
+[data-side='right'] .ms-drawer {
+	right: 0;
+	left: auto;
+	box-shadow: -8px 0 24px rgb(0 0 0 / 0.15);
+}
+
+[data-side='bottom'] .ms-drawer {
+	top: auto;
+	right: 0;
+	width: auto;
+	height: 62%;
+	border-radius: 16px 16px 0 0;
+	box-shadow: 0 -8px 24px rgb(0 0 0 / 0.15);
+}
+
+.ms-drawer b {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	margin: 0 6px 10px;
+	color: var(--ink);
+	font-size: 0.95rem;
+}
+
+.ms-drawer span {
+	padding: 8px 10px;
+	border-radius: 8px;
+	color: var(--ink-soft);
+	font-size: 0.85rem;
+}
+
+.ms-drawer span.is-active {
+	background: var(--paper-muted);
+	color: var(--ink);
+	font-weight: 600;
+}
+
+.ms-overlay__save {
+	width: auto;
+	justify-self: start;
+	margin-top: 10px;
+	padding: 0 22px;
+	font-size: 0.85rem;
+}
+
+.ms-toast {
+	bottom: 18px;
+	left: 50%;
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	margin-left: -60px;
+	width: 120px;
+	justify-content: center;
+	padding: 10px 14px;
+	overflow: hidden;
+	border-radius: 10px;
+	background: var(--ink);
+	color: var(--paper);
+	font-size: 0.85rem;
+}
+
+[data-pos='corner'] .ms-toast {
+	top: 14px;
+	right: 14px;
+	bottom: auto;
+	left: auto;
+	margin-left: 0;
+}
+
+.ms-toast .ph {
+	color: var(--cat-products);
+	font-size: 1rem;
+}
+
+.ms-toast__timer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 2px;
+	background: color-mix(in srgb, var(--paper) 50%, transparent);
+	transform-origin: left;
+}
+
+.ms-app__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.ms-sort {
+	display: inline-flex;
+	gap: 4px;
+	align-items: center;
+	padding: 5px 10px;
+	border: 1px solid var(--rule);
+	border-radius: 8px;
+	color: var(--ink);
+	font-size: 0.8rem;
+	cursor: pointer;
+}
+
+.ms-sort.is-hover {
+	background: var(--paper-muted);
+}
+
+.ms-menu {
+	top: 52px;
+	right: 16px;
+	display: grid;
+	gap: 2px;
+	width: 130px;
+	padding: 6px;
+	border: 1px solid var(--rule);
+	border-radius: 10px;
+	background: var(--paper);
+	box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
+	transform-origin: top right;
+}
+
+.ms-menu span {
+	padding: 7px 10px;
+	border-radius: 6px;
+	color: var(--ink);
+	font-size: 0.82rem;
+	cursor: pointer;
+}
+
+.ms-menu span.is-active {
+	background: var(--paper-muted);
+	font-weight: 600;
+}
+
+/* Tooltip：编辑器工具栏 */
+.ms-editor {
+	display: grid;
+	gap: 14px;
+	width: min(88%, 440px);
+	padding: 18px;
+	border: 1px solid var(--rule);
+	border-radius: 14px;
+	background: var(--paper);
+}
+
+.ms-editor__bar {
+	position: relative;
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+	border: 1px solid var(--rule-soft);
+	border-radius: 10px;
+	background: var(--paper-raised);
+}
+
+.ms-editor__tool {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 8px;
+	color: var(--ink);
+	font-size: 1.1rem;
+	cursor: pointer;
+}
+
+.ms-editor__tool.is-hover {
+	background: var(--paper-muted);
+}
+
+.ms-tip {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	padding: 5px 9px;
+	border-radius: 6px;
+	background: var(--ink);
+	color: var(--paper);
+	font-size: 0.75rem;
+	white-space: nowrap;
+	transform: translateX(-50%);
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.ms-tip.is-shown {
+	visibility: visible;
+}
+
+.ms-editor__text {
+	display: grid;
+	gap: 6px;
+	margin: 0;
+	color: var(--ink-soft);
+	font-size: 0.86rem;
+	line-height: 1.6;
+}
+
+.ms-editor__text b {
+	color: var(--ink);
+	font-size: 0.95rem;
+}
+
 /* 数字滚动 */
 .ms-stats {
 	display: grid;

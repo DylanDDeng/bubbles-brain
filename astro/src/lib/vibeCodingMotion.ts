@@ -32,7 +32,13 @@ export type MotionDemo =
 	| 'cart'
 	| 'drag'
 	| 'swipe'
-	| 'pull';
+	| 'pull'
+	| 'modal'
+	| 'drawer'
+	| 'toast'
+	| 'dropdown'
+	| 'tooltip'
+	| 'shimmer';
 
 export interface MotionChoice {
 	value: string;
@@ -1378,7 +1384,7 @@ export const vibeCodingMotionProfiles: Record<string, MotionProfile> = {
 			},
 			{
 				id: 'release',
-				label: '拖得够远时',
+				label: '拖过一半',
 				type: 'choice',
 				value: 'auto',
 				options: [
@@ -1447,6 +1453,257 @@ export const vibeCodingMotionProfiles: Record<string, MotionProfile> = {
 			'列表顶部支持下拉刷新：往下拉时内容跟着下移，越拉阻力越大，顶部露出{indicator}；拉过 {dist} 松手开始刷新，刷新时显示转圈，完成后内容{bounce}收回，新内容出现在最上面。没拉够就松手，直接收回。',
 		warning:
 			'下拉刷新只在列表已经滚到最顶上时才生效。列表中间往下拉应该是正常滚动，抢了滚动手势会让人非常抓狂。',
+	},
+	'skeleton-shimmer': {
+		demo: 'shimmer',
+		hint: '先显示骨架屏，过一会儿换成真实内容，一直循环',
+		controls: [
+			{
+				id: 'kind',
+				label: '方式',
+				type: 'choice',
+				value: 'sweep',
+				options: [
+					{ value: 'sweep', label: '光带扫过', say: '上面有一道浅色光带从左到右循环扫过' },
+					{ value: 'pulse', label: '整体呼吸', say: '整体明暗缓慢地呼吸' },
+				],
+			},
+			{
+				id: 'dur',
+				label: '一次',
+				type: 'range',
+				value: 1500,
+				min: 800,
+				max: 3000,
+				step: 100,
+				unit: 's',
+			},
+			{
+				id: 'swap',
+				label: '加载完',
+				type: 'choice',
+				value: 'fade',
+				options: [
+					{ value: 'fade', label: '淡入替换', say: '占位块淡出、真实内容淡入' },
+					{ value: 'cut', label: '直接替换', say: '直接换成真实内容' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'内容加载时，先用和真实布局一样的灰色占位块（骨架屏）占位，{kind}，一次约 {dur}；数据回来后{swap}。',
+		warning:
+			'骨架屏的形状要和真实内容对得上。灰条一个样、内容另一个样，加载完整个页面跳一下，比直接转圈还难受。',
+	},
+	'modal-enter': {
+		demo: 'modal',
+		hint: '点「删除」打开弹窗，再点「取消」；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{
+				id: 'kind',
+				label: '出现方式',
+				type: 'choice',
+				value: 'scale',
+				options: [
+					{ value: 'scale', label: '缩放淡入', say: '从 95% 大小放大到原大小并淡入' },
+					{ value: 'rise', label: '从下方升起', say: '从下方 24px 升起并淡入' },
+					{ value: 'fade', label: '只淡入', say: '原地淡入' },
+				],
+			},
+			{
+				id: 'dur',
+				label: '时长',
+				type: 'range',
+				value: 220,
+				min: 120,
+				max: 500,
+				step: 20,
+				unit: 's',
+			},
+			{
+				id: 'backdrop',
+				label: '背景',
+				type: 'choice',
+				value: 'dim',
+				options: [
+					{ value: 'dim', label: '变暗', say: '' },
+					{ value: 'blur', label: '变暗 + 模糊', say: '并轻微模糊' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'点击按钮弹出确认弹窗：背景遮罩在 {dur}内淡入变暗{backdrop}，弹窗{kind}；关闭时按相反方向更快地消失，约为打开时长的七成。',
+		warning:
+			'弹窗打开后，键盘焦点要移进弹窗里，关闭后再回到原来的按钮；按 Esc 也要能关。动画再好看，用键盘的人出不来也是坏的弹窗。',
+	},
+	'drawer-slide': {
+		demo: 'drawer',
+		hint: '点左上角的菜单按钮，再点遮罩关闭；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{
+				id: 'side',
+				label: '方向',
+				type: 'choice',
+				value: 'left',
+				options: [
+					{ value: 'left', label: '左侧', say: '屏幕左侧' },
+					{ value: 'right', label: '右侧', say: '屏幕右侧' },
+					{ value: 'bottom', label: '底部', say: '屏幕底部' },
+				],
+			},
+			{
+				id: 'dur',
+				label: '时长',
+				type: 'range',
+				value: 300,
+				min: 150,
+				max: 600,
+				step: 25,
+				unit: 's',
+			},
+			{
+				id: 'ease',
+				label: '手感',
+				type: 'choice',
+				value: 'out',
+				options: [
+					{ value: 'out', label: '先快后慢', say: '先快后慢（ease-out）' },
+					{ value: 'back', label: '弹簧', say: '到位时带一点弹性' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'点击菜单按钮时，抽屉从{side}滑入，时长 {dur}，{ease}，同时后面的页面盖上一层半透明遮罩；点遮罩或按 Esc 关闭，关闭时滑回原方向。',
+		warning:
+			'抽屉打开时，后面的页面不能跟着滚。让 AI 在抽屉打开期间锁住页面滚动，关闭后再恢复，否则手机上一滑，背后的页面也跟着动。',
+	},
+	'toast-enter': {
+		demo: 'toast',
+		hint: '点「保存」弹出提示，它会自己消失；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{
+				id: 'pos',
+				label: '位置',
+				type: 'choice',
+				value: 'bottom',
+				options: [
+					{ value: 'bottom', label: '底部居中', say: '页面底部居中' },
+					{ value: 'corner', label: '右上角', say: '右上角' },
+				],
+			},
+			{
+				id: 'kind',
+				label: '怎么出来',
+				type: 'choice',
+				value: 'rise',
+				options: [
+					{ value: 'rise', label: '上浮淡入', say: '从下方浮起并淡入' },
+					{ value: 'slide', label: '从侧边滑入', say: '从屏幕边缘滑入' },
+					{ value: 'pop', label: '弹出', say: '从小放大并带一点回弹' },
+				],
+			},
+			{
+				id: 'hold',
+				label: '停留',
+				type: 'range',
+				value: 3000,
+				min: 1500,
+				max: 6000,
+				step: 500,
+				unit: 's',
+			},
+		],
+		presets: [],
+		prompt:
+			'保存成功后，在{pos}弹出提示「已保存」：{kind}，停留 {hold}后自动淡出；鼠标悬停在提示上时暂停计时，连续触发时新提示叠在最上面。',
+		warning:
+			'停留时间按字数来定：一句「已保存」3 秒够了，带「撤销」按钮的提示要留 5 秒以上，不然用户还没看清就没了。',
+	},
+	'dropdown-open': {
+		demo: 'dropdown',
+		hint: '点「排序」展开菜单，选一项后收起；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{
+				id: 'kind',
+				label: '怎么展开',
+				type: 'choice',
+				value: 'scale',
+				options: [
+					{ value: 'scale', label: '从按钮处展开', say: '从按钮所在的位置缩放展开并淡入' },
+					{ value: 'slide', label: '向下滑出', say: '向下滑出 8px 并淡入' },
+					{ value: 'fade', label: '只淡入', say: '原地淡入' },
+				],
+			},
+			{
+				id: 'dur',
+				label: '时长',
+				type: 'range',
+				value: 160,
+				min: 80,
+				max: 350,
+				step: 10,
+				unit: 's',
+			},
+			{
+				id: 'items',
+				label: '菜单项',
+				type: 'choice',
+				value: 'together',
+				options: [
+					{ value: 'together', label: '一起出现', say: '' },
+					{ value: 'stagger', label: '依次出现', say: '，菜单项每个间隔 30ms 依次出现' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'点击按钮展开下拉菜单：菜单{kind}，时长 {dur}{items}；点菜单外任意位置收起，收起比展开更快。',
+		warning:
+			'下拉菜单是天天点的东西，动画要快，0.15 秒左右。从按钮的位置展开（transform-origin 对准按钮），用户才知道这个菜单是从哪儿来的。',
+	},
+	'tooltip-delay': {
+		demo: 'tooltip',
+		hint: '把鼠标停在工具栏图标上；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{
+				id: 'delay',
+				label: '出现延迟',
+				type: 'range',
+				value: 400,
+				min: 0,
+				max: 1000,
+				step: 50,
+				unit: 'ms',
+			},
+			{
+				id: 'kind',
+				label: '怎么出来',
+				type: 'choice',
+				value: 'rise',
+				options: [
+					{ value: 'fade', label: '淡入', say: '淡入' },
+					{ value: 'rise', label: '淡入上浮', say: '从下方 4px 淡入上浮' },
+					{ value: 'scale', label: '缩放', say: '从 90% 大小放大并淡入' },
+				],
+			},
+			{
+				id: 'chain',
+				label: '换图标时',
+				type: 'choice',
+				value: 'instant',
+				options: [
+					{ value: 'instant', label: '立即切换', say: '立即显示新的提示，不再等待' },
+					{ value: 'wait', label: '每次都等', say: '同样要等待' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'鼠标悬停在工具栏图标上 {delay}后显示文字提示，提示{kind}；提示已经出现时，鼠标移到相邻图标{chain}；鼠标移开立即隐藏。',
+		warning:
+			'延迟太短，鼠标划过工具栏就一路弹提示，很吵；太长又像坏了。300 到 500 毫秒最合适，并且只有第一次需要等。',
 	},
 };
 

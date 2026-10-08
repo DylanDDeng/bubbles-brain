@@ -47,6 +47,11 @@ const pointerDemo = [
 	'drag',
 	'swipe',
 	'pull',
+	'modal',
+	'drawer',
+	'toast',
+	'dropdown',
+	'tooltip',
 ].includes(demo);
 const defaults = defaultMotionValues(profile);
 // 演示用的真实内容：一个虚构的笔记 App「小记」，和一个徒步路线网站
@@ -125,6 +130,13 @@ const messages = [
 	{ icon: 'ph-heart', tone: 'red', title: '阿青赞了你的笔记', text: '《置身事内》读书笔记' },
 	{ icon: 'ph-chat-circle', tone: 'blue', title: '小满评论了你', text: '这个模板好用，求分享！' },
 	{ icon: 'ph-gift', tone: 'amber', title: '你获得了 1 个月 Pro', text: '感谢邀请朋友加入小记' },
+];
+const toolbar = [
+	{ icon: 'ph-text-b', tip: '加粗 ⌘B' },
+	{ icon: 'ph-text-italic', tip: '斜体 ⌘I' },
+	{ icon: 'ph-link', tip: '插入链接 ⌘K' },
+	{ icon: 'ph-image', tip: '插入图片' },
+	{ icon: 'ph-list-checks', tip: '待办清单' },
 ];
 const routes = [
 	{ name: '香山环线', meta: '8 公里 · 约 3 小时 · 难度适中' },
@@ -763,6 +775,156 @@ const stats = [
 									</span>
 								))}
 							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'shimmer' ? (
+						<div class="ms-app ms-skel" data-motion-target>
+							<p class="ms-app__title">最近的笔记</p>
+							{notes.map((note) => (
+								<div class="ms-skel__row">
+									<span class="ms-skel__ghost">
+										<i />
+										<span>
+											<b />
+											<b class="is-short" />
+										</span>
+									</span>
+									<span class="ms-app__row ms-skel__real">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								</div>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'modal' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<p class="ms-app__title">{notes[2].title}</p>
+								<p class="ms-app__text">
+									大理三天两晚：洱海骑行、喜洲古镇、苍山索道。记得带防晒和外套。
+								</p>
+								<span class="ms-danger" data-motion-open>
+									<i class="ph ph-trash" />
+									删除这条笔记
+								</span>
+							</div>
+							<i class="ms-backdrop" data-motion-backdrop />
+							<div class="ms-modal" data-motion-panel>
+								<strong>删除「{notes[2].title}」？</strong>
+								<p>删除后可以在「最近删除」里找回，30 天后彻底清除。</p>
+								<span class="ms-modal__actions">
+									<span class="ms-modal__cancel" data-motion-close>
+										取消
+									</span>
+									<span class="ms-modal__ok">删除</span>
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'drawer' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<span class="ms-app__menu" data-motion-open>
+									<i class="ph ph-list" />
+								</span>
+								<p class="ms-app__title">我的笔记</p>
+								{notes.map((note) => (
+									<span class="ms-app__row">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+							<i class="ms-backdrop" data-motion-backdrop data-motion-close />
+							<div class="ms-drawer" data-motion-panel>
+								<b>
+									<i class="ph ph-notebook" />
+									小记
+								</b>
+								{['全部笔记', '工作', '读书', '旅行', '最近删除'].map((item, index) => (
+									<span class={index === 0 ? 'is-active' : undefined}>{item}</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'toast' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<p class="ms-app__title">第 41 周周报</p>
+								<p class="ms-app__text">
+									本周完成：首页改版上线，转化率提升 12%。下周计划：整理用户访谈。
+								</p>
+								<span class="ms-load ms-overlay__save" data-motion-open data-state="idle">
+									<span class="ms-load__text">保存</span>
+								</span>
+							</div>
+							<div class="ms-toast" data-motion-panel>
+								<i class="ph ph-check-circle" />
+								已保存
+								<i class="ms-toast__timer" data-motion-timer />
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'dropdown' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<div class="ms-app__bar">
+									<p class="ms-app__title">我的笔记</p>
+									<span class="ms-sort" data-motion-open>
+										<span data-motion-label>最近编辑</span>
+										<i class="ph ph-caret-down" />
+									</span>
+								</div>
+								{notes.map((note) => (
+									<span class="ms-app__row">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+							<div class="ms-menu" data-motion-panel>
+								{['最近编辑', '最近创建', '标题 A–Z', '字数最多'].map((item) => (
+									<span data-motion-option>{item}</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'tooltip' ? (
+						<div class="ms-editor">
+							<div class="ms-editor__bar">
+								{toolbar.map((tool) => (
+									<span class="ms-editor__tool" data-motion-tool data-tip={tool.tip}>
+										<i class={`ph ${tool.icon}`} />
+									</span>
+								))}
+								<span class="ms-tip" data-motion-panel />
+							</div>
+							<p class="ms-editor__text">
+								<b>读书笔记 · 《置身事内》</b>
+								地方政府的「土地财政」这一章写得最清楚……
+							</p>
 						</div>
 					) : null
 				}

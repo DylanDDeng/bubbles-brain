@@ -1,0 +1,2069 @@
+/* 动效图鉴列表页的缩略动画：每个词条一块 72px 高的小舞台，循环播放这个动效的精简版 */
+.motion-grid {
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 22px 16px;
+}
+
+.motion-tile {
+	display: grid;
+	gap: 8px;
+	align-items: start;
+}
+
+.mg {
+	position: relative;
+	display: block;
+	height: 72px;
+	overflow: hidden;
+	border: 1px solid var(--rule-soft);
+	border-radius: 10px;
+	background: var(--paper-raised);
+	--acc: var(--cat-models);
+}
+
+.motion-tile:hover .mg {
+	border-color: var(--rule);
+}
+
+.mg i {
+	position: absolute;
+	display: block;
+	animation-duration: 2.4s;
+	animation-iteration-count: infinite;
+	animation-fill-mode: both;
+}
+
+/* 通用积木 */
+.mg--hover-lift i:nth-child(2),
+.mg--press i:nth-child(2),
+.mg--magnetic-button i:nth-child(2),
+.mg--tooltip-delay i:nth-child(3) {
+	width: 10px;
+	height: 14px;
+	background: var(--ink);
+	clip-path: polygon(0 0, 100% 62%, 52% 62%, 30% 100%);
+}
+
+.mg--duration i:nth-child(-n + 2),
+.mg--easing i:nth-child(1) {
+	left: 15%;
+	width: 70%;
+	border-radius: 2px;
+}
+
+/* 时长：进度条从空到满 */
+.mg--duration i:nth-child(1) {
+	top: 34px;
+	height: 4px;
+	background: var(--rule);
+}
+
+.mg--duration i:nth-child(2) {
+	top: 34px;
+	height: 4px;
+	background: var(--ink);
+	transform-origin: left;
+	animation-name: mg-fill;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-fill {
+	0% {
+		transform: scaleX(0);
+	}
+
+	45%,
+	100% {
+		transform: scaleX(1);
+	}
+}
+
+/* 缓动：小球先快后慢 */
+.mg--easing i:nth-child(1) {
+	top: 35px;
+	height: 2px;
+	background: var(--rule);
+}
+
+.mg--easing i:nth-child(2) {
+	top: 30px;
+	left: calc(85% - 12px);
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: var(--acc);
+	animation-name: mg-ease;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes mg-ease {
+	0% {
+		left: 15%;
+	}
+
+	55%,
+	100% {
+		left: calc(85% - 12px);
+	}
+}
+
+/* 弹簧：小球落下弹几下 */
+.mg--spring i:nth-child(1) {
+	top: 56px;
+	left: 30%;
+	width: 40%;
+	height: 2px;
+	background: var(--rule);
+}
+
+.mg--spring i:nth-child(2) {
+	top: 42px;
+	left: calc(50% - 7px);
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: var(--acc);
+	animation-name: mg-bounce;
+}
+
+@keyframes mg-bounce {
+	0% {
+		transform: translateY(-34px);
+		animation-timing-function: ease-in;
+	}
+
+	28% {
+		transform: none;
+		animation-timing-function: ease-out;
+	}
+
+	40% {
+		transform: translateY(-12px);
+		animation-timing-function: ease-in;
+	}
+
+	52% {
+		transform: none;
+		animation-timing-function: ease-out;
+	}
+
+	60% {
+		transform: translateY(-4px);
+		animation-timing-function: ease-in;
+	}
+
+	68%,
+	100% {
+		transform: none;
+	}
+}
+
+/* 滚动淡入 / 依次出现 / 逐字出现：块状物浮现 */
+.mg--reveal-on-scroll i:nth-child(-n + 2) {
+	left: 20%;
+	width: 60%;
+	height: 18px;
+	border: 1px solid var(--rule);
+	border-radius: 5px;
+	background: var(--paper);
+	animation-name: mg-rise;
+	animation-timing-function: ease-out;
+}
+
+.mg--reveal-on-scroll i:nth-child(1) {
+	top: 14px;
+}
+
+.mg--reveal-on-scroll i:nth-child(2) {
+	top: 40px;
+	animation-delay: 0.35s;
+}
+
+@keyframes mg-rise {
+	0% {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+
+	30%,
+	85% {
+		opacity: 1;
+		transform: none;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+.mg--stagger i:nth-child(-n + 4),
+.mg--text-reveal i:nth-child(-n + 4) {
+	top: 28px;
+	width: 13%;
+	height: 16px;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--acc) 35%, var(--paper));
+	animation-name: mg-pop;
+	animation-timing-function: ease-out;
+}
+
+.mg--text-reveal i:nth-child(-n + 4) {
+	top: 30px;
+	height: 12px;
+	background: var(--ink);
+}
+
+.mg--stagger i:nth-child(1),
+.mg--text-reveal i:nth-child(1) {
+	left: 18%;
+}
+
+.mg--stagger i:nth-child(2),
+.mg--text-reveal i:nth-child(2) {
+	left: 34%;
+	animation-delay: 0.15s;
+}
+
+.mg--stagger i:nth-child(3),
+.mg--text-reveal i:nth-child(3) {
+	left: 50%;
+	animation-delay: 0.3s;
+}
+
+.mg--stagger i:nth-child(4),
+.mg--text-reveal i:nth-child(4) {
+	left: 66%;
+	animation-delay: 0.45s;
+}
+
+@keyframes mg-pop {
+	0% {
+		opacity: 0;
+		transform: translateY(8px) scale(0.85);
+	}
+
+	25%,
+	85% {
+		opacity: 1;
+		transform: none;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 视差：远处慢、近处快 */
+.mg--parallax {
+	background: color-mix(in srgb, var(--cat-models) 6%, var(--paper));
+}
+
+.mg--parallax i {
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+}
+
+.mg--parallax i:nth-child(1) {
+	top: 12px;
+	left: 66%;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: color-mix(in srgb, var(--cat-agents) 40%, var(--paper));
+	animation-name: mg-par-slow;
+}
+
+.mg--parallax i:nth-child(2) {
+	top: 38px;
+	left: -15%;
+	width: 130%;
+	height: 70px;
+	border-radius: 50% 50% 0 0;
+	background: color-mix(in srgb, var(--cat-oss) 25%, var(--paper));
+	animation-name: mg-par-slow;
+}
+
+.mg--parallax i:nth-child(3) {
+	top: 30px;
+	left: 26%;
+	width: 48%;
+	height: 16px;
+	border: 1px solid var(--rule);
+	border-radius: 5px;
+	background: var(--paper);
+	animation-name: mg-par-fast;
+}
+
+@keyframes mg-par-slow {
+	from {
+		transform: translateY(4px);
+	}
+
+	to {
+		transform: translateY(-4px);
+	}
+}
+
+@keyframes mg-par-fast {
+	from {
+		transform: translateY(18px);
+	}
+
+	to {
+		transform: translateY(-18px);
+	}
+}
+
+/* 数字滚动：数字往上翻 */
+.mg--count-up i:nth-child(1) {
+	top: 16px;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	overflow: hidden;
+	color: var(--ink);
+	font-size: 20px;
+	font-weight: 700;
+	font-style: normal;
+	line-height: 40px;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+.mg--count-up i:nth-child(1)::before {
+	display: block;
+	white-space: pre;
+	content: '0\A 1,280\A 6,950\A 12,480';
+	animation: mg-count 2.4s ease-out infinite both;
+}
+
+@keyframes mg-count {
+	0%,
+	10% {
+		transform: none;
+	}
+
+	22% {
+		transform: translateY(-40px);
+	}
+
+	34% {
+		transform: translateY(-80px);
+	}
+
+	46%,
+	100% {
+		transform: translateY(-120px);
+	}
+}
+
+/* 粘性滚动叙事：左边文字往上走，右边画面换色 */
+.mg--scrollytelling i:nth-child(-n + 3) {
+	left: 12%;
+	width: 38%;
+	height: 5px;
+	border-radius: 3px;
+	background: var(--rule);
+	animation-name: mg-scroll-up;
+	animation-timing-function: linear;
+}
+
+.mg--scrollytelling i:nth-child(1) {
+	top: 22px;
+}
+
+.mg--scrollytelling i:nth-child(2) {
+	top: 34px;
+	width: 30%;
+}
+
+.mg--scrollytelling i:nth-child(3) {
+	top: 46px;
+}
+
+.mg--scrollytelling i:nth-child(4) {
+	top: 10px;
+	left: 62%;
+	width: 24%;
+	height: 50px;
+	border: 2px solid var(--ink);
+	border-radius: 7px;
+	animation-name: mg-swap;
+	animation-timing-function: step-end;
+}
+
+@keyframes mg-scroll-up {
+	from {
+		transform: translateY(14px);
+	}
+
+	to {
+		transform: translateY(-14px);
+	}
+}
+
+@keyframes mg-swap {
+	0% {
+		background: color-mix(in srgb, var(--cat-models) 30%, var(--paper));
+	}
+
+	33% {
+		background: color-mix(in srgb, var(--cat-oss) 30%, var(--paper));
+	}
+
+	66% {
+		background: color-mix(in srgb, var(--cat-agents) 30%, var(--paper));
+	}
+}
+
+/* 悬停浮起：鼠标过来，卡片抬起 */
+.mg--hover-lift i:nth-child(1) {
+	top: 18px;
+	left: 25%;
+	width: 50%;
+	height: 34px;
+	border: 1px solid var(--rule);
+	border-radius: 7px;
+	background: var(--paper);
+	animation-name: mg-lift;
+	animation-timing-function: ease-out;
+}
+
+.mg--hover-lift i:nth-child(2) {
+	top: 34px;
+	left: 52%;
+	animation-name: mg-cursor-lift;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-lift {
+	0%,
+	32% {
+		transform: none;
+		box-shadow: 0 0 0 rgb(0 0 0 / 0);
+	}
+
+	45%,
+	80% {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 14px rgb(0 0 0 / 0.14);
+	}
+
+	95%,
+	100% {
+		transform: none;
+		box-shadow: 0 0 0 rgb(0 0 0 / 0);
+	}
+}
+
+@keyframes mg-cursor-lift {
+	0% {
+		top: 56px;
+		left: 82%;
+	}
+
+	35%,
+	80% {
+		top: 34px;
+		left: 52%;
+	}
+
+	100% {
+		top: 56px;
+		left: 82%;
+	}
+}
+
+/* 按下回弹 / 涟漪 / 按钮加载 / 复制：深色按钮 */
+.mg--press i:nth-child(1),
+.mg--magnetic-button i:nth-child(1),
+.mg--ripple i:nth-child(1),
+.mg--loading-button i:nth-child(1),
+.mg--copy-feedback i:nth-child(1) {
+	top: 23px;
+	left: 28%;
+	width: 44%;
+	height: 26px;
+	border-radius: 999px;
+	background: var(--ink);
+}
+
+.mg--press i:nth-child(1) {
+	animation-name: mg-press;
+}
+
+.mg--press i:nth-child(2) {
+	top: 34px;
+	left: 54%;
+}
+
+@keyframes mg-press {
+	0%,
+	35% {
+		transform: none;
+	}
+
+	42% {
+		transform: scale(0.88);
+	}
+
+	55%,
+	100% {
+		transform: none;
+	}
+}
+
+/* 磁吸按钮：按钮被鼠标吸过去 */
+.mg--magnetic-button i:nth-child(1) {
+	animation-name: mg-mag;
+	animation-timing-function: ease-out;
+}
+
+.mg--magnetic-button i:nth-child(2) {
+	top: 46px;
+	left: 24%;
+	animation-name: mg-mag-cursor;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-mag {
+	0%,
+	20% {
+		transform: none;
+	}
+
+	45% {
+		transform: translate(-6px, 4px);
+	}
+
+	65% {
+		transform: translate(6px, -3px);
+	}
+
+	85%,
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes mg-mag-cursor {
+	0% {
+		top: 58px;
+		left: 12%;
+	}
+
+	45% {
+		top: 46px;
+		left: 24%;
+	}
+
+	65% {
+		top: 14px;
+		left: 74%;
+	}
+
+	100% {
+		top: 58px;
+		left: 90%;
+	}
+}
+
+/* 鼠标跟随光效：深色卡片上一团光在走 */
+.mg--cursor-spotlight i:nth-child(1) {
+	top: 12px;
+	left: 12%;
+	width: 76%;
+	height: 48px;
+	border-radius: 8px;
+	background: var(--ink);
+}
+
+.mg--cursor-spotlight i:nth-child(2) {
+	top: 10px;
+	left: 40%;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: radial-gradient(
+		circle,
+		color-mix(in srgb, var(--cat-models) 75%, transparent),
+		transparent 70%
+	);
+	animation-name: mg-spot;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-spot {
+	0%,
+	100% {
+		top: 10px;
+		left: 12%;
+	}
+
+	40% {
+		top: 6px;
+		left: 58%;
+	}
+
+	70% {
+		top: 22px;
+		left: 44%;
+	}
+}
+
+/* 3D 倾斜：会员卡左右转 */
+.mg--tilt i:nth-child(1) {
+	top: 14px;
+	left: 28%;
+	width: 44%;
+	height: 44px;
+	border-radius: 8px;
+	background: linear-gradient(135deg, var(--cat-models), var(--cat-research));
+	animation-name: mg-tilt;
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-tilt {
+	from {
+		transform: perspective(200px) rotateX(8deg) rotateY(-20deg);
+	}
+
+	to {
+		transform: perspective(200px) rotateX(-8deg) rotateY(20deg);
+	}
+}
+
+/* 涟漪：按钮里荡开一圈 */
+.mg--ripple i:nth-child(1) {
+	overflow: hidden;
+}
+
+.mg--ripple i:nth-child(1)::after {
+	position: absolute;
+	top: 50%;
+	left: 40%;
+	width: 20px;
+	height: 20px;
+	margin: -10px;
+	border-radius: 50%;
+	background: rgb(255 255 255 / 0.5);
+	animation: mg-ripple 2.4s ease-out infinite both;
+	content: '';
+}
+
+@keyframes mg-ripple {
+	0%,
+	20% {
+		transform: scale(0);
+		opacity: 1;
+	}
+
+	60% {
+		transform: scale(6);
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 点赞爆开：心形变红、跳一下、迸出小点 */
+.mg--like-burst i:nth-child(1) {
+	top: 26px;
+	left: calc(50% - 10px);
+	width: 20px;
+	height: 18px;
+	background: var(--rule);
+	clip-path: polygon(
+		50% 100%,
+		0 42%,
+		0 15%,
+		15% 0,
+		35% 0,
+		50% 16%,
+		65% 0,
+		85% 0,
+		100% 15%,
+		100% 42%
+	);
+	animation-name: mg-like;
+}
+
+.mg--like-burst i:nth-child(n + 2) {
+	top: 33px;
+	left: calc(50% - 2px);
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background: var(--red);
+	animation-name: mg-burst;
+	animation-timing-function: ease-out;
+}
+
+.mg--like-burst i:nth-child(2) {
+	--dx: -18px;
+	--dy: -12px;
+}
+
+.mg--like-burst i:nth-child(3) {
+	--dx: 18px;
+	--dy: -12px;
+}
+
+.mg--like-burst i:nth-child(4) {
+	--dx: -16px;
+	--dy: 14px;
+}
+
+.mg--like-burst i:nth-child(5) {
+	--dx: 16px;
+	--dy: 14px;
+}
+
+@keyframes mg-like {
+	0%,
+	30% {
+		background: var(--rule);
+		transform: none;
+	}
+
+	38% {
+		background: var(--red);
+		transform: scale(1.4);
+	}
+
+	50%,
+	85% {
+		background: var(--red);
+		transform: none;
+	}
+
+	100% {
+		background: var(--rule);
+	}
+}
+
+@keyframes mg-burst {
+	0%,
+	34% {
+		opacity: 0;
+		transform: none;
+	}
+
+	40% {
+		opacity: 1;
+	}
+
+	62%,
+	100% {
+		opacity: 0;
+		transform: translate(var(--dx), var(--dy));
+	}
+}
+
+/* 开关切换 */
+.mg--toggle-switch i:nth-child(1) {
+	top: 24px;
+	background: var(--rule);
+	left: calc(50% - 22px);
+	width: 44px;
+	height: 24px;
+	border-radius: 999px;
+	animation-name: mg-track;
+}
+
+.mg--toggle-switch i:nth-child(2) {
+	top: 27px;
+	left: calc(50% - 19px);
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--paper);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+	animation-name: mg-knob;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-track {
+	0%,
+	35% {
+		background: var(--rule);
+	}
+
+	45%,
+	85% {
+		background: var(--cat-products);
+	}
+
+	95%,
+	100% {
+		background: var(--rule);
+	}
+}
+
+@keyframes mg-knob {
+	0%,
+	35% {
+		transform: none;
+	}
+
+	45%,
+	85% {
+		transform: translateX(20px);
+	}
+
+	95%,
+	100% {
+		transform: none;
+	}
+}
+
+/* 按钮加载：文字 → 转圈 → 对勾 */
+.mg--loading-button i:nth-child(1) {
+	animation-name: mg-loadbg;
+	animation-timing-function: step-end;
+}
+
+.mg--loading-button i:nth-child(2) {
+	top: 35px;
+	left: 40%;
+	width: 20%;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--paper);
+	animation-name: mg-phase-a;
+	animation-timing-function: step-end;
+}
+
+.mg--loading-button i:nth-child(3) {
+	top: 29px;
+	left: calc(50% - 7px);
+	width: 14px;
+	height: 14px;
+	border: 2px solid rgb(255 255 255 / 0.35);
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation:
+		mg-spin 0.8s linear infinite,
+		mg-phase-b 2.4s step-end infinite;
+}
+
+.mg--loading-button i:nth-child(4),
+.mg--copy-feedback i:nth-child(3) {
+	top: 30px;
+	left: calc(50% - 5px);
+	width: 10px;
+	height: 6px;
+	border-bottom: 2px solid #fff;
+	border-left: 2px solid #fff;
+	transform: rotate(-45deg);
+}
+
+.mg--loading-button i:nth-child(4) {
+	animation-name: mg-phase-c;
+	animation-timing-function: step-end;
+}
+
+@keyframes mg-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes mg-phase-a {
+	0% {
+		opacity: 1;
+	}
+
+	30%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-phase-b {
+	0% {
+		opacity: 0;
+	}
+
+	30% {
+		opacity: 1;
+	}
+
+	65%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-phase-c {
+	0% {
+		opacity: 0;
+	}
+
+	65% {
+		opacity: 1;
+	}
+
+	95%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-loadbg {
+	0% {
+		background: var(--ink);
+	}
+
+	65% {
+		background: var(--cat-products);
+	}
+
+	95%,
+	100% {
+		background: var(--ink);
+	}
+}
+
+/* 出错抖动 */
+.mg--error-shake i:nth-child(1),
+.mg--input-focus i:nth-child(1) {
+	top: 22px;
+	left: 16%;
+	width: 68%;
+	height: 28px;
+	border: 1.5px solid var(--rule);
+	border-radius: 6px;
+	background: var(--paper);
+}
+
+.mg--error-shake i:nth-child(1) {
+	animation-name: mg-shake;
+}
+
+.mg--error-shake i:nth-child(2) {
+	top: 56px;
+	left: 16%;
+	width: 40%;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--red);
+	animation-name: mg-phase-err;
+	animation-timing-function: step-end;
+}
+
+@keyframes mg-shake {
+	0%,
+	30% {
+		transform: none;
+		border-color: var(--rule);
+	}
+
+	34% {
+		transform: translateX(-6px);
+		border-color: var(--red);
+	}
+
+	38% {
+		transform: translateX(6px);
+	}
+
+	42% {
+		transform: translateX(-4px);
+	}
+
+	46% {
+		transform: translateX(4px);
+	}
+
+	50%,
+	85% {
+		transform: none;
+		border-color: var(--red);
+	}
+
+	100% {
+		border-color: var(--rule);
+	}
+}
+
+@keyframes mg-phase-err {
+	0% {
+		opacity: 0;
+	}
+
+	32% {
+		opacity: 1;
+	}
+
+	88%,
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 输入框聚焦：边框变色、标签浮上去、开始打字 */
+.mg--input-focus i:nth-child(1) {
+	animation-name: mg-focus;
+}
+
+.mg--input-focus i:nth-child(2) {
+	top: 34px;
+	background: var(--rule);
+	left: 21%;
+	width: 22%;
+	height: 5px;
+	border-radius: 3px;
+	transform-origin: left;
+	animation-name: mg-label;
+}
+
+.mg--input-focus i:nth-child(3) {
+	top: 37px;
+	left: 21%;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--ink);
+	animation-name: mg-typing;
+	animation-timing-function: steps(5, end);
+}
+
+@keyframes mg-focus {
+	0%,
+	25% {
+		border-color: var(--rule);
+		box-shadow: 0 0 0 0 transparent;
+	}
+
+	35%,
+	85% {
+		border-color: var(--cat-models);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat-models) 20%, transparent);
+	}
+
+	100% {
+		border-color: var(--rule);
+		box-shadow: 0 0 0 0 transparent;
+	}
+}
+
+@keyframes mg-label {
+	0%,
+	25% {
+		background: var(--rule);
+		transform: none;
+	}
+
+	35%,
+	85% {
+		background: var(--cat-models);
+		transform: translateY(-14px) scale(0.8);
+	}
+
+	100% {
+		background: var(--rule);
+		transform: none;
+	}
+}
+
+@keyframes mg-typing {
+	0%,
+	35% {
+		width: 0;
+	}
+
+	70%,
+	85% {
+		width: 40%;
+	}
+
+	100% {
+		width: 0;
+	}
+}
+
+/* 复制成功：图标换成对勾 */
+.mg--copy-feedback i:nth-child(1) {
+	animation-name: mg-copybg;
+	animation-timing-function: step-end;
+}
+
+.mg--copy-feedback i:nth-child(2) {
+	top: 30px;
+	left: calc(50% - 5px);
+	width: 10px;
+	height: 12px;
+	border: 1.5px solid #fff;
+	border-radius: 2px;
+	animation-name: mg-show-a;
+}
+
+.mg--copy-feedback i:nth-child(3) {
+	animation-name: mg-show-b;
+}
+
+@keyframes mg-copybg {
+	0% {
+		background: var(--ink);
+	}
+
+	38% {
+		background: var(--cat-products);
+	}
+
+	88%,
+	100% {
+		background: var(--ink);
+	}
+}
+
+@keyframes mg-show-a {
+	0%,
+	35% {
+		opacity: 1;
+		scale: 1;
+	}
+
+	40%,
+	85% {
+		opacity: 0;
+		scale: 0.5;
+	}
+
+	90%,
+	100% {
+		opacity: 1;
+		scale: 1;
+	}
+}
+
+@keyframes mg-show-b {
+	0%,
+	35% {
+		opacity: 0;
+		scale: 0.5;
+	}
+
+	40%,
+	85% {
+		opacity: 1;
+		scale: 1;
+	}
+
+	90%,
+	100% {
+		opacity: 0;
+		scale: 0.5;
+	}
+}
+
+/* 加入购物车：小方块飞进右上角 */
+.mg--add-to-cart i:nth-child(1) {
+	top: 8px;
+	left: 76%;
+	width: 20px;
+	height: 20px;
+	border: 1px solid var(--rule);
+	border-radius: 50%;
+	background: var(--paper);
+	animation-name: mg-cart;
+}
+
+.mg--add-to-cart i:nth-child(2) {
+	top: 44px;
+	left: 14%;
+	opacity: 0;
+	width: 16px;
+	height: 16px;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--cat-agents) 45%, var(--paper));
+	animation-name: mg-fly;
+	animation-timing-function: ease-in-out;
+}
+
+.mg--add-to-cart i:nth-child(3) {
+	top: 44px;
+	left: 14%;
+	width: 16px;
+	height: 16px;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--cat-agents) 45%, var(--paper));
+}
+
+@keyframes mg-fly {
+	0%,
+	20% {
+		top: 44px;
+		left: 14%;
+		opacity: 0;
+		transform: none;
+	}
+
+	22% {
+		opacity: 1;
+	}
+
+	40% {
+		top: 6px;
+		left: 45%;
+		transform: scale(0.8);
+	}
+
+	58% {
+		top: 10px;
+		left: 77%;
+		opacity: 0.3;
+		transform: scale(0.4);
+	}
+
+	60%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-cart {
+	0%,
+	58% {
+		transform: none;
+	}
+
+	64% {
+		transform: rotate(-14deg) scale(1.15);
+	}
+
+	70% {
+		transform: rotate(10deg);
+	}
+
+	76%,
+	100% {
+		transform: none;
+	}
+}
+
+/* 骨架屏闪光 */
+.mg--skeleton-shimmer i:nth-child(-n + 3) {
+	left: 14%;
+	width: 72%;
+	height: 7px;
+	border-radius: 4px;
+	background: linear-gradient(90deg, var(--paper-muted), var(--paper) 50%, var(--paper-muted))
+		var(--paper-muted);
+	background-size: 200% 100%;
+	animation-name: mg-sweep;
+	animation-duration: 1.4s;
+	animation-timing-function: linear;
+}
+
+.mg--skeleton-shimmer i:nth-child(1) {
+	top: 18px;
+}
+
+.mg--skeleton-shimmer i:nth-child(2) {
+	top: 32px;
+}
+
+.mg--skeleton-shimmer i:nth-child(3) {
+	top: 46px;
+	width: 45%;
+}
+
+@keyframes mg-sweep {
+	from {
+		background-position: 150% 0;
+	}
+
+	to {
+		background-position: -50% 0;
+	}
+}
+
+/* 打字机：文字一点点变长，光标跟着走 */
+.mg--typewriter i:nth-child(1) {
+	top: 32px;
+	width: 60%;
+	left: 15%;
+	height: 8px;
+	border-radius: 3px;
+	background: var(--ink);
+	animation-name: mg-typewriter;
+	animation-timing-function: steps(6, end);
+}
+
+.mg--typewriter i:nth-child(1)::after {
+	position: absolute;
+	top: -4px;
+	right: -6px;
+	width: 2px;
+	height: 16px;
+	background: var(--acc);
+	animation: mg-blink 1s steps(1) infinite;
+	content: '';
+}
+
+@keyframes mg-typewriter {
+	0% {
+		width: 0;
+	}
+
+	45%,
+	75% {
+		width: 60%;
+	}
+
+	100% {
+		width: 0;
+	}
+}
+
+@keyframes mg-blink {
+	50% {
+		opacity: 0;
+	}
+}
+
+/* 跑马灯：一排 logo 往左走，两端渐隐 */
+.mg--marquee i:nth-child(1) {
+	top: 30px;
+	left: 0;
+	width: calc(100% + 40px);
+	height: 12px;
+	background: repeating-linear-gradient(90deg, var(--ink-faint) 0 22px, transparent 22px 40px);
+	animation-name: mg-marquee;
+	animation-timing-function: linear;
+}
+
+.mg--marquee i:nth-child(2),
+.mg--marquee i:nth-child(3) {
+	top: 0;
+	bottom: 0;
+	width: 22%;
+}
+
+.mg--marquee i:nth-child(2) {
+	left: 0;
+	background: linear-gradient(90deg, var(--paper-raised), transparent);
+}
+
+.mg--marquee i:nth-child(3) {
+	right: 0;
+	background: linear-gradient(270deg, var(--paper-raised), transparent);
+}
+
+@keyframes mg-marquee {
+	from {
+		transform: none;
+	}
+
+	to {
+		transform: translateX(-40px);
+	}
+}
+
+/* 渐变流动：几团颜色在漂 */
+.mg--animated-gradient i:nth-child(-n + 3) {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	filter: blur(16px);
+	animation-duration: 3.6s;
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+}
+
+.mg--animated-gradient i:nth-child(1) {
+	top: -20px;
+	left: 0;
+	background: color-mix(in srgb, var(--cat-models) 55%, transparent);
+	animation-name: mg-drift-a;
+}
+
+.mg--animated-gradient i:nth-child(2) {
+	top: 10px;
+	left: 45%;
+	background: color-mix(in srgb, var(--cat-research) 50%, transparent);
+	animation-name: mg-drift-b;
+}
+
+.mg--animated-gradient i:nth-child(3) {
+	top: 20px;
+	left: 15%;
+	background: color-mix(in srgb, var(--cat-oss) 50%, transparent);
+	animation-name: mg-drift-a;
+	animation-delay: -1.8s;
+}
+
+@keyframes mg-drift-a {
+	from {
+		transform: translate(0, 0);
+	}
+
+	to {
+		transform: translate(50px, 14px);
+	}
+}
+
+@keyframes mg-drift-b {
+	from {
+		transform: translate(0, 0);
+	}
+
+	to {
+		transform: translate(-50px, -10px);
+	}
+}
+
+/* 展开收起：卡片高度拉开 */
+.mg--expand-collapse i:nth-child(1) {
+	top: 9px;
+	height: 54px;
+	left: 20%;
+	width: 60%;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background:
+		repeating-linear-gradient(180deg, transparent 0 7px, var(--rule) 7px 10px) 8px 5px /
+			calc(100% - 16px) 100% no-repeat,
+		var(--paper);
+	animation-name: mg-expand;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-expand {
+	0%,
+	25% {
+		height: 22px;
+	}
+
+	45%,
+	80% {
+		height: 54px;
+	}
+
+	95%,
+	100% {
+		height: 22px;
+	}
+}
+
+/* 页面转场：旧页滑走、新页滑进来 */
+.mg--page-transition i:nth-child(-n + 2),
+.mg--shared-element i:nth-child(4) {
+	top: 10px;
+	left: 20%;
+	width: 60%;
+	height: 52px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background:
+		repeating-linear-gradient(180deg, transparent 0 8px, var(--rule) 8px 11px) 8px 8px /
+			calc(100% - 16px) 60% no-repeat,
+		var(--paper);
+}
+
+.mg--page-transition i:nth-child(1) {
+	animation-name: mg-page-out;
+	animation-timing-function: ease-out;
+}
+
+.mg--page-transition i:nth-child(2) {
+	background-color: color-mix(in srgb, var(--cat-models) 12%, var(--paper));
+	animation-name: mg-page-in;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-page-out {
+	0%,
+	30% {
+		opacity: 1;
+		transform: none;
+	}
+
+	45%,
+	85% {
+		opacity: 0;
+		transform: translateX(-40%);
+	}
+
+	100% {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes mg-page-in {
+	0%,
+	30% {
+		transform: translateX(140%);
+	}
+
+	45%,
+	85% {
+		transform: none;
+	}
+
+	100% {
+		transform: translateX(140%);
+	}
+}
+
+/* 共享元素：小封面长成大图 */
+.mg--shared-element i:nth-child(4) {
+	z-index: 0;
+	opacity: 0;
+	animation-name: mg-phase-detail;
+	animation-timing-function: step-end;
+}
+
+.mg--shared-element i:nth-child(1) {
+	top: 34px;
+	left: 22%;
+	width: 18px;
+	height: 18px;
+	z-index: 1;
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--cat-models) 40%, var(--paper));
+	animation-name: mg-share;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mg--shared-element i:nth-child(2) {
+	top: 34px;
+	left: 44%;
+	width: 18px;
+	height: 18px;
+	border-radius: 4px;
+	background: var(--rule);
+	animation-name: mg-phase-list;
+	animation-timing-function: step-end;
+}
+
+@keyframes mg-share {
+	0%,
+	25% {
+		top: 34px;
+		left: 22%;
+		width: 18px;
+		height: 18px;
+	}
+
+	45%,
+	80% {
+		top: 14px;
+		left: 24%;
+		width: 52%;
+		height: 24px;
+	}
+
+	95%,
+	100% {
+		top: 34px;
+		left: 22%;
+		width: 18px;
+		height: 18px;
+	}
+}
+
+@keyframes mg-phase-detail {
+	0% {
+		opacity: 0;
+	}
+
+	30% {
+		opacity: 1;
+	}
+
+	90%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-phase-list {
+	0% {
+		opacity: 1;
+	}
+
+	28% {
+		opacity: 0;
+	}
+
+	92%,
+	100% {
+		opacity: 1;
+	}
+}
+
+/* 拖拽排序：第一行被拎起来往下放，其他行往上让 */
+.mg--drag-reorder i:nth-child(-n + 3) {
+	left: 20%;
+	width: 60%;
+	height: 14px;
+	border: 1px solid var(--rule);
+	border-radius: 4px;
+	background: var(--paper);
+}
+
+.mg--drag-reorder i:nth-child(1) {
+	top: 10px;
+	z-index: 1;
+	animation-name: mg-drag-a;
+	animation-timing-function: ease-in-out;
+}
+
+.mg--drag-reorder i:nth-child(2) {
+	top: 29px;
+	animation-name: mg-drag-b;
+	animation-timing-function: ease-out;
+}
+
+.mg--drag-reorder i:nth-child(3) {
+	top: 48px;
+	animation-name: mg-drag-c;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-drag-a {
+	0%,
+	15% {
+		transform: none;
+		box-shadow: 0 0 0 rgb(0 0 0 / 0);
+	}
+
+	25% {
+		transform: scale(1.05);
+		box-shadow: 0 6px 12px rgb(0 0 0 / 0.15);
+	}
+
+	60% {
+		transform: translateY(38px) scale(1.05);
+		box-shadow: 0 6px 12px rgb(0 0 0 / 0.15);
+	}
+
+	70%,
+	92% {
+		transform: translateY(38px);
+		box-shadow: 0 0 0 rgb(0 0 0 / 0);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes mg-drag-b {
+	0%,
+	30% {
+		transform: none;
+	}
+
+	42%,
+	92% {
+		transform: translateY(-19px);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes mg-drag-c {
+	0%,
+	46% {
+		transform: none;
+	}
+
+	58%,
+	92% {
+		transform: translateY(-19px);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+/* 滑动删除：这一行往左滑走，露出红色 */
+.mg--swipe-delete i:nth-child(-n + 2) {
+	top: 24px;
+	left: 15%;
+	width: 70%;
+	height: 24px;
+	border-radius: 6px;
+}
+
+.mg--swipe-delete i:nth-child(1) {
+	background: var(--red);
+	animation-name: mg-swipe-bg;
+	animation-timing-function: step-end;
+}
+
+.mg--swipe-delete i:nth-child(2) {
+	border: 1px solid var(--rule);
+	background: var(--paper);
+	animation-name: mg-swipe;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-swipe {
+	0%,
+	25% {
+		opacity: 1;
+		transform: none;
+	}
+
+	45%,
+	62% {
+		transform: translateX(-28%);
+	}
+
+	78% {
+		opacity: 1;
+		transform: translateX(-115%);
+	}
+
+	80%,
+	96% {
+		opacity: 0;
+		transform: translateX(-115%);
+	}
+
+	100% {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes mg-swipe-bg {
+	0% {
+		opacity: 1;
+	}
+
+	80% {
+		opacity: 0;
+	}
+
+	98%,
+	100% {
+		opacity: 1;
+	}
+}
+
+/* 下拉刷新：列表被拉下来，顶上转圈 */
+.mg--pull-to-refresh i:nth-child(1) {
+	top: 14px;
+	left: 20%;
+	width: 60%;
+	height: 52px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background:
+		repeating-linear-gradient(180deg, transparent 0 8px, var(--rule) 8px 11px) 8px 8px /
+			calc(100% - 16px) 70% no-repeat,
+		var(--paper);
+	animation-name: mg-pull;
+	animation-timing-function: ease-out;
+}
+
+.mg--pull-to-refresh i:nth-child(2) {
+	top: 5px;
+	left: calc(50% - 7px);
+	width: 14px;
+	height: 14px;
+	border: 2px solid color-mix(in srgb, var(--acc) 25%, transparent);
+	border-top-color: var(--acc);
+	border-radius: 50%;
+	animation:
+		mg-spin 0.8s linear infinite,
+		mg-phase-pull 2.4s step-end infinite;
+}
+
+@keyframes mg-pull {
+	0%,
+	20% {
+		transform: none;
+	}
+
+	40% {
+		transform: translateY(18px);
+	}
+
+	50%,
+	78% {
+		transform: translateY(14px);
+	}
+
+	92%,
+	100% {
+		transform: none;
+	}
+}
+
+@keyframes mg-phase-pull {
+	0% {
+		opacity: 0;
+	}
+
+	30% {
+		opacity: 1;
+	}
+
+	82%,
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 浮层类：没出现时，背后也是一页正文 */
+.mg--modal-enter,
+.mg--drawer-slide,
+.mg--toast-enter {
+	background:
+		repeating-linear-gradient(180deg, transparent 0 10px, var(--rule-soft) 10px 13px) 16px 12px /
+			calc(100% - 32px) 48px no-repeat,
+		var(--paper);
+}
+
+/* 弹窗出现：背景变暗，中间放大浮现 */
+.mg--modal-enter i:nth-child(1),
+.mg--drawer-slide i:nth-child(1) {
+	inset: 0;
+	background: rgb(0 0 0 / 0.3);
+	animation-name: mg-shade;
+}
+
+.mg--modal-enter i:nth-child(2) {
+	top: 18px;
+	left: 28%;
+	width: 44%;
+	height: 36px;
+	border-radius: 7px;
+	background: var(--paper);
+	animation-name: mg-modal;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-shade {
+	0%,
+	25% {
+		opacity: 0;
+	}
+
+	35%,
+	82% {
+		opacity: 1;
+	}
+
+	92%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-modal {
+	0%,
+	25% {
+		opacity: 0;
+		transform: scale(0.88);
+	}
+
+	35%,
+	82% {
+		opacity: 1;
+		transform: none;
+	}
+
+	90%,
+	100% {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+}
+
+/* 抽屉滑入 */
+.mg--drawer-slide i:nth-child(2) {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 44%;
+	background:
+		repeating-linear-gradient(180deg, transparent 0 10px, var(--rule) 10px 13px) 10px 12px /
+			calc(100% - 20px) 60% no-repeat,
+		var(--paper);
+	animation-name: mg-drawer;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-drawer {
+	0%,
+	25% {
+		transform: translateX(-100%);
+	}
+
+	38%,
+	82% {
+		transform: none;
+	}
+
+	95%,
+	100% {
+		transform: translateX(-100%);
+	}
+}
+
+/* Toast：底部冒出一条，几秒后消失 */
+.mg--toast-enter i:nth-child(1) {
+	top: 44px;
+	left: 30%;
+	width: 40%;
+	height: 16px;
+	border-radius: 999px;
+	background: var(--ink);
+	animation-name: mg-toast;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-toast {
+	0%,
+	20% {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+
+	32%,
+	78% {
+		opacity: 1;
+		transform: none;
+	}
+
+	90%,
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 下拉菜单：从按钮处展开 */
+.mg--dropdown-open i:nth-child(1) {
+	top: 8px;
+	left: 50%;
+	width: 34%;
+	height: 14px;
+	border: 1px solid var(--rule);
+	border-radius: 4px;
+	background: var(--paper);
+}
+
+.mg--dropdown-open i:nth-child(2) {
+	top: 26px;
+	left: 50%;
+	width: 34%;
+	height: 38px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background:
+		repeating-linear-gradient(180deg, transparent 0 7px, var(--rule) 7px 9px) 6px 5px /
+			calc(100% - 12px) 100% no-repeat,
+		var(--paper);
+	box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+	transform-origin: top right;
+	animation-name: mg-menu;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-menu {
+	0%,
+	25% {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	33%,
+	80% {
+		opacity: 1;
+		transform: none;
+	}
+
+	88%,
+	100% {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+}
+
+/* Tooltip：鼠标停一会儿，上方才冒出提示 */
+.mg--tooltip-delay i:nth-child(1) {
+	top: 40px;
+	left: 20%;
+	width: 60%;
+	height: 22px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background: var(--paper);
+}
+
+.mg--tooltip-delay i:nth-child(2) {
+	top: 18px;
+	left: 33%;
+	width: 30%;
+	height: 14px;
+	border-radius: 4px;
+	background: var(--ink);
+	animation-name: mg-tip;
+	animation-timing-function: ease-out;
+}
+
+.mg--tooltip-delay i:nth-child(3) {
+	top: 46px;
+	left: 46%;
+	animation-name: mg-tip-cursor;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-tip {
+	0%,
+	42% {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+
+	50%,
+	82% {
+		opacity: 1;
+		transform: none;
+	}
+
+	88%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-tip-cursor {
+	0% {
+		top: 64px;
+		left: 80%;
+	}
+
+	18%,
+	84% {
+		top: 46px;
+		left: 46%;
+	}
+
+	100% {
+		top: 64px;
+		left: 80%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mg i,
+	.mg i::before,
+	.mg i::after {
+		animation: none !important;
+	}
+}

@@ -17,6 +17,7 @@ export const homeQuestions: HomeQuestion[] = [
 	{ ask: 'AI 这么多，我该用哪个？', href: '/newbie-tutorials/which-ai-should-i-use/' },
 	{ ask: 'MCP 到底是什么？', href: '/vibe-coding/terms/mcp/' },
 	{ ask: 'Skill 和提示词有什么不同？', href: '/vibe-coding/terms/skill/' },
+	{ ask: '网页动效怎么跟 AI 说清楚？', href: '/vibe-coding/terms/#motion' },
 	{ ask: '零样本和少样本差在哪？', href: '/vibe-coding/terms/few-shot/' },
 	{ ask: '智能体和聊天机器人差在哪？', href: '/vibe-coding/terms/agent/' },
 	{ ask: 'AI 为什么不知道最近发生的事？', href: '/vibe-coding/terms/knowledge-cutoff/' },

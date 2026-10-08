@@ -22,6 +22,8 @@ export const vibeCodingLabTitles: Record<string, string> = {
 	'few-shot': '给三个例子，AI 就会照着做吗？',
 	multimodal: '打字描述和直接发截图，差在哪？',
 	moe: '参数更多，就一定算得更慢吗？',
+	parameters: '7B 和 70B，差的只是一个零吗？',
+	quantization: '16GB 的笔记本，跑得动 8B 模型吗？',
 	'open-source': '合同不能外传，还能用 AI 审吗？',
 	frontend: '一个页面是怎样做出来的？',
 	backend: '一次请求会经过哪些部分？',

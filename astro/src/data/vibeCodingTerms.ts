@@ -183,11 +183,25 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 					'不只能读文字，还能看图片、听声音、看视频的模型。截图、照片、录音可以直接发给它，不用先自己转成文字。',
 			},
 			{
+				id: 'parameters',
+				name: 'Parameters',
+				chineseName: '参数量',
+				description:
+					'模型在训练中学到的数字一共有多少个。模型名里的 7B、70B 就是参数量，B 是十亿：7B 即 70 亿。参数越多，通常能力越强，运行时占用的内存也越大。',
+			},
+			{
 				id: 'moe',
 				name: 'MoE',
 				chineseName: '混合专家',
 				description:
 					'Mixture of Experts。把模型拆成很多组「专家」，每个词元只交给其中几组来算。总参数很大，每次真正参与计算的只有一小部分，所以更省算力。',
+			},
+			{
+				id: 'quantization',
+				name: 'Quantization',
+				chineseName: '量化',
+				description:
+					'用更少的位数存模型的每个参数，比如从 16 位压到 4 位，模型体积缩小到约四分之一，普通电脑也能跑。代价是精度略有损失，压得越狠损失越明显。',
 			},
 			{
 				id: 'open-source',

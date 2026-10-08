@@ -1582,6 +1582,10 @@
 	display: none;
 }
 
+[data-choice-pm='small'] .pm-when-large,
+[data-choice-pm='large'] .pm-when-small,
+[data-choice-qz='fp16'] .qz-when-q4,
+[data-choice-qz='q4'] .qz-when-fp16,
 [data-choice-mm='text'] .mm-when-image,
 [data-choice-mm='image'] .mm-when-text,
 [data-choice-mo='dense'] .mo-when-moe,

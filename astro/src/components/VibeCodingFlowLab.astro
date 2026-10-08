@@ -33,6 +33,8 @@ const isAgentLab = concept.id === 'agent';
 const isVibeLab = concept.id === 'vibe-coding';
 const isWindowLab = concept.id === 'context-window';
 const isTokenLab = concept.id === 'token';
+const isParametersLab = concept.id === 'parameters';
+const isQuantizationLab = concept.id === 'quantization';
 const isMultimodalLab = concept.id === 'multimodal';
 const isMoeLab = concept.id === 'moe';
 const isOpenSourceLab = concept.id === 'open-source';
@@ -67,6 +69,8 @@ const customLabIds = new Set([
 	'few-shot',
 	'multimodal',
 	'moe',
+	'parameters',
+	'quantization',
 	'open-source',
 	'agent',
 	'vibe-coding',
@@ -139,6 +143,8 @@ const stageNames: Record<string, string[]> = {
 	'few-shot': ['挑例', '成对', '模仿', '调整'],
 	multimodal: ['输入', '编码', '理解', '回答'],
 	moe: ['拆分', '路由', '计算', '合并'],
+	parameters: ['读数', '估算', '比较', '选择'],
+	quantization: ['原版', '压缩', '加载', '取舍'],
 	'open-source': ['获取', '部署', '使用', '维护'],
 	frontend: ['结构', '样式', '交互', '呈现'],
 	backend: ['请求', '校验', '处理', '响应'],
@@ -973,6 +979,166 @@ const labels =
 										<b>自己扛</b>
 										<span>硬件、部署、升级都要有人负责</span>
 										<small>换来的是数据自主，版本也由你决定</small>
+									</div>
+								</div>
+							) : null}
+
+							{isParametersLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="pm" data-choice-pm="small">
+									<div class="concept-props-choices" role="group" aria-label="选择模型大小">
+										<button
+											type="button"
+											data-flow-choice="small"
+											data-flow-choice-group="pm"
+											aria-pressed="true"
+										>
+											7B
+										</button>
+										<button
+											type="button"
+											data-flow-choice="large"
+											data-flow-choice-group="pm"
+											aria-pressed="false"
+										>
+											70B
+										</button>
+									</div>
+									<div class="pm-when-small concept-component-def">
+										<small>模型名里的数字</small>
+										<p>
+											<code>7B</code>
+											<span>7 Billion，70 亿个参数</span>
+										</p>
+									</div>
+									<div class="pm-when-large concept-component-def">
+										<small>模型名里的数字</small>
+										<p>
+											<code>70B</code>
+											<span>70 Billion，700 亿个参数</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isParametersLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="pm" data-choice-pm="small">
+									<div class="pm-when-small concept-js-preview">
+										<p>70 亿 × 2 字节</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>约 14GB，一张大显存的显卡放得下</p>
+									</div>
+									<div class="pm-when-large concept-js-preview">
+										<p>700 亿 × 2 字节</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>约 140GB，要好几张数据中心显卡</p>
+									</div>
+								</div>
+							) : null}
+
+							{isParametersLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="pm" data-choice-pm="small">
+									<div class="pm-when-small concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />审 50
+										页合同：明显的风险条款能找出来，前后条款互相矛盾的地方常漏掉
+									</div>
+									<div class="pm-when-large concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />审 50
+										页合同：能对照前后条款，指出第 12 条和第 37 条说法冲突
+									</div>
+								</div>
+							) : null}
+
+							{isParametersLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="pm" data-choice-pm="small">
+									<div class="pm-when-small concept-bk-resp is-200">
+										<b>轻便</b>
+										<span>本地能跑，又快又省</span>
+										<small>适合改写、分类、摘要这类简单活</small>
+									</div>
+									<div class="pm-when-large concept-bk-resp is-400">
+										<b>昂贵</b>
+										<span>要上服务器，每次调用更贵、更慢</span>
+										<small>留给真正需要它的难题</small>
+									</div>
+								</div>
+							) : null}
+
+							{isQuantizationLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="qz" data-choice-qz="fp16">
+									<div class="concept-props-choices" role="group" aria-label="选择下载的版本">
+										<button
+											type="button"
+											data-flow-choice="fp16"
+											data-flow-choice-group="qz"
+											aria-pressed="true"
+										>
+											原版 FP16
+										</button>
+										<button
+											type="button"
+											data-flow-choice="q4"
+											data-flow-choice-group="qz"
+											aria-pressed="false"
+										>
+											量化版 Q4
+										</button>
+									</div>
+									<div class="qz-when-fp16 concept-component-def">
+										<small>下载页上的 8B 模型</small>
+										<p>
+											<code>文件</code>
+											<span>model-fp16 · 16GB</span>
+										</p>
+									</div>
+									<div class="qz-when-q4 concept-component-def">
+										<small>下载页上的 8B 模型</small>
+										<p>
+											<code>文件</code>
+											<span>model-Q4 · 4.9GB</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isQuantizationLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="qz" data-choice-qz="fp16">
+									<div class="qz-when-fp16 concept-js-preview">
+										<p>每个参数 16 位</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>保持原样，一位都不省</p>
+									</div>
+									<div class="qz-when-q4 concept-js-preview">
+										<p>每个参数压到 4 位</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>只剩 16 个档位，取最接近的那一档</p>
+									</div>
+								</div>
+							) : null}
+
+							{isQuantizationLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="qz" data-choice-qz="fp16">
+									<div class="qz-when-fp16 concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										16GB 内存的笔记本：装不下，加载失败或卡到没法用
+									</div>
+									<div class="qz-when-q4 concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										16GB 内存的笔记本：顺利加载，回答流畅
+									</div>
+								</div>
+							) : null}
+
+							{isQuantizationLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="qz" data-choice-qz="fp16">
+									<div class="qz-when-fp16 concept-bk-resp is-400">
+										<b>用不上</b>
+										<span>质量最好，但这台电脑跑不动</span>
+										<small>原版更适合内存充足的服务器</small>
+									</div>
+									<div class="qz-when-q4 concept-bk-resp is-200">
+										<b>能用</b>
+										<span>质量略降，日常问答基本感觉不出来</span>
+										<small>别再往 2、3 位压，那时就明显变笨了</small>
 									</div>
 								</div>
 							) : null}

@@ -32,6 +32,8 @@ const isAgentTerm = concept.id === 'agent';
 const isVibeCoding = concept.id === 'vibe-coding';
 const isContextWindow = concept.id === 'context-window';
 const isToken = concept.id === 'token';
+const isParameters = concept.id === 'parameters';
+const isQuantization = concept.id === 'quantization';
 const isMultimodal = concept.id === 'multimodal';
 const isMoe = concept.id === 'moe';
 const isOpenSource = concept.id === 'open-source';
@@ -1278,6 +1280,99 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 							</span>
 						</div>
 						<strong>没有哪个更好，看你更在意什么</strong>
+					</div>
+				</div>
+			) : isParameters ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">7B 模型</i>
+							<i class="concept-state-b">70B 模型</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>参数</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">70 亿个数字</i>
+								<i class="concept-state-b">700 亿个数字</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>每个占</code>
+							<span>2 字节（16 位）</span>
+						</div>
+						<strong>参数量 × 每个的大小 = 内存</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">小而快</i>
+							<i class="concept-state-b">大而强</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>内存</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-yes">约 14GB</i>
+								<i class="concept-state-b concept-rtm-no">约 140GB</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>在哪跑</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">一张大显存的显卡</i>
+								<i class="concept-state-b">好几张数据中心显卡</i>
+							</span>
+						</div>
+						<strong>数字大十倍，机器也要大十倍</strong>
+					</div>
+				</div>
+			) : isQuantization ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">原版 · 16 位</i>
+							<i class="concept-state-b">量化 · 4 位</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>一个参数</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">0.01274</i>
+								<i class="concept-state-b">≈ 0.0125</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>8B 模型</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">约 16GB</i>
+								<i class="concept-state-b">约 5GB</i>
+							</span>
+						</div>
+						<strong>每个数记得粗一点</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">16GB 内存的笔记本</i>
+							<i class="concept-state-b">16GB 内存的笔记本</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>装得下吗</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-no">✗ 装不下</i>
+								<i class="concept-state-b concept-rtm-yes">✓ 能跑，还有余量</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>质量</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">原汁原味</i>
+								<i class="concept-state-b">略有损失，日常够用</i>
+							</span>
+						</div>
+						<strong>用一点精度，换一大截体积</strong>
 					</div>
 				</div>
 			) : isToken ? (

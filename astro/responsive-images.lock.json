@@ -1739,6 +1739,30 @@
 				"/_responsive/media/showcase/claude-fable-figure-study-1440.webp"
 			]
 		},
+		"/media/showcase/claude-haiku-5.5-launch-oneshot.webp": {
+			"source_sha256": "0a831a6075a9012a22bc90997254ee9db63b66811ca15ea079aa960745f3800f",
+			"width": 1920,
+			"variants": [
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-640.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-640.webp",
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-960.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-960.webp",
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-1440.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-launch-oneshot-1440.webp"
+			]
+		},
+		"/media/showcase/claude-haiku-5.5-twenty-haiku.webp": {
+			"source_sha256": "04b8095f2e5733b529ce218dc5615fc22aa3312888e4e97f99bc08e53c896942",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-640.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-640.webp",
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-960.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-960.webp",
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-1080.avif",
+				"/_responsive/media/showcase/claude-haiku-5.5-twenty-haiku-1080.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-80000-particles.webp": {
 			"source_sha256": "df2520895e0a0c2bd4b82af607247df02098cf0838d981fafb2687d10288d430",
 			"width": 1080,
@@ -1855,6 +1879,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-1440.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-dots-vs-grok-bot.webp": {
+			"source_sha256": "419e05188bd17e4d3d57c251a2e954e6ad06d26d0ae10599163dc036173a7bd6",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-dots-vs-grok-bot-1280.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-every-frame-is-code.webp": {
 			"source_sha256": "06d0041ce7416c81498542182ba40b42a98daebdb68c2614cd41e67291ed5fe7",
 			"width": 1280,
@@ -1889,6 +1925,16 @@
 				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-960.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-1280.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-hongmen-banquet-1280.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-imitation-of-life-1.webp": {
+			"source_sha256": "4bf318c7edc2c707717ff875ebd044f5306fca1004f90cd8db6714e0414a3dba",
+			"width": 720,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-imitation-of-life-1-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-imitation-of-life-1-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-imitation-of-life-1-720.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-imitation-of-life-1-720.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-inside-its-mind.webp": {
@@ -2077,6 +2123,18 @@
 				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-960.webp",
 				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-1440.avif",
 				"/_responsive/media/showcase/claude-opus-5.5-watercolor-owl-1440.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-welcome-haiku.webp": {
+			"source_sha256": "906de928eea8300da3790657f986a7e8dc4f1c0e44d571fa9edd9a9cc6290cc4",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-1280.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-welcome-haiku-1280.webp"
 			]
 		},
 		"/media/showcase/claude-opus-5.5-x-tech-feed.webp": {

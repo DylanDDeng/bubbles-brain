@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { loadDirectoryData } from '../../../lib/directories';
 import { vibeCodingSkillCategories } from '../../../data/vibeCodingSkills';
+import '../../../styles/terms-directory.css';
 
 const data = await loadDirectoryData();
 const skills = data.index.items.filter((item) => item.section === 'vibe-coding-skills');
@@ -21,69 +22,69 @@ const groups = vibeCodingSkillCategories
 	title="Skills · Vibe Coding · Bubble's Brain"
 	description="浏览原始 SKILL.md、作者和来源，把好方法带进工作流。"
 >
-	<div class="rr-page rr-page--wide" data-reading-directory>
+	{/* The same directory as 术语: categories in the left rail, one category's skills at a time. */}
+	<div class="terms-page" data-terms-directory>
 		<header class="rr-head">
-			<nav class="rr-crumbs" aria-label="位置"><a href="/vibe-coding/">Vibe Coding</a> / Skills</nav>
+			<nav class="rr-crumbs" aria-label="位置">
+				<a href="/vibe-coding/">Vibe Coding</a> / Skills
+			</nav>
 			<h1 class="rr-title" lang="en">Skills</h1>
 			<label class="rr-search">
 				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
 				<span class="sr-only">搜索 Skills</span>
-				<input
-					type="search"
-					placeholder="搜索 Skills"
-					autocomplete="off"
-					data-reading-search
-				/>
+				<input type="search" placeholder="搜索 Skills" autocomplete="off" data-terms-search />
 			</label>
-			<div class="rr-filters" role="group" aria-label="按分类">
-				<button type="button" data-reading-filter="" aria-pressed="true">全部</button>
-				{
-					groups.map((group) => (
-						<button type="button" data-reading-filter={group.id} aria-pressed="false">
-							{group.label}
-						</button>
-					))
-				}
-			</div>
 		</header>
 
-		{
-			groups.map((group) => (
-				<section
-					class="rr-block"
-					id={group.id}
-					data-reading-group={group.id}
-					aria-labelledby={`skills-${group.id}`}
-				>
-					<div class="rr-block__head">
-						<h2 class="rr-block__title" id={`skills-${group.id}`}>
+		<div class="terms-body">
+			<nav class="terms-rail" aria-label="Skills 分类">
+				{
+					groups.map((group) => (
+						<a href={`#${group.id}`} data-terms-tab={group.id}>
 							{group.label}
-						</h2>
-					</div>
-					<ul class="rr-names rr-names--three">
-						{group.skills.map((item) => {
-							const { name, latin } = split(item.title);
-							return (
-								<li data-reading-item data-search={item.title.toLocaleLowerCase()}>
-									<a class="rr-name" href={item.href}>
-										<span class="rr-name__main">{name}</span>
-										{latin && (
-											<span class="rr-name__sub" lang="en">
-												{latin}
-											</span>
-										)}
-									</a>
-								</li>
-							);
-						})}
-					</ul>
-				</section>
-			))
-		}
-		<p class="rr-empty" data-reading-empty hidden>没有找到匹配的 Skill，换个词试试。</p>
+						</a>
+					))
+				}
+			</nav>
+
+			<div class="terms-main">
+				{
+					groups.map((group) => (
+						<section
+							class="terms-category"
+							id={group.id}
+							data-terms-group={group.id}
+							aria-labelledby={`skills-${group.id}`}
+						>
+							<h2 id={`skills-${group.id}`}>{group.label}</h2>
+							<div class="terms-group" data-terms-sub>
+								<ul class="rr-names rr-names--three">
+									{group.skills.map((item) => {
+										const { name, latin } = split(item.title);
+										return (
+											<li data-terms-item data-search={item.title.toLocaleLowerCase()}>
+												<a class="rr-name" href={item.href}>
+													<span class="rr-name__main">{name}</span>
+													{latin && (
+														<span class="rr-name__sub" lang="en">
+															{latin}
+														</span>
+													)}
+												</a>
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						</section>
+					))
+				}
+				<p class="rr-empty" data-terms-empty hidden>没有找到匹配的 Skill，换个词试试。</p>
+			</div>
+		</div>
 	</div>
 </BaseLayout>
 
 <script>
-	import '../../../scripts/readingDirectory';
+	import '../../../scripts/termsDirectory';
 </script>

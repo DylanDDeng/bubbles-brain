@@ -196,9 +196,48 @@ function setupHoverPlay(root: HTMLElement) {
 	}
 }
 
+/**
+ * A work in movements: a row plays its movement in the page's player, and the player moves on
+ * to the next movement when one ends. Modified clicks still open the file itself.
+ */
+function setupMovements(list: HTMLElement) {
+	if (list.dataset.ready) return;
+	list.dataset.ready = 'true';
+	const video = document.querySelector<HTMLVideoElement>('[data-showcase-video]');
+	if (!video) return;
+	const rows = Array.from(list.querySelectorAll<HTMLAnchorElement>('[data-movement-video]'));
+	let current = 0;
+
+	const select = (index: number, play: boolean) => {
+		const row = rows[index];
+		if (!row) return;
+		current = index;
+		rows.forEach((item, i) => {
+			if (i === index) item.setAttribute('aria-current', 'true');
+			else item.removeAttribute('aria-current');
+		});
+		video.poster = row.dataset.movementPoster ?? '';
+		video.src = row.dataset.movementVideo ?? '';
+		video.setAttribute('aria-label', row.dataset.movementLabel ?? '');
+		if (play) video.play().catch(() => {});
+	};
+
+	rows.forEach((row, index) =>
+		row.addEventListener('click', (event) => {
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			event.preventDefault();
+			select(index, true);
+		}),
+	);
+	video.addEventListener('ended', () => {
+		if (current < rows.length - 1) select(current + 1, true);
+	});
+}
+
 function initShowcase() {
 	reviveVideos();
 	document.querySelectorAll<HTMLElement>('[data-showcase-prompt]').forEach(setupPrompt);
+	document.querySelectorAll<HTMLElement>('[data-showcase-movements]').forEach(setupMovements);
 	document.querySelectorAll<HTMLElement>('[data-showcase-theater]').forEach(setupFilter);
 	document.querySelectorAll<HTMLElement>('[data-showcase-gallery]').forEach(setupHoverPlay);
 }

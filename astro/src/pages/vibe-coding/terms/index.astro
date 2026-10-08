@@ -34,7 +34,12 @@ const groupsOf = (terms: VibeCodingTerm[]) => {
 			<label class="rr-search">
 				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
 				<span class="sr-only">查术语</span>
-				<input type="search" placeholder="查一个词，中英文都行" autocomplete="off" data-terms-search />
+				<input
+					type="search"
+					placeholder="查一个词，中英文都行"
+					autocomplete="off"
+					data-terms-search
+				/>
 			</label>
 		</header>
 
@@ -73,11 +78,7 @@ const groupsOf = (terms: VibeCodingTerm[]) => {
 											>
 												<a class="rr-name" href={`/vibe-coding/terms/${term.id}/`}>
 													<span class="rr-name__main">{term.chineseName}</span>
-													{term.name !== term.chineseName && (
-														<span class="rr-name__sub" lang="en">
-															{term.name}
-														</span>
-													)}
+													{term.badge && <span class="terms-badge">{term.badge}</span>}
 												</a>
 											</li>
 										))}

@@ -5,6 +5,8 @@ export interface VibeCodingTerm {
 	description: string;
 	/** 可选：分类内的分组名（如界面图鉴按用途分组） */
 	group?: string;
+	/** 可选：列表里名字旁的小标记，如「从这里开始」 */
+	badge?: string;
 }
 
 export interface VibeCodingTermCategory {
@@ -132,83 +134,178 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 		id: 'ai-agent',
 		name: 'AI',
 		label: 'AI',
-		description: '理解 AI 编码工具如何接收上下文、调用工具并完成任务。',
+		description: '理解 AI 是什么、怎么用、会在哪出错。',
 		terms: [
 			{
-				id: 'vibe-coding',
-				name: 'Vibe Coding',
-				chineseName: '氛围编程',
+				id: 'llm',
+				name: 'LLM',
+				chineseName: '大语言模型',
+				group: '认识模型',
+				badge: '从这里开始',
 				description:
-					'通过自然语言描述意图，让 AI 生成和修改代码，再根据运行结果持续反馈的开发方式。',
-			},
-			{
-				id: 'prompt',
-				name: 'Prompt',
-				chineseName: '提示词',
-				description: '交给 AI 的任务说明。清晰的提示词通常包含目标、上下文、约束和验收标准。',
-			},
-			{
-				id: 'zero-shot',
-				name: 'Zero-shot',
-				chineseName: '零样本',
-				description: '不给任何示例，只用文字说明让 AI 完成任务。适合翻译、总结、分类这类 AI 本来就熟悉的常见任务。',
-			},
-			{
-				id: 'few-shot',
-				name: 'Few-shot',
-				chineseName: '少样本',
-				description: '在提示词里附上几条「输入 → 输出」示例，让 AI 照着示例的格式和口径完成同类任务。',
-			},
-			{
-				id: 'context-window',
-				name: 'Context Window',
-				chineseName: '上下文窗口',
-				description:
-					'模型此刻能看到的全部内容和它的容量上限。窗口装满后，较早的细节可能被压缩或移出。',
+					'用海量文字训练出来、靠「预测下一个词元」来生成内容的模型。ChatGPT、Claude、DeepSeek、豆包背后都是大语言模型，常简称「大模型」。',
 			},
 			{
 				id: 'token',
 				name: 'Token',
 				chineseName: '词元',
+				group: '认识模型',
 				description:
 					'模型切分和处理文本的最小单位，并非每个字就是一个词元：英文约 4 个字符合一个词元，中文一个字通常要占一到两个，视模型而定。上下文窗口容量和调用费用都按词元数计算。',
+			},
+			{
+				id: 'parameters',
+				name: 'Parameters',
+				chineseName: '参数量',
+				group: '认识模型',
+				description:
+					'模型在训练中学到的数字一共有多少个。模型名里的 7B、70B 就是参数量，B 是十亿：7B 即 70 亿。参数越多，通常能力越强，运行时占用的内存也越大。',
+			},
+			{
+				id: 'moe',
+				name: 'MoE',
+				chineseName: '混合专家',
+				group: '认识模型',
+				description:
+					'Mixture of Experts。把模型拆成很多组「专家」，每个词元只交给其中几组来算。总参数很大，每次真正参与计算的只有一小部分，所以更省算力。',
+			},
+			{
+				id: 'quantization',
+				name: 'Quantization',
+				chineseName: '量化',
+				group: '认识模型',
+				description:
+					'用更少的位数存模型的每个参数，比如从 16 位压到 4 位，模型体积缩小到约四分之一，普通电脑也能跑。代价是精度略有损失，压得越狠损失越明显。',
+			},
+			{
+				id: 'open-source',
+				name: 'Open vs Closed',
+				chineseName: '开源和闭源',
+				group: '认识模型',
+				description:
+					'开源模型公开了权重，任何人都能下载、在自己的机器上运行和修改；闭源模型只能通过官方的 App 或 API 使用。大多数「开源」模型只公开权重，不公开训练数据。',
+			},
+			{
+				id: 'multimodal',
+				name: 'Multimodal',
+				chineseName: '多模态',
+				group: '认识模型',
+				description:
+					'不只能读文字，还能看图片、听声音、看视频的模型。截图、照片、录音可以直接发给它，不用先自己转成文字。',
+			},
+			{
+				id: 'reasoning-model',
+				name: 'Reasoning Model',
+				chineseName: '推理模型',
+				group: '认识模型',
+				description:
+					'回答前会先「想一会儿」的模型：先一步步推理、检查，再给出答案。擅长数学、编程和复杂分析，代价是更慢、更费词元。产品里常叫「深度思考」或「思考模式」。',
+			},
+			{
+				id: 'confidence-interval',
+				name: 'Confidence Interval',
+				chineseName: '置信区间',
+				group: '认识模型',
+				description:
+					'只测一部分题，算出的分数难免有偶然性。置信区间就是给这个估计配上一个范围，提醒你不要把单次分数看得太精确。例如 70% ± 3 个百分点，表示区间从 67% 到 73%。',
+			},
+			{
+				id: 'prompt',
+				name: 'Prompt',
+				chineseName: '提示词',
+				group: '怎么跟它说',
+				description: '交给 AI 的任务说明。清晰的提示词通常包含目标、上下文、约束和验收标准。',
+			},
+			{
+				id: 'system-prompt',
+				name: 'System Prompt',
+				chineseName: '系统提示词',
+				group: '怎么跟它说',
+				description:
+					'你开口之前，应用就已经交给模型的一段设定：它是谁、怎么说话、哪些事不能做。每次对话都会附在最前面，普通用户通常看不到。',
+			},
+			{
+				id: 'zero-shot',
+				name: 'Zero-shot',
+				chineseName: '零样本',
+				group: '怎么跟它说',
+				description:
+					'不给任何示例，只用文字说明让 AI 完成任务。适合翻译、总结、分类这类 AI 本来就熟悉的常见任务。',
+			},
+			{
+				id: 'few-shot',
+				name: 'Few-shot',
+				chineseName: '少样本',
+				group: '怎么跟它说',
+				description:
+					'在提示词里附上几条「输入 → 输出」示例，让 AI 照着示例的格式和口径完成同类任务。',
+			},
+			{
+				id: 'context-window',
+				name: 'Context Window',
+				chineseName: '上下文窗口',
+				group: '怎么跟它说',
+				description:
+					'模型此刻能看到的全部内容和它的容量上限。窗口装满后，较早的细节可能被压缩或移出。',
+			},
+			{
+				id: 'knowledge-cutoff',
+				name: 'Knowledge Cutoff',
+				chineseName: '知识截止日期',
+				group: '它会出错',
+				description:
+					'模型的训练数据收集到哪一天为止。这之后发生的事，模型自己不知道，除非联网搜索，或者你把资料发给它。',
+			},
+			{
+				id: 'hallucination',
+				name: 'Hallucination',
+				chineseName: '幻觉',
+				group: '它会出错',
+				description:
+					'模型一本正经地说出不存在或不正确的内容，比如编造的论文、错误的数字、不存在的函数。它不是故意撒谎，而是生成了「看起来像对的」话。',
 			},
 			{
 				id: 'rag',
 				name: 'RAG',
 				chineseName: '检索增强生成',
+				group: '它会出错',
 				description: '回答前先从知识库检索相关资料，连同问题一起交给模型，让回答有据可依。',
+			},
+			{
+				id: 'vibe-coding',
+				name: 'Vibe Coding',
+				chineseName: '氛围编程',
+				group: '让它动手',
+				description:
+					'通过自然语言描述意图，让 AI 生成和修改代码，再根据运行结果持续反馈的开发方式。',
 			},
 			{
 				id: 'agent',
 				name: 'Agent',
 				chineseName: '智能体',
+				group: '让它动手',
 				description: '能够围绕目标读取文件、调用工具、修改代码并验证结果的 AI 执行单元。',
 			},
 			{
 				id: 'harness',
 				name: 'Harness',
 				chineseName: '智能体运行框架',
+				group: '让它动手',
 				description: '连接模型、工具、权限、状态和执行循环的框架，决定 Agent 如何真正完成工作。',
 			},
 			{
 				id: 'mcp',
 				name: 'MCP',
 				chineseName: '模型上下文协议',
+				group: '让它动手',
 				description: '让 AI 应用以统一方式连接外部工具和数据源的开放协议。',
 			},
 			{
 				id: 'skill',
 				name: 'Skill',
 				chineseName: '技能',
+				group: '让它动手',
 				description: '封装特定任务的方法、约束、脚本和素材，让 Agent 稳定复用一套工作流程。',
-			},
-			{
-				id: 'confidence-interval',
-				name: 'Confidence Interval',
-				chineseName: '置信区间',
-				description:
-					'只测一部分题，算出的分数难免有偶然性。置信区间就是给这个估计配上一个范围，提醒你不要把单次分数看得太精确。例如 70% ± 3 个百分点，表示区间从 67% 到 73%。',
 			},
 		],
 	},

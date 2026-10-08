@@ -80,6 +80,15 @@
 .terms-group + .terms-group {
 	margin-top: 40px;
 }
+.terms-badge {
+	margin-left: 8px;
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: var(--blue-soft);
+	color: var(--blue-strong);
+	font-size: 12px;
+	white-space: nowrap;
+}
 
 /* With JS, one category shows at a time and the next sits flush under the rail. */
 .terms-page.is-enhanced .terms-category + .terms-category {

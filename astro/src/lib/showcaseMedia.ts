@@ -4,6 +4,7 @@
  * cached for a year. Posters also get the responsive variants the image pipeline cut for them.
  */
 import responsiveLock from '../../responsive-images.lock.json';
+import type { ShowcaseWork } from '../data/showcase';
 import versions from '../data/showcaseMedia.json';
 
 const versionOf: Record<string, string | undefined> = versions;
@@ -12,6 +13,13 @@ const responsiveSources: Record<string, { variants: string[] } | undefined> =
 
 /** The short, silent clip that plays when the pointer rests on a gallery tile. */
 export const showcasePreviewPath = (video: string) => video.replace(/\.mp4$/, '-preview.mp4');
+
+/** Every hosted file a work uses: its film, hover preview and poster, plus each movement's. */
+export function showcaseFiles(work: ShowcaseWork): string[] {
+	const files = [work.video, showcasePreviewPath(work.video), work.poster];
+	for (const movement of work.movements ?? []) files.push(movement.video, movement.poster);
+	return [...new Set(files)];
+}
 
 export function showcaseMediaUrl(path: string): string {
 	const version = versionOf[path];

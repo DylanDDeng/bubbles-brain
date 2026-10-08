@@ -32,6 +32,24 @@ export interface ShowcaseWork {
 	/** The prompt the author used, when public; either language may be missing. */
 	prompt?: { zh?: string; en?: string };
 	source?: { author: string; url: string; platform?: string };
+	/**
+	 * A work in several parts, such as the movements of a symphony. The work's own video and
+	 * poster are the first part's (the gallery tile and hover preview use them) and its duration
+	 * is the total; the work page lists every part and plays them in order.
+	 */
+	movements?: ShowcaseMovement[];
+}
+
+export interface ShowcaseMovement {
+	/** Roman numeral, as printed on the part's cover. */
+	numeral: string;
+	title: string;
+	/** Chinese title shown beside the original one. */
+	titleZh?: string;
+	video: string;
+	poster: string;
+	/** Length in whole seconds. */
+	duration: number;
 }
 
 export const showcaseCategories: ShowcaseCategory[] = [
@@ -1063,6 +1081,141 @@ Ask me for the inputs, measure the word timings, then show me 8 stills before yo
 		source: {
 			author: '@twoclipping',
 			url: 'https://x.com/twoclipping/status/2107822293653041659',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-haiku-5.5-twenty-haiku',
+		title: 'Haiku 写的 20 首俳句',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Haiku 5.5',
+		video: '/media/showcase/claude-haiku-5.5-twenty-haiku.mp4',
+		poster: '/media/showcase/claude-haiku-5.5-twenty-haiku.webp',
+		width: 1080,
+		height: 1080,
+		duration: 40,
+		added: '2026-10-08',
+		note: '让刚发布的 Claude Haiku 5.5 写 20 首俳句，每首配一幅手绘感的小画：窗上的霜花、雨季卡车后挡板上的玫瑰、沙上的波纹、炉栅里的炭火……每一帧都是 JavaScript 画的。',
+		source: {
+			author: '@kevin_t_ngo',
+			url: 'https://x.com/kevin_t_ngo/status/2107939123818574231',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-welcome-haiku',
+		title: '欢迎 Haiku 5.5',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-welcome-haiku.mp4',
+		poster: '/media/showcase/claude-opus-5.5-welcome-haiku.webp',
+		width: 1280,
+		height: 720,
+		duration: 103,
+		added: '2026-10-08',
+		note: '为 Claude Haiku 5.5 发布做的动画：两只方块 Clawd 在海滩沙堡边捡到一颗蛋，守着它孵出一只小 Clawd，最后挂起彩旗庆祝「Welcome, Haiku 5.5」。由 Claude Opus 5.5 指挥 Haiku 5.5 子 agent 一起做出来。',
+		source: {
+			author: '@ishuagra02',
+			url: 'https://x.com/ishuagra02/status/2107960657265950790',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-dots-vs-grok-bot',
+		title: 'ChatGPT 小圆点大战 Grok 机器人',
+		category: 'demo',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-dots-vs-grok-bot.mp4',
+		poster: '/media/showcase/claude-opus-5.5-dots-vs-grok-bot.webp',
+		width: 1280,
+		height: 720,
+		duration: 178,
+		added: '2026-10-08',
+		note: '一部三分钟的卡通短片：以 @thsottiaux 和 @poteto 为原型的两个角色，带着一群彩色小圆点穿过鸟居、吊桥和云海，最后对上一只巨大的毛绒怪物。由 Claude Opus 5.5 制作。',
+		source: {
+			author: '@ishuagra02',
+			url: 'https://x.com/ishuagra02/status/2108015747960062216',
+			platform: 'X',
+		},
+	},
+	{
+		id: 'claude-opus-5.5-imitation-of-life',
+		title: '模仿生命：一部交响曲',
+		category: 'mv',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-imitation-of-life-1.mp4',
+		poster: '/media/showcase/claude-opus-5.5-imitation-of-life-1.webp',
+		width: 540,
+		height: 540,
+		duration: 2396,
+		added: '2026-10-08',
+		note: '作者只给了 Claude Opus 5.5 一句话，让它自学怎么写交响曲再做出来。四个小时后，它交回一部四个乐章、约 40 分钟的《Imitation of Life》，从「模仿」「镜像」到「嬉戏」「创造」，每个乐章还配了一张自己画的封面。',
+		prompt: {
+			en: 'Teach yourself how to write a symphony and then produce it',
+		},
+		source: {
+			author: '@devteamdrew',
+			url: 'https://x.com/devteamdrew/status/2107975507702661191',
+			platform: 'X',
+		},
+		movements: [
+			{
+				numeral: 'I',
+				title: 'Copy',
+				titleZh: '模仿',
+				video: '/media/showcase/claude-opus-5.5-imitation-of-life-1.mp4',
+				poster: '/media/showcase/claude-opus-5.5-imitation-of-life-1.webp',
+				duration: 690,
+			},
+			{
+				numeral: 'II',
+				title: 'Mirror',
+				titleZh: '镜像',
+				video: '/media/showcase/claude-opus-5.5-imitation-of-life-2.mp4',
+				poster: '/media/showcase/claude-opus-5.5-imitation-of-life-2.webp',
+				duration: 591,
+			},
+			{
+				numeral: 'III',
+				title: 'Play',
+				titleZh: '嬉戏',
+				video: '/media/showcase/claude-opus-5.5-imitation-of-life-3.mp4',
+				poster: '/media/showcase/claude-opus-5.5-imitation-of-life-3.webp',
+				duration: 393,
+			},
+			{
+				numeral: 'IV',
+				title: 'Invention',
+				titleZh: '创造',
+				video: '/media/showcase/claude-opus-5.5-imitation-of-life-4.mp4',
+				poster: '/media/showcase/claude-opus-5.5-imitation-of-life-4.webp',
+				duration: 722,
+			},
+		],
+	},
+	{
+		id: 'claude-haiku-5.5-launch-oneshot',
+		title: 'Haiku 5.5 自己的发布片',
+		category: 'launch',
+		medium: 'code-to-video',
+		model: 'Claude Haiku 5.5',
+		video: '/media/showcase/claude-haiku-5.5-launch-oneshot.mp4',
+		poster: '/media/showcase/claude-haiku-5.5-launch-oneshot.webp',
+		width: 1920,
+		height: 1080,
+		duration: 36,
+		added: '2026-10-08',
+		note: 'Claude Haiku 5.5 一次生成的自家发布片：水墨远山前升起一轮红日，「cheapest」「small」「capable」逐个登场，旁边是比 Haiku 4.5 便宜约 75% 的对比方块，最后落在「the cheapest, fastest, most capable small model」。2D、3D、配乐和手绘都由代码完成。',
+		prompt: {
+			en: 'make 10 times banger video for your launch that shows how good motion designer you are and how good you do 2d, 3d and music and drawing with code',
+		},
+		source: {
+			author: '@chetaslua',
+			url: 'https://x.com/chetaslua/status/2107921284059594835',
 			platform: 'X',
 		},
 	},

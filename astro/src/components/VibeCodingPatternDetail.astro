@@ -1,5 +1,6 @@
 ---
-import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { vibeCodingTermCategories, type VibeCodingConcept } from '../data/vibeCodingTerms';
+import { motionsForPattern } from '../lib/vibeCodingMotion';
 import { brainPodTermReturn } from '../lib/brainpodTerms';
 import type { VibeCodingPatternProfile } from '../data/vibeCodingPatternDetails';
 import ArticleOutline from './ArticleOutline.astro';
@@ -7,6 +8,7 @@ import '../styles/reading-page.css';
 import '../styles/vibe-coding-term-detail.css';
 import '../styles/vibe-coding-pattern-detail.css';
 import '../styles/term-page.css';
+import '../styles/motion-glyphs.css';
 
 interface Props {
 	concept: VibeCodingConcept;
@@ -16,6 +18,11 @@ interface Props {
 }
 
 const { concept, profile, previousConcept, nextConcept } = Astro.props;
+// 这个零件常配的动效，链到动效图鉴
+const motionTerms = vibeCodingTermCategories.find((category) => category.id === 'motion')?.terms ?? [];
+const motions = (motionsForPattern[concept.id] ?? [])
+	.map((id) => motionTerms.find((term) => term.id === id))
+	.filter((term) => term !== undefined);
 // Same reading layout as the other term pages; each heading is the content itself.
 const outline = [
 	{ slug: 'pattern-anatomy-title', text: '这一块由什么组成' },
@@ -23,6 +30,7 @@ const outline = [
 	...(profile.spot ? [{ slug: 'pattern-spot-title', text: profile.spot.title }] : []),
 	{ slug: 'pattern-usage-title', text: '什么时候该上它' },
 	...(profile.quiz ? [{ slug: 'pattern-quiz-title', text: '想一想' }] : []),
+	...(motions.length ? [{ slug: 'pattern-motion-title', text: '让它动起来' }] : []),
 	{ slug: 'pattern-prompts-title', text: '让 AI 改它时，这样说' },
 	{ slug: 'concept-boundary-title', text: '最容易踩的坑' },
 ].map((heading) => ({ ...heading, depth: 2 }));
@@ -3831,6 +3839,30 @@ const datePickerDays = Array.from({ length: 35 }, (_, index) =>
 				</div>
 			</section>
 		) : null
+	}
+
+	{
+		motions.length > 0 && (
+			<section class="term-section" aria-labelledby="pattern-motion-title">
+				<h2 class="term-section__title" id="pattern-motion-title">让它动起来</h2>
+				<ul class="rr-names motion-grid">
+					{motions.map((motion) => (
+						<li>
+							<a class="rr-name motion-tile" href={`/vibe-coding/terms/${motion.id}/`}>
+								<span class={`mg mg--${motion.id}`} aria-hidden="true">
+									<i />
+									<i />
+									<i />
+									<i />
+									<i />
+								</span>
+								<span class="rr-name__main">{motion.chineseName}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		)
 	}
 
 	<section class="term-section" aria-labelledby="pattern-prompts-title">

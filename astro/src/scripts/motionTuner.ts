@@ -2414,6 +2414,149 @@ function tooltipDemo(stage: HTMLElement): Demo {
 	);
 }
 
+/* ---------- 延迟：首屏三个元素依次登场，时间轴标出起点 ---------- */
+
+function delayDemo(stage: HTMLElement): Demo {
+	const parts = [...stage.querySelectorAll<HTMLElement>('[data-motion-part]')];
+	const marks = [...stage.querySelectorAll<HTMLElement>('[data-motion-mark]')];
+	const head = stage.querySelector<HTMLElement>('[data-motion-head]')!;
+	let timer = 0;
+	return {
+		play(values) {
+			window.clearTimeout(timer);
+			cancelAll([...parts, head]);
+			const delays = [0, Number(values.sub), Number(values.btn)];
+			const total = Math.max(1500, Math.max(...delays) + 500);
+			marks.forEach((mark, index) => (mark.style.left = `${(delays[index] / total) * 100}%`));
+			parts.forEach((part, index) =>
+				part.animate(
+					[
+						{ opacity: 0, transform: 'translateY(14px)' },
+						{ opacity: 1, transform: 'none' },
+					],
+					{ duration: 500, delay: delays[index], easing: EASE.out, fill: 'both' },
+				),
+			);
+			head.animate([{ left: '0%' }, { left: '100%' }], {
+				duration: total,
+				easing: 'linear',
+				fill: 'both',
+			});
+			timer = window.setTimeout(() => {
+				const fades = parts.map((part) =>
+					part.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }),
+				);
+				fades[0].finished.then(() => this.play(values, true)).catch(() => {});
+			}, total + 1800);
+		},
+		stop() {
+			window.clearTimeout(timer);
+		},
+	};
+}
+
+/* ---------- 减少动态效果：同一页在两种系统设置下 ---------- */
+
+function reducedDemo(stage: HTMLElement): Demo {
+	const root = stage.querySelector<HTMLElement>('[data-motion-target]')!;
+	const cards = [...root.querySelectorAll<HTMLElement>('[data-motion-card]')];
+	const blob = root.querySelector<HTMLElement>('.ms-reduced__blob')!;
+	const badge = root.querySelector<HTMLElement>('[data-motion-badge]')!;
+	let timer = 0;
+	return {
+		prepare(values) {
+			const reduce = values.mode === 'reduce';
+			root.classList.toggle('is-reduce', reduce);
+			badge.textContent = reduce ? '模拟：减少动态效果 已开启' : '模拟：系统设置正常';
+		},
+		play(values) {
+			window.clearTimeout(timer);
+			this.prepare!(values);
+			cancelAll([...cards, blob]);
+			const reduce = values.mode === 'reduce';
+			if (!reduce) {
+				blob.animate(
+					[{ transform: 'translate(-20%, -10%)' }, { transform: 'translate(60%, 30%)' }],
+					{ duration: 3000, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' },
+				);
+			}
+			cards.forEach((card, index) => {
+				if (reduce && values.fallback === 'none') return;
+				card.animate(
+					reduce
+						? [{ opacity: 0 }, { opacity: 1 }]
+						: [
+								{ opacity: 0, transform: 'translateY(40px) scale(0.92)' },
+								{ opacity: 1, transform: 'none' },
+							],
+					{
+						duration: reduce ? 250 : 650,
+						delay: reduce ? 0 : index * 150,
+						easing: EASE.out,
+						fill: 'both',
+					},
+				);
+			});
+			timer = window.setTimeout(() => {
+				const fades = cards.map((card) =>
+					card.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }),
+				);
+				fades[0].finished.then(() => this.play(values, true)).catch(() => {});
+			}, 2800);
+		},
+		stop() {
+			window.clearTimeout(timer);
+			cancelAll([blob]);
+		},
+	};
+}
+
+/* ---------- 只动位置和透明度：主线程一忙，left 卡、transform 不卡 ---------- */
+
+function perfDemo(stage: HTMLElement): Demo {
+	const leftBall = stage.querySelector<HTMLElement>('[data-motion-left]')!;
+	const transformBall = stage.querySelector<HTMLElement>('[data-motion-transform]')!;
+	const status = stage.querySelector<HTMLElement>('[data-motion-status]')!;
+	let busyTimer = 0;
+	const calm = () => window.clearInterval(busyTimer);
+	return {
+		play(values) {
+			calm();
+			cancelAll([leftBall, transformBall]);
+			const travel = transformBall.parentElement!.clientWidth - transformBall.offsetWidth;
+			const timing: KeyframeAnimationOptions = {
+				duration: 1400,
+				iterations: Infinity,
+				direction: 'alternate',
+				easing: 'ease-in-out',
+			};
+			leftBall.animate([{ left: '0px' }, { left: `${travel}px` }], timing);
+			transformBall.animate(
+				[{ transform: 'none' }, { transform: `translateX(${travel}px)` }],
+				timing,
+			);
+			const busy = values.busy === 'busy';
+			stage.classList.toggle('is-busy', busy);
+			status.textContent = busy
+				? '页面很忙：上面的球一顿一顿，下面的照样顺'
+				: '页面空闲：两个球一样顺';
+			// 模拟主线程被大量脚本占住：每 100ms 里有 60ms 什么都做不了
+			if (busy) {
+				busyTimer = window.setInterval(() => {
+					const end = performance.now() + 60;
+					while (performance.now() < end) {
+						// 故意空转
+					}
+				}, 100);
+			}
+		},
+		stop() {
+			calm();
+			cancelAll([leftBall, transformBall]);
+		},
+	};
+}
+
 const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	duration: durationDemo,
 	easing: easingDemo,
@@ -2452,6 +2595,9 @@ const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	dropdown: dropdownDemo,
 	tooltip: tooltipDemo,
 	shimmer: shimmerDemo,
+	delay: delayDemo,
+	reduced: reducedDemo,
+	perf: perfDemo,
 };
 
 function setupTuner(root: HTMLElement): () => void {

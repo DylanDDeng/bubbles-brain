@@ -1,9 +1,10 @@
 ---
-import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { vibeCodingTermCategories, type VibeCodingConcept } from '../data/vibeCodingTerms';
 import { brainPodTermReturn } from '../lib/brainpodTerms';
 import {
 	defaultMotionValues,
 	formatMotionValue,
+	patternsForMotion,
 	renderMotionPrompt,
 	type MotionProfile,
 } from '../lib/vibeCodingMotion';
@@ -27,6 +28,12 @@ const outline = [
 	{ slug: 'concept-boundary-title', text: '最容易踩的坑' },
 ].map((heading) => ({ ...heading, depth: 2 }));
 const demo = profile.demo;
+// 这个动效常用在界面图鉴的哪些零件上
+const patternTerms =
+	vibeCodingTermCategories.find((category) => category.id === 'ui-patterns')?.terms ?? [];
+const usedOn = patternsForMotion(concept.id)
+	.map((id) => patternTerms.find((term) => term.id === id))
+	.filter((term) => term !== undefined);
 const pointerDemo = [
 	'lift',
 	'press',
@@ -929,6 +936,69 @@ const stats = [
 					) : null
 				}
 				{
+					demo === 'delay' ? (
+						<div class="ms-delay">
+							<div class="ms-delay__hero">
+								<strong data-motion-part="0">把灵感，随手记下来</strong>
+								<p data-motion-part="1">文字、语音、图片都能记，手机和电脑实时同步。</p>
+								<span class="ms-site__cta" data-motion-part="2">
+									免费下载
+								</span>
+							</div>
+							<div class="ms-timeline" data-motion-timeline>
+								<i class="ms-timeline__head" data-motion-head />
+								{['标题', '副标题', '按钮'].map((label, index) => (
+									<span class="ms-timeline__mark" data-motion-mark={index}>
+										{label}
+									</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'reduced' ? (
+						<div class="ms-reduced" data-motion-target>
+							<span class="ms-reduced__setting" data-motion-badge />
+							<i class="ms-blob ms-reduced__blob" />
+							<div class="ms-reduced__cards">
+								{features.slice(0, 3).map((feature) => (
+									<div class="ms-card" data-motion-card>
+										<i class={`ph ${feature.icon} ms-icon ms-icon--${feature.tone}`} />
+										<strong>{feature.title}</strong>
+										<span>{feature.text}</span>
+									</div>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'perf' ? (
+						<div class="ms-perf">
+							<div class="ms-perf__lane">
+								<span>
+									用 <code>left</code> 做动画
+								</span>
+								<div class="ms-perf__track">
+									<i class="ms-perf__ball is-left" data-motion-left />
+								</div>
+							</div>
+							<div class="ms-perf__lane">
+								<span>
+									用 <code>transform</code> 做动画
+								</span>
+								<div class="ms-perf__track">
+									<i class="ms-perf__ball is-transform" data-motion-transform />
+								</div>
+							</div>
+							<small class="ms-perf__status" data-motion-status>
+								页面空闲：两个球一样顺
+							</small>
+						</div>
+					) : null
+				}
+				{
 					demo === 'countup' ? (
 						<div class="ms-stats">
 							{stats.map((stat) => (
@@ -1031,6 +1101,16 @@ const stats = [
 					{renderMotionPrompt(profile, defaults)}
 				</p>
 			</div>
+			{
+				usedOn.length > 0 && (
+					<p class="motion-used-on">
+						常用在
+						{usedOn.map((pattern) => (
+							<a href={`/vibe-coding/terms/${pattern.id}/`}>{pattern.chineseName}</a>
+						))}
+					</p>
+				)
+			}
 		</section>
 
 		<section class="term-section" aria-labelledby="concept-boundary-title">

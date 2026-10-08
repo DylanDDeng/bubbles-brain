@@ -716,6 +716,27 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				description: '像弹簧一样冲过头再弹回来的动画，回弹多少决定了它是稳重还是俏皮。',
 			},
 			{
+				id: 'delay',
+				name: 'Delay',
+				chineseName: '延迟',
+				group: '动效的说法',
+				description: '动画开始之前先等多久。几个元素各等一点，就有了先后登场的节奏。',
+			},
+			{
+				id: 'reduced-motion',
+				name: 'Reduced Motion',
+				chineseName: '减少动态效果',
+				group: '动效的说法',
+				description: '系统里的一个辅助设置，打开后网页应该少动、甚至不动，照顾容易晕的人。',
+			},
+			{
+				id: 'transform-opacity',
+				name: 'Transform & Opacity',
+				chineseName: '只动位置和透明度',
+				group: '动效的说法',
+				description: '让动画不卡的头号规则：只改位置、缩放、旋转和透明度，别去改宽高和边距。',
+			},
+			{
 				id: 'reveal-on-scroll',
 				name: 'Scroll Reveal',
 				chineseName: '滚动淡入',

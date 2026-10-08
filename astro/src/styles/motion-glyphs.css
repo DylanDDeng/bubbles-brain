@@ -4,7 +4,8 @@
 	gap: 22px 16px;
 }
 
-.motion-tile {
+/* 和 .rr-name 同时出现，样式表加载顺序在各页不同，所以写成两个类 */
+.rr-name.motion-tile {
 	display: grid;
 	gap: 8px;
 	align-items: start;
@@ -155,6 +156,155 @@
 	68%,
 	100% {
 		transform: none;
+	}
+}
+
+/* 延迟：标题、副标题、按钮一个一个来 */
+.mg--delay i:nth-child(-n + 3) {
+	left: 50%;
+	border-radius: 4px;
+	background: var(--ink);
+	animation-name: mg-rise;
+	animation-timing-function: ease-out;
+}
+
+.mg--delay i:nth-child(1) {
+	top: 14px;
+	width: 56%;
+	height: 9px;
+	margin-left: -28%;
+}
+
+.mg--delay i:nth-child(2) {
+	top: 30px;
+	width: 40%;
+	height: 5px;
+	margin-left: -20%;
+	background: var(--rule);
+	animation-delay: 0.4s;
+}
+
+.mg--delay i:nth-child(3) {
+	top: 44px;
+	width: 22%;
+	height: 13px;
+	margin-left: -11%;
+	border-radius: 999px;
+	animation-delay: 0.8s;
+}
+
+/* 减少动态效果：先滑进来；开关一开，就只淡入 */
+.mg--reduced-motion i:nth-child(1) {
+	top: 8px;
+	left: calc(100% - 30px);
+	width: 22px;
+	height: 12px;
+	border-radius: 999px;
+	background: var(--rule);
+	animation-name: mg-rm-track;
+	animation-timing-function: step-end;
+}
+
+.mg--reduced-motion i:nth-child(2) {
+	top: 10px;
+	left: calc(100% - 28px);
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--paper);
+	animation-name: mg-rm-knob;
+	animation-timing-function: step-end;
+}
+
+.mg--reduced-motion i:nth-child(3) {
+	top: 28px;
+	left: 26%;
+	width: 48%;
+	height: 28px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background: var(--paper);
+	animation-name: mg-rm-card;
+}
+
+@keyframes mg-rm-track {
+	0% {
+		background: var(--rule);
+	}
+
+	50% {
+		background: var(--ink);
+	}
+}
+
+@keyframes mg-rm-knob {
+	0% {
+		transform: none;
+	}
+
+	50% {
+		transform: translateX(10px);
+	}
+}
+
+@keyframes mg-rm-card {
+	0% {
+		opacity: 0;
+		transform: translate(-40px, 16px) rotate(-6deg);
+	}
+
+	20%,
+	44% {
+		opacity: 1;
+		transform: none;
+	}
+
+	48% {
+		opacity: 0;
+		transform: none;
+	}
+
+	62%,
+	94% {
+		opacity: 1;
+		transform: none;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 只动位置和透明度：上面一顿一顿，下面顺滑 */
+.mg--transform-opacity i:nth-child(-n + 2) {
+	left: 12%;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	animation-direction: alternate;
+}
+
+.mg--transform-opacity i:nth-child(1) {
+	top: 18px;
+	background: var(--cat-business);
+	animation-name: mg-perf;
+	animation-timing-function: steps(5, end);
+}
+
+.mg--transform-opacity i:nth-child(2) {
+	top: 42px;
+	background: var(--cat-products);
+	animation-name: mg-perf;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes mg-perf {
+	from {
+		left: 12%;
+	}
+
+	to {
+		left: calc(88% - 12px);
 	}
 }
 

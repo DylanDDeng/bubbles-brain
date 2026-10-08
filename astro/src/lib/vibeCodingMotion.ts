@@ -38,7 +38,10 @@ export type MotionDemo =
 	| 'toast'
 	| 'dropdown'
 	| 'tooltip'
-	| 'shimmer';
+	| 'shimmer'
+	| 'delay'
+	| 'reduced'
+	| 'perf';
 
 export interface MotionChoice {
 	value: string;
@@ -189,6 +192,93 @@ export const vibeCodingMotionProfiles: Record<string, MotionProfile> = {
 		prompt: '卡片出现时用弹簧动画（spring）：时长约 {dur}，{bounce}。',
 		warning:
 			'回弹适合「被你拉出来」的东西：弹窗、通知、拖拽松手。页面上的文字段落也弹来弹去，会显得轻浮。',
+	},
+	delay: {
+		demo: 'delay',
+		hint: '标题先出来，副标题和按钮各等一会儿；下面的时间轴标出了每个的起点',
+		controls: [
+			{
+				id: 'sub',
+				label: '副标题等',
+				type: 'range',
+				value: 150,
+				min: 0,
+				max: 800,
+				step: 50,
+				unit: 'ms',
+			},
+			{
+				id: 'btn',
+				label: '按钮等',
+				type: 'range',
+				value: 300,
+				min: 0,
+				max: 1200,
+				step: 50,
+				unit: 'ms',
+			},
+		],
+		presets: [
+			{ label: '同时', note: '一起出来', values: { sub: 0, btn: 0 } },
+			{ label: '紧凑', note: '错开一点', values: { sub: 150, btn: 300 } },
+			{ label: '舒展', note: '一个一个来', values: { sub: 400, btn: 800 } },
+		],
+		prompt:
+			'首屏元素依次登场：标题先淡入上浮，副标题延迟 {sub} 开始，按钮延迟 {btn} 开始，每个动画时长 0.5 秒。',
+		warning:
+			'延迟加起来不要太长。按钮要等 1 秒多才出现，用户早就想点了；首屏所有内容最好在 0.8 秒内全部到位。',
+	},
+	'reduced-motion': {
+		demo: 'reduced',
+		hint: '切换「模拟系统设置」，看同一个页面在两种设置下怎么动',
+		controls: [
+			{
+				id: 'mode',
+				label: '模拟设置',
+				type: 'choice',
+				value: 'normal',
+				options: [
+					{ value: 'normal', label: '正常', say: '' },
+					{ value: 'reduce', label: '减少动态效果', say: '' },
+				],
+			},
+			{
+				id: 'fallback',
+				label: '开启后',
+				type: 'choice',
+				value: 'fade',
+				options: [
+					{ value: 'fade', label: '只留淡入', say: '去掉位移、缩放和旋转，只保留短暂的淡入淡出' },
+					{ value: 'none', label: '完全不动', say: '所有动画都不播放，元素直接出现在最终位置' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'所有动效都要尊重系统的「减少动态效果」设置（prefers-reduced-motion）：开启时，{fallback}；视差、自动轮播、背景流动这类一直在动的效果全部停掉。',
+		warning:
+			'有些人看到大幅度的移动和缩放会头晕、恶心，才在系统里打开这个设置。它不是「关掉所有动画」的开关，状态变化的淡入淡出可以保留，但晃来晃去的必须停。',
+	},
+	'transform-opacity': {
+		demo: 'perf',
+		hint: '切到「页面很忙」，看看哪个球开始卡',
+		controls: [
+			{
+				id: 'busy',
+				label: '页面状态',
+				type: 'choice',
+				value: 'idle',
+				options: [
+					{ value: 'idle', label: '空闲', say: '' },
+					{ value: 'busy', label: '页面很忙', say: '' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'所有动画只改 transform（位移、缩放、旋转）和 opacity（透明度），不要用 top、left、width、height、margin 做动画；需要变大变小时，用 transform: scale 代替改宽高。',
+		warning:
+			'改 width、height、top、left，浏览器每一帧都要重新排版，页面一忙就卡；transform 和 opacity 可以交给显卡单独处理，主线程再忙也照样流畅。',
 	},
 	'reveal-on-scroll': {
 		demo: 'reveal',
@@ -1745,4 +1835,36 @@ export function renderMotionPrompt(profile: MotionProfile, values: MotionValues)
 	const fill = (text: string) => text.replace(/\{(\w+)\}/g, (_, id: string) => sayings[id] ?? '');
 	// 选项措辞里还可以再引用别的控件，比如「从下方 {dist} 淡入上浮」
 	return fill(fill(profile.prompt));
+}
+
+/** 界面图鉴的零件 → 让它动起来的动效。零件页和动效页按这张表互相链接 */
+export const motionsForPattern: Record<string, string[]> = {
+	hero: ['text-reveal', 'typewriter', 'animated-gradient', 'parallax'],
+	navbar: ['dropdown-open', 'drawer-slide'],
+	card: ['hover-lift', 'tilt', 'cursor-spotlight', 'shared-element'],
+	section: ['reveal-on-scroll', 'stagger', 'scrollytelling'],
+	accordion: ['expand-collapse'],
+	button: ['press', 'ripple', 'loading-button', 'magnetic-button'],
+	form: ['input-focus', 'error-shake', 'loading-button'],
+	input: ['input-focus', 'error-shake', 'copy-feedback'],
+	toggle: ['toggle-switch'],
+	modal: ['modal-enter'],
+	toast: ['toast-enter'],
+	drawer: ['drawer-slide', 'swipe-delete'],
+	'dropdown-menu': ['dropdown-open'],
+	tooltip: ['tooltip-delay'],
+	skeleton: ['skeleton-shimmer'],
+	spinner: ['loading-button', 'pull-to-refresh'],
+	'progress-bar': ['duration', 'count-up'],
+	badge: ['add-to-cart', 'like-burst'],
+	alert: ['error-shake', 'toast-enter'],
+	tabs: ['page-transition'],
+	'infinite-scroll': ['reveal-on-scroll', 'stagger', 'pull-to-refresh'],
+};
+
+/** 反过来：一个动效常用在哪些零件上 */
+export function patternsForMotion(motionId: string): string[] {
+	return Object.entries(motionsForPattern)
+		.filter(([, motions]) => motions.includes(motionId))
+		.map(([pattern]) => pattern);
 }

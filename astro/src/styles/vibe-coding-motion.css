@@ -2532,6 +2532,161 @@
 	font-size: 0.95rem;
 }
 
+/* 延迟：首屏三件套 + 时间轴 */
+.ms-delay {
+	display: grid;
+	gap: 28px;
+	width: min(86%, 440px);
+}
+
+.ms-delay__hero {
+	display: grid;
+	gap: 10px;
+	justify-items: center;
+	text-align: center;
+}
+
+.ms-delay__hero strong {
+	color: var(--ink);
+	font-size: 1.4rem;
+}
+
+.ms-delay__hero p {
+	margin: 0;
+	color: var(--ink-soft);
+	font-size: 0.86rem;
+}
+
+.ms-timeline {
+	position: relative;
+	height: 34px;
+	border-top: 2px solid var(--rule);
+}
+
+.ms-timeline__head {
+	position: absolute;
+	top: -7px;
+	width: 2px;
+	height: 12px;
+	margin-left: -1px;
+	background: var(--cat-models);
+}
+
+.ms-timeline__mark {
+	position: absolute;
+	top: 6px;
+	color: var(--ink-faint);
+	font-size: 0.72rem;
+	white-space: nowrap;
+	transform: translateX(-50%);
+	transition: left 0.3s;
+}
+
+.ms-timeline__mark::before {
+	position: absolute;
+	top: -11px;
+	left: 50%;
+	width: 8px;
+	height: 8px;
+	margin-left: -4px;
+	border-radius: 50%;
+	background: var(--ink);
+	content: '';
+}
+
+/* 减少动态效果 */
+.ms-reduced {
+	position: relative;
+	display: grid;
+	place-items: center;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.ms-reduced__setting {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 1;
+	padding: 3px 10px;
+	border-radius: 999px;
+	background: var(--paper);
+	box-shadow: 0 0 0 1px var(--rule);
+	color: var(--ink-soft);
+	font-size: 0.75rem;
+}
+
+.ms-reduced.is-reduce .ms-reduced__setting {
+	background: var(--ink);
+	box-shadow: none;
+	color: var(--paper);
+}
+
+.ms-reduced__blob {
+	--c1: var(--cat-models);
+	--strength: 30%;
+}
+
+.ms-reduced__cards {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	width: min(90%, 540px);
+}
+
+/* 只动位置和透明度 */
+.ms-perf {
+	display: grid;
+	gap: 22px;
+	width: min(86%, 480px);
+}
+
+.ms-perf__lane {
+	display: grid;
+	gap: 8px;
+	color: var(--ink-soft);
+	font-size: 0.85rem;
+}
+
+.ms-perf__lane code {
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: var(--paper-muted);
+	color: var(--ink);
+}
+
+.ms-perf__track {
+	position: relative;
+	height: 22px;
+	border-bottom: 1px dashed var(--rule);
+}
+
+.ms-perf__ball {
+	position: absolute;
+	top: 2px;
+	left: 0;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--cat-business);
+}
+
+.ms-perf__ball.is-transform {
+	background: var(--cat-products);
+}
+
+.ms-perf__status {
+	color: var(--ink-faint);
+	font-size: 0.8rem;
+}
+
+.ms-perf.is-busy .ms-perf__status,
+.is-busy .ms-perf__status {
+	color: var(--red);
+}
+
 /* 数字滚动 */
 .ms-stats {
 	display: grid;
@@ -2644,6 +2799,15 @@
 		grid-column: 1 / -1;
 	}
 
+	.ms-reduced__cards {
+		grid-template-columns: 1fr;
+		gap: 6px;
+	}
+
+	.ms-reduced__cards .ms-card:nth-child(n + 3) {
+		display: none;
+	}
+
 	.ms-stats {
 		grid-template-columns: 1fr;
 		gap: 8px;
@@ -2661,4 +2825,27 @@
 	.ms-dd__menu {
 		opacity: 1;
 	}
+}
+
+/* 常用在：链回界面图鉴的零件 */
+.motion-used-on {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 10px;
+	align-items: center;
+	margin: 14px 0 0;
+	color: var(--ink-faint);
+	font-size: 0.85rem;
+}
+
+.motion-used-on a {
+	padding: 2px 10px;
+	border: 1px solid var(--rule);
+	border-radius: 999px;
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.motion-used-on a:hover {
+	border-color: var(--ink-faint);
 }

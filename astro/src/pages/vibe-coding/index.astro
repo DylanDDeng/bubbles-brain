@@ -6,6 +6,7 @@ import '../../styles/directories.css';
 // is shown on its own page, so there are no previews, rules or counts here.
 const parts = [
 	{ title: '术语', href: '/vibe-coding/terms/', lede: '图解和小实验，把概念一块一块拆开。' },
+	{ title: '动效图鉴', href: '/vibe-coding/terms/#motion', lede: '看着动效调参数，拿走跟 AI 说的那句话。' },
 	{ title: 'Skills', href: '/vibe-coding/skills/', lede: '装上就能用的 Agent 技能包。' },
 	{ title: 'Design', href: '/vibe-coding/design/', lede: '知名品牌的 DESIGN.md，拿来教 AI 审美。' },
 	{ title: 'Code to Video', href: '/vibe-coding/showcase/', lede: '用 AI 写代码做出来的视频，每一帧都是代码画的。' },
@@ -21,7 +22,7 @@ const parts = [
 			<h1 class="rr-title" lang="en">Vibe Coding</h1>
 		</header>
 
-		<nav class="vibe-entries" aria-label="Vibe Coding 的四个部分">
+		<nav class="vibe-entries" aria-label="Vibe Coding 的各个部分">
 			{
 				parts.map((part) => (
 					<a class="vibe-entry" href={part.href}>

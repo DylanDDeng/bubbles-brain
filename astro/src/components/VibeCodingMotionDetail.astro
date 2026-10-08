@@ -1,0 +1,1071 @@
+---
+import type { VibeCodingConcept } from '../data/vibeCodingTerms';
+import { brainPodTermReturn } from '../lib/brainpodTerms';
+import {
+	defaultMotionValues,
+	formatMotionValue,
+	renderMotionPrompt,
+	type MotionProfile,
+} from '../lib/vibeCodingMotion';
+import ArticleOutline from './ArticleOutline.astro';
+import '../styles/reading-page.css';
+import '../styles/term-page.css';
+import '../styles/vibe-coding-motion.css';
+
+interface Props {
+	concept: VibeCodingConcept;
+	profile: MotionProfile;
+	previousConcept: VibeCodingConcept | null;
+	nextConcept: VibeCodingConcept | null;
+}
+
+const { concept, profile, previousConcept, nextConcept } = Astro.props;
+// Motion is read by watching it: the stage leads, text stays to one line and one warning.
+const outline = [
+	{ slug: 'motion-stage-title', text: '亲手调一调' },
+	{ slug: 'motion-prompt-title', text: '跟 AI 这么说' },
+	{ slug: 'concept-boundary-title', text: '最容易踩的坑' },
+].map((heading) => ({ ...heading, depth: 2 }));
+const demo = profile.demo;
+const pointerDemo = [
+	'lift',
+	'press',
+	'magnetic',
+	'spotlight',
+	'tilt',
+	'ripple',
+	'like',
+	'toggle',
+	'loading',
+	'shake',
+	'focus',
+	'copy',
+	'cart',
+	'expand',
+	'pageTransition',
+	'sharedElement',
+	'drag',
+	'swipe',
+	'pull',
+	'modal',
+	'drawer',
+	'toast',
+	'dropdown',
+	'tooltip',
+].includes(demo);
+const defaults = defaultMotionValues(profile);
+// 演示用的真实内容：一个虚构的笔记 App「小记」，和一个徒步路线网站
+const features = [
+	{ icon: 'ph-microphone', tone: 'blue', title: '语音速记', text: '说一句话，自动转成文字' },
+	{ icon: 'ph-image', tone: 'amber', title: '图片识字', text: '拍下白板，文字一键提取' },
+	{ icon: 'ph-arrows-clockwise', tone: 'green', title: '多端同步', text: '手机上写，电脑上接着改' },
+	{
+		icon: 'ph-magnifying-glass',
+		tone: 'violet',
+		title: '全文搜索',
+		text: '三年前的一句话也能找到',
+	},
+	{ icon: 'ph-lock-key', tone: 'red', title: '本地加密', text: '只有你能看到你的笔记' },
+	{ icon: 'ph-tag', tone: 'teal', title: '自动标签', text: '不用手动整理，自动归类' },
+];
+const templates = [
+	{ icon: 'ph-chart-line-up', tone: 'blue', title: '周报', uses: '2.1 万人在用' },
+	{ icon: 'ph-book-open', tone: 'amber', title: '读书笔记', uses: '1.8 万人在用' },
+	{ icon: 'ph-airplane-tilt', tone: 'teal', title: '旅行清单', uses: '9,320 人在用' },
+	{ icon: 'ph-users-three', tone: 'violet', title: '会议纪要', uses: '1.5 万人在用' },
+	{ icon: 'ph-barbell', tone: 'red', title: '健身记录', uses: '6,410 人在用' },
+	{ icon: 'ph-cooking-pot', tone: 'amber', title: '菜谱', uses: '7,880 人在用' },
+	{ icon: 'ph-check-square', tone: 'green', title: '待办', uses: '3.2 万人在用' },
+	{ icon: 'ph-moon-stars', tone: 'blue', title: '日记', uses: '2.6 万人在用' },
+];
+const storySteps = [
+	{
+		title: '随手记',
+		text: '想到什么，打开就写，不用先想放在哪个文件夹。',
+		screen: '快速记录',
+		icon: 'ph-pencil-simple-line',
+		tone: 'blue',
+	},
+	{
+		title: '自动整理',
+		text: '小记会读懂你写的内容，自动打上标签、归好类。',
+		screen: '自动标签',
+		icon: 'ph-tag',
+		tone: 'teal',
+	},
+	{
+		title: '随时找回',
+		text: '三年前的一句话，搜一个词就能找到。',
+		screen: '全文搜索',
+		icon: 'ph-magnifying-glass',
+		tone: 'violet',
+	},
+];
+const headline = [
+	['每一个', '想法，'],
+	['都值得', '被记住'],
+];
+const partners = [
+	{ icon: 'ph-coffee', name: '山野咖啡' },
+	{ icon: 'ph-books', name: '云端书店' },
+	{ icon: 'ph-pen-nib', name: '小满设计' },
+	{ icon: 'ph-graduation-cap', name: '橙子学堂' },
+	{ icon: 'ph-sun-horizon', name: '晨光出版' },
+	{ icon: 'ph-star-four', name: '北极星科技' },
+];
+const changelog = [
+	'语音速记支持方言：粤语、四川话、东北话',
+	'图片识字准确率提升 30%，手写体也能认',
+	'新增「读书笔记」「会议纪要」两个模板',
+	'夜间模式更柔和，看久了不累眼',
+	'修复：iPad 分屏时偶尔无法同步的问题',
+];
+const notes = [
+	{ icon: 'ph-chart-line-up', tone: 'blue', title: '第 41 周周报', meta: '工作 · 今天 09:30' },
+	{ icon: 'ph-book-open', tone: 'amber', title: '《置身事内》读书笔记', meta: '读书 · 昨天' },
+	{ icon: 'ph-airplane-tilt', tone: 'teal', title: '国庆去大理', meta: '旅行 · 9 月 28 日' },
+];
+const todos = ['回复设计稿的修改意见', '整理用户访谈记录', '写第 41 周周报', '预约周六的体检'];
+const messages = [
+	{ icon: 'ph-heart', tone: 'red', title: '阿青赞了你的笔记', text: '《置身事内》读书笔记' },
+	{ icon: 'ph-chat-circle', tone: 'blue', title: '小满评论了你', text: '这个模板好用，求分享！' },
+	{ icon: 'ph-gift', tone: 'amber', title: '你获得了 1 个月 Pro', text: '感谢邀请朋友加入小记' },
+];
+const toolbar = [
+	{ icon: 'ph-text-b', tip: '加粗 ⌘B' },
+	{ icon: 'ph-text-italic', tip: '斜体 ⌘I' },
+	{ icon: 'ph-link', tip: '插入链接 ⌘K' },
+	{ icon: 'ph-image', tip: '插入图片' },
+	{ icon: 'ph-list-checks', tip: '待办清单' },
+];
+const routes = [
+	{ name: '香山环线', meta: '8 公里 · 约 3 小时 · 难度适中' },
+	{ name: '凤凰岭北线', meta: '12 公里 · 约 5 小时 · 有一段陡坡' },
+	{ name: '慕田峪野长城', meta: '6 公里 · 约 2.5 小时 · 风景最好' },
+];
+const lanes = [
+	{ id: 'out', label: '先快后慢' },
+	{ id: 'in', label: '先慢后快' },
+	{ id: 'inout', label: '慢快慢' },
+	{ id: 'linear', label: '匀速' },
+	{ id: 'back', label: '回弹' },
+];
+const stats = [
+	{ to: 12480, suffix: '', label: '注册用户' },
+	{ to: 98.6, suffix: '%', label: '满意度', decimals: 1 },
+	{ to: 3200, suffix: '+', label: '每日新增' },
+];
+---
+
+<article class="reading-page term-page term-page--motion" data-vibe-coding-term-detail={concept.id}>
+	<div class="reading-rail">
+		<a class="reading-back" href={brainPodTermReturn(concept.id)}>← 术语</a>
+		<ArticleOutline headings={outline} locale="zh-CN" />
+	</div>
+
+	<header class="article-header">
+		<p class="reading-kicker">术语 · {concept.categoryLabel}</p>
+		<h1>{concept.chineseName}</h1>
+		<p class="term-page__name" lang="en">{concept.name}</p>
+		<p class="article-lede">{concept.description}</p>
+	</header>
+
+	<div class="article-main">
+		<section
+			class="term-section motion-tuner"
+			aria-labelledby="motion-stage-title"
+			data-motion-tuner
+			data-motion-config={JSON.stringify(profile)}
+		>
+			<h2 class="term-section__title sr-only" id="motion-stage-title">亲手调一调</h2>
+
+			<div class={`motion-stage motion-stage--${demo}`} data-motion-stage aria-hidden="true">
+				{
+					pointerDemo && (
+						<svg class="ms-ghost" data-motion-ghost viewBox="0 0 24 24" width="22" height="22">
+							<path d="M5 3l14 8-6 1.6L10 19z" />
+						</svg>
+					)
+				}
+				{
+					demo === 'duration' ? (
+						<div class="ms-dd">
+							<span class="ms-dd__trigger">
+								排序方式 <i class="ph ph-caret-down" />
+							</span>
+							<div class="ms-dd__menu" data-motion-target>
+								<b>最新发布</b>
+								<b>最多阅读</b>
+								<b>最多收藏</b>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'easing' ? (
+						<div class="ms-lanes">
+							{lanes.map((lane) => (
+								<div class="ms-lane" data-lane={lane.id}>
+									<span>{lane.label}</span>
+									<div class="ms-lane__track">
+										<i data-motion-target />
+									</div>
+								</div>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'spring' ? (
+						<div class="ms-spring">
+							<div class="ms-spring__card" data-motion-target>
+								<i class="ph ph-bell-ringing" />
+								<span>
+									<b>新消息</b>
+									<small>小明给你的作品点了赞</small>
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'reveal' ? (
+						<div
+							class="ms-scroll ms-site"
+							data-motion-scroll
+							tabindex="0"
+							aria-label="可滚动的演示区"
+						>
+							<nav class="ms-site__nav">
+								<b>
+									<i class="ph ph-notebook" />
+									小记
+								</b>
+								<span>功能</span>
+								<span>模板</span>
+								<span>价格</span>
+							</nav>
+							<div class="ms-site__hero">
+								<h3>把灵感，随手记下来</h3>
+								<p>文字、语音、图片都能记，手机和电脑实时同步。</p>
+								<span class="ms-site__cta">免费下载</span>
+								<small>往下滚动 ↓</small>
+							</div>
+							<p class="ms-site__kicker">为什么选小记</p>
+							<div class="ms-cards">
+								{features.map((feature) => (
+									<div class="ms-card" data-motion-target>
+										<i class={`ph ${feature.icon} ms-icon ms-icon--${feature.tone}`} />
+										<strong>{feature.title}</strong>
+										<span>{feature.text}</span>
+									</div>
+								))}
+							</div>
+							<div class="ms-site__end">
+								<span class="ms-site__cta">开始记录</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'stagger' ? (
+						<div class="ms-gallery">
+							<p class="ms-gallery__title">小记 · 模板库</p>
+							<div class="ms-tiles">
+								{templates.map((template) => (
+									<div class="ms-tile" data-motion-target>
+										<i class={`ph ${template.icon} ms-tile__thumb ms-icon--${template.tone}`} />
+										<strong>{template.title}</strong>
+										<span>{template.uses}</span>
+									</div>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'parallax' ? (
+						<div
+							class="ms-scroll ms-parallax"
+							data-motion-scroll
+							tabindex="0"
+							aria-label="可滚动的演示区"
+						>
+							<div class="ms-parallax__inner">
+								<div class="ms-parallax__bg" data-layer="bg">
+									<i class="ms-sun" />
+									<i class="ms-hill ms-hill--far" />
+								</div>
+								<div class="ms-parallax__mid" data-layer="mid">
+									<i class="ms-hill ms-hill--mid" />
+								</div>
+								<div class="ms-parallax__content">
+									<div class="ms-parallax__title">
+										<h3>周末，去山里走走</h3>
+										<p>30 条城市周边徒步路线，带上水就出发</p>
+									</div>
+									{routes.map((route) => (
+										<div class="ms-parallax__panel">
+											<i class="ph ph-mountains ms-icon ms-icon--green" />
+											<span>
+												<strong>{route.name}</strong>
+												<small>{route.meta}</small>
+											</span>
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'lift' ? (
+						<div class="ms-lift">
+							{templates.slice(0, 3).map((template) => (
+								<div class="ms-lift__card" data-motion-target>
+									<i class={`ph ${template.icon} ms-tile__thumb ms-icon--${template.tone}`} />
+									<strong>{template.title}</strong>
+									<span>{template.uses}</span>
+								</div>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'press' ? (
+						<div class="ms-press">
+							<span class="ms-press__button" data-motion-target>
+								<i class="ph ph-download-simple" />
+								免费下载小记
+							</span>
+							<small>支持 iPhone、安卓、Mac 和 Windows</small>
+						</div>
+					) : null
+				}
+				{
+					demo === 'magnetic' ? (
+						<div class="ms-magnetic">
+							<p>准备好开始记录了吗？</p>
+							<span class="ms-magnetic__button" data-motion-target>
+								开始使用
+								<i class="ph ph-arrow-right" />
+							</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'spotlight' ? (
+						<div class="ms-spot" data-motion-target>
+							<span class="ms-spot__badge">小记 Pro</span>
+							<strong>无限空间，所有设备同步</strong>
+							<p>语音转文字不限时长，历史版本保留一年。</p>
+							<span class="ms-site__cta">升级 Pro · ¥12/月</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'tilt' ? (
+						<div class="ms-tilt">
+							<div class="ms-tilt__card" data-motion-target>
+								<span class="ms-tilt__glare" />
+								<b>
+									<i class="ph ph-notebook" />
+									小记 · 会员卡
+								</b>
+								<strong>PRO</strong>
+								<span>No. 0024 6801 · 有效期至 2027.10</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'ripple' ? (
+						<div class="ms-press">
+							<span class="ms-press__button ms-ripple" data-motion-target>
+								<i class="ph ph-floppy-disk" />
+								保存笔记
+							</span>
+							<small>周报 · 2026 年第 41 周</small>
+						</div>
+					) : null
+				}
+				{
+					demo === 'like' ? (
+						<div class="ms-like-post">
+							<div class="ms-like-post__head">
+								<i class="ph ph-book-open ms-icon ms-icon--amber" />
+								<span>
+									<strong>《置身事内》读书笔记</strong>
+									<small>阿青 · 3 小时前</small>
+								</span>
+							</div>
+							<p>地方政府的「土地财政」这一章写得最清楚，第一次看懂了城投是怎么回事。</p>
+							<span class="ms-like" data-motion-target>
+								<span class="ms-like__burst" data-motion-burst />
+								<svg viewBox="0 0 24 24" width="22" height="22" class="ms-like__heart">
+									<path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.6 4.5 7.2 4.5c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.6 0 5.8 3.5 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2z" />
+								</svg>
+								<b data-motion-count>128</b>
+							</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'toggle' ? (
+						<div class="ms-settings">
+							<div class="ms-settings__row">
+								<span>
+									<strong>自动同步</strong>
+									<small>在手机和电脑之间同步笔记</small>
+								</span>
+								<span class="ms-switch" data-motion-target>
+									<i />
+								</span>
+							</div>
+							<div class="ms-settings__row is-muted">
+								<span>
+									<strong>仅在 Wi-Fi 下同步图片</strong>
+									<small>节省流量</small>
+								</span>
+								<span class="ms-switch is-on">
+									<i />
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'loading' ? (
+						<div class="ms-form">
+							<label class="ms-field">
+								<span class="ms-field__label is-up">意见反馈</span>
+								<span class="ms-field__value">希望能支持导出成 PDF</span>
+							</label>
+							<span
+								class="ms-load"
+								data-motion-target
+								data-state="idle"
+								data-waiting="spinner"
+								data-shape="keep"
+							>
+								<span class="ms-load__text">提交</span>
+								<span class="ms-load__spinner" />
+								<span class="ms-load__dots">
+									<i />
+									<i />
+									<i />
+								</span>
+								<span class="ms-load__busy">提交中…</span>
+								<span class="ms-load__done">
+									<i class="ph ph-check" />
+									已提交
+								</span>
+							</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'shake' ? (
+						<div class="ms-form">
+							<p class="ms-form__title">登录小记</p>
+							<label class="ms-field">
+								<span class="ms-field__label is-up">邮箱</span>
+								<span class="ms-field__value">aqing@example.com</span>
+							</label>
+							<label class="ms-field" data-motion-field>
+								<span class="ms-field__label is-up">密码</span>
+								<span class="ms-field__value">••••••••</span>
+							</label>
+							<small class="ms-form__error" data-motion-error>
+								<i class="ph ph-warning-circle" />
+								密码不正确，请重新输入
+							</small>
+							<span class="ms-load ms-form__submit" data-motion-target>
+								<span class="ms-load__text">登录</span>
+							</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'focus' ? (
+						<div class="ms-form">
+							<p class="ms-form__title">订阅小记周刊</p>
+							<label class="ms-field ms-field--focus" data-motion-target>
+								<span class="ms-field__label">邮箱地址</span>
+								<span class="ms-field__value" data-motion-typed />
+								<i class="ms-field__caret" />
+							</label>
+							<small class="ms-form__note">每周五早上 8 点，一封邮件，可以随时退订</small>
+						</div>
+					) : null
+				}
+				{
+					demo === 'scrolly' ? (
+						<div
+							class="ms-scroll ms-scrolly"
+							data-motion-scroll
+							tabindex="0"
+							aria-label="可滚动的演示区"
+						>
+							<div class="ms-scrolly__steps">
+								{storySteps.map((step, index) => (
+									<div class="ms-scrolly__step" data-step={index}>
+										<small>0{index + 1}</small>
+										<strong>{step.title}</strong>
+										<p>{step.text}</p>
+									</div>
+								))}
+							</div>
+							<div class="ms-scrolly__sticky">
+								<div class="ms-phone">
+									{storySteps.map((step, index) => (
+										<div class="ms-phone__screen" data-screen={index}>
+											<i class={`ph ${step.icon} ms-icon ms-icon--${step.tone}`} />
+											<b>{step.screen}</b>
+											<span />
+											<span />
+											<span class="is-short" />
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'copy' ? (
+						<div class="ms-share">
+							<strong>邀请朋友一起用小记</strong>
+							<p>朋友通过你的链接注册，你们都能获得 1 个月 Pro。</p>
+							<div class="ms-share__row">
+								<code>xiaoji.app/invite/aqing-7d2k</code>
+								<span class="ms-copy" data-motion-target>
+									<span class="ms-copy__bubble">已复制到剪贴板</span>
+									<span class="ms-copy__icon">
+										<i class="ph ph-copy" />
+										<i class="ph ph-check" />
+									</span>
+									<span class="ms-copy__label">复制</span>
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'cart' ? (
+						<div class="ms-shop">
+							<div class="ms-shop__bar">
+								<b>小记 · 周边小店</b>
+								<span class="ms-shop__cart" data-motion-cart>
+									<i class="ph ph-shopping-cart-simple" />
+									<em data-motion-count>2</em>
+								</span>
+							</div>
+							<div class="ms-shop__item">
+								<span class="ms-shop__thumb ms-icon--amber" data-motion-thumb>
+									<i class="ph ph-notebook" />
+								</span>
+								<span>
+									<strong>小记 · 点阵笔记本</strong>
+									<small>A5 · 160 页 · ¥39</small>
+								</span>
+								<span class="ms-load ms-shop__add" data-motion-target data-state="idle">
+									<span class="ms-load__text">加入购物车</span>
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'typewriter' ? (
+						<div class="ms-type">
+							<p class="ms-type__lead">小记，帮你</p>
+							<p class="ms-type__line">
+								<span data-motion-typed />
+								<i class="ms-type__cursor" data-motion-cursor />
+							</p>
+						</div>
+					) : null
+				}
+				{
+					demo === 'textReveal' ? (
+						<div class="ms-reveal" data-motion-target>
+							{headline.map((line) => (
+								<p class="ms-reveal__line">
+									{line.map((word) => (
+										<span class="ms-reveal__word">
+											{[...word].map((char) => (
+												<span class="ms-reveal__char">{char}</span>
+											))}
+										</span>
+									))}
+								</p>
+							))}
+							<small>小记 · 你的第二大脑</small>
+						</div>
+					) : null
+				}
+				{
+					demo === 'marquee' ? (
+						<div class="ms-marquee-wrap">
+							<p>这些团队都在用小记</p>
+							<div class="ms-marquee" data-motion-target>
+								<div class="ms-marquee__track" data-motion-track>
+									{[...partners, ...partners].map((partner) => (
+										<span class="ms-marquee__item">
+											<i class={`ph ${partner.icon}`} />
+											{partner.name}
+										</span>
+									))}
+								</div>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'gradient' ? (
+						<div class="ms-gradient" data-motion-target>
+							<i class="ms-blob" />
+							<i class="ms-blob" />
+							<i class="ms-blob" />
+							<div class="ms-gradient__copy">
+								<strong>想法来的时候，随手记下</strong>
+								<span class="ms-site__cta">免费开始</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'expand' ? (
+						<div class="ms-expand">
+							<strong>小记 2.4 更新了什么</strong>
+							<div class="ms-expand__body" data-motion-body>
+								<ul>
+									{changelog.map((item) => (
+										<li>{item}</li>
+									))}
+								</ul>
+							</div>
+							<span class="ms-expand__toggle" data-motion-target>
+								<span data-motion-label>展开全部</span>
+								<i class="ph ph-caret-down" />
+							</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'pageTransition' ? (
+						<div class="ms-app" data-motion-app>
+							<div class="ms-app__page is-current" data-page="list">
+								<p class="ms-app__title">我的笔记</p>
+								{notes.map((note, index) => (
+									<span class="ms-app__row" data-motion-open={index === 0 ? '' : undefined}>
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+							<div class="ms-app__page" data-page="detail">
+								<span class="ms-app__back" data-motion-back>
+									<i class="ph ph-caret-left" />
+									我的笔记
+								</span>
+								<p class="ms-app__title">{notes[0].title}</p>
+								<p class="ms-app__text">
+									本周完成：首页改版上线，转化率提升 12%。下周计划：整理用户访谈，确定 2.5
+									版本范围。
+								</p>
+								<span class="ms-app__chip">工作 · 周报</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'sharedElement' ? (
+						<div class="ms-app ms-shared" data-motion-app>
+							<div class="ms-app__page is-current" data-page="list">
+								<p class="ms-app__title">模板库</p>
+								<div class="ms-shared__grid">
+									{templates.slice(0, 4).map((template, index) => (
+										<span class="ms-shared__card" data-motion-open={index === 1 ? '' : undefined}>
+											<i
+												class={`ph ${template.icon} ms-tile__thumb ms-icon--${template.tone}`}
+												data-motion-cover={index === 1 ? '' : undefined}
+											/>
+											<strong>{template.title}</strong>
+										</span>
+									))}
+								</div>
+							</div>
+							<div class="ms-app__page" data-page="detail">
+								<span class="ms-app__back" data-motion-back>
+									<i class="ph ph-caret-left" />
+									模板库
+								</span>
+								<i
+									class={`ph ${templates[1].icon} ms-tile__thumb ms-icon--${templates[1].tone} ms-shared__hero`}
+									data-motion-hero
+								/>
+								<div class="ms-shared__rest" data-motion-rest>
+									<p class="ms-app__title">{templates[1].title}</p>
+									<p class="ms-app__text">
+										书名、作者、金句摘录、我的想法，四栏结构，读完一本书顺手填好。
+									</p>
+									<span class="ms-site__cta">使用这个模板</span>
+								</div>
+							</div>
+							<i class="ms-shared__flyer" data-motion-flyer />
+						</div>
+					) : null
+				}
+				{
+					demo === 'drag' ? (
+						<div class="ms-list" data-motion-list>
+							<p class="ms-list__title">今天要做</p>
+							{todos.map((todo) => (
+								<span class="ms-list__item" data-motion-item>
+									<i class="ph ph-dots-six-vertical" />
+									<span>{todo}</span>
+								</span>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'swipe' ? (
+						<div class="ms-list ms-inbox" data-motion-list>
+							<p class="ms-list__title">消息</p>
+							{messages.map((message) => (
+								<span class="ms-inbox__row" data-motion-item>
+									<span class="ms-inbox__delete">删除</span>
+									<span class="ms-inbox__content">
+										<i class={`ph ${message.icon} ms-icon ms-icon--${message.tone}`} />
+										<span>
+											<strong>{message.title}</strong>
+											<small>{message.text}</small>
+										</span>
+									</span>
+								</span>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'pull' ? (
+						<div class="ms-pull" data-motion-target>
+							<div class="ms-pull__indicator" data-motion-indicator>
+								<i class="ph ph-arrow-down ms-pull__arrow" />
+								<svg class="ms-pull__ring" viewBox="0 0 24 24" width="22" height="22">
+									<circle cx="12" cy="12" r="9" pathLength="100" />
+								</svg>
+								<span class="ms-load__spinner ms-pull__spinner" />
+							</div>
+							<div class="ms-pull__list" data-motion-list>
+								<p class="ms-list__title">最近的笔记</p>
+								{notes.map((note) => (
+									<span class="ms-app__row">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'shimmer' ? (
+						<div class="ms-app ms-skel" data-motion-target>
+							<p class="ms-app__title">最近的笔记</p>
+							{notes.map((note) => (
+								<div class="ms-skel__row">
+									<span class="ms-skel__ghost">
+										<i />
+										<span>
+											<b />
+											<b class="is-short" />
+										</span>
+									</span>
+									<span class="ms-app__row ms-skel__real">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								</div>
+							))}
+						</div>
+					) : null
+				}
+				{
+					demo === 'modal' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<p class="ms-app__title">{notes[2].title}</p>
+								<p class="ms-app__text">
+									大理三天两晚：洱海骑行、喜洲古镇、苍山索道。记得带防晒和外套。
+								</p>
+								<span class="ms-danger" data-motion-open>
+									<i class="ph ph-trash" />
+									删除这条笔记
+								</span>
+							</div>
+							<i class="ms-backdrop" data-motion-backdrop />
+							<div class="ms-modal" data-motion-panel>
+								<strong>删除「{notes[2].title}」？</strong>
+								<p>删除后可以在「最近删除」里找回，30 天后彻底清除。</p>
+								<span class="ms-modal__actions">
+									<span class="ms-modal__cancel" data-motion-close>
+										取消
+									</span>
+									<span class="ms-modal__ok">删除</span>
+								</span>
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'drawer' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<span class="ms-app__menu" data-motion-open>
+									<i class="ph ph-list" />
+								</span>
+								<p class="ms-app__title">我的笔记</p>
+								{notes.map((note) => (
+									<span class="ms-app__row">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+							<i class="ms-backdrop" data-motion-backdrop data-motion-close />
+							<div class="ms-drawer" data-motion-panel>
+								<b>
+									<i class="ph ph-notebook" />
+									小记
+								</b>
+								{['全部笔记', '工作', '读书', '旅行', '最近删除'].map((item, index) => (
+									<span class={index === 0 ? 'is-active' : undefined}>{item}</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'toast' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<p class="ms-app__title">第 41 周周报</p>
+								<p class="ms-app__text">
+									本周完成：首页改版上线，转化率提升 12%。下周计划：整理用户访谈。
+								</p>
+								<span class="ms-load ms-overlay__save" data-motion-open data-state="idle">
+									<span class="ms-load__text">保存</span>
+								</span>
+							</div>
+							<div class="ms-toast" data-motion-panel>
+								<i class="ph ph-check-circle" />
+								已保存
+								<i class="ms-toast__timer" data-motion-timer />
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'dropdown' ? (
+						<div class="ms-app ms-overlay" data-motion-app>
+							<div class="ms-app__page is-current">
+								<div class="ms-app__bar">
+									<p class="ms-app__title">我的笔记</p>
+									<span class="ms-sort" data-motion-open>
+										<span data-motion-label>最近编辑</span>
+										<i class="ph ph-caret-down" />
+									</span>
+								</div>
+								{notes.map((note) => (
+									<span class="ms-app__row">
+										<i class={`ph ${note.icon} ms-icon ms-icon--${note.tone}`} />
+										<span>
+											<strong>{note.title}</strong>
+											<small>{note.meta}</small>
+										</span>
+									</span>
+								))}
+							</div>
+							<div class="ms-menu" data-motion-panel>
+								{['最近编辑', '最近创建', '标题 A–Z', '字数最多'].map((item) => (
+									<span data-motion-option>{item}</span>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'tooltip' ? (
+						<div class="ms-editor">
+							<div class="ms-editor__bar">
+								{toolbar.map((tool) => (
+									<span class="ms-editor__tool" data-motion-tool data-tip={tool.tip}>
+										<i class={`ph ${tool.icon}`} />
+									</span>
+								))}
+								<span class="ms-tip" data-motion-panel />
+							</div>
+							<p class="ms-editor__text">
+								<b>读书笔记 · 《置身事内》</b>
+								地方政府的「土地财政」这一章写得最清楚……
+							</p>
+						</div>
+					) : null
+				}
+				{
+					demo === 'countup' ? (
+						<div class="ms-stats">
+							{stats.map((stat) => (
+								<div class="ms-stat">
+									<b
+										data-motion-target
+										data-to={stat.to}
+										data-decimals={stat.decimals ?? 0}
+										data-suffix={stat.suffix}
+									>
+										0
+									</b>
+									<span>{stat.label}</span>
+								</div>
+							))}
+						</div>
+					) : null
+				}
+			</div>
+
+			<div class="motion-bar">
+				<p class="motion-hint">{profile.hint}</p>
+				<button type="button" class="motion-replay" data-motion-replay>
+					<i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>
+					重播
+				</button>
+			</div>
+
+			{
+				profile.presets.length > 0 && (
+					<div class="motion-presets" role="group" aria-label="预设风格">
+						{profile.presets.map((preset, index) => (
+							<button
+								type="button"
+								data-motion-preset={index}
+								aria-pressed={
+									Object.entries(preset.values).every(
+										([id, value]) => String(defaults[id]) === String(value),
+									)
+										? 'true'
+										: 'false'
+								}
+							>
+								<b>{preset.label}</b>
+								<small>{preset.note}</small>
+							</button>
+						))}
+					</div>
+				)
+			}
+
+			<div class="motion-controls">
+				{
+					profile.controls.map((control) =>
+						control.type === 'range' ? (
+							<label class="motion-control" data-motion-control={control.id}>
+								<span class="motion-control__label">{control.label}</span>
+								<input
+									type="range"
+									min={control.min}
+									max={control.max}
+									step={control.step}
+									value={control.value}
+									data-motion-input={control.id}
+								/>
+								<output data-motion-output={control.id}>
+									{formatMotionValue(control, control.value)}
+								</output>
+							</label>
+						) : (
+							<div class="motion-control" data-motion-control={control.id}>
+								<span class="motion-control__label">{control.label}</span>
+								<div class="motion-choices" role="group" aria-label={control.label}>
+									{control.options!.map((option) => (
+										<button
+											type="button"
+											data-motion-choice={control.id}
+											data-value={option.value}
+											aria-pressed={option.value === control.value ? 'true' : 'false'}
+										>
+											{option.label}
+										</button>
+									))}
+								</div>
+							</div>
+						),
+					)
+				}
+			</div>
+
+			<div class="motion-prompt">
+				<div class="motion-prompt__head">
+					<h2 class="motion-prompt__title" id="motion-prompt-title">跟 AI 这么说</h2>
+					<button type="button" data-motion-copy>
+						<i class="ph ph-copy" aria-hidden="true"></i>
+						<span data-motion-copy-label>复制</span>
+					</button>
+				</div>
+				<p data-motion-prompt aria-live="polite">
+					{renderMotionPrompt(profile, defaults)}
+				</p>
+			</div>
+		</section>
+
+		<section class="term-section" aria-labelledby="concept-boundary-title">
+			<h2 class="term-section__title" id="concept-boundary-title">最容易踩的坑</h2>
+			<p class="term-section__intro">{profile.warning}</p>
+		</section>
+
+		<footer class="article-ending">
+			<nav class="article-pagination" aria-label="相邻术语">
+				{
+					previousConcept && (
+						<a
+							href={`/vibe-coding/terms/${previousConcept.id}/`}
+							class="article-previous"
+							rel="prev"
+						>
+							<span>← 上一个</span>
+							<strong class="article-pagination-title">{previousConcept.chineseName}</strong>
+						</a>
+					)
+				}
+				{
+					nextConcept && (
+						<a href={`/vibe-coding/terms/${nextConcept.id}/`} class="article-next" rel="next">
+							<span>下一个 →</span>
+							<strong class="article-pagination-title">{nextConcept.chineseName}</strong>
+						</a>
+					)
+				}
+			</nav>
+		</footer>
+	</div>
+</article>
+
+<script>
+	import '../scripts/article-outline.ts';
+	import '../scripts/motionTuner.ts';
+</script>

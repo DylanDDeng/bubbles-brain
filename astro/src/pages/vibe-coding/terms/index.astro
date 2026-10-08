@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { vibeCodingTermCategories, type VibeCodingTerm } from '../../../data/vibeCodingTerms';
 import '../../../styles/terms-directory.css';
+import '../../../styles/motion-glyphs.css';
 
 // AI first: it is what most readers come here for.
 const categories = [...vibeCodingTermCategories].sort(
@@ -70,13 +71,29 @@ const groupsOf = (terms: VibeCodingTerm[]) => {
 							{groupsOf(category.terms).map((group) => (
 								<div class="terms-group" data-terms-sub>
 									{group.label && <h3>{group.label}</h3>}
-									<ul class="rr-names rr-names--three">
+									<ul
+										class={
+											category.id === 'motion' ? 'rr-names motion-grid' : 'rr-names rr-names--three'
+										}
+									>
 										{group.terms.map((term) => (
 											<li
 												data-terms-item
 												data-search={`${term.chineseName} ${term.name}`.toLocaleLowerCase()}
 											>
-												<a class="rr-name" href={`/vibe-coding/terms/${term.id}/`}>
+												<a
+													class={category.id === 'motion' ? 'rr-name motion-tile' : 'rr-name'}
+													href={`/vibe-coding/terms/${term.id}/`}
+												>
+													{category.id === 'motion' && (
+														<span class={`mg mg--${term.id}`} aria-hidden="true">
+															<i />
+															<i />
+															<i />
+															<i />
+															<i />
+														</span>
+													)}
 													<span class="rr-name__main">{term.chineseName}</span>
 													{term.badge && <span class="terms-badge">{term.badge}</span>}
 												</a>

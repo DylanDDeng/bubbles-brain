@@ -527,6 +527,40 @@ export const vibeCodingDetailProfiles: Record<string, VibeCodingDetailProfile> =
 		warning:
 			'浏览器存储在用户手里：能被查看、修改和清空。别往里放密钥和敏感信息，重要数据永远以后端为准。',
 	},
+	motion: {
+		question: '是什么？那些让网页显得「高级」的动效，该怎么跟 AI 说？',
+		visualTitle: '先看它动，再说出它',
+		visualCaption:
+			'每个动效都由四件事决定：什么时候开始、动什么、动多久、怎么动。说清这四件事，AI 就能做出你要的样子。',
+		analogy:
+			'动效图鉴像给舞蹈动作起名字：你不用会跳，但知道那个动作叫「转圈」还是「下腰」，再说一句「慢一点、收得轻一点」，编舞就能照着排。',
+		steps: [
+			{
+				label: 'Trigger',
+				detail: '什么时候开始',
+				result: '页面一打开、滚动到眼前、鼠标移上去，还是点击之后。',
+			},
+			{ label: 'Property', detail: '动的是什么', result: '位置、透明度、大小，还是颜色。' },
+			{
+				label: 'Duration',
+				detail: '动多久',
+				result: '0.15 秒很利落，0.5 秒很从容，超过 1 秒多半太慢。',
+			},
+			{ label: 'Easing', detail: '怎么动', result: '先快后慢、慢快慢，还是带一点回弹。' },
+		],
+		scenes: [
+			{ title: '提需求', description: '不再说「加点动画」，而是说清楚哪里、怎么动、多久。' },
+			{ title: '改手感', description: 'AI 做出来的动画「不太对」时，能说出是太慢了还是缓动不对。' },
+			{ title: '拆解网站', description: '看到喜欢的官网，能拆出它用了哪几种动效。' },
+		],
+		practice: {
+			question: '你跟 AI 说「给卡片加点动画」，结果所有卡片同时闪了一下，很生硬。下一句该怎么补？',
+			answer:
+				'说清四件事：滚动到眼前时开始；从下方 24px 淡入上浮；时长 0.5 秒、先快后慢；几张卡片依次出现，每张间隔 80 毫秒。',
+		},
+		warning:
+			'动效是调味料，不是主菜。一个页面里每块都在动，用户反而不知道该看哪里；还要记得照顾在系统里开了「减少动态效果」的人。',
+	},
 	'ui-patterns': {
 		question: '是什么？为什么要认识这些界面零件的名字？',
 		visualTitle: '从认出它，到说出它',

@@ -5,7 +5,12 @@ import { describe, expect, it } from 'vitest';
 
 import { showcaseWorks } from '../data/showcase';
 import versions from '../data/showcaseMedia.json';
-import { showcaseMediaUrl, showcasePosterSrcset, showcasePreviewPath } from './showcaseMedia';
+import {
+	showcaseFiles,
+	showcaseMediaUrl,
+	showcasePosterSrcset,
+	showcasePreviewPath,
+} from './showcaseMedia';
 
 const staticRoot = resolve(import.meta.dirname, '../../../static');
 const local = (publicPath: string) => resolve(staticRoot, `.${publicPath}`);
@@ -27,7 +32,7 @@ describe('showcase media', () => {
 	it('versions every file with its current content hash', async () => {
 		const expected: Record<string, string> = {};
 		for (const work of showcaseWorks) {
-			for (const path of [work.video, showcasePreviewPath(work.video), work.poster]) {
+			for (const path of showcaseFiles(work)) {
 				expected[path] = createHash('sha256')
 					.update(await readFile(local(path)))
 					.digest('hex')
@@ -37,6 +42,17 @@ describe('showcase media', () => {
 		expect(versions, `showcaseMedia.json is stale; ${regenerate}`).toEqual(expected);
 		const work = showcaseWorks[0]!;
 		expect(showcaseMediaUrl(work.video)).toBe(`${work.video}?v=${expected[work.video]}`);
+	});
+
+	it('keeps a multi-part work consistent with its first part', () => {
+		for (const work of showcaseWorks.filter((entry) => entry.movements?.length)) {
+			const [first] = work.movements!;
+			expect(work.video).toBe(first!.video);
+			expect(work.poster).toBe(first!.poster);
+			expect(work.duration).toBe(
+				work.movements!.reduce((total, movement) => total + movement.duration, 0),
+			);
+		}
 	});
 
 	it('serves every poster in sizes for the gallery tiles', () => {

@@ -32,6 +32,11 @@ const isAgentTerm = concept.id === 'agent';
 const isVibeCoding = concept.id === 'vibe-coding';
 const isContextWindow = concept.id === 'context-window';
 const isToken = concept.id === 'token';
+const isLlm = concept.id === 'llm';
+const isSystemPrompt = concept.id === 'system-prompt';
+const isKnowledgeCutoff = concept.id === 'knowledge-cutoff';
+const isHallucination = concept.id === 'hallucination';
+const isReasoningModel = concept.id === 'reasoning-model';
 const isParameters = concept.id === 'parameters';
 const isQuantization = concept.id === 'quantization';
 const isMultimodal = concept.id === 'multimodal';
@@ -1373,6 +1378,231 @@ const isDeployRuntime = concept.id === 'deployment-runtime';
 							</span>
 						</div>
 						<strong>用一点精度，换一大截体积</strong>
+					</div>
+				</div>
+			) : isLlm ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">见过的问题</i>
+							<i class="concept-state-b">没见过的问题</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>前文</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">「中国的首都是」</i>
+								<i class="concept-state-b">「我家猫的名字是」</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>任务</code>
+							<span>预测下一个词元</span>
+						</div>
+						<strong>它只会往下接</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">概率集中</i>
+							<i class="concept-state-b">概率分散</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>候选</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">北京 96% · 上海 1%</i>
+								<i class="concept-state-b">咪咪 8% · 小白 7%</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>接上</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-yes">✓ 北京</i>
+								<i class="concept-state-b concept-rtm-no">✗ 咪咪（纯属猜测）</i>
+							</span>
+						</div>
+						<strong>没见过也会接，接出来的只是「像」答案</strong>
+					</div>
+				</div>
+			) : isSystemPrompt ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">没有系统提示词</i>
+							<i class="concept-state-b">系统提示词：银行客服</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>设定</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">（空）</i>
+								<i class="concept-state-b">只回答账户问题，语气礼貌</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>用户</code>
+							<span>「帮我写首诗」</span>
+						</div>
+						<strong>用户只看得到自己这一行</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">想写就写</i>
+							<i class="concept-state-b">按设定回应</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>回复</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">写了一首诗</i>
+								<i class="concept-state-b">婉拒，引导回账户问题</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>结果</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-no">✗ 客服跑题了</i>
+								<i class="concept-state-b concept-rtm-yes">✓ 守住了边界</i>
+							</span>
+						</div>
+						<strong>设定排在最前面，每次都在</strong>
+					</div>
+				</div>
+			) : isKnowledgeCutoff ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">不联网 · 只凭记忆</i>
+							<i class="concept-state-b">联网 · 先搜再答</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>问题</code>
+							<span>「这个软件最新是哪一版」</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>它看的</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">训练时的数据</i>
+								<i class="concept-state-b">今天的网页</i>
+							</span>
+						</div>
+						<strong>知识停在截止那天</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">把旧的当成新的</i>
+							<i class="concept-state-b">查到了最新消息</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>回答</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">「最新是 3.2 版」</i>
+								<i class="concept-state-b">「最新是 4.0 版」</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>实际</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-no">✗ 已经出到 4.0</i>
+								<i class="concept-state-b concept-rtm-yes">✓ 附上了发布页链接</i>
+							</span>
+						</div>
+						<strong>和时间有关的问题，先让它查</strong>
+					</div>
+				</div>
+			) : isHallucination ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">凭印象回答</i>
+							<i class="concept-state-b">检索后回答</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>问题</code>
+							<span>「推荐三篇相关论文」</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>依据</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">训练时留下的印象</i>
+								<i class="concept-state-b">搜到的真实页面</i>
+							</span>
+						</div>
+						<strong>它不会主动说不知道</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">看着都很像样</i>
+							<i class="concept-state-b">每篇都能点开</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>第 1 篇</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-yes">真实存在</i>
+								<i class="concept-state-b concept-rtm-yes">真实存在</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>第 2、3 篇</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-no">✗ 查无此文</i>
+								<i class="concept-state-b concept-rtm-yes">✓ 附链接，可核对</i>
+							</span>
+						</div>
+						<strong>没有出处的，先别信</strong>
+					</div>
+				</div>
+			) : isReasoningModel ? (
+				<div class="concept-instance-visual" aria-label={profile.visualTitle}>
+					<div class="concept-instance-source">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">直接回答</i>
+							<i class="concept-state-b">先想再答</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>题目</code>
+							<span>球拍和球共 1.10 元，球拍贵 1 元</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>过程</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">（脱口而出）</i>
+								<i class="concept-state-b">设球 x：2x + 1 = 1.10</i>
+							</span>
+						</div>
+						<strong>球多少钱？</strong>
+					</div>
+					<i class="concept-instance-wire" aria-hidden="true">
+						<b />
+					</i>
+					<div class="concept-instance-page">
+						<em class="concept-state-flip concept-rtm-head" aria-hidden="true">
+							<i class="concept-state-a">2 秒出答案</i>
+							<i class="concept-state-b">想了 15 秒</i>
+						</em>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>回答</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a concept-rtm-no">✗ 0.10 元</i>
+								<i class="concept-state-b concept-rtm-yes">✓ 0.05 元</i>
+							</span>
+						</div>
+						<div class="concept-rtm-row" aria-hidden="true">
+							<code>验算</code>
+							<span class="concept-state-flip">
+								<i class="concept-state-a">（没有验算）</i>
+								<i class="concept-state-b">0.05 + 1.05 = 1.10</i>
+							</span>
+						</div>
+						<strong>难题值得等，简单题不必开</strong>
 					</div>
 				</div>
 			) : isToken ? (

@@ -33,6 +33,11 @@ const isAgentLab = concept.id === 'agent';
 const isVibeLab = concept.id === 'vibe-coding';
 const isWindowLab = concept.id === 'context-window';
 const isTokenLab = concept.id === 'token';
+const isLlmLab = concept.id === 'llm';
+const isSystemPromptLab = concept.id === 'system-prompt';
+const isKnowledgeCutoffLab = concept.id === 'knowledge-cutoff';
+const isHallucinationLab = concept.id === 'hallucination';
+const isReasoningModelLab = concept.id === 'reasoning-model';
 const isParametersLab = concept.id === 'parameters';
 const isQuantizationLab = concept.id === 'quantization';
 const isMultimodalLab = concept.id === 'multimodal';
@@ -67,6 +72,11 @@ const customLabIds = new Set([
 	'prompt',
 	'zero-shot',
 	'few-shot',
+	'llm',
+	'system-prompt',
+	'knowledge-cutoff',
+	'hallucination',
+	'reasoning-model',
 	'multimodal',
 	'moe',
 	'parameters',
@@ -141,6 +151,11 @@ const stageNames: Record<string, string[]> = {
 	prompt: ['目标', '上下文', '约束', '验收'],
 	'zero-shot': ['说明', '调用', '作答', '检查'],
 	'few-shot': ['挑例', '成对', '模仿', '调整'],
+	llm: ['读入', '预测', '选取', '循环'],
+	'system-prompt': ['编写', '附加', '对话', '约束'],
+	'knowledge-cutoff': ['收集', '训练', '使用', '补救'],
+	hallucination: ['提问', '生成', '包装', '核实'],
+	'reasoning-model': ['审题', '推理', '检查', '作答'],
 	multimodal: ['输入', '编码', '理解', '回答'],
 	moe: ['拆分', '路由', '计算', '合并'],
 	parameters: ['读数', '估算', '比较', '选择'],
@@ -1139,6 +1154,430 @@ const labels =
 										<b>能用</b>
 										<span>质量略降，日常问答基本感觉不出来</span>
 										<small>别再往 2、3 位压，那时就明显变笨了</small>
+									</div>
+								</div>
+							) : null}
+
+							{isLlmLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="lm" data-choice-lm="known">
+									<div class="concept-props-choices" role="group" aria-label="选择要接的话">
+										<button
+											type="button"
+											data-flow-choice="known"
+											data-flow-choice-group="lm"
+											aria-pressed="true"
+										>
+											见过的问题
+										</button>
+										<button
+											type="button"
+											data-flow-choice="unknown"
+											data-flow-choice-group="lm"
+											aria-pressed="false"
+										>
+											没见过的问题
+										</button>
+									</div>
+									<div class="lm-when-known concept-component-def">
+										<small>交给模型的前文</small>
+										<p>
+											<code>前文</code>
+											<span>「中国的首都是」</span>
+										</p>
+									</div>
+									<div class="lm-when-unknown concept-component-def">
+										<small>交给模型的前文</small>
+										<p>
+											<code>前文</code>
+											<span>「我家猫的名字是」</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isLlmLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="lm" data-choice-lm="known">
+									<div class="lm-when-known concept-js-preview">
+										<p>在训练数据里见过无数次</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>下一个词元的概率高度集中</p>
+									</div>
+									<div class="lm-when-unknown concept-js-preview">
+										<p>训练数据里不可能有你家的猫</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>概率分散在一堆常见猫名上</p>
+									</div>
+								</div>
+							) : null}
+
+							{isLlmLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="lm" data-choice-lm="known">
+									<div class="lm-when-known concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										「北京」96%，稳稳接上
+									</div>
+									<div class="lm-when-unknown concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										「咪咪」只有 8%，也照样接上了
+									</div>
+								</div>
+							) : null}
+
+							{isLlmLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="lm" data-choice-lm="known">
+									<div class="lm-when-known concept-bk-resp is-200">
+										<b>又稳又准</b>
+										<span>见过的知识，接得几乎不会错</span>
+										<small>这正是大语言模型擅长的事</small>
+									</div>
+									<div class="lm-when-unknown concept-bk-resp is-400">
+										<b>像答案而已</b>
+										<span>没见过也会接，不会主动说不知道</span>
+										<small>这就是幻觉的来源</small>
+									</div>
+								</div>
+							) : null}
+
+							{isSystemPromptLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="sp" data-choice-sp="none">
+									<div
+										class="concept-props-choices"
+										role="group"
+										aria-label="选择是否设置系统提示词"
+									>
+										<button
+											type="button"
+											data-flow-choice="none"
+											data-flow-choice-group="sp"
+											aria-pressed="true"
+										>
+											不设置
+										</button>
+										<button
+											type="button"
+											data-flow-choice="set"
+											data-flow-choice-group="sp"
+											aria-pressed="false"
+										>
+											设为银行客服
+										</button>
+									</div>
+									<div class="sp-when-none concept-component-def">
+										<small>开发者写在最前面的设定</small>
+										<p>
+											<code>system</code>
+											<span>（空）</span>
+										</p>
+									</div>
+									<div class="sp-when-set concept-component-def">
+										<small>开发者写在最前面的设定</small>
+										<p>
+											<code>system</code>
+											<span>你是某银行客服，只回答账户相关问题，语气礼貌简洁</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isSystemPromptLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="sp" data-choice-sp="none">
+									<div class="sp-when-none concept-js-preview">
+										<p>用户发来「帮我写首诗」</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>模型只收到这一句</p>
+									</div>
+									<div class="sp-when-set concept-js-preview">
+										<p>用户发来「帮我写首诗」</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>模型收到的是：设定 + 这一句</p>
+									</div>
+								</div>
+							) : null}
+
+							{isSystemPromptLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="sp" data-choice-sp="none">
+									<div class="sp-when-none concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										写了一首诗：银行的客服窗口聊起了风花雪月
+									</div>
+									<div class="sp-when-set concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										「抱歉，我只能帮您处理账户相关的问题」
+									</div>
+								</div>
+							) : null}
+
+							{isSystemPromptLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="sp" data-choice-sp="none">
+									<div class="sp-when-none concept-bk-resp is-400">
+										<b>跑题</b>
+										<span>什么都答，不像一个客服</span>
+										<small>产品的定位守不住</small>
+									</div>
+									<div class="sp-when-set concept-bk-resp is-200">
+										<b>守住边界</b>
+										<span>始终按设定的身份说话</span>
+										<small>用户看不到设定，却处处感受得到</small>
+									</div>
+								</div>
+							) : null}
+
+							{isKnowledgeCutoffLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="kc" data-choice-kc="offline">
+									<div class="concept-props-choices" role="group" aria-label="选择是否联网">
+										<button
+											type="button"
+											data-flow-choice="offline"
+											data-flow-choice-group="kc"
+											aria-pressed="true"
+										>
+											不联网
+										</button>
+										<button
+											type="button"
+											data-flow-choice="online"
+											data-flow-choice-group="kc"
+											aria-pressed="false"
+										>
+											打开联网搜索
+										</button>
+									</div>
+									<div class="kc-when-offline concept-component-def">
+										<small>你的提问</small>
+										<p>
+											<code>问题</code>
+											<span>「这个软件最新是哪一版？」</span>
+										</p>
+										<p>
+											<code>联网</code>
+											<span>关闭</span>
+										</p>
+									</div>
+									<div class="kc-when-online concept-component-def">
+										<small>你的提问</small>
+										<p>
+											<code>问题</code>
+											<span>「这个软件最新是哪一版？」</span>
+										</p>
+										<p>
+											<code>联网</code>
+											<span>打开</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isKnowledgeCutoffLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="kc" data-choice-kc="offline">
+									<div class="kc-when-offline concept-js-preview">
+										<p>只能翻自己的记忆</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>记忆停在训练数据截止那天</p>
+									</div>
+									<div class="kc-when-online concept-js-preview">
+										<p>先去搜索今天的网页</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>把搜到的内容放进上下文</p>
+									</div>
+								</div>
+							) : null}
+
+							{isKnowledgeCutoffLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="kc" data-choice-kc="offline">
+									<div class="kc-when-offline concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										「最新是 3.2 版」：其实早就出到 4.0 了
+									</div>
+									<div class="kc-when-online concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										「最新是 4.0 版，上个月发布」，还附了链接
+									</div>
+								</div>
+							) : null}
+
+							{isKnowledgeCutoffLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="kc" data-choice-kc="offline">
+									<div class="kc-when-offline concept-bk-resp is-400">
+										<b>过时</b>
+										<span>说得很肯定，但已经过时</span>
+										<small>它不知道自己的知识停在哪天</small>
+									</div>
+									<div class="kc-when-online concept-bk-resp is-200">
+										<b>最新</b>
+										<span>基于今天的信息回答</span>
+										<small>和时间有关的问题，都该这样问</small>
+									</div>
+								</div>
+							) : null}
+
+							{isHallucinationLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="ha" data-choice-ha="closed">
+									<div class="concept-props-choices" role="group" aria-label="选择提问方式">
+										<button
+											type="button"
+											data-flow-choice="closed"
+											data-flow-choice-group="ha"
+											aria-pressed="true"
+										>
+											直接问
+										</button>
+										<button
+											type="button"
+											data-flow-choice="grounded"
+											data-flow-choice-group="ha"
+											aria-pressed="false"
+										>
+											要求检索并附链接
+										</button>
+									</div>
+									<div class="ha-when-closed concept-component-def">
+										<small>你的提问</small>
+										<p>
+											<code>问题</code>
+											<span>「推荐三篇关于远程办公效率的论文」</span>
+										</p>
+									</div>
+									<div class="ha-when-grounded concept-component-def">
+										<small>你的提问</small>
+										<p>
+											<code>问题</code>
+											<span>「推荐三篇关于远程办公效率的论文」</span>
+										</p>
+										<p>
+											<code>要求</code>
+											<span>联网检索，每篇附上链接</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isHallucinationLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="ha" data-choice-ha="closed">
+									<div class="ha-when-closed concept-js-preview">
+										<p>凭训练时的印象</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>拼出像样的标题、作者和年份</p>
+									</div>
+									<div class="ha-when-grounded concept-js-preview">
+										<p>先检索真实页面</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>只引用搜得到的论文</p>
+									</div>
+								</div>
+							) : null}
+
+							{isHallucinationLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="ha" data-choice-ha="closed">
+									<div class="ha-when-closed concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										三篇格式工整，但第 2、3 篇查无此文
+									</div>
+									<div class="ha-when-grounded concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										三篇都附了链接，点开都能找到原文
+									</div>
+								</div>
+							) : null}
+
+							{isHallucinationLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="ha" data-choice-ha="closed">
+									<div class="ha-when-closed concept-bk-resp is-400">
+										<b>不能直接用</b>
+										<span>每一篇都得自己去查</span>
+										<small>看着越像样，越容易被骗</small>
+									</div>
+									<div class="ha-when-grounded concept-bk-resp is-200">
+										<b>可以核对</b>
+										<span>依据摆在眼前，查起来很快</span>
+										<small>引用和数据，都要有出处</small>
+									</div>
+								</div>
+							) : null}
+
+							{isReasoningModelLab && index === 0 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="rm" data-choice-rm="fast">
+									<div class="concept-props-choices" role="group" aria-label="选择回答模式">
+										<button
+											type="button"
+											data-flow-choice="fast"
+											data-flow-choice-group="rm"
+											aria-pressed="true"
+										>
+											直接回答
+										</button>
+										<button
+											type="button"
+											data-flow-choice="think"
+											data-flow-choice-group="rm"
+											aria-pressed="false"
+										>
+											深度思考
+										</button>
+									</div>
+									<div class="rm-when-fast concept-component-def">
+										<small>同一道题</small>
+										<p>
+											<code>题目</code>
+											<span>球拍和球一共 1.10 元，球拍比球贵 1 元，球多少钱？</span>
+										</p>
+										<p>
+											<code>模式</code>
+											<span>直接回答</span>
+										</p>
+									</div>
+									<div class="rm-when-think concept-component-def">
+										<small>同一道题</small>
+										<p>
+											<code>题目</code>
+											<span>球拍和球一共 1.10 元，球拍比球贵 1 元，球多少钱？</span>
+										</p>
+										<p>
+											<code>模式</code>
+											<span>深度思考</span>
+										</p>
+									</div>
+								</div>
+							) : null}
+
+							{isReasoningModelLab && index === 1 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="rm" data-choice-rm="fast">
+									<div class="rm-when-fast concept-js-preview">
+										<p>不打草稿</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>凭直觉直接生成答案</p>
+									</div>
+									<div class="rm-when-think concept-js-preview">
+										<p>先在草稿区推导</p>
+										<i class="ph ph-arrow-down" aria-hidden="true" />
+										<p>设球 x 元：x + (x + 1) = 1.10</p>
+									</div>
+								</div>
+							) : null}
+
+							{isReasoningModelLab && index === 2 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="rm" data-choice-rm="fast">
+									<div class="rm-when-fast concept-bk-verdict is-block">
+										<i class="ph ph-warning" aria-hidden="true" />
+										答「0.10 元」：那样球拍 1.10，加起来是 1.20
+									</div>
+									<div class="rm-when-think concept-bk-verdict is-pass">
+										<i class="ph ph-check-circle" aria-hidden="true" />
+										答「0.05 元」：0.05 + 1.05 = 1.10，验算通过
+									</div>
+								</div>
+							) : null}
+
+							{isReasoningModelLab && index === 3 ? (
+								<div class="concept-lab-pick" data-flow-choice-target="rm" data-choice-rm="fast">
+									<div class="rm-when-fast concept-bk-resp is-400">
+										<b>掉坑</b>
+										<span>2 秒出答案，但这道题错了</span>
+										<small>简单问题用它完全够</small>
+									</div>
+									<div class="rm-when-think concept-bk-resp is-200">
+										<b>答对</b>
+										<span>多等了十几秒，多花了几百个词元</span>
+										<small>难题值得，简单问题没必要开</small>
 									</div>
 								</div>
 							) : null}

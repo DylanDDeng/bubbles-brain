@@ -8,9 +8,11 @@
 	font-size: 13px;
 }
 
+/* The rail keeps to the left edge; the timeline is centred on the page, at most 900px (as on the
+   terms page). */
 .news-body {
 	display: grid;
-	grid-template-columns: 120px minmax(0, 1fr);
+	grid-template-columns: minmax(120px, 1fr) minmax(0, 900px) minmax(120px, 1fr);
 	column-gap: 40px;
 	align-items: start;
 	padding: 0 80px 96px;
@@ -148,9 +150,6 @@
 	white-space: nowrap;
 }
 /* One long card per story, stacked: a timeline reads down, one thing after another. */
-.news-timeline {
-	max-width: 820px;
-}
 .news-hour__cards {
 	display: flex;
 	flex-direction: column;
@@ -330,6 +329,7 @@
    a lower band, so cards soften gradually instead of behind one hard frosted strip. A faint white
    wash on top keeps the edge light. It never takes clicks. */
 .news-end {
+	grid-column: 1 / -1;
 	height: 1px;
 }
 .news-veil {

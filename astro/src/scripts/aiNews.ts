@@ -3,19 +3,27 @@
  * Feishu Base) and shows one Beijing day at a time, picked in the left rail and kept in the address
  * as #YYYY-MM-DD. The rail groups days by month: the newest month starts open, older ones closed;
  * a month whose older days have aged out of the feed is read from the archive when it is opened.
+ * A day reads as a timeline: one row per Beijing hour, newest first, its time label pinned while
+ * its cards scroll. Today's rows say how long ago (刚刚, 3 小时前); stories that arrived since the
+ * reader's last visit (kept in this browser only) are marked 新, with a 上次看到这里 line under them.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
 	archiveUrl,
+	beijingToday,
 	clockTime,
 	COVER_RATIO,
 	dayTitle,
+	hourGroups,
+	LAST_SEEN_KEY,
 	monthLabel,
 	monthOf,
 	parseArchive,
 	parseFeed,
 	railLabel,
 	railMonths,
+	relativeTime,
+	seenLabel,
 	updatedLabel,
 	type NewsDay,
 	type NewsFeed,
@@ -30,7 +38,7 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string, t
 	return node;
 }
 
-function card(item: NewsItem): HTMLElement {
+function card(item: NewsItem, fresh: boolean): HTMLElement {
 	const link = el('a', 'news-card');
 	link.href = item.url;
 	link.target = '_blank';
@@ -38,7 +46,7 @@ function card(item: NewsItem): HTMLElement {
 	if (item.cover) {
 		const frame = el('span', 'news-card__cover');
 		const image = el('img');
-		// Reserve the cover's own shape up front so the masonry can deal cards before images load.
+		// Reserve the cover's own shape up front so the row does not jump as images load.
 		image.style.aspectRatio = String(item.coverRatio ?? COVER_RATIO.fallback);
 		image.src = item.cover;
 		image.alt = '';
@@ -53,34 +61,78 @@ function card(item: NewsItem): HTMLElement {
 	const body = el('span', 'news-card__body');
 	body.append(el('span', 'news-card__title', item.title));
 	if (item.summary) body.append(el('span', 'news-card__summary', item.summary));
-	const time = el('time', 'news-card__time', clockTime(item.at));
+	const time = el(
+		'time',
+		'news-card__time',
+		fresh ? `${clockTime(item.at)} · 新` : clockTime(item.at),
+	);
 	time.dateTime = item.at;
+	if (fresh) time.classList.add('is-new');
 	body.append(time);
 	link.append(body);
 	return link;
 }
 
-const COLUMN_MIN = 240;
-const COLUMN_GAP = 16;
+function readLastSeen(): string | null {
+	try {
+		const value = localStorage.getItem(LAST_SEEN_KEY);
+		return value && !Number.isNaN(Date.parse(value)) ? value : null;
+	} catch {
+		return null;
+	}
+}
 
-function columnCount(grid: HTMLElement): number {
-	return Math.max(1, Math.floor((grid.clientWidth + COLUMN_GAP) / (COLUMN_MIN + COLUMN_GAP)));
+function writeLastSeen(iso: string) {
+	try {
+		localStorage.setItem(LAST_SEEN_KEY, iso);
+	} catch {
+		// Private windows may refuse storage; the page simply marks nothing as new next time.
+	}
 }
 
 /**
- * Masonry that reads left to right: each card, newest first, goes to the column that is shortest
- * so far. (CSS columns would fill the first column top to bottom, burying the newest stories.)
+ * One row per hour: a pinned label (how long ago today, the hour on other days) beside its cards.
+ * Stories newer than the last visit are 新; the 上次看到这里 line goes above the first older row.
  */
-function layOut(grid: HTMLElement, cards: HTMLElement[]) {
-	const columns = Array.from({ length: columnCount(grid) }, () => el('div', 'news-col'));
-	grid.replaceChildren(...columns);
-	grid.dataset.columns = String(columns.length);
-	for (const node of cards) {
-		const shortest = columns.reduce((low, column) =>
-			column.offsetHeight < low.offsetHeight ? column : low,
-		);
-		shortest.append(node);
+function timeline(
+	items: NewsItem[],
+	day: string,
+	lastSeen: string | null,
+	now: Date,
+): HTMLElement[] {
+	const today = day === beijingToday(now);
+	const isNew = (item: NewsItem) => !!lastSeen && item.at > lastSeen;
+	const nodes: HTMLElement[] = [];
+	let sawNew = false;
+	let marked = false;
+	for (const group of hourGroups(items)) {
+		const fresh = group.items.some(isNew);
+		if (sawNew && !fresh && !marked && lastSeen) {
+			const line = el('div', 'news-seen');
+			line.append(
+				el('span'),
+				el('span', 'news-seen__label', `上次看到这里 · ${seenLabel(lastSeen, now)}`),
+				el('span'),
+			);
+			nodes.push(line);
+			marked = true;
+		}
+		sawNew ||= fresh;
+
+		const row = el('section', 'news-hour');
+		if (fresh) row.classList.add('is-new');
+		const label = el('div', 'news-hour__label');
+		const dot = el('span', 'news-hour__dot');
+		dot.setAttribute('aria-hidden', 'true');
+		const ago = today ? relativeTime(group.items[0].at, now) : '';
+		label.append(dot, el('span', 'news-hour__primary', ago || `${group.hour} 点`));
+		if (ago) label.append(el('span', 'news-hour__secondary', `${group.hour} 点`));
+		const cards = el('div', 'news-hour__cards');
+		cards.append(...group.items.map((item) => card(item, isNew(item))));
+		row.append(label, cards);
+		nodes.push(row);
 	}
+	return nodes;
 }
 
 function setupNews(root: HTMLElement) {
@@ -104,13 +156,24 @@ function setupNews(root: HTMLElement) {
 	const failed = new Set<string>();
 	/** Months whose days are listed in the rail. The newest starts open. */
 	const open = new Set<string>();
-	let shown: HTMLElement[] = [];
-	// Re-deal the cards only when the number of columns changes, not on every pixel of a resize.
-	const resize = new ResizeObserver(() => {
-		if (shown.length && grid.dataset.columns !== String(columnCount(grid))) layOut(grid, shown);
-	});
-	resize.observe(grid);
-	document.addEventListener('astro:before-swap', () => resize.disconnect(), { once: true });
+	// The last visit as it was when this page opened; this visit is saved on leaving, so a reload
+	// still shows what was new.
+	const lastSeen = readLastSeen();
+	const saveVisit = () => writeLastSeen(new Date().toISOString());
+	const onHide = () => {
+		if (document.visibilityState === 'hidden') saveVisit();
+	};
+	document.addEventListener('visibilitychange', onHide);
+	window.addEventListener('pagehide', saveVisit);
+	document.addEventListener(
+		'astro:before-swap',
+		() => {
+			saveVisit();
+			document.removeEventListener('visibilitychange', onHide);
+			window.removeEventListener('pagehide', saveVisit);
+		},
+		{ once: true },
+	);
 
 	// The frosted bottom edge fades away once the end of the list is on screen.
 	const veil = root.querySelector<HTMLElement>('[data-news-veil]');
@@ -229,9 +292,9 @@ function setupNews(root: HTMLElement) {
 		const days = knownDays();
 		const day = days.find((entry) => entry.day === active);
 		title.textContent = dayTitle(active);
-		shown = (day?.items ?? []).map(card);
-		layOut(grid, shown);
-		status.hidden = shown.length > 0;
+		const items = day?.items ?? [];
+		grid.replaceChildren(...timeline(items, active, lastSeen, new Date()));
+		status.hidden = items.length > 0;
 		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 
 		// The next older day: one already known, else the newest day of the next archived month.

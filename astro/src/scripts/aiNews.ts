@@ -4,13 +4,12 @@
  * as #YYYY-MM-DD. The rail groups days by month: the newest month starts open, older ones closed;
  * a month whose older days have aged out of the feed is read from the archive when it is opened.
  * A day reads as a timeline: one row per Beijing hour, newest first, its time label pinned while
- * its cards scroll. Today's rows say how long ago (刚刚, 3 小时前); stories that arrived since the
+ * its cards scroll, labelled with the plain hour (23:00) in light grey. Stories that arrived since the
  * reader's last visit (kept in this browser only) are marked 新, with a 上次看到这里 line under them.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
 	archiveUrl,
-	beijingToday,
 	clockTime,
 	dayTitle,
 	hourGroups,
@@ -21,7 +20,6 @@ import {
 	parseFeed,
 	railLabel,
 	railMonths,
-	relativeTime,
 	seenLabel,
 	updatedLabel,
 	type NewsDay,
@@ -100,7 +98,7 @@ function writeLastSeen(iso: string) {
 }
 
 /**
- * One row per hour: a pinned label (how long ago today, the hour on other days) beside its cards.
+ * One row per hour: a pinned label with the hour (23:00) beside its cards.
  * Stories newer than the last visit are 新; the 上次看到这里 line goes above the first older row.
  */
 function timeline(
@@ -109,7 +107,6 @@ function timeline(
 	lastSeen: string | null,
 	now: Date,
 ): HTMLElement[] {
-	const today = day === beijingToday(now);
 	const isNew = (item: NewsItem) => !!lastSeen && item.at > lastSeen;
 	const nodes: HTMLElement[] = [];
 	let sawNew = false;
@@ -133,9 +130,7 @@ function timeline(
 		const label = el('div', 'news-hour__label');
 		const dot = el('span', 'news-hour__dot');
 		dot.setAttribute('aria-hidden', 'true');
-		const ago = today ? relativeTime(group.items[0].at, now) : '';
-		label.append(dot, el('span', 'news-hour__primary', ago || `${group.hour} 点`));
-		if (ago) label.append(el('span', 'news-hour__secondary', `${group.hour} 点`));
+		label.append(dot, el('span', 'news-hour__time', `${String(group.hour).padStart(2, '0')}:00`));
 		const cards = el('div', 'news-hour__cards');
 		cards.append(...group.items.map((item) => card(item, isNew(item))));
 		row.append(label, cards);

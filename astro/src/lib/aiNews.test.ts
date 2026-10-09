@@ -3,7 +3,6 @@ import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
 	hourGroups,
-	relativeTime,
 	seenLabel,
 	archiveUrl,
 	monthLabel,
@@ -232,13 +231,6 @@ describe('the day as a timeline', () => {
 			[18, 1],
 			[16, 1],
 		]);
-	});
-
-	it('says how long ago in words a reader uses', () => {
-		expect(relativeTime('2026-10-09T12:35:00.000Z', now)).toBe('刚刚');
-		expect(relativeTime('2026-10-09T12:15:00.000Z', now)).toBe('25 分钟前');
-		expect(relativeTime('2026-10-09T09:20:00.000Z', now)).toBe('3 小时前');
-		expect(relativeTime('2026-10-08T09:20:00.000Z', now)).toBe('');
 	});
 
 	it('names the last visit by day', () => {

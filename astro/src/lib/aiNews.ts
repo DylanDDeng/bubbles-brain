@@ -230,15 +230,6 @@ export function hourGroups(items: NewsItem[]): HourGroup[] {
 	return groups;
 }
 
-/** 刚刚, 25 分钟前, 3 小时前; empty for anything a day old or more. */
-export function relativeTime(iso: string, now: Date): string {
-	const minutes = Math.floor((now.getTime() - Date.parse(iso)) / 60000);
-	if (minutes < 10) return '刚刚';
-	if (minutes < 60) return `${minutes} 分钟前`;
-	if (minutes < 24 * 60) return `${Math.floor(minutes / 60)} 小时前`;
-	return '';
-}
-
 /** When the reader last came: 今天 18:30, 昨天 18:30, else 10月7日 18:30. */
 export function seenLabel(iso: string, now: Date): string {
 	const day = beijingToday(new Date(iso));

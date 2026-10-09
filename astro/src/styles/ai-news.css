@@ -137,16 +137,12 @@
 	border-color: var(--ink);
 	background: var(--ink);
 }
-.news-hour__primary {
-	color: var(--ink);
-	font-size: 15px;
-	font-weight: 600;
-	line-height: 1.3;
-	white-space: nowrap;
-}
-.news-hour__secondary {
+/* Just the hour, quiet: the cards carry the exact minute. */
+.news-hour__time {
 	color: var(--ink-faint);
-	font-size: 12px;
+	font-size: 13px;
+	line-height: 1.4;
+	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
 }
 /* One long card per story, stacked: a timeline reads down, one thing after another. */

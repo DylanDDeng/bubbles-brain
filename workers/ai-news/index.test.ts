@@ -1,7 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
 import worker from './index';
 import * as entry from './index';
-import { FEED_KEY, lookUpCover, requestSync, SYNC_LOCK_KEY, sync, TOKEN_KEY, type Env } from './sync';
+import {
+	FEED_KEY,
+	lookUpCover,
+	requestSync,
+	SYNC_LOCK_KEY,
+	sync,
+	TOKEN_KEY,
+	type CoverBucket,
+	type Env,
+	type ImageResizer,
+} from './sync';
 import type { Feed } from './feed';
 
 class MemoryKV {
@@ -199,5 +209,107 @@ describe('POST /v1/sync', () => {
 		await Promise.all(waits);
 		expect(JSON.parse(e.NEWS.store.get(FEED_KEY)!).days[0].items[0].id).toBe('rec1');
 		vi.unstubAllGlobals();
+	});
+});
+
+class MemoryR2 implements CoverBucket {
+	objects = new Map<string, { bytes: Uint8Array; contentType?: string }>();
+	heads = 0;
+	async head(key: string) {
+		this.heads += 1;
+		return this.objects.has(key) ? {} : null;
+	}
+	async get(key: string) {
+		const object = this.objects.get(key);
+		if (!object) return null;
+		return { body: new Response(object.bytes).body!, httpMetadata: { contentType: object.contentType }, httpEtag: '"e1"' };
+	}
+	async put(key: string, value: ArrayBuffer | ReadableStream, options?: { httpMetadata?: { contentType?: string } }) {
+		const bytes = new Uint8Array(await new Response(value).arrayBuffer());
+		this.objects.set(key, { bytes, contentType: options?.httpMetadata?.contentType });
+	}
+}
+
+/** Pretends to shrink: prefixes the bytes so the test can tell the resized copy was stored. */
+const fakeImages: ImageResizer = {
+	input(stream) {
+		return {
+			transform: () => ({
+				output: async () => {
+					const original = new Uint8Array(await new Response(stream).arrayBuffer());
+					const shrunk = new Uint8Array([9, ...original]);
+					return { image: () => new Response(shrunk).body!, contentType: () => 'image/webp' };
+				},
+			}),
+		};
+	},
+};
+
+describe('attachment covers', () => {
+	const attachedRows = [
+		{
+			record_id: 'recA',
+			fields: {
+				标题: 'WSJ 独家新闻',
+				内容: '有附件封面',
+				链接: { link: 'https://www.wsj.com/tech/story', text: 'https://www.wsj.com/tech/story', type: 'url' },
+				推送时间: Date.parse('2026-10-08T14:00:00Z'),
+				封面: [{ file_token: 'FileTokenAAAA1', name: 'recA.jpg', size: 3 }],
+			},
+		},
+	];
+
+	function feishuWithMedia(calls: string[]): typeof fetch {
+		return (async (input: RequestInfo | URL) => {
+			const url = String(input);
+			calls.push(url);
+			if (url.endsWith('/tenant_access_token/internal')) return Response.json({ code: 0, tenant_access_token: 't-1', expire: 7200 });
+			if (url.includes('/records/search')) return Response.json({ code: 0, data: { items: attachedRows, has_more: false } });
+			if (url.includes('/medias/FileTokenAAAA1/download')) return new Response(new Uint8Array([1, 2, 3]), { headers: { 'content-type': 'image/jpeg' } });
+			throw new Error(`unexpected fetch ${url}`);
+		}) as typeof fetch;
+	}
+
+	it('copies the attachment once, shrunk, and prefers it over the page share image', async () => {
+		const covers = new MemoryR2();
+		const e = { ...env(), COVERS: covers, IMAGES: fakeImages } as Env & { NEWS: MemoryKV };
+		const calls: string[] = [];
+		const feed = await sync(e, new Date('2026-10-09T00:00:00Z'), feishuWithMedia(calls));
+
+		expect(feed.days[0].items[0].cover).toBe('https://news-api.bubblenews.today/v1/cover/FileTokenAAAA1');
+		expect([...covers.objects.get('covers/FileTokenAAAA1')!.bytes]).toEqual([9, 1, 2, 3]);
+		expect(covers.objects.get('covers/FileTokenAAAA1')!.contentType).toBe('image/webp');
+		// No share-image lookup for a story that already has its own cover.
+		expect(calls.some((url) => url.includes('wsj.com'))).toBe(false);
+
+		const again: string[] = [];
+		covers.heads = 0;
+		await sync(e, new Date('2026-10-09T01:00:00Z'), feishuWithMedia(again));
+		expect(again.some((url) => url.includes('/medias/'))).toBe(false);
+		expect(covers.heads).toBe(0);
+	});
+
+	it('keeps the original when resizing fails', async () => {
+		const covers = new MemoryR2();
+		const broken: ImageResizer = {
+			input: () => ({ transform: () => ({ output: async () => Promise.reject(new Error('quota')) }) }),
+		};
+		const e = { ...env(), COVERS: covers, IMAGES: broken } as Env & { NEWS: MemoryKV };
+		await sync(e, new Date('2026-10-09T00:00:00Z'), feishuWithMedia([]));
+		expect(covers.objects.get('covers/FileTokenAAAA1')).toEqual({ bytes: new Uint8Array([1, 2, 3]), contentType: 'image/jpeg' });
+	});
+
+	it('serves stored covers for a year and refuses odd paths', async () => {
+		const covers = new MemoryR2();
+		covers.objects.set('covers/FileTokenAAAA1', { bytes: new Uint8Array([7]), contentType: 'image/webp' });
+		const e = { ...env(), COVERS: covers } as Env & { NEWS: MemoryKV };
+		const ok = await worker.fetch(new Request('https://news-api.test/v1/cover/FileTokenAAAA1'), e, { waitUntil() {} });
+		expect(ok.status).toBe(200);
+		expect(ok.headers.get('content-type')).toBe('image/webp');
+		expect(ok.headers.get('cache-control')).toContain('immutable');
+		expect([...new Uint8Array(await ok.arrayBuffer())]).toEqual([7]);
+		for (const path of ['/v1/cover/Missing12345', '/v1/cover/..%2Fsecret', '/v1/cover/']) {
+			expect((await worker.fetch(new Request(`https://news-api.test${path}`), e, { waitUntil() {} })).status).toBe(404);
+		}
 	});
 });

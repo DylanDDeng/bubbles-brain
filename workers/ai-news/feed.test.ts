@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+	attachmentToken,
 	beijingDay,
 	buildFeed,
 	cellText,
@@ -142,5 +143,25 @@ describe('findShareImage', () => {
 	it('returns null without an image or with an unsafe one', () => {
 		expect(findShareImage('<meta property="og:title" content="x">', 'https://s.test')).toBeNull();
 		expect(findShareImage('<meta property="og:image" content="javascript:x">', 'https://s.test')).toBeNull();
+	});
+});
+
+describe('attachmentToken', () => {
+	it('takes the first image from a 封面 attachment cell', () => {
+		// Shape captured from the live Base on 2026-10-09.
+		expect(
+			attachmentToken([
+				{ file_token: 'Doc1abcdefghij', name: 'notes.pdf', size: 1 },
+				{ file_token: 'Sz2vbiPxkoiaqIx3MEocXA62nbe', name: 'recvvp2wgwMnn4.jpg', size: 38814 },
+			]),
+		).toBe('Sz2vbiPxkoiaqIx3MEocXA62nbe');
+		expect(attachmentToken([{ file_token: 'Abc12345xyz', type: 'image/png' }])).toBe('Abc12345xyz');
+	});
+
+	it('ignores empty cells and tokens that could escape a URL path', () => {
+		expect(attachmentToken(null)).toBeNull();
+		expect(attachmentToken([])).toBeNull();
+		expect(attachmentToken('Sz2vbiPxkoiaqIx3')).toBeNull();
+		expect(attachmentToken([{ file_token: '../../etc/passwd', name: 'a.jpg' }])).toBeNull();
 	});
 });

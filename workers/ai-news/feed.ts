@@ -32,7 +32,31 @@ export const FIELDS = {
 	summary: '内容',
 	url: '链接',
 	at: '推送时间',
+	/** An attachment the bot adds when the source has no usable share image. */
+	cover: '封面',
 } as const;
+
+const IMAGE_NAME = /\.(jpe?g|png|webp|gif|avif)$/i;
+const FILE_TOKEN = /^[A-Za-z0-9_-]{8,128}$/;
+
+/** The file token of the first image in an attachment cell, or null. */
+export function attachmentToken(value: unknown): string | null {
+	if (!Array.isArray(value)) return null;
+	for (const entry of value) {
+		if (!entry || typeof entry !== 'object') continue;
+		const file = entry as Record<string, unknown>;
+		const token = file.file_token;
+		if (typeof token !== 'string' || !FILE_TOKEN.test(token)) continue;
+		const name = typeof file.name === 'string' ? file.name : '';
+		const type = typeof file.type === 'string' ? file.type : '';
+		if (type.startsWith('image/') || IMAGE_NAME.test(name) || (!name && !type)) return token;
+	}
+	return null;
+}
+
+export function isFileToken(value: string): boolean {
+	return FILE_TOKEN.test(value);
+}
 
 export const SUMMARY_LIMIT = 160;
 const BEIJING_OFFSET_MS = 8 * 60 * 60 * 1000;

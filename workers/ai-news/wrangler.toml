@@ -13,6 +13,15 @@ kv_namespaces = [
   { binding = "NEWS", id = "9acf30d2336846d78f573d91fb5b4a45" }
 ]
 
+# Covers the bot attaches in 封面, copied from Feishu once and served from /v1/cover/<file token>.
+r2_buckets = [
+  { binding = "COVERS", bucket_name = "bubble-ai-news-covers" }
+]
+
+# Shrinks those covers to 800px WebP (Cloudflare Images; the free tier covers a few thousand a month).
+[images]
+binding = "IMAGES"
+
 # The bot asks for a sync (POST /v1/sync) after each batch it writes. The hourly run is only the
 # safety net for a missed call or a hand edit in the Base, and keeps Feishu API use low.
 [triggers]
@@ -22,6 +31,7 @@ crons = ["7 * * * *"]
 # https://qxs9ymhwwgc.feishu.cn/base/VeAHb1KBJaC376sPK9kcqWtKnIh, table 选题
 FEISHU_BASE_TOKEN = "VeAHb1KBJaC376sPK9kcqWtKnIh"
 FEISHU_TABLE_ID = "tbllnXUeB6wHLgBJ"
+COVER_BASE_URL = "https://news-api.bubblenews.today/v1/cover/"
 
 # Secrets (wrangler secret put … --config workers/ai-news/wrangler.toml):
 #   FEISHU_APP_ID, FEISHU_APP_SECRET — a Feishu custom app with bitable:app:readonly (app identity),

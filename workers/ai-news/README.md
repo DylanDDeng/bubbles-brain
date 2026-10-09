@@ -20,7 +20,13 @@ right after writing a batch (`POST /v1/sync`), and once an hour on a cron as a s
 
 `GET https://news-api.bubblenews.today/v1/feed` serves that value to any origin with a
 one-minute cache. The page itself is static; publishing news never needs a site release.
-The Base remains the archive: if KV is lost, the next run rebuilds the feed.
+The feed covers the last 30 days. Every sync also folds it into a monthly archive in the R2
+bucket `bubble-ai-news-archive` (`archive/YYYY-MM.json`, grouped by Beijing day), so a story
+keeps its last version after it ages out of the window and the Base can be pruned. Days
+before the window are kept as archived; later days follow the feed (edits and deletions carry
+over); the window's first day keeps both. `GET /v1/archive/<YYYY-MM>` serves a month, and the
+feed's `archiveMonths` lists the months that hold days older than the window. If KV is lost,
+the next run rebuilds the feed from the Base.
 
 The Feishu tenant token is kept in KV until five minutes before it expires, so a run normally
 costs one or two Feishu API calls (the record search), not three.

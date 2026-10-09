@@ -15,7 +15,9 @@ kv_namespaces = [
 
 # Covers the bot attaches in 封面, copied from Feishu once and served from /v1/cover/<file token>.
 r2_buckets = [
-  { binding = "COVERS", bucket_name = "bubble-ai-news-covers" }
+  { binding = "COVERS", bucket_name = "bubble-ai-news-covers" },
+  # Every story the feed has shown, one JSON file per Beijing month (archive.ts), served from /v1/archive/<YYYY-MM>.
+  { binding = "ARCHIVE", bucket_name = "bubble-ai-news-archive" }
 ]
 
 # Shrinks those covers to 800px WebP (Cloudflare Images; the free tier covers a few thousand a month).

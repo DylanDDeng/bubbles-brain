@@ -3,7 +3,7 @@
  * as the built rows, then asks knowledge-search.js to filter again. They stay hidden until there
  * is a query or the AI 动态 filter is chosen, so the full listing is not swamped by news.
  */
-import { loadNewsFeed, monthDay, newsSearchItems } from '../lib/aiNews';
+import { loadNewsFeed, monthDay, NEWS_FRESH_FOR, newsSearchItems } from '../lib/aiNews';
 
 function row(item: ReturnType<typeof newsSearchItems>[number]): HTMLLIElement {
 	const li = document.createElement('li');
@@ -36,7 +36,7 @@ function addNews(root: HTMLElement) {
 	const list = root.querySelector<HTMLElement>('[data-knowledge-results]');
 	const url = root.dataset.newsUrl;
 	if (!list || !url) return;
-	void loadNewsFeed(url).then((feed) => {
+	void loadNewsFeed(url, NEWS_FRESH_FOR).then((feed) => {
 		if (!feed) return;
 		list.append(...newsSearchItems(feed).map(row));
 		root.dispatchEvent(new CustomEvent('knowledge-search:refresh'));

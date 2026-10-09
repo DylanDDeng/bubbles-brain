@@ -1,10 +1,18 @@
 /**
  * The home search box: while it has focus and is empty, the latest AI 动态 open under it. Typing
  * closes them (Enter still searches, news included); Escape, clicking elsewhere or opening a story
- * closes them too. The feed is fetched once the page is idle, so the list is there on first focus;
- * if it cannot be read the box is just a search box.
+ * closes them too. The feed is fetched once the page is idle, so the list is there on first focus,
+ * and again on a later focus once it is over a minute old; if it cannot be read the box is just a
+ * search box.
  */
-import { homeNews, LAST_SEEN_KEY, loadNewsFeed, type HomeNews } from '../lib/aiNews';
+import {
+	homeNews,
+	LAST_SEEN_KEY,
+	loadNewsFeed,
+	NEWS_FRESH_FOR as FRESH_FOR,
+	type HomeNews,
+	type NewsFeed,
+} from '../lib/aiNews';
 
 const SHOWN = 5;
 
@@ -65,36 +73,34 @@ function init() {
 	const { signal } = controller;
 	let ready = false;
 
-	const isOpen = () => !panel.hidden;
+	const isOpen = () => shell.classList.contains('is-open');
 	const open = () => {
 		if (!ready || input.value.trim() !== '' || !shell.contains(document.activeElement)) return;
-		panel.hidden = false;
 		shell.classList.add('is-open');
 	};
 	const close = () => {
-		panel.hidden = true;
 		shell.classList.remove('is-open');
 	};
 
-	let loading: Promise<void> | null = null;
-	const load = () => {
-		loading ??= loadNewsFeed(url).then((feed) => {
-			if (signal.aborted || !feed) {
-				loading = null;
-				return;
-			}
+	let shown: NewsFeed | null = null;
+	/** The feed, read again when the copy in hand is over a minute old (the Worker's cache time). */
+	const load = () =>
+		loadNewsFeed(url, FRESH_FOR).then((feed) => {
+			if (signal.aborted || !feed || feed === shown) return;
+			// Never swap rows out from under a reader moving through them with the keyboard.
+			if (list.contains(document.activeElement)) return;
 			const news = homeNews(feed, readLastSeen(), new Date(), SHOWN);
 			if (!news.rows.length) return;
+			shown = feed;
 			list.replaceChildren(...news.rows.map(row));
 			updated.textContent = news.updated;
 			all.textContent = news.today ? `今天推送了 ${news.today} 条，看全部` : '看全部 AI 动态';
+			// From here the shell's is-open class shows and hides the list, so it can slide.
+			panel.hidden = false;
 			ready = true;
-			open();
 		});
-		return loading;
-	};
 	const idle = window.requestIdleCallback ?? ((run: () => void) => window.setTimeout(run, 1200));
-	idle(() => void load());
+	idle(() => void load().then(open));
 
 	input.addEventListener('focus', () => void load().then(open), { signal });
 	input.addEventListener('input', () => (input.value.trim() ? close() : open()), { signal });

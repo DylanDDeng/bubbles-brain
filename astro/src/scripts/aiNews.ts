@@ -5,7 +5,7 @@
  * a month whose older days have aged out of the feed is read from the archive when it is opened.
  * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
  * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
- * reader's last visit (kept in this browser only) are marked 新, with a 上次看到这里 line under them.
+ * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
@@ -59,7 +59,7 @@ function card(item: NewsItem): HTMLElement {
 	return link;
 }
 
-/** This tab's starting point, so a reload keeps the same 新 marks (sessionStorage dies with the tab). */
+/** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
 const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
 
 /**
@@ -90,7 +90,7 @@ function writeLastSeen(iso: string) {
 
 /**
  * One row per push time: a pinned label with the time (23:08) beside that batch's cards.
- * Stories newer than the last visit are 新; the 上次看到这里 line goes above the first older row.
+ * The 上次看到这里 line goes above the first row older than the last visit, and only if newer rows come before it.
  */
 function timeline(items: NewsItem[], lastSeen: string | null, now: Date): HTMLElement[] {
 	const isNew = (item: NewsItem) => !!lastSeen && item.at > lastSeen;
@@ -112,14 +112,12 @@ function timeline(items: NewsItem[], lastSeen: string | null, now: Date): HTMLEl
 		sawNew ||= fresh;
 
 		const row = el('section', 'news-moment');
-		if (fresh) row.classList.add('is-new');
 		const label = el('div', 'news-moment__label');
 		const dot = el('span', 'news-moment__dot');
 		dot.setAttribute('aria-hidden', 'true');
 		const time = el('time', 'news-moment__time', group.time);
 		time.dateTime = group.items[0].at;
 		label.append(dot, time);
-		if (fresh) label.append(el('span', 'news-moment__new', '新'));
 		const cards = el('div', 'news-moment__cards');
 		cards.append(...group.items.map(card));
 		row.append(label, cards);

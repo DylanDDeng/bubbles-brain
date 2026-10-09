@@ -133,23 +133,13 @@
 	border-radius: 50%;
 	background: var(--paper);
 }
-.news-moment.is-new .news-moment__dot {
-	border-color: var(--ink);
-	background: var(--ink);
-}
-/* The push time, quiet, on the timeline itself; 新 beside it for stories since the last visit. */
+/* The push time, quiet, on the timeline itself. */
 .news-moment__time {
 	color: var(--ink-faint);
 	font-size: 13px;
 	line-height: 1.4;
 	font-variant-numeric: tabular-nums;
 	white-space: nowrap;
-}
-.news-moment__new {
-	color: var(--ink);
-	font-size: 12px;
-	font-weight: 600;
-	line-height: 1.4;
 }
 /* One long card per story, stacked: a timeline reads down, one thing after another. */
 .news-moment__cards {

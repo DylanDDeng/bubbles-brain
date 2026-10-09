@@ -31,7 +31,12 @@ import '../../styles/ai-news.css';
 					</button>
 				</div>
 			</div>
+			{/* When this comes into view the reader is at the end: the veil steps aside. */}
+			<div class="news-end" data-news-end></div>
 		</div>
+
+		{/* Frosted edge at the bottom of the screen: cards blur out as they scroll under it. */}
+		<div class="news-veil" aria-hidden="true" data-news-veil><i></i><i></i><i></i><i></i></div>
 	</div>
 </BaseLayout>
 

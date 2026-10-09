@@ -59,6 +59,7 @@ const pointerDemo = [
 	'toast',
 	'dropdown',
 	'tooltip',
+	'confetti',
 ].includes(demo);
 const defaults = defaultMotionValues(profile);
 // 演示用的真实内容：一个虚构的笔记 App「小记」，和一个徒步路线网站
@@ -144,6 +145,12 @@ const toolbar = [
 	{ icon: 'ph-link', tip: '插入链接 ⌘K' },
 	{ icon: 'ph-image', tip: '插入图片' },
 	{ icon: 'ph-list-checks', tip: '待办清单' },
+];
+const article = [
+	'这本书最大的价值，是把「地方政府」从一个抽象的词，拆成了一套看得见的账本：钱从哪里来，花到哪里去，为什么总是不够花。',
+	'第二章讲土地财政，是全书最清楚的一章。卖地收入、城投公司、基础设施投资，三件事其实是同一个循环的三个环节。',
+	'第三章讲债务。作者没有简单地说「借多了不好」，而是解释了为什么在当时的约束下，借钱几乎是唯一的选择。',
+	'读完最大的感受：很多看起来不合理的现象，放回它的约束条件里，就变得可以理解了。理解不等于认同，但这是讨论的起点。',
 ];
 const routes = [
 	{ name: '香山环线', meta: '8 公里 · 约 3 小时 · 难度适中' },
@@ -995,6 +1002,111 @@ const stats = [
 							<small class="ms-perf__status" data-motion-status>
 								页面空闲：两个球一样顺
 							</small>
+						</div>
+					) : null
+				}
+				{
+					demo === 'progress' ? (
+						<div class="ms-progress" data-motion-target>
+							<div
+								class="ms-scroll ms-article"
+								data-motion-scroll
+								tabindex="0"
+								aria-label="可滚动的演示区"
+							>
+								<i class="ms-progress__bar" data-motion-bar />
+								<article>
+									<small>读书笔记 · 6 分钟读完</small>
+									<h3>《置身事内》：看懂地方政府怎么花钱</h3>
+									{article.map((paragraph) => (
+										<p>{paragraph}</p>
+									))}
+								</article>
+							</div>
+							<svg class="ms-progress__ring" viewBox="0 0 36 36" width="36" height="36">
+								<circle cx="18" cy="18" r="15" pathLength="100" />
+								<circle cx="18" cy="18" r="15" pathLength="100" data-motion-ring />
+							</svg>
+						</div>
+					) : null
+				}
+				{
+					demo === 'navbar' ? (
+						<div
+							class="ms-scroll ms-navpage"
+							data-motion-scroll
+							tabindex="0"
+							aria-label="可滚动的演示区"
+						>
+							<nav class="ms-navpage__bar" data-motion-nav>
+								<b>
+									<i class="ph ph-notebook" />
+									小记
+								</b>
+								<span>功能</span>
+								<span>模板</span>
+								<span>价格</span>
+							</nav>
+							<div class="ms-navpage__hero">
+								<strong>把灵感，随手记下来</strong>
+								<span>往下滚动 ↓</span>
+							</div>
+							<div class="ms-cards">
+								{features.map((feature) => (
+									<div class="ms-card">
+										<i class={`ph ${feature.icon} ms-icon ms-icon--${feature.tone}`} />
+										<strong>{feature.title}</strong>
+										<span>{feature.text}</span>
+									</div>
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'snap' ? (
+						<div class="ms-snap-wrap">
+							<p class="ms-gallery__title">小记 · 精选模板</p>
+							<div class="ms-snap" data-motion-snap tabindex="0" aria-label="可横向滚动的演示区">
+								{templates.map((template) => (
+									<div class="ms-snap__card">
+										<i class={`ph ${template.icon} ms-tile__thumb ms-icon--${template.tone}`} />
+										<strong>{template.title}</strong>
+										<span>{template.uses}</span>
+									</div>
+								))}
+							</div>
+							<div class="ms-snap__dots" data-motion-dots>
+								{templates.map(() => (
+									<i />
+								))}
+							</div>
+						</div>
+					) : null
+				}
+				{
+					demo === 'check' ? (
+						<div class="ms-check" data-motion-target>
+							<svg viewBox="0 0 64 64" width="88" height="88" data-motion-svg>
+								<circle class="ms-check__circle" cx="32" cy="32" r="28" pathLength="100" />
+								<path class="ms-check__tick" d="M19 33l9 9 17-19" pathLength="100" />
+							</svg>
+							<strong data-motion-text>提交成功</strong>
+							<span data-motion-text>我们会在 1 个工作日内回复你的反馈</span>
+						</div>
+					) : null
+				}
+				{
+					demo === 'confetti' ? (
+						<div class="ms-list ms-todo">
+							<p class="ms-list__title">今天要做 · 还剩 1 项</p>
+							{todos.slice(0, 3).map((todo, index) => (
+								<span class={index < 2 ? 'ms-todo__item is-done' : 'ms-todo__item'}>
+									<i class="ms-todo__box" data-motion-target={index === 2 ? '' : undefined} />
+									<span>{todo}</span>
+								</span>
+							))}
+							<span class="ms-confetti" data-motion-confetti />
 						</div>
 					) : null
 				}

@@ -308,6 +308,253 @@
 	}
 }
 
+/* 阅读进度条：顶部细线跟着正文往下走 */
+.mg--reading-progress i:nth-child(1) {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: var(--acc);
+	transform-origin: left;
+	animation-name: mg-fill;
+	animation-timing-function: linear;
+}
+
+.mg--reading-progress i:nth-child(n + 2) {
+	left: 16%;
+	width: 68%;
+	height: 5px;
+	border-radius: 3px;
+	background: var(--rule);
+	animation-name: mg-scroll-up;
+	animation-timing-function: linear;
+}
+
+.mg--reading-progress i:nth-child(2) {
+	top: 20px;
+}
+
+.mg--reading-progress i:nth-child(3) {
+	top: 32px;
+	width: 56%;
+}
+
+.mg--reading-progress i:nth-child(4) {
+	top: 44px;
+}
+
+.mg--reading-progress i:nth-child(5) {
+	top: 56px;
+	width: 40%;
+}
+
+/* 导航栏滚动变化：一往下滚，顶栏变实色带阴影 */
+.mg--navbar-scroll i:nth-child(1) {
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: 16px;
+	animation-name: mg-navbar;
+	animation-timing-function: step-end;
+}
+
+.mg--navbar-scroll i:nth-child(n + 2) {
+	left: 16%;
+	width: 68%;
+	height: 5px;
+	border-radius: 3px;
+	background: var(--rule);
+	animation-name: mg-scroll-up;
+	animation-timing-function: linear;
+}
+
+.mg--navbar-scroll i:nth-child(2) {
+	top: 26px;
+}
+
+.mg--navbar-scroll i:nth-child(3) {
+	top: 38px;
+	width: 50%;
+}
+
+.mg--navbar-scroll i:nth-child(4) {
+	top: 50px;
+}
+
+@keyframes mg-navbar {
+	0% {
+		background: transparent;
+		box-shadow: 0 0 0 transparent;
+	}
+
+	25% {
+		background: var(--ink);
+		box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
+	}
+}
+
+/* 横向滑动吸附：一排卡片一张一张对齐 */
+.mg--scroll-snap i:nth-child(-n + 3) {
+	top: 14px;
+	width: 46%;
+	height: 44px;
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	background: var(--paper);
+	animation-name: mg-snap;
+	animation-timing-function: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.mg--scroll-snap i:nth-child(1) {
+	left: 8%;
+}
+
+.mg--scroll-snap i:nth-child(2) {
+	left: 58%;
+	background: color-mix(in srgb, var(--acc) 15%, var(--paper));
+}
+
+.mg--scroll-snap i:nth-child(3) {
+	left: 108%;
+}
+
+@keyframes mg-snap {
+	0%,
+	30% {
+		transform: none;
+	}
+
+	50%,
+	80% {
+		transform: translateX(-108%);
+	}
+
+	100% {
+		transform: none;
+	}
+}
+
+/* 成功打勾：圆圈先出来，再出对勾 */
+.mg--success-check i:nth-child(1) {
+	top: 14px;
+	left: calc(50% - 22px);
+	width: 44px;
+	height: 44px;
+	border: 3px solid var(--cat-products);
+	border-radius: 50%;
+	animation-name: mg-check-ring;
+	animation-timing-function: ease-out;
+}
+
+.mg--success-check i:nth-child(2) {
+	top: 28px;
+	left: calc(50% - 9px);
+	width: 18px;
+	height: 9px;
+	border-bottom: 3px solid var(--cat-products);
+	border-left: 3px solid var(--cat-products);
+	transform: rotate(-45deg);
+	animation-name: mg-check-tick;
+	animation-timing-function: ease-out;
+}
+
+@keyframes mg-check-ring {
+	0% {
+		opacity: 0;
+		transform: scale(0.6);
+	}
+
+	25%,
+	85% {
+		opacity: 1;
+		transform: none;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes mg-check-tick {
+	0%,
+	25% {
+		clip-path: inset(0 100% 0 0);
+	}
+
+	45%,
+	85% {
+		clip-path: inset(0 0 0 0);
+	}
+
+	100% {
+		clip-path: inset(0 100% 0 0);
+	}
+}
+
+/* 撒花：彩纸从中间喷出再落下 */
+.mg--confetti i {
+	top: 44px;
+	left: calc(50% - 3px);
+	width: 6px;
+	height: 9px;
+	border-radius: 2px;
+	animation-name: mg-confetti;
+	animation-timing-function: cubic-bezier(0.25, 0.6, 0.45, 1);
+}
+
+.mg--confetti i:nth-child(1) {
+	background: #e0b23f;
+	--dx: -46px;
+	--r: -260deg;
+}
+
+.mg--confetti i:nth-child(2) {
+	background: #d4537e;
+	--dx: -20px;
+	--r: 200deg;
+}
+
+.mg--confetti i:nth-child(3) {
+	background: #3f8fd6;
+	--dx: 6px;
+	--r: -180deg;
+}
+
+.mg--confetti i:nth-child(4) {
+	background: #2f9e6e;
+	--dx: 28px;
+	--r: 240deg;
+}
+
+.mg--confetti i:nth-child(5) {
+	background: #9b6bd6;
+	--dx: 50px;
+	--r: -220deg;
+}
+
+@keyframes mg-confetti {
+	0%,
+	15% {
+		opacity: 0;
+		transform: none;
+	}
+
+	18% {
+		opacity: 1;
+	}
+
+	40% {
+		transform: translate(calc(var(--dx) * 0.6), -36px) rotate(calc(var(--r) / 2));
+	}
+
+	85%,
+	100% {
+		opacity: 0;
+		transform: translate(var(--dx), 30px) rotate(var(--r));
+	}
+}
+
 /* 滚动淡入 / 依次出现 / 逐字出现：块状物浮现 */
 .mg--reveal-on-scroll i:nth-child(-n + 2) {
 	left: 20%;

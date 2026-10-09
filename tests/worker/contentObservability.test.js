@@ -186,6 +186,15 @@ describe("content observability production identity", () => {
     expect(result.reasons).toContain("api_analytics_sample_invalid");
   });
 
+  it("reports superseded dead letters without alerting on them", () => {
+    const input = healthyInput();
+    input.database.outbox.superseded_dead_letter_count = 7;
+    const result = evaluateContentObservability(input, NOW);
+    expect(result.healthy).toBe(true);
+    expect(result.reasons).toEqual([]);
+    expect(result.outbox.superseded_dead_letter_count).toBe(7);
+  });
+
   it("alerts when a production release-head claim remains occupied", () => {
     const input = healthyInput();
     input.database.outbox.release_head_stale_count = 1;

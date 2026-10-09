@@ -4,6 +4,7 @@
  * as #YYYY-MM-DD. Typing in the search box looks across every day instead.
  */
 import {
+	COVER_RATIO,
 	dayTitle,
 	clockTime,
 	parseFeed,
@@ -29,6 +30,8 @@ function card(item: NewsItem): HTMLElement {
 	if (item.cover) {
 		const frame = el('span', 'news-card__cover');
 		const image = el('img');
+		// Reserve the cover's own shape up front so the masonry can deal cards before images load.
+		image.style.aspectRatio = String(item.coverRatio ?? COVER_RATIO.fallback);
 		image.src = item.cover;
 		image.alt = '';
 		image.loading = 'lazy';

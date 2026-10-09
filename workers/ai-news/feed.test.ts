@@ -165,3 +165,15 @@ describe('attachmentToken', () => {
 		expect(attachmentToken([{ file_token: '../../etc/passwd', name: 'a.jpg' }])).toBeNull();
 	});
 });
+
+describe('cover sizes', () => {
+	it('adds a known size to the item whose cover it belongs to', () => {
+		const feed = buildFeed(
+			[record('a', { 标题: 'A', 链接: 'https://a.test/x', 推送时间: Date.parse('2026-10-08T10:00:00Z') })],
+			new Map([[storyKey('https://a.test/x'), 'https://cdn.test/a.webp']]),
+			new Date('2026-10-09T00:00:00Z'),
+			new Map([['https://cdn.test/a.webp', { width: 800, height: 600 }]]),
+		);
+		expect(feed.days[0].items[0]).toMatchObject({ cover: 'https://cdn.test/a.webp', coverWidth: 800, coverHeight: 600 });
+	});
+});

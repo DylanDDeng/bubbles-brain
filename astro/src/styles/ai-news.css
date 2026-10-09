@@ -94,7 +94,9 @@
 	border-bottom: 1px solid var(--rule);
 	background: var(--paper-muted);
 }
-/* Share images are made at 1.91:1; fixing the frame keeps a card's height known before it loads. */
+/* Each cover keeps its own shape (aiNews.ts sets aspect-ratio from the size the Worker recorded,
+   clamped to 4:5–2:1; share images without a size get their usual 1.91:1). Knowing the shape
+   before the image loads keeps the masonry steady. */
 .news-card__cover img {
 	display: block;
 	width: 100%;
@@ -122,8 +124,8 @@
 	color: var(--ink-soft);
 	font-size: 13px;
 	line-height: 1.7;
-	-webkit-line-clamp: 3;
-	line-clamp: 3;
+	-webkit-line-clamp: 6;
+	line-clamp: 6;
 	-webkit-box-orient: vertical;
 }
 .news-card__time {

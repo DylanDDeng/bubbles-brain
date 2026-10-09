@@ -212,26 +212,44 @@ describe('POST /v1/sync', () => {
 	});
 });
 
+type StoredObject = { bytes: Uint8Array; contentType?: string; customMetadata?: Record<string, string> };
+
 class MemoryR2 implements CoverBucket {
-	objects = new Map<string, { bytes: Uint8Array; contentType?: string }>();
+	objects = new Map<string, StoredObject>();
 	heads = 0;
 	async head(key: string) {
 		this.heads += 1;
-		return this.objects.has(key) ? {} : null;
+		const object = this.objects.get(key);
+		return object ? { customMetadata: object.customMetadata } : null;
 	}
 	async get(key: string) {
 		const object = this.objects.get(key);
 		if (!object) return null;
-		return { body: new Response(object.bytes).body!, httpMetadata: { contentType: object.contentType }, httpEtag: '"e1"' };
+		return {
+			body: new Response(object.bytes).body!,
+			arrayBuffer: async () => object.bytes.slice().buffer,
+			httpMetadata: { contentType: object.contentType },
+			customMetadata: object.customMetadata,
+			httpEtag: '"e1"',
+		};
 	}
-	async put(key: string, value: ArrayBuffer | ReadableStream, options?: { httpMetadata?: { contentType?: string } }) {
+	async put(
+		key: string,
+		value: ArrayBuffer | ReadableStream,
+		options?: { httpMetadata?: { contentType?: string }; customMetadata?: Record<string, string> },
+	) {
 		const bytes = new Uint8Array(await new Response(value).arrayBuffer());
-		this.objects.set(key, { bytes, contentType: options?.httpMetadata?.contentType });
+		this.objects.set(key, {
+			bytes,
+			contentType: options?.httpMetadata?.contentType,
+			...(options?.customMetadata ? { customMetadata: options.customMetadata } : {}),
+		});
 	}
 }
 
 /** Pretends to shrink: prefixes the bytes so the test can tell the resized copy was stored. */
 const fakeImages: ImageResizer = {
+	info: async () => ({ width: 800, height: 1000 }),
 	input(stream) {
 		return {
 			transform: () => ({
@@ -276,7 +294,12 @@ describe('attachment covers', () => {
 		const calls: string[] = [];
 		const feed = await sync(e, new Date('2026-10-09T00:00:00Z'), feishuWithMedia(calls));
 
-		expect(feed.days[0].items[0].cover).toBe('https://news-api.bubblenews.today/v1/cover/FileTokenAAAA1');
+		expect(feed.days[0].items[0]).toMatchObject({
+			cover: 'https://news-api.bubblenews.today/v1/cover/FileTokenAAAA1',
+			coverWidth: 800,
+			coverHeight: 1000,
+		});
+		expect(covers.objects.get('covers/FileTokenAAAA1')!.customMetadata).toEqual({ width: '800', height: '1000' });
 		expect([...covers.objects.get('covers/FileTokenAAAA1')!.bytes]).toEqual([9, 1, 2, 3]);
 		expect(covers.objects.get('covers/FileTokenAAAA1')!.contentType).toBe('image/webp');
 		// No share-image lookup for a story that already has its own cover.
@@ -292,11 +315,27 @@ describe('attachment covers', () => {
 	it('keeps the original when resizing fails', async () => {
 		const covers = new MemoryR2();
 		const broken: ImageResizer = {
+			info: async () => Promise.reject(new Error('quota')),
 			input: () => ({ transform: () => ({ output: async () => Promise.reject(new Error('quota')) }) }),
 		};
 		const e = { ...env(), COVERS: covers, IMAGES: broken } as Env & { NEWS: MemoryKV };
 		await sync(e, new Date('2026-10-09T00:00:00Z'), feishuWithMedia([]));
 		expect(covers.objects.get('covers/FileTokenAAAA1')).toEqual({ bytes: new Uint8Array([1, 2, 3]), contentType: 'image/jpeg' });
+	});
+
+	it('measures covers copied before sizes were kept, without downloading them again', async () => {
+		const covers = new MemoryR2();
+		covers.objects.set('covers/FileTokenAAAA1', { bytes: new Uint8Array([5, 5]), contentType: 'image/webp' });
+		const e = { ...env(), COVERS: covers, IMAGES: fakeImages } as Env & { NEWS: MemoryKV };
+		const calls: string[] = [];
+		const feed = await sync(e, new Date('2026-10-09T00:00:00Z'), feishuWithMedia(calls));
+		expect(calls.some((url) => url.includes('/medias/'))).toBe(false);
+		expect(feed.days[0].items[0]).toMatchObject({ coverWidth: 800, coverHeight: 1000 });
+		expect(covers.objects.get('covers/FileTokenAAAA1')).toEqual({
+			bytes: new Uint8Array([5, 5]),
+			contentType: 'image/webp',
+			customMetadata: { width: '800', height: '1000' },
+		});
 	});
 
 	it('serves stored covers for a year and refuses odd paths', async () => {
@@ -311,5 +350,42 @@ describe('attachment covers', () => {
 		for (const path of ['/v1/cover/Missing12345', '/v1/cover/..%2Fsecret', '/v1/cover/']) {
 			expect((await worker.fetch(new Request(`https://news-api.test${path}`), e, { waitUntil() {} })).status).toBe(404);
 		}
+	});
+});
+
+describe('attachment covers at scale', () => {
+	it('does not ask R2 about covers the last feed already showed', async () => {
+		const many = Array.from({ length: 50 }, (_, i) => ({
+			record_id: `rec${i}`,
+			fields: {
+				标题: `新闻 ${i}`,
+				链接: `https://news.test/${i}`,
+				推送时间: Date.parse('2026-10-08T14:00:00Z') - i * 60000,
+				封面: [{ file_token: `FileToken${String(i).padStart(4, '0')}`, name: `${i}.jpg` }],
+			},
+		}));
+		const feishu = (async (input: RequestInfo | URL) => {
+			const url = String(input);
+			if (url.endsWith('/tenant_access_token/internal')) return Response.json({ code: 0, tenant_access_token: 't', expire: 7200 });
+			if (url.includes('/records/search')) return Response.json({ code: 0, data: { items: many, has_more: false } });
+			throw new Error(`unexpected fetch ${url}`);
+		}) as typeof fetch;
+		const covers = new MemoryR2();
+		for (const row of many) covers.objects.set(`covers/${row.fields.封面[0].file_token}`, { bytes: new Uint8Array([1]), contentType: 'image/webp' });
+		const e = { ...env(), COVERS: covers, IMAGES: fakeImages } as Env & { NEWS: MemoryKV };
+		// The feed as it was before sizes existed: every cover shown, none sized.
+		const base = 'https://news-api.bubblenews.today/v1/cover/';
+		e.NEWS.store.set(
+			FEED_KEY,
+			JSON.stringify({
+				updatedAt: '2026-10-08T15:00:00.000Z',
+				days: [{ day: '2026-10-08', items: many.map((row) => ({ id: row.record_id, cover: `${base}${row.fields.封面[0].file_token}` })) }],
+			}),
+		);
+		const feed = await sync(e, new Date('2026-10-09T00:00:00Z'), feishu, { pages: 0, attachments: 4 });
+		expect(covers.heads).toBe(0);
+		const items = feed.days.flatMap((day) => day.items);
+		expect(items.every((item) => item.cover?.startsWith(base))).toBe(true);
+		expect(items.filter((item) => item.coverWidth)).toHaveLength(4);
 	});
 });

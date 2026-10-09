@@ -1,4 +1,4 @@
-import { loadNewsFeed, newsSearchItems } from '../lib/aiNews';
+import { loadNewsFeed, NEWS_FRESH_FOR, newsSearchItems } from '../lib/aiNews';
 import type { KnowledgeSearchIndex, KnowledgeSearchItem } from '../lib/searchIndex';
 
 export function normalizeCommandQuery(value: string): string {
@@ -163,8 +163,8 @@ function initCommandSearch(): void {
 
 	const loadNews = () => {
 		const newsUrl = dialog.dataset.newsUrl;
-		if (!newsUrl || news.length) return;
-		void loadNewsFeed(newsUrl).then((feed) => {
+		if (!newsUrl) return;
+		void loadNewsFeed(newsUrl, NEWS_FRESH_FOR).then((feed) => {
 			if (!feed) return;
 			news = newsSearchItems(feed);
 			if (input?.value.trim()) render();

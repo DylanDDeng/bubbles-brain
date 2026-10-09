@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
@@ -17,6 +17,7 @@ import {
 	newsSearchItems,
 	updatedLabel,
 	homeNews,
+	loadNewsFeed,
 } from './aiNews';
 
 const item = (id: string, extra: Record<string, unknown> = {}) => ({
@@ -288,5 +289,34 @@ describe('the home page’s newest stories', () => {
 		const home = homeNews(feed, null, new Date('2026-10-10T05:00:00.000Z'));
 		expect(home.updated).toBe('昨天 20:29 更新');
 		expect(home.today).toBe(0);
+	});
+});
+
+describe('reading the feed', () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		vi.useRealTimers();
+	});
+
+	it('shares one request, and reads past the browser cache once the copy is too old', async () => {
+		vi.useFakeTimers({ now: new Date('2026-10-09T13:00:00.000Z'), toFake: ['Date'] });
+		const calls: RequestInit[] = [];
+		vi.stubGlobal('fetch', async (_url: string, init: RequestInit) => {
+			calls.push(init);
+			return new Response(JSON.stringify({ updatedAt: '2026-10-09T13:00:00.000Z', days: [] }));
+		});
+		const url = 'https://news.test/v1/feed?stale';
+		const first = await loadNewsFeed(url, 60_000);
+		expect(await loadNewsFeed(url, 60_000)).toBe(first);
+		expect(await loadNewsFeed(url)).toBe(first);
+		expect(calls).toHaveLength(1);
+		expect(calls[0].cache).toBeUndefined();
+
+		vi.setSystemTime(new Date('2026-10-09T13:01:01.000Z'));
+		expect(await loadNewsFeed(url)).toBe(first);
+		const second = await loadNewsFeed(url, 60_000);
+		expect(second).not.toBe(first);
+		expect(calls).toHaveLength(2);
+		expect(calls[1].cache).toBe('no-cache');
 	});
 });

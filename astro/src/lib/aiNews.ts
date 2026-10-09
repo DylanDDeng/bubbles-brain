@@ -321,21 +321,30 @@ export function newsSearchItems(feed: NewsFeed): KnowledgeSearchItem[] {
 	);
 }
 
-const feedRequests = new Map<string, Promise<NewsFeed | null>>();
+/** How long a fetched feed counts as current: the Worker caches it for as long. */
+export const NEWS_FRESH_FOR = 60_000;
 
-/** The feed, fetched once per page view; null when it cannot be read (search then skips news). */
-export function loadNewsFeed(url: string): Promise<NewsFeed | null> {
-	let request = feedRequests.get(url);
-	if (!request) {
-		request = fetch(url, { headers: { accept: 'application/json' } })
-			.then((response) => (response.ok ? response.json() : null))
-			.then((raw: unknown) => (raw ? parseFeed(raw) : null))
-			.catch(() => null);
-		feedRequests.set(url, request);
-		// A failed read may succeed on the next search.
-		void request.then((feed) => {
-			if (!feed) feedRequests.delete(url);
-		});
-	}
+const feedRequests = new Map<string, { at: number; request: Promise<NewsFeed | null> }>();
+
+/**
+ * The feed; null when it cannot be read (search then skips news). One request serves every caller
+ * on the page; with `maxAge` a copy older than that is fetched again, past the browser's cache, so
+ * a tab left open (or kept across in-site navigation) catches up with what the bot has pushed.
+ */
+export function loadNewsFeed(url: string, maxAge = Infinity): Promise<NewsFeed | null> {
+	const cached = feedRequests.get(url);
+	if (cached && Date.now() - cached.at < maxAge) return cached.request;
+	const request = fetch(url, {
+		headers: { accept: 'application/json' },
+		...(cached ? { cache: 'no-cache' as const } : {}),
+	})
+		.then((response) => (response.ok ? response.json() : null))
+		.then((raw: unknown) => (raw ? parseFeed(raw) : null))
+		.catch(() => null);
+	feedRequests.set(url, { at: Date.now(), request });
+	// A failed read may succeed on the next try; until then callers keep what they last showed.
+	void request.then((feed) => {
+		if (!feed && feedRequests.get(url)?.request === request) feedRequests.delete(url);
+	});
 	return request;
 }

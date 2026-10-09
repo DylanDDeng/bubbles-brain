@@ -39,6 +39,8 @@ export interface FeedDay {
 export interface Feed {
 	updatedAt: string;
 	days: FeedDay[];
+	/** Months (YYYY-MM, newest first) with archived days older than `days`: GET /v1/archive/<month>. */
+	archiveMonths?: string[];
 }
 
 /** The Base's column names, as the bot writes them. */

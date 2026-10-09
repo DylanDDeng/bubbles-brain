@@ -2557,6 +2557,336 @@ function perfDemo(stage: HTMLElement): Demo {
 	};
 }
 
+/* ---------- 按路线自动滚：滚到某处、停一下、再滚到下一处，循环 ---------- */
+
+interface ScrollStop {
+	/** 目标位置：可滚动距离的比例，或者（横向）第几张卡片 */
+	to: number;
+	ms: number;
+	hold: number;
+}
+
+function scrollTour(
+	box: HTMLElement,
+	stops: ScrollStop[],
+	options: {
+		axis?: 'x' | 'y';
+		/** 把 to 换算成像素；默认按可滚动距离的比例 */
+		toPixels?: (to: number) => number;
+		restart?: () => void;
+		beforeMove?: () => void;
+		afterMove?: () => void;
+	},
+): () => void {
+	const horizontal = options.axis === 'x';
+	const max = () =>
+		horizontal ? box.scrollWidth - box.clientWidth : box.scrollHeight - box.clientHeight;
+	const toPixels = options.toPixels ?? ((to: number) => to * max());
+	let frame = 0;
+	let timer = 0;
+	let stopped = false;
+	const takeover = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+	const stop = () => {
+		stopped = true;
+		cancelAnimationFrame(frame);
+		window.clearTimeout(timer);
+		for (const type of takeover) box.removeEventListener(type, stop);
+		options.afterMove?.();
+	};
+	for (const type of takeover) box.addEventListener(type, stop, { passive: true });
+	const read = () => (horizontal ? box.scrollLeft : box.scrollTop);
+	const write = (value: number) => {
+		if (horizontal) box.scrollLeft = value;
+		else box.scrollTop = value;
+	};
+	const go = (index: number) => {
+		if (stopped) return;
+		if (index === 0) {
+			options.restart?.();
+			write(0);
+		}
+		const target = stops[index];
+		const from = read();
+		const to = Math.max(0, Math.min(max(), toPixels(target.to)));
+		let start = 0;
+		options.beforeMove?.();
+		const step = (time: number) => {
+			if (stopped) return;
+			if (!start) start = time;
+			const progress = Math.min((time - start) / target.ms, 1);
+			const eased = progress < 0.5 ? 2 * progress * progress : 1 - (-2 * progress + 2) ** 2 / 2;
+			write(from + (to - from) * eased);
+			if (progress < 1) {
+				frame = requestAnimationFrame(step);
+				return;
+			}
+			options.afterMove?.();
+			timer = window.setTimeout(() => go((index + 1) % stops.length), target.hold);
+		};
+		frame = requestAnimationFrame(step);
+	};
+	go(0);
+	return stop;
+}
+
+/* ---------- 阅读进度条 ---------- */
+
+function progressDemo(stage: HTMLElement): Demo {
+	const root = stage.querySelector<HTMLElement>('[data-motion-target]')!;
+	const box = stage.querySelector<HTMLElement>('[data-motion-scroll]')!;
+	const bar = stage.querySelector<HTMLElement>('[data-motion-bar]')!;
+	const ring = stage.querySelector<SVGCircleElement>('[data-motion-ring]')!;
+	let release = () => {};
+	const update = () => {
+		const max = box.scrollHeight - box.clientHeight;
+		const progress = max > 0 ? box.scrollTop / max : 0;
+		bar.style.transform = `scaleX(${progress})`;
+		ring.style.strokeDashoffset = String(100 - progress * 100);
+	};
+	box.addEventListener('scroll', update, { passive: true });
+	return {
+		prepare(values) {
+			root.dataset.style = String(values.style);
+			root.style.setProperty('--thick', `${values.thick}px`);
+			root.classList.toggle('is-smooth', values.smooth === 'ease');
+			update();
+		},
+		play(values, auto) {
+			release();
+			this.prepare!(values);
+			release = scrollLoop(box, auto ? 3600 : 4400, update);
+		},
+		stop() {
+			release();
+		},
+	};
+}
+
+/* ---------- 导航栏滚动变化 ---------- */
+
+function navbarDemo(stage: HTMLElement): Demo {
+	const box = stage.querySelector<HTMLElement>('[data-motion-scroll]')!;
+	const nav = stage.querySelector<HTMLElement>('[data-motion-nav]')!;
+	let kind = 'solid';
+	let last = 0;
+	let release = () => {};
+	const update = () => {
+		const y = box.scrollTop;
+		const delta = y - last;
+		last = y;
+		nav.classList.toggle('is-solid', kind === 'solid' && y > 40);
+		nav.classList.toggle('is-small', kind === 'shrink' && y > 40);
+		if (kind !== 'hide') return nav.classList.remove('is-hidden');
+		if (y < 60 || delta < -2) nav.classList.remove('is-hidden');
+		else if (delta > 2) nav.classList.add('is-hidden');
+	};
+	box.addEventListener('scroll', update, { passive: true });
+	return {
+		prepare(values) {
+			kind = String(values.kind);
+			stage.style.setProperty('--dur', `${values.dur}ms`);
+			nav.classList.remove('is-solid', 'is-small', 'is-hidden');
+			update();
+		},
+		play(values) {
+			release();
+			this.prepare!(values);
+			release = scrollTour(
+				box,
+				[
+					{ to: 1, ms: 2600, hold: 900 },
+					{ to: 0.55, ms: 900, hold: 1600 },
+				],
+				{ restart: () => (last = 0) },
+			);
+		},
+		stop() {
+			release();
+		},
+	};
+}
+
+/* ---------- 横向滑动吸附 ---------- */
+
+function snapDemo(stage: HTMLElement): Demo {
+	const strip = stage.querySelector<HTMLElement>('[data-motion-snap]')!;
+	const dots = [...stage.querySelectorAll<HTMLElement>('[data-motion-dots] i')];
+	const cards = [...strip.querySelectorAll<HTMLElement>('.ms-snap__card')];
+	let snapOn = true;
+	let release = () => {};
+	const step = () => (cards[1]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
+	const update = () => {
+		const index = Math.round(strip.scrollLeft / Math.max(1, step()));
+		dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+	};
+	strip.addEventListener('scroll', update, { passive: true });
+	return {
+		prepare(values) {
+			snapOn = values.snap === 'mandatory';
+			strip.dataset.snap = String(values.snap);
+			strip.dataset.align = String(values.align);
+			strip.dataset.stop = String(values.stop);
+			update();
+		},
+		play(values) {
+			release();
+			this.prepare!(values);
+			// 自动演示时先关掉吸附、滑到两张卡片中间，到位后再打开，让浏览器自己对齐
+			release = scrollTour(
+				strip,
+				[
+					{ to: 1.45, ms: 900, hold: 1500 },
+					{ to: 2.6, ms: 800, hold: 1500 },
+					{ to: 0.35, ms: 900, hold: 1500 },
+				],
+				{
+					axis: 'x',
+					toPixels: (to) => to * step(),
+					beforeMove: () => (strip.dataset.snap = 'none'),
+					afterMove: () => (strip.dataset.snap = snapOn ? 'mandatory' : 'none'),
+				},
+			);
+		},
+		stop() {
+			release();
+		},
+	};
+}
+
+/* ---------- 成功打勾 ---------- */
+
+function checkDemo(stage: HTMLElement): Demo {
+	const root = stage.querySelector<HTMLElement>('[data-motion-target]')!;
+	const svg = root.querySelector<SVGElement>('[data-motion-svg]')!;
+	const circle = root.querySelector<SVGElement>('.ms-check__circle')!;
+	const tick = root.querySelector<SVGElement>('.ms-check__tick')!;
+	const texts = [...root.querySelectorAll<HTMLElement>('[data-motion-text]')];
+	let timer = 0;
+	return {
+		prepare(values) {
+			root.dataset.color = String(values.color);
+		},
+		play(values) {
+			window.clearTimeout(timer);
+			this.prepare!(values);
+			cancelAll([circle, tick, svg, ...texts]);
+			const total = Number(values.dur);
+			const draw = [{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }];
+			circle.animate(draw, { duration: total * 0.55, easing: EASE.inout, fill: 'both' });
+			tick.animate(draw, {
+				duration: total * 0.45,
+				delay: total * 0.55,
+				easing: EASE.out,
+				fill: 'both',
+			});
+			if (values.pop === 'pop') {
+				svg.animate(
+					[{ transform: 'scale(1)' }, { transform: 'scale(1.12)' }, { transform: 'scale(1)' }],
+					{ duration: 320, delay: total, easing: EASE.out },
+				);
+			}
+			texts.forEach((text, index) =>
+				text.animate(
+					[
+						{ opacity: 0, transform: 'translateY(6px)' },
+						{ opacity: 1, transform: 'none' },
+					],
+					{ duration: 300, delay: total + 80 + index * 100, easing: EASE.out, fill: 'both' },
+				),
+			);
+			timer = window.setTimeout(() => this.play(values, true), total + 2200);
+		},
+		stop() {
+			window.clearTimeout(timer);
+		},
+	};
+}
+
+/* ---------- 撒花庆祝 ---------- */
+
+function confettiDemo(stage: HTMLElement): Demo {
+	const box = stage.querySelector<HTMLElement>('[data-motion-target]')!;
+	const item = box.closest<HTMLElement>('.ms-todo__item')!;
+	const title = stage.querySelector<HTMLElement>('.ms-list__title')!;
+	let count = 60;
+	let rain = false;
+	let brand = false;
+	let timer = 0;
+	const COLORFUL = ['#e0b23f', '#d4537e', '#3f8fd6', '#2f9e6e', '#9b6bd6', '#e07a3f'];
+	const reset = () => {
+		window.clearTimeout(timer);
+		item.classList.remove('is-done');
+		title.textContent = '今天要做 · 还剩 1 项';
+	};
+	const celebrate = () => {
+		const base = stage.getBoundingClientRect();
+		const origin = box.getBoundingClientRect();
+		const accent = getComputedStyle(stage).getPropertyValue('--cat-models').trim() || '#254f99';
+		for (let index = 0; index < count; index++) {
+			const piece = document.createElement('i');
+			piece.className = 'ms-confetti__piece';
+			piece.style.background = brand
+				? `color-mix(in srgb, ${accent} ${40 + Math.round(Math.random() * 60)}%, white)`
+				: COLORFUL[index % COLORFUL.length];
+			const startX = rain ? Math.random() * base.width : origin.left + origin.width / 2 - base.left;
+			const startY = rain ? -12 : origin.top + origin.height / 2 - base.top;
+			piece.style.left = `${startX}px`;
+			piece.style.top = `${startY}px`;
+			stage.append(piece);
+			const spread = rain ? (Math.random() - 0.5) * 80 : (Math.random() - 0.5) * 320;
+			const rise = rain ? 0 : -(80 + Math.random() * 120);
+			const fall = rain ? base.height + 20 : 140 + Math.random() * 120;
+			const spin = (Math.random() - 0.5) * 900;
+			piece
+				.animate(
+					[
+						{ transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+						{
+							transform: `translate(${spread * 0.6}px, ${rise}px) rotate(${spin / 2}deg)`,
+							opacity: 1,
+							offset: rain ? 0.2 : 0.35,
+						},
+						{ transform: `translate(${spread}px, ${fall}px) rotate(${spin}deg)`, opacity: 0 },
+					],
+					{
+						duration: 1500 + Math.random() * 700,
+						delay: rain ? Math.random() * 500 : 0,
+						easing: 'cubic-bezier(0.25, 0.6, 0.45, 1)',
+						fill: 'backwards',
+					},
+				)
+				.finished.then(() => piece.remove())
+				.catch(() => piece.remove());
+		}
+	};
+	return pointerDemo(
+		stage,
+		clicker(box, {
+			onClick() {
+				if (item.classList.contains('is-done')) return reset();
+				item.classList.add('is-done');
+				title.textContent = '今天要做 · 全部完成';
+				celebrate();
+				timer = window.setTimeout(reset, 3400);
+			},
+		}),
+		() => {
+			const { x, y } = centerOf(stage, box);
+			return [
+				{ x: 0.9, y: 0.92, move: 0, hold: 400 },
+				...click(x, y, 800, 3800),
+				{ x: 0.9, y: 0.92, move: 700, hold: 400 },
+			];
+		},
+		(values) => {
+			reset();
+			count = Number(values.count);
+			rain = values.style === 'rain';
+			brand = values.palette === 'brand';
+		},
+	);
+}
+
 const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	duration: durationDemo,
 	easing: easingDemo,
@@ -2598,6 +2928,11 @@ const DEMOS: Record<MotionProfile['demo'], (stage: HTMLElement) => Demo> = {
 	delay: delayDemo,
 	reduced: reducedDemo,
 	perf: perfDemo,
+	progress: progressDemo,
+	navbar: navbarDemo,
+	snap: snapDemo,
+	check: checkDemo,
+	confetti: confettiDemo,
 };
 
 function setupTuner(root: HTMLElement): () => void {
@@ -2630,6 +2965,14 @@ function setupTuner(root: HTMLElement): () => void {
 		const distance = root.querySelector<HTMLElement>('[data-motion-control="dist"]');
 		if (distance)
 			distance.classList.toggle('is-idle', values.kind === 'fade' || values.kind === 'scale');
+		// 不吸附时，对齐方式和「一次滑过」都不起作用；圆环样式用不到粗细
+		const idle = (id: string, on: boolean) =>
+			root.querySelector(`[data-motion-control="${id}"]`)?.classList.toggle('is-idle', on);
+		if (values.snap !== undefined) {
+			idle('align', values.snap === 'none');
+			idle('stop', values.snap === 'none');
+		}
+		if (values.thick !== undefined) idle('thick', values.style === 'ring');
 		presets.forEach((button, index) => {
 			const preset = profile.presets[index];
 			const matches = Object.entries(preset.values).every(

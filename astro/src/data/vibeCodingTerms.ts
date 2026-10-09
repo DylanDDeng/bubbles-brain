@@ -772,6 +772,27 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				description: '左边文字往下滚，右边的图固定不动，跟着文字一张张换，像在翻一本图文书。',
 			},
 			{
+				id: 'reading-progress',
+				name: 'Reading Progress',
+				chineseName: '阅读进度条',
+				group: '滚动和进场',
+				description: '文章顶部一条细线随着往下读慢慢填满，读到哪儿一眼就知道。',
+			},
+			{
+				id: 'navbar-scroll',
+				name: 'Navbar on Scroll',
+				chineseName: '导航栏滚动变化',
+				group: '滚动和进场',
+				description: '往下滚时导航栏变实色、变矮或藏起来，往回滚又出现。',
+			},
+			{
+				id: 'scroll-snap',
+				name: 'Scroll Snap',
+				chineseName: '横向滑动吸附',
+				group: '滚动和进场',
+				description: '一排卡片横着滑，松手后自动对齐到一整张，不会停在半张上。',
+			},
+			{
 				id: 'hover-lift',
 				name: 'Hover Lift',
 				chineseName: '悬停浮起',
@@ -868,6 +889,20 @@ export const vibeCodingTermCategories: VibeCodingTermCategory[] = [
 				chineseName: '骨架屏闪光',
 				group: '点击和状态',
 				description: '内容加载时，灰色占位块上有一道光扫过，告诉你「马上就好」。',
+			},
+			{
+				id: 'success-check',
+				name: 'Success Check',
+				chineseName: '成功打勾',
+				group: '点击和状态',
+				description: '提交成功后，一个对勾被一笔「画」出来，比一句「成功」更让人安心。',
+			},
+			{
+				id: 'confetti',
+				name: 'Confetti',
+				chineseName: '撒花庆祝',
+				group: '点击和状态',
+				description: '完成一件大事时，满屏彩纸飞起来再飘落，替你开心一下。',
 			},
 			{
 				id: 'typewriter',

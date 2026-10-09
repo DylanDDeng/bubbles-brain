@@ -2687,6 +2687,358 @@
 	color: var(--red);
 }
 
+/* 阅读进度条 */
+.ms-progress {
+	/* 铺满舞台；写 height: 100% 会被网格行按内容撑高 */
+	position: absolute;
+	inset: 0;
+}
+
+.ms-article {
+	background: var(--paper);
+}
+
+.ms-article article {
+	display: grid;
+	gap: 12px;
+	padding: 22px 28px 40px;
+}
+
+.ms-article small {
+	color: var(--ink-faint);
+	font-size: 0.75rem;
+}
+
+.ms-article h3 {
+	margin: 0;
+	color: var(--ink);
+	font-size: 1.15rem;
+	line-height: 1.4;
+}
+
+.ms-article p {
+	margin: 0;
+	color: var(--ink-soft);
+	font-size: 0.86rem;
+	line-height: 1.8;
+}
+
+.ms-progress__bar {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	display: block;
+	height: var(--thick, 3px);
+	background: var(--cat-models);
+	transform: scaleX(0);
+	transform-origin: left;
+}
+
+.ms-progress.is-smooth .ms-progress__bar {
+	transition: transform 0.15s ease-out;
+}
+
+.ms-progress__ring {
+	position: absolute;
+	right: 14px;
+	bottom: 14px;
+	display: none;
+	transform: rotate(-90deg);
+}
+
+.ms-progress__ring circle {
+	fill: none;
+	stroke: var(--rule);
+	stroke-width: 3;
+}
+
+.ms-progress__ring circle + circle {
+	stroke: var(--cat-models);
+	stroke-dasharray: 100;
+	stroke-dashoffset: 100;
+	stroke-linecap: round;
+}
+
+.ms-progress.is-smooth .ms-progress__ring circle + circle {
+	transition: stroke-dashoffset 0.15s ease-out;
+}
+
+.ms-progress[data-style='ring'] .ms-progress__bar {
+	visibility: hidden;
+}
+
+.ms-progress[data-style='ring'] .ms-progress__ring {
+	display: block;
+}
+
+/* 导航栏滚动变化 */
+.ms-navpage {
+	background: var(--paper);
+}
+
+.ms-navpage__bar {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	height: 56px;
+	padding: 0 22px;
+	color: var(--ink-soft);
+	font-size: 0.82rem;
+	background: transparent;
+	box-shadow: 0 1px 0 transparent;
+	transition:
+		background-color var(--dur, 200ms) ease-out,
+		box-shadow var(--dur, 200ms) ease-out,
+		height var(--dur, 200ms) ease-out,
+		font-size var(--dur, 200ms) ease-out,
+		transform var(--dur, 200ms) ease-out;
+}
+
+.ms-navpage__bar b {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	margin-right: auto;
+	color: var(--ink);
+	font-size: 1em;
+}
+
+.ms-navpage__bar.is-solid {
+	background: var(--paper);
+	box-shadow: 0 6px 16px rgb(0 0 0 / 0.08);
+}
+
+.ms-navpage__bar.is-small {
+	height: 40px;
+	background: var(--paper);
+	box-shadow: 0 1px 0 var(--rule);
+	font-size: 0.74rem;
+}
+
+.ms-navpage__bar.is-hidden {
+	transform: translateY(-100%);
+}
+
+.ms-navpage__hero {
+	display: grid;
+	gap: 10px;
+	place-items: center;
+	height: 230px;
+	margin-top: -56px;
+	padding-top: 56px;
+	background: color-mix(in srgb, var(--cat-models) 10%, var(--paper));
+}
+
+.ms-navpage__hero strong {
+	color: var(--ink);
+	font-size: 1.3rem;
+}
+
+.ms-navpage__hero span {
+	color: var(--ink-faint);
+	font-size: 0.78rem;
+}
+
+.ms-navpage .ms-cards {
+	padding: 22px 22px 40px;
+}
+
+/* 横向滑动吸附 */
+.ms-snap-wrap {
+	display: grid;
+	gap: 12px;
+	width: 100%;
+	padding: 0 24px;
+}
+
+.ms-snap {
+	display: flex;
+	gap: 12px;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	padding-bottom: 6px;
+	scrollbar-width: thin;
+}
+
+.ms-snap:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+
+.ms-snap[data-snap='mandatory'] {
+	scroll-snap-type: x mandatory;
+}
+
+.ms-snap__card {
+	display: grid;
+	flex: 0 0 42%;
+	gap: 4px;
+	padding: 12px;
+	border: 1px solid var(--rule);
+	border-radius: 12px;
+	background: var(--paper);
+}
+
+.ms-snap[data-align='start'] .ms-snap__card {
+	scroll-snap-align: start;
+}
+
+.ms-snap[data-align='center'] .ms-snap__card {
+	scroll-snap-align: center;
+}
+
+.ms-snap[data-stop='one'] .ms-snap__card {
+	scroll-snap-stop: always;
+}
+
+.ms-snap__card .ms-tile__thumb {
+	height: 84px;
+}
+
+.ms-snap__card strong {
+	color: var(--ink);
+	font-size: 0.92rem;
+}
+
+.ms-snap__card span {
+	color: var(--ink-faint);
+	font-size: 0.8rem;
+}
+
+.ms-snap__dots {
+	display: flex;
+	gap: 6px;
+	justify-content: center;
+}
+
+.ms-snap__dots i {
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background: var(--rule);
+	transition:
+		width 0.2s,
+		background-color 0.2s;
+}
+
+.ms-snap__dots i.is-active {
+	width: 16px;
+	background: var(--ink);
+}
+
+/* 成功打勾 */
+.ms-check {
+	display: grid;
+	gap: 8px;
+	justify-items: center;
+	text-align: center;
+	--check: var(--cat-products);
+}
+
+.ms-check[data-color='brand'] {
+	--check: var(--cat-models);
+}
+
+.ms-check svg {
+	margin-bottom: 6px;
+}
+
+.ms-check__circle,
+.ms-check__tick {
+	fill: none;
+	stroke: var(--check);
+	stroke-dasharray: 100;
+	stroke-dashoffset: 100;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.ms-check__circle {
+	stroke-width: 4;
+}
+
+.ms-check__tick {
+	stroke-width: 5;
+}
+
+.ms-check strong {
+	color: var(--ink);
+	font-size: 1.1rem;
+}
+
+.ms-check span {
+	color: var(--ink-faint);
+	font-size: 0.82rem;
+}
+
+/* 撒花：待办清单 */
+.ms-todo {
+	width: min(84%, 380px);
+}
+
+.ms-todo__item {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	padding: 12px 14px;
+	border: 1px solid var(--rule);
+	border-radius: 10px;
+	background: var(--paper);
+	color: var(--ink);
+	font-size: 0.88rem;
+}
+
+.ms-todo__box {
+	position: relative;
+	display: grid;
+	flex: none;
+	place-items: center;
+	width: 20px;
+	height: 20px;
+	border: 2px solid var(--rule);
+	border-radius: 6px;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s;
+}
+
+.ms-todo__box.is-hover {
+	border-color: var(--ink-faint);
+}
+
+.ms-todo__item.is-done .ms-todo__box {
+	border-color: var(--cat-products);
+	background: var(--cat-products);
+}
+
+.ms-todo__item.is-done .ms-todo__box::after {
+	width: 9px;
+	height: 5px;
+	margin-top: -3px;
+	border-bottom: 2px solid #fff;
+	border-left: 2px solid #fff;
+	transform: rotate(-45deg);
+	content: '';
+}
+
+.ms-todo__item.is-done > span {
+	color: var(--ink-faint);
+	text-decoration: line-through;
+}
+
+.ms-confetti__piece {
+	position: absolute;
+	z-index: 5;
+	width: 7px;
+	height: 11px;
+	border-radius: 2px;
+	pointer-events: none;
+}
+
 /* 数字滚动 */
 .ms-stats {
 	display: grid;
@@ -2806,6 +3158,10 @@
 
 	.ms-reduced__cards .ms-card:nth-child(n + 3) {
 		display: none;
+	}
+
+	.ms-snap__card {
+		flex-basis: 70%;
 	}
 
 	.ms-stats {

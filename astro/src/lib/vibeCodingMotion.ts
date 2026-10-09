@@ -41,7 +41,12 @@ export type MotionDemo =
 	| 'shimmer'
 	| 'delay'
 	| 'reduced'
-	| 'perf';
+	| 'perf'
+	| 'progress'
+	| 'navbar'
+	| 'snap'
+	| 'check'
+	| 'confetti';
 
 export interface MotionChoice {
 	value: string;
@@ -1000,6 +1005,197 @@ export const vibeCodingMotionProfiles: Record<string, MotionProfile> = {
 			'做一个粘性滚动叙事：左边三段说明文字正常滚动，右边的手机截图固定不动（position: sticky）；每段文字滚到视口中间时，右边的截图{swap}成对应画面，时长 {dur}。手机上改成上下排列，每段文字下面直接放对应截图。',
 		warning: '段落之间要留足滚动距离，至少大半屏。三段文字挤在一起，右边的图还没看清就被换掉了。',
 	},
+	'reading-progress': {
+		demo: 'progress',
+		hint: '在框里往下读，或者点「重播」自动滚一遍',
+		controls: [
+			{
+				id: 'style',
+				label: '样式',
+				type: 'choice',
+				value: 'bar',
+				options: [
+					{ value: 'bar', label: '顶部细线', say: '在顶部固定一条 {thick} 高的细线' },
+					{ value: 'ring', label: '角落圆环', say: '在右下角放一个小圆环' },
+				],
+			},
+			{ id: 'thick', label: '粗细', type: 'range', value: 3, min: 2, max: 6, step: 1, unit: 'px' },
+			{
+				id: 'smooth',
+				label: '跟随',
+				type: 'choice',
+				value: 'ease',
+				options: [
+					{ value: 'instant', label: '紧跟滚动', say: '紧跟滚动位置' },
+					{ value: 'ease', label: '平滑追上', say: '用 0.15 秒平滑地追上滚动位置' },
+				],
+			},
+		],
+		presets: [],
+		prompt: '文章页加阅读进度条：{style}，随着往下滚动从 0% 填到 100%，{smooth}。',
+		warning:
+			'进度要按「正文」算，不是按整页算。页面底下还有很长的评论区和推荐列表时，读完正文进度条才走到一半，会让人以为还有很多没读。',
+	},
+	'navbar-scroll': {
+		demo: 'navbar',
+		hint: '框里会往下滚、再往回滚一点；也可以自己滚',
+		controls: [
+			{
+				id: 'kind',
+				label: '方式',
+				type: 'choice',
+				value: 'solid',
+				options: [
+					{
+						value: 'solid',
+						label: '透明变实色',
+						say: '页面在最顶上时背景透明，往下滚超过 40px 后变成白色实底并带一条细阴影',
+					},
+					{
+						value: 'hide',
+						label: '下滚隐藏',
+						say: '往下滚时导航栏向上滑出隐藏，一往上滚立刻滑回来',
+					},
+					{
+						value: 'shrink',
+						label: '变矮',
+						say: '往下滚超过 40px 后高度从 64px 缩到 48px，logo 也跟着变小',
+					},
+				],
+			},
+			{
+				id: 'dur',
+				label: '时长',
+				type: 'range',
+				value: 200,
+				min: 100,
+				max: 500,
+				step: 25,
+				unit: 's',
+			},
+		],
+		presets: [],
+		prompt: '导航栏固定在页面顶部：{kind}，过渡 {dur}。',
+		warning:
+			'「下滚隐藏」要配「上滚立刻出现」，不能等滚回顶部才出来。用户往回滚一下，往往就是想找导航。',
+	},
+	'scroll-snap': {
+		demo: 'snap',
+		hint: '在卡片上左右滑动或用触控板横向滚动；不动时会自动演示',
+		controls: [
+			{
+				id: 'snap',
+				label: '吸附',
+				type: 'choice',
+				value: 'mandatory',
+				options: [
+					{
+						value: 'mandatory',
+						label: '开启',
+						say: '开启滚动吸附，松手后自动对齐到最近的一张卡片{align}{stop}；用 CSS 的 scroll-snap 实现，不需要写 JS',
+					},
+					{ value: 'none', label: '关闭', say: '不开吸附，松手停在哪就是哪' },
+				],
+			},
+			{
+				id: 'align',
+				label: '对齐到',
+				type: 'choice',
+				value: 'start',
+				options: [
+					{ value: 'start', label: '左边缘', say: '，卡片和容器左边缘对齐' },
+					{ value: 'center', label: '居中', say: '，卡片居中对齐' },
+				],
+			},
+			{
+				id: 'stop',
+				label: '一次滑过',
+				type: 'choice',
+				value: 'one',
+				options: [
+					{ value: 'one', label: '最多一张', say: '，用力一滑也只翻一张' },
+					{ value: 'many', label: '可以多张', say: '' },
+				],
+			},
+		],
+		presets: [],
+		prompt: '这一排卡片横向滑动：{snap}。',
+		warning:
+			'要让人看出「还能往右滑」：最后露出半张卡片，或者在下面放一排小圆点。卡片刚好塞满一屏，用户根本不知道右边还有东西。',
+	},
+	'success-check': {
+		demo: 'check',
+		hint: '先画出一个圆，再画出对勾，一直循环',
+		controls: [
+			{
+				id: 'dur',
+				label: '总时长',
+				type: 'range',
+				value: 700,
+				min: 300,
+				max: 1500,
+				step: 50,
+				unit: 's',
+			},
+			{
+				id: 'color',
+				label: '颜色',
+				type: 'choice',
+				value: 'green',
+				options: [
+					{ value: 'green', label: '绿色', say: '绿色' },
+					{ value: 'brand', label: '品牌色', say: '品牌色' },
+				],
+			},
+			{
+				id: 'pop',
+				label: '画完后',
+				type: 'choice',
+				value: 'pop',
+				options: [
+					{ value: 'pop', label: '轻轻放大', say: '，画完后整体轻轻放大一下再回到原大小' },
+					{ value: 'none', label: '不动', say: '' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'提交成功后显示一个{color}对勾：先画出圆圈，再一笔画出对勾，总时长约 {dur}{pop}；下面接着出现「提交成功」。',
+		warning:
+			'对勾动画是给「真的成功了」准备的。请求还没返回就先打勾，万一失败再改成报错，比不打勾更伤信任。',
+	},
+	confetti: {
+		demo: 'confetti',
+		hint: '勾掉最后一项待办试试；你不动时，会有一只鼠标自动演示',
+		controls: [
+			{ id: 'count', label: '数量', type: 'range', value: 60, min: 20, max: 150, step: 10 },
+			{
+				id: 'style',
+				label: '方式',
+				type: 'choice',
+				value: 'burst',
+				options: [
+					{ value: 'burst', label: '从按钮喷出', say: '从勾选的位置向上喷出' },
+					{ value: 'rain', label: '从顶部落下', say: '从页面顶部飘落' },
+				],
+			},
+			{
+				id: 'palette',
+				label: '颜色',
+				type: 'choice',
+				value: 'colorful',
+				options: [
+					{ value: 'colorful', label: '彩色', say: '彩色' },
+					{ value: 'brand', label: '品牌色', say: '只用品牌色深浅' },
+				],
+			},
+		],
+		presets: [],
+		prompt:
+			'完成最后一项待办时撒花庆祝：{style}约 {count} 片{palette}的小彩纸，带一点旋转和重力下落，2 秒内全部消失；同一页面短时间内不要重复撒。',
+		warning:
+			'撒花只留给真正值得庆祝的时刻：全部完成、第一次成功、升级到会员。每勾一项都撒一次，第三次就烦了。',
+	},
 	'copy-feedback': {
 		demo: 'copy',
 		hint: '点一下复制试试；你不动时，会有一只鼠标自动演示',
@@ -1840,12 +2036,12 @@ export function renderMotionPrompt(profile: MotionProfile, values: MotionValues)
 /** 界面图鉴的零件 → 让它动起来的动效。零件页和动效页按这张表互相链接 */
 export const motionsForPattern: Record<string, string[]> = {
 	hero: ['text-reveal', 'typewriter', 'animated-gradient', 'parallax'],
-	navbar: ['dropdown-open', 'drawer-slide'],
-	card: ['hover-lift', 'tilt', 'cursor-spotlight', 'shared-element'],
+	navbar: ['navbar-scroll', 'dropdown-open', 'drawer-slide'],
+	card: ['hover-lift', 'tilt', 'cursor-spotlight', 'shared-element', 'scroll-snap'],
 	section: ['reveal-on-scroll', 'stagger', 'scrollytelling'],
 	accordion: ['expand-collapse'],
 	button: ['press', 'ripple', 'loading-button', 'magnetic-button'],
-	form: ['input-focus', 'error-shake', 'loading-button'],
+	form: ['input-focus', 'error-shake', 'loading-button', 'success-check'],
 	input: ['input-focus', 'error-shake', 'copy-feedback'],
 	toggle: ['toggle-switch'],
 	modal: ['modal-enter'],
@@ -1855,7 +2051,9 @@ export const motionsForPattern: Record<string, string[]> = {
 	tooltip: ['tooltip-delay'],
 	skeleton: ['skeleton-shimmer'],
 	spinner: ['loading-button', 'pull-to-refresh'],
-	'progress-bar': ['duration', 'count-up'],
+	'progress-bar': ['reading-progress', 'duration', 'count-up'],
+	checkbox: ['confetti'],
+	stepper: ['success-check'],
 	badge: ['add-to-cart', 'like-burst'],
 	alert: ['error-shake', 'toast-enter'],
 	tabs: ['page-transition'],

@@ -17,6 +17,15 @@ export interface ChangelogItem {
 
 export const changelog: ChangelogItem[] = [
 	{
+		date: '2026-10-09',
+		tag: 'AI 动态',
+		type: 'feature',
+		title: '首页搜索框里看最新 AI 动态',
+		summary:
+			'点进首页搜索框、还没打字时，下面列出最新 5 条 AI 动态（手机上 3 条），点一条直接读原文；开始打字就收起，照常搜索。',
+		links: [{ label: 'AI 动态', href: '/ai-news/' }],
+	},
+	{
 		date: '2026-10-08',
 		tag: 'AI 动态',
 		type: 'feature',

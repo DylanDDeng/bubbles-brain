@@ -16,6 +16,7 @@ import {
 	railLabel,
 	newsSearchItems,
 	updatedLabel,
+	homeNews,
 } from './aiNews';
 
 const item = (id: string, extra: Record<string, unknown> = {}) => ({
@@ -234,5 +235,58 @@ describe('the day as a timeline', () => {
 		expect(seenLabel('2026-10-09T10:30:00.000Z', now)).toBe('今天 18:30');
 		expect(seenLabel('2026-10-08T10:30:00.000Z', now)).toBe('昨天 18:30');
 		expect(seenLabel('2026-10-06T10:30:00.000Z', now)).toBe('10月6日 18:30');
+	});
+});
+
+describe('the home page’s newest stories', () => {
+	// 20:29 and 19:23 Beijing on 10月9日, then 18:48 the day before.
+	const feed = parseFeed({
+		updatedAt: '2026-10-09T12:40:00.000Z',
+		days: [
+			{
+				day: '2026-10-09',
+				items: [
+					item('a', { at: '2026-10-09T12:29:00.000Z' }),
+					item('b', { at: '2026-10-09T11:23:00.000Z' }),
+					item('c', { at: '2026-10-09T11:23:00.000Z' }),
+				],
+			},
+			{ day: '2026-10-08', items: [item('d', { at: '2026-10-08T10:48:00.000Z' })] },
+		],
+	})!;
+	const now = new Date('2026-10-09T13:00:00.000Z');
+
+	it('lists the newest first, writing a batch’s time once and older days by name', () => {
+		const home = homeNews(feed, null, now);
+		expect(home.rows.map((row) => [row.item.id, row.time])).toEqual([
+			['a', '20:29'],
+			['b', '19:23'],
+			['c', ''],
+			['d', '昨天'],
+		]);
+		expect(home.updated).toBe('20:29 更新');
+		expect(home.today).toBe(3);
+		expect(home.rows.some((row) => row.seenBefore)).toBe(false);
+	});
+
+	it('stops at the limit', () => {
+		expect(homeNews(feed, null, now, 2).rows.map((row) => row.item.id)).toEqual(['a', 'b']);
+	});
+
+	it('draws the 上次看到这里 line under what came since the last visit, and only between rows', () => {
+		const line = (lastSeen: string) =>
+			homeNews(feed, lastSeen, now)
+				.rows.filter((row) => row.seenBefore)
+				.map((row) => row.item.id);
+		expect(line('2026-10-09T12:00:00.000Z')).toEqual(['b']);
+		expect(line('2026-10-09T12:30:00.000Z')).toEqual([]);
+		expect(line('2026-10-01T00:00:00.000Z')).toEqual([]);
+		expect(line('not a date')).toEqual([]);
+	});
+
+	it('names the day of the newest push when nothing came today', () => {
+		const home = homeNews(feed, null, new Date('2026-10-10T05:00:00.000Z'));
+		expect(home.updated).toBe('昨天 20:29 更新');
+		expect(home.today).toBe(0);
 	});
 });

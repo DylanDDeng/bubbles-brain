@@ -85,8 +85,10 @@ function init() {
 		overlay.hidden = paused || input.value !== '';
 	};
 
-	input.addEventListener(
-		'focus',
+	// The box and the AI 动态 under it count as one: moving into the list keeps the typing paused.
+	const box = form.closest<HTMLElement>('.home-search-shell') ?? form;
+	box.addEventListener(
+		'focusin',
 		() => {
 			paused = true;
 			input.placeholder = current.ask;
@@ -94,9 +96,10 @@ function init() {
 		},
 		{ signal },
 	);
-	input.addEventListener(
-		'blur',
-		() => {
+	box.addEventListener(
+		'focusout',
+		(event) => {
+			if (box.contains(event.relatedTarget as Node | null)) return;
 			paused = false;
 			input.placeholder = '';
 			show();

@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import type { KnowledgeSearchItem } from '../lib/searchIndex';
-import { commandSearchMatches, normalizeCommandQuery } from './commandSearch';
+import {
+	commandSearchMatches,
+	commandSearchWithNews,
+	normalizeCommandQuery,
+} from './commandSearch';
 
 const items: KnowledgeSearchItem[] = [
 	{
@@ -45,5 +49,63 @@ describe('command search ranking', () => {
 	it('matches section labels and tags through the shared search text', () => {
 		expect(commandSearchMatches(items, '精选阅读')[0]?.title).toContain('Cursor');
 		expect(commandSearchMatches(items, '设计系统')[0]?.title).toContain('Cursor');
+	});
+});
+
+describe('commandSearchWithNews', () => {
+	const entry = (key: string, title: string, section = 'highlights') =>
+		({
+			key,
+			href: `/${key}/`,
+			title,
+			summary: '',
+			section,
+			section_label: section,
+			date: null,
+			tags: [],
+			external: section === 'ai-news',
+			search_text: title.toLowerCase(),
+		}) as KnowledgeSearchItem;
+	const site = [
+		entry('s1', 'OpenAI 官方播客'),
+		entry('s2', 'OpenAI Codex 教程'),
+		entry('s3', 'Claude'),
+	];
+	const news = Array.from({ length: 10 }, (_, i) => entry(`n${i}`, `OpenAI 新闻 ${i}`, 'ai-news'));
+
+	it('keeps the knowledge base first and gives news at most three rows', () => {
+		const many = [
+			...site,
+			...Array.from({ length: 8 }, (_, i) => entry(`k${i}`, `OpenAI 文章 ${i}`)),
+		];
+		expect(commandSearchWithNews(many, news, 'openai').map((item) => item.key)).toEqual([
+			's1',
+			's2',
+			'k0',
+			'k1',
+			'n0',
+			'n1',
+			'n2',
+		]);
+	});
+
+	it('lets news fill rows the knowledge base leaves empty', () => {
+		expect(commandSearchWithNews(site, news, 'openai').map((item) => item.key)).toEqual([
+			's1',
+			's2',
+			'n0',
+			'n1',
+			'n2',
+			'n3',
+			'n4',
+		]);
+	});
+
+	it('leaves the recent list to the knowledge base', () => {
+		expect(commandSearchWithNews(site, news, '').map((item) => item.key)).toEqual([
+			's1',
+			's2',
+			's3',
+		]);
 	});
 });

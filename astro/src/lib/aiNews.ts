@@ -2,6 +2,7 @@
  * AI 动态: the feed the bubble-ai-news Worker serves (workers/ai-news), and how the page names its
  * days and times. Everything is shown in Beijing time, the readers' clock.
  */
+import type { KnowledgeSearchItem } from './searchIndex';
 
 /** `npm run dev` may point at a local Worker (PUBLIC_AI_NEWS_FEED); a build always uses the real one. */
 export const AI_NEWS_FEED_URL =
@@ -147,14 +148,46 @@ export function updatedLabel(iso: string, now: Date): string {
 	return day === beijingToday(now) ? `更新于 ${time}` : `更新于 ${monthDay(day)} ${time}`;
 }
 
-/** Every item whose title or summary holds all the words, newest first. */
-export function searchFeed(feed: NewsFeed, query: string): NewsItem[] {
-	const words = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-	if (!words.length) return [];
-	return feed.days
-		.flatMap((day) => day.items)
-		.filter((item) => {
-			const text = `${item.title} ${item.summary}`.toLocaleLowerCase();
-			return words.every((word) => text.includes(word));
+export const NEWS_SECTION_LABEL = 'AI 动态';
+
+/**
+ * The feed as site-search entries (⌘K and /search/), newest first. A result opens the source
+ * article, as a card on /ai-news/ does.
+ */
+export function newsSearchItems(feed: NewsFeed): KnowledgeSearchItem[] {
+	return feed.days.flatMap((day) =>
+		day.items.map((item) => ({
+			key: `ai-news:${item.id}`,
+			href: item.url,
+			title: item.title,
+			summary: item.summary,
+			section: 'ai-news' as const,
+			section_label: NEWS_SECTION_LABEL,
+			date: item.at,
+			tags: [],
+			external: true,
+			search_text: `${item.title} ${item.summary} ${NEWS_SECTION_LABEL}`
+				.normalize('NFKC')
+				.toLocaleLowerCase(),
+		})),
+	);
+}
+
+const feedRequests = new Map<string, Promise<NewsFeed | null>>();
+
+/** The feed, fetched once per page view; null when it cannot be read (search then skips news). */
+export function loadNewsFeed(url: string): Promise<NewsFeed | null> {
+	let request = feedRequests.get(url);
+	if (!request) {
+		request = fetch(url, { headers: { accept: 'application/json' } })
+			.then((response) => (response.ok ? response.json() : null))
+			.then((raw: unknown) => (raw ? parseFeed(raw) : null))
+			.catch(() => null);
+		feedRequests.set(url, request);
+		// A failed read may succeed on the next search.
+		void request.then((feed) => {
+			if (!feed) feedRequests.delete(url);
 		});
+	}
+	return request;
 }

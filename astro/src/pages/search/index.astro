@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import KnowledgeResults from '../../components/KnowledgeResults.astro';
 import { buildKnowledgeSearchIndex } from '../../lib/searchIndex';
+import { AI_NEWS_FEED_URL, NEWS_SECTION_LABEL } from '../../lib/aiNews';
 import '../../styles/knowledge.css';
 
 const index = await buildKnowledgeSearchIndex();
@@ -12,7 +13,7 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 	title="知识搜索 · Bubble's Brain"
 	description="搜索教程、精选阅读、Vibe Coding 术语、Skills 与 Design"
 >
-	<section class="rr-page knowledge-search" data-knowledge-search>
+	<section class="rr-page knowledge-search" data-knowledge-search data-news-url={AI_NEWS_FEED_URL}>
 		<h1 class="sr-only">搜索知识库</h1>
 		<form class="knowledge-search-form" data-knowledge-search-form method="get" role="search">
 			<label class="knowledge-query">
@@ -36,6 +37,7 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 							<option value={section}>{sectionLabels.get(section)}</option>
 						))
 					}
+					<option value="ai-news">{NEWS_SECTION_LABEL}</option>
 				</select>
 				<details class="knowledge-filter" data-knowledge-filter-menu>
 					<summary>
@@ -58,6 +60,14 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 								</button>
 							))
 						}
+						<button
+							type="button"
+							role="menuitemradio"
+							aria-checked="false"
+							data-section-value="ai-news"
+						>
+							{NEWS_SECTION_LABEL}
+						</button>
 					</div>
 				</details>
 				{/* Not shown on the page; screen readers still hear how many results there are. */}
@@ -88,3 +98,6 @@ const sectionLabels = new Map(index.items.map((item) => [item.section, item.sect
 </BaseLayout>
 
 <script is:inline type="module" src="/js/knowledge-search.js"></script>
+<script>
+	import '../../scripts/searchNews';
+</script>

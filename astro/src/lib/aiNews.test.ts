@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
 	beijingToday,
@@ -7,7 +8,7 @@ import {
 	dayTitle,
 	parseFeed,
 	railLabel,
-	searchFeed,
+	newsSearchItems,
 	updatedLabel,
 } from './aiNews';
 
@@ -76,7 +77,7 @@ describe('AI 动态 days and times (Beijing)', () => {
 	});
 });
 
-describe('searchFeed', () => {
+describe('news in the site search', () => {
 	const feed = parseFeed({
 		updatedAt: '2026-10-08T02:51:00.000Z',
 		days: [
@@ -85,10 +86,35 @@ describe('searchFeed', () => {
 		],
 	})!;
 
-	it('matches every word across all days, newest first', () => {
-		expect(searchFeed(feed, 'haiku').map((entry) => entry.id)).toEqual(['a', 'b']);
-		expect(searchFeed(feed, 'haiku 便宜').map((entry) => entry.id)).toEqual(['b']);
-		expect(searchFeed(feed, '   ')).toEqual([]);
+	it('turns every story into a search entry that opens the source', () => {
+		const entries = newsSearchItems(feed);
+		expect(entries.map((entry) => entry.key)).toEqual(['ai-news:a', 'ai-news:b', 'ai-news:c']);
+		expect(entries[0]).toMatchObject({
+			href: 'https://news.test/a',
+			title: 'Claude Haiku 5.5 发布',
+			section: 'ai-news',
+			section_label: 'AI 动态',
+			date: '2026-10-08T02:51:00.000Z',
+			external: true,
+		});
+		expect(entries[1].search_text).toContain('haiku 更便宜');
+	});
+
+	it('is found by ⌘K alongside the knowledge base', () => {
+		const site = {
+			key: 'term:haiku',
+			href: '/vibe-coding/terms/haiku/',
+			title: 'Haiku 是什么',
+			summary: '',
+			section: 'vibe-coding-terms' as const,
+			section_label: '术语',
+			date: null,
+			tags: [],
+			external: false,
+			search_text: 'haiku 是什么',
+		};
+		const found = commandSearchMatches([site, ...newsSearchItems(feed)], 'Haiku');
+		expect(found.map((entry) => entry.key)).toEqual(['term:haiku', 'ai-news:a', 'ai-news:b']);
 	});
 });
 

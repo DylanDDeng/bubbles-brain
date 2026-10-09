@@ -21,7 +21,9 @@ export type KnowledgeSearchSection =
 	| 'vibe-coding-skills'
 	| 'vibe-coding-design'
 	| 'vibe-coding-showcase'
-	| 'benchmarks';
+	| 'benchmarks'
+	/** Live news, added in the browser from the AI 动态 feed (never in the built index). */
+	| 'ai-news';
 
 export interface KnowledgeSearchItem {
 	key: string;

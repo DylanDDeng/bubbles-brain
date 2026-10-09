@@ -1,4 +1,5 @@
 ---
+import { AI_NEWS_FEED_URL } from '../lib/aiNews';
 import '../styles/command-search.css';
 
 interface Props {
@@ -17,6 +18,7 @@ const searchHref = isEnglish ? '/search/?locale=en' : '/search/';
 	data-index-url={indexUrl}
 	data-search-href={searchHref}
 	data-locale={locale}
+	data-news-url={isEnglish ? undefined : AI_NEWS_FEED_URL}
 	aria-labelledby={`command-search-title-${locale}`}
 >
 	<header class="command-search-header">

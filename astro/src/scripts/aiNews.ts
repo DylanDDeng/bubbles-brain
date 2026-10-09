@@ -1,7 +1,7 @@
 /**
  * AI 动态: reads the feed the bubble-ai-news Worker keeps (refreshed every 15 minutes from the
  * Feishu Base) and shows one Beijing day at a time, picked in the left rail and kept in the address
- * as #YYYY-MM-DD. Typing in the search box looks across every day instead.
+ * as #YYYY-MM-DD. News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
 	COVER_RATIO,
@@ -9,7 +9,6 @@ import {
 	clockTime,
 	parseFeed,
 	railLabel,
-	searchFeed,
 	updatedLabel,
 	type NewsFeed,
 	type NewsItem,
@@ -84,7 +83,6 @@ function setupNews(root: HTMLElement) {
 	const grid = root.querySelector<HTMLElement>('[data-news-grid]')!;
 	const status = root.querySelector<HTMLElement>('[data-news-status]')!;
 	const updated = root.querySelector<HTMLElement>('[data-news-updated]')!;
-	const search = root.querySelector<HTMLInputElement>('[data-news-search]');
 	const older = root.querySelector<HTMLButtonElement>('[data-news-older]')!;
 	const olderLabel = root.querySelector<HTMLElement>('[data-news-older-label]')!;
 	const body = root.querySelector<HTMLElement>('.news-body');
@@ -103,7 +101,6 @@ function setupNews(root: HTMLElement) {
 	};
 
 	const showDay = (day: string) => {
-		if (search) search.value = '';
 		history.replaceState(history.state, '', `#${day}`);
 		render();
 		// Keep the reader at the top of the list rather than wherever the last day ended.
@@ -112,11 +109,8 @@ function setupNews(root: HTMLElement) {
 
 	function render() {
 		if (!feed) return;
-		const query = search?.value.trim() ?? '';
-		const active = query ? '' : currentDay();
-		const items = query
-			? searchFeed(feed, query)
-			: (feed.days.find((day) => day.day === active)?.items ?? []);
+		const active = currentDay();
+		const items = feed.days.find((day) => day.day === active)?.items ?? [];
 
 		for (const link of rail.querySelectorAll<HTMLAnchorElement>('a')) {
 			if (link.dataset.day !== active) {
@@ -130,14 +124,14 @@ function setupNews(root: HTMLElement) {
 					link.offsetLeft - rail.offsetLeft - (rail.clientWidth - link.offsetWidth) / 2;
 			}
 		}
-		title.textContent = query ? '搜索结果' : dayTitle(active);
+		title.textContent = dayTitle(active);
 		shown = items.map(card);
 		layOut(grid, shown);
 		status.hidden = items.length > 0;
-		status.textContent = query ? '没有找到。换个词试试。' : '这一天还没有动态。';
+		status.textContent = '这一天还没有动态。';
 
 		const index = feed.days.findIndex((day) => day.day === active);
-		const next = !query && index >= 0 ? feed.days[index + 1] : undefined;
+		const next = index >= 0 ? feed.days[index + 1] : undefined;
 		older.hidden = !next;
 		if (next) {
 			olderLabel.textContent = dayTitle(next.day);
@@ -154,7 +148,6 @@ function setupNews(root: HTMLElement) {
 	older.addEventListener('click', () => {
 		if (older.dataset.day) showDay(older.dataset.day);
 	});
-	search?.addEventListener('input', render);
 	const onHash = () => render();
 	window.addEventListener('hashchange', onHash);
 	document.addEventListener(

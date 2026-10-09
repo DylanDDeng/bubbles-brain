@@ -48,3 +48,17 @@ describe('knowledge search URL state', () => {
         })).toBe(false);
     });
 });
+
+describe("live AI 动态 rows", () => {
+    const news = { dataset: { search: "openai gpt-6 ai 动态", section: "ai-news", live: "" } };
+
+    it("stay out of the full listing", () => {
+        expect(itemMatchesKnowledgeState(news, { query: "", section: "" })).toBe(false);
+    });
+
+    it("show for a matching search or under their own filter", () => {
+        expect(itemMatchesKnowledgeState(news, { query: "GPT-6", section: "" })).toBe(true);
+        expect(itemMatchesKnowledgeState(news, { query: "", section: "ai-news" })).toBe(true);
+        expect(itemMatchesKnowledgeState(news, { query: "claude", section: "" })).toBe(false);
+    });
+});

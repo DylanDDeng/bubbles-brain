@@ -1,3 +1,4 @@
+import { loadNewsFeed, newsSearchItems } from '../lib/aiNews';
 import type { KnowledgeSearchIndex, KnowledgeSearchItem } from '../lib/searchIndex';
 
 export function normalizeCommandQuery(value: string): string {
@@ -29,6 +30,25 @@ export function commandSearchMatches(
 		.sort((left, right) => right.score - left.score || left.index - right.index)
 		.slice(0, limit)
 		.map(({ item }) => item);
+}
+
+/**
+ * Knowledge first, then AI 动态: news gets at most `newsShare` rows while the knowledge base has
+ * matches, and any rows the knowledge base leaves empty. Hundreds of news titles would otherwise
+ * crowd the knowledge base out of a short list.
+ */
+export function commandSearchWithNews(
+	items: KnowledgeSearchItem[],
+	news: KnowledgeSearchItem[],
+	query: string,
+	limit = 7,
+	newsShare = 3,
+): KnowledgeSearchItem[] {
+	const site = commandSearchMatches(items, query, limit);
+	if (!normalizeCommandQuery(query) || !news.length) return site;
+	const stories = commandSearchMatches(news, query, limit);
+	const newsCount = Math.min(stories.length, Math.max(newsShare, limit - site.length));
+	return [...site.slice(0, limit - newsCount), ...stories.slice(0, newsCount)];
 }
 
 const cachedIndexes = new Map<string, Promise<KnowledgeSearchIndex>>();
@@ -88,6 +108,8 @@ function initCommandSearch(): void {
 	const controller = new AbortController();
 	const { signal } = controller;
 	let index: KnowledgeSearchIndex | null = null;
+	/** AI 动态 stories, searched alongside the index (not listed under 最近收录). */
+	let news: KnowledgeSearchItem[] = [];
 	let activeIndex = -1;
 	let restoreFocus: HTMLElement | null = null;
 
@@ -130,7 +152,8 @@ function initCommandSearch(): void {
 
 	const render = () => {
 		if (!index || !input || !results || !state) return;
-		const matches = commandSearchMatches(index.items, input.value);
+		const query = input.value.trim();
+		const matches = commandSearchWithNews(index.items, news, query);
 		results.replaceChildren(...matches.map(createResultRow));
 		state.querySelector('span')!.textContent = input.value.trim() ? labels.results : labels.recent;
 		state.querySelector('p')!.textContent = matches.length === 0 ? labels.empty : '';
@@ -138,7 +161,18 @@ function initCommandSearch(): void {
 		setActive(input.value.trim() && matches.length > 0 ? 0 : -1);
 	};
 
+	const loadNews = () => {
+		const newsUrl = dialog.dataset.newsUrl;
+		if (!newsUrl || news.length) return;
+		void loadNewsFeed(newsUrl).then((feed) => {
+			if (!feed) return;
+			news = newsSearchItems(feed);
+			if (input?.value.trim()) render();
+		});
+	};
+
 	const load = async () => {
+		loadNews();
 		if (index) return index;
 		const indexUrl = dialog.dataset.indexUrl;
 		if (!indexUrl) throw new Error('Missing command search index URL');

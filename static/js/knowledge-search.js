@@ -12,6 +12,8 @@ export function parseKnowledgeSearchState(search = "", sectionIds = []) {
 }
 
 export function itemMatchesKnowledgeState(item, state) {
+  // Live AI 动态 rows only show for a search or their own filter, not in the full listing.
+  if (item.dataset.live !== undefined && !state.query && state.section !== "ai-news") return false;
   return (
     (!state.section || item.dataset.section === state.section) &&
     (!state.query || normalized(item.dataset.search).includes(normalized(state.query)))
@@ -32,7 +34,6 @@ function initKnowledgeSearch(root) {
   if (!root || root.dataset.searchReady === "true") return;
   root.dataset.searchReady = "true";
   const form = root.querySelector("[data-knowledge-search-form]");
-  const items = [...root.querySelectorAll("[data-knowledge-search-item]")];
   const count = root.querySelector("[data-search-result-count]");
   const empty = root.querySelector("[data-search-empty]");
   const queryControl = form?.querySelector('[name="q"]');
@@ -62,7 +63,8 @@ function initKnowledgeSearch(root) {
     if (sectionControl && sectionControl.value !== state.section) sectionControl.value = state.section;
     syncFilterMenu(state.section);
     let visible = 0;
-    for (const item of items) {
+    // Read the rows each time: AI 动态 rows are appended after the page loads.
+    for (const item of root.querySelectorAll("[data-knowledge-search-item]")) {
       item.hidden = !itemMatchesKnowledgeState(item, state);
       if (!item.hidden) visible += 1;
     }
@@ -107,6 +109,7 @@ function initKnowledgeSearch(root) {
     apply({ query: "", section: "" });
     queryControl?.focus();
   });
+  root.addEventListener("knowledge-search:refresh", () => apply(readControls(), false));
   const handlePopState = () => apply(parseKnowledgeSearchState(window.location.search, sectionIds), false);
   window.addEventListener("popstate", handlePopState);
   document.addEventListener("astro:before-swap", () => {

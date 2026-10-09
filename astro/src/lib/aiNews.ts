@@ -208,24 +208,20 @@ export function clockTime(iso: string): string {
 	}).format(new Date(iso));
 }
 
-/** The hour of the day in Beijing, 0–23. */
-export function beijingHour(iso: string): number {
-	return Number(clockTime(iso).slice(0, 2));
-}
-
-export interface HourGroup {
-	hour: number;
+export interface TimeGroup {
+	/** 23:08, Beijing time. */
+	time: string;
 	items: NewsItem[];
 }
 
-/** A day's stories by Beijing hour, keeping their order (newest first). */
-export function hourGroups(items: NewsItem[]): HourGroup[] {
-	const groups: HourGroup[] = [];
+/** A day's stories by push time (to the minute), keeping their order (newest first): one bot batch each. */
+export function timeGroups(items: NewsItem[]): TimeGroup[] {
+	const groups: TimeGroup[] = [];
 	for (const item of items) {
-		const hour = beijingHour(item.at);
+		const time = clockTime(item.at);
 		const last = groups.at(-1);
-		if (last?.hour === hour) last.items.push(item);
-		else groups.push({ hour, items: [item] });
+		if (last?.time === time) last.items.push(item);
+		else groups.push({ time, items: [item] });
 	}
 	return groups;
 }

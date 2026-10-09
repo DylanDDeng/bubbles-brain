@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
-	hourGroups,
+	timeGroups,
 	seenLabel,
 	archiveUrl,
 	monthLabel,
@@ -217,19 +217,16 @@ describe('months in the rail', () => {
 describe('the day as a timeline', () => {
 	const now = new Date('2026-10-09T12:40:00Z'); // 20:40 in Beijing
 
-	it('groups a day by Beijing hour, newest first', () => {
-		const stories = ['12:29', '11:23', '11:18', '10:48', '08:49'].map((t, i) =>
+	it('groups a day by push time (one bot batch each), newest first', () => {
+		const stories = ['15:08', '15:08', '14:45', '14:45', '14:12'].map((t, i) =>
 			item(String(i), { at: `2026-10-09T${t}:00.000Z` }),
 		);
-		expect(
-			hourGroups(
-				parseFeed({ updatedAt: 'x', days: [{ day: '2026-10-09', items: stories }] })!.days[0].items,
-			).map((g) => [g.hour, g.items.length]),
-		).toEqual([
-			[20, 1],
-			[19, 2],
-			[18, 1],
-			[16, 1],
+		const day = parseFeed({ updatedAt: 'x', days: [{ day: '2026-10-09', items: stories }] })!
+			.days[0];
+		expect(timeGroups(day.items).map((g) => [g.time, g.items.map((s) => s.id)])).toEqual([
+			['23:08', ['0', '1']],
+			['22:45', ['2', '3']],
+			['22:12', ['4']],
 		]);
 	});
 

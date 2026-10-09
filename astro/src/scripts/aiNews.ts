@@ -1,17 +1,26 @@
 /**
  * AI 动态: reads the feed the bubble-ai-news Worker keeps (refreshed every 15 minutes from the
  * Feishu Base) and shows one Beijing day at a time, picked in the left rail and kept in the address
- * as #YYYY-MM-DD. News is searched from the site search in the header (commandSearch.ts, /search/).
+ * as #YYYY-MM-DD. The rail groups days by month: the newest month starts open, older ones closed;
+ * a month whose older days have aged out of the feed is read from the archive when it is opened.
+ * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
+	archiveUrl,
+	clockTime,
 	COVER_RATIO,
 	dayTitle,
-	clockTime,
+	monthLabel,
+	monthOf,
+	parseArchive,
 	parseFeed,
 	railLabel,
+	railMonths,
 	updatedLabel,
+	type NewsDay,
 	type NewsFeed,
 	type NewsItem,
+	type RailMonth,
 } from '../lib/aiNews';
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string, text?: string) {
@@ -86,7 +95,15 @@ function setupNews(root: HTMLElement) {
 	const older = root.querySelector<HTMLButtonElement>('[data-news-older]')!;
 	const olderLabel = root.querySelector<HTMLElement>('[data-news-older-label]')!;
 	const body = root.querySelector<HTMLElement>('.news-body');
+	const feedUrl = root.dataset.feedUrl ?? '';
 	let feed: NewsFeed | null = null;
+	/** Archived months read so far; a month's request is shared while it is in flight. */
+	const archives = new Map<string, NewsDay[]>();
+	const loading = new Map<string, Promise<void>>();
+	/** Months whose archive could not be read: retried only when the reader opens them again. */
+	const failed = new Set<string>();
+	/** Months whose days are listed in the rail. The newest starts open. */
+	const open = new Set<string>();
 	let shown: HTMLElement[] = [];
 	// Re-deal the cards only when the number of columns changes, not on every pixel of a resize.
 	const resize = new ResizeObserver(() => {
@@ -95,47 +112,131 @@ function setupNews(root: HTMLElement) {
 	resize.observe(grid);
 	document.addEventListener('astro:before-swap', () => resize.disconnect(), { once: true });
 
-	const currentDay = () => {
-		const wanted = decodeURIComponent(location.hash.slice(1));
-		return feed?.days.find((day) => day.day === wanted)?.day ?? feed?.days[0]?.day ?? '';
+	const months = () => (feed ? railMonths(feed, archives) : []);
+	const knownDays = () => months().flatMap((month) => month.days);
+	const wantedDay = () => decodeURIComponent(location.hash.slice(1));
+
+	/** Reads one archived month once; the rail and the page redraw when it arrives. */
+	const loadArchive = (month: string): Promise<void> => {
+		if (archives.has(month)) return Promise.resolve();
+		let request = loading.get(month);
+		if (!request) {
+			request = fetch(archiveUrl(feedUrl, month), { headers: { accept: 'application/json' } })
+				.then((response) => (response.ok ? response.json() : null))
+				.then((raw: unknown) => {
+					const days = parseArchive(raw, month);
+					if (days) archives.set(month, days);
+					else failed.add(month);
+				})
+				.catch(() => {
+					failed.add(month);
+				})
+				.finally(() => {
+					loading.delete(month);
+					render();
+				});
+			loading.set(month, request);
+		}
+		return request;
+	};
+
+	/** The day to show: the address's when it is known (or its month can be fetched), else the newest. */
+	const currentDay = (): string => {
+		const wanted = wantedDay();
+		if (knownDays().some((day) => day.day === wanted)) return wanted;
+		const month = months().find((entry) => entry.month === monthOf(wanted));
+		if (month?.archived && !month.loaded && !failed.has(month.month)) {
+			open.add(month.month);
+			void loadArchive(month.month);
+			return wanted;
+		}
+		return knownDays()[0]?.day ?? '';
 	};
 
 	const showDay = (day: string) => {
+		open.add(monthOf(day));
 		history.replaceState(history.state, '', `#${day}`);
 		render();
 		// Keep the reader at the top of the list rather than wherever the last day ended.
 		if (body && body.getBoundingClientRect().top < 0) body.scrollIntoView();
 	};
 
+	const toggleMonth = (month: RailMonth) => {
+		if (open.has(month.month)) open.delete(month.month);
+		else {
+			open.add(month.month);
+			failed.delete(month.month);
+			if (month.archived && !month.loaded) void loadArchive(month.month);
+		}
+		render();
+	};
+
+	function drawRail(active: string) {
+		const now = new Date();
+		rail.replaceChildren(
+			...months().map((month) => {
+				const group = el('div', 'news-month');
+				const expanded = open.has(month.month);
+				const toggle = el('button', 'news-month__toggle');
+				toggle.type = 'button';
+				toggle.setAttribute('aria-expanded', String(expanded));
+				toggle.append(monthLabel(month.month, now), el('i', 'ph ph-caret-right'));
+				toggle.lastElementChild!.setAttribute('aria-hidden', 'true');
+				toggle.addEventListener('click', () => toggleMonth(month));
+				group.append(toggle);
+				if (expanded) {
+					const days = el('div', 'news-month__days');
+					for (const day of month.days) {
+						const link = el('a', undefined, railLabel(day.day, now));
+						link.href = `#${day.day}`;
+						link.dataset.day = day.day;
+						if (day.day === active) link.setAttribute('aria-current', 'true');
+						link.addEventListener('click', (event) => {
+							event.preventDefault();
+							showDay(day.day);
+						});
+						days.append(link);
+					}
+					if (loading.has(month.month)) days.append(el('span', 'news-month__loading', '…'));
+					group.append(days);
+				}
+				return group;
+			}),
+		);
+		// On a phone the rail is one sideways row: bring the chosen day into view.
+		const current = rail.querySelector<HTMLElement>('[aria-current]');
+		if (current && rail.scrollWidth > rail.clientWidth) {
+			rail.scrollLeft =
+				current.offsetLeft - rail.offsetLeft - (rail.clientWidth - current.offsetWidth) / 2;
+		}
+	}
+
 	function render() {
 		if (!feed) return;
 		const active = currentDay();
-		const items = feed.days.find((day) => day.day === active)?.items ?? [];
-
-		for (const link of rail.querySelectorAll<HTMLAnchorElement>('a')) {
-			if (link.dataset.day !== active) {
-				link.removeAttribute('aria-current');
-				continue;
-			}
-			link.setAttribute('aria-current', 'true');
-			// On a phone the rail is one sideways row: bring the chosen day into view.
-			if (rail.scrollWidth > rail.clientWidth) {
-				rail.scrollLeft =
-					link.offsetLeft - rail.offsetLeft - (rail.clientWidth - link.offsetWidth) / 2;
-			}
-		}
+		drawRail(active);
+		const days = knownDays();
+		const day = days.find((entry) => entry.day === active);
 		title.textContent = dayTitle(active);
-		shown = items.map(card);
+		shown = (day?.items ?? []).map(card);
 		layOut(grid, shown);
-		status.hidden = items.length > 0;
-		status.textContent = '这一天还没有动态。';
+		status.hidden = shown.length > 0;
+		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 
-		const index = feed.days.findIndex((day) => day.day === active);
-		const next = index >= 0 ? feed.days[index + 1] : undefined;
-		older.hidden = !next;
-		if (next) {
-			olderLabel.textContent = dayTitle(next.day);
-			older.dataset.day = next.day;
+		// The next older day: one already known, else the newest day of the next archived month.
+		const index = days.findIndex((entry) => entry.day === active);
+		const next = index >= 0 ? days[index + 1] : undefined;
+		// Includes this day's own month: its older days may still be waiting in the archive.
+		const nextMonth = next
+			? undefined
+			: months().find((month) => month.month <= monthOf(active) && month.archived && !month.loaded);
+		older.hidden = !next && !nextMonth;
+		older.dataset.day = next?.day ?? '';
+		older.dataset.month = nextMonth?.month ?? '';
+		if (next) olderLabel.textContent = dayTitle(next.day);
+		else if (nextMonth) {
+			const label = monthLabel(nextMonth.month, new Date());
+			olderLabel.textContent = nextMonth.month === monthOf(active) ? `${label}更早` : label;
 		}
 	}
 
@@ -146,7 +247,15 @@ function setupNews(root: HTMLElement) {
 	}
 
 	older.addEventListener('click', () => {
-		if (older.dataset.day) showDay(older.dataset.day);
+		if (older.dataset.day) return showDay(older.dataset.day);
+		const month = older.dataset.month;
+		if (!month) return;
+		const from = currentDay();
+		open.add(month);
+		void loadArchive(month).then(() => {
+			const following = knownDays().find((entry) => entry.day < from);
+			if (following) showDay(following.day);
+		});
 	});
 	const onHash = () => render();
 	window.addEventListener('hashchange', onHash);
@@ -158,27 +267,17 @@ function setupNews(root: HTMLElement) {
 		},
 	);
 
-	fetch(root.dataset.feedUrl ?? '', { headers: { accept: 'application/json' } })
+	fetch(feedUrl, { headers: { accept: 'application/json' } })
 		.then((response) =>
 			response.ok ? response.json() : Promise.reject(new Error(String(response.status))),
 		)
 		.then((raw: unknown) => {
 			feed = parseFeed(raw);
 			if (!feed || !feed.days.length) return fail();
-			const now = new Date();
-			updated.textContent = updatedLabel(feed.updatedAt, now);
-			rail.replaceChildren(
-				...feed.days.map((day) => {
-					const link = el('a', undefined, railLabel(day.day, now));
-					link.href = `#${day.day}`;
-					link.dataset.day = day.day;
-					link.addEventListener('click', (event) => {
-						event.preventDefault();
-						showDay(day.day);
-					});
-					return link;
-				}),
-			);
+			updated.textContent = updatedLabel(feed.updatedAt, new Date());
+			open.add(monthOf(feed.days[0].day));
+			// A link to a day in another month opens that month too.
+			if (wantedDay()) open.add(monthOf(wantedDay()));
 			main.setAttribute('aria-busy', 'false');
 			root.classList.add('is-ready');
 			render();

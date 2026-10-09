@@ -3,17 +3,15 @@
  * Feishu Base) and shows one Beijing day at a time, picked in the left rail and kept in the address
  * as #YYYY-MM-DD. The rail groups days by month: the newest month starts open, older ones closed;
  * a month whose older days have aged out of the feed is read from the archive when it is opened.
- * A day reads as a timeline: one row per Beijing hour, newest first, its time label pinned while
- * its cards scroll. Today's rows say how long ago (刚刚, 3 小时前); stories that arrived since the
- * reader's last visit (kept in this browser only) are marked 新, with a 上次看到这里 line under them.
+ * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
+ * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
+ * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
 	archiveUrl,
-	beijingToday,
-	clockTime,
 	dayTitle,
-	hourGroups,
+	timeGroups,
 	LAST_SEEN_KEY,
 	monthLabel,
 	monthOf,
@@ -21,7 +19,6 @@ import {
 	parseFeed,
 	railLabel,
 	railMonths,
-	relativeTime,
 	seenLabel,
 	updatedLabel,
 	type NewsDay,
@@ -37,7 +34,7 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string, t
 	return node;
 }
 
-function card(item: NewsItem, fresh: boolean): HTMLElement {
+function card(item: NewsItem): HTMLElement {
 	const link = el('a', 'news-card');
 	link.href = item.url;
 	link.target = '_blank';
@@ -58,19 +55,11 @@ function card(item: NewsItem, fresh: boolean): HTMLElement {
 	const body = el('span', 'news-card__body');
 	body.append(el('span', 'news-card__title', item.title));
 	if (item.summary) body.append(el('span', 'news-card__summary', item.summary));
-	const time = el(
-		'time',
-		'news-card__time',
-		fresh ? `${clockTime(item.at)} · 新` : clockTime(item.at),
-	);
-	time.dateTime = item.at;
-	if (fresh) time.classList.add('is-new');
-	body.append(time);
 	link.append(body);
 	return link;
 }
 
-/** This tab's starting point, so a reload keeps the same 新 marks (sessionStorage dies with the tab). */
+/** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
 const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
 
 /**
@@ -100,21 +89,15 @@ function writeLastSeen(iso: string) {
 }
 
 /**
- * One row per hour: a pinned label (how long ago today, the hour on other days) beside its cards.
- * Stories newer than the last visit are 新; the 上次看到这里 line goes above the first older row.
+ * One row per push time: a pinned label with the time (23:08) beside that batch's cards.
+ * The 上次看到这里 line goes above the first row older than the last visit, and only if newer rows come before it.
  */
-function timeline(
-	items: NewsItem[],
-	day: string,
-	lastSeen: string | null,
-	now: Date,
-): HTMLElement[] {
-	const today = day === beijingToday(now);
+function timeline(items: NewsItem[], lastSeen: string | null, now: Date): HTMLElement[] {
 	const isNew = (item: NewsItem) => !!lastSeen && item.at > lastSeen;
 	const nodes: HTMLElement[] = [];
 	let sawNew = false;
 	let marked = false;
-	for (const group of hourGroups(items)) {
+	for (const group of timeGroups(items)) {
 		const fresh = group.items.some(isNew);
 		if (sawNew && !fresh && !marked && lastSeen) {
 			const line = el('div', 'news-seen');
@@ -128,16 +111,15 @@ function timeline(
 		}
 		sawNew ||= fresh;
 
-		const row = el('section', 'news-hour');
-		if (fresh) row.classList.add('is-new');
-		const label = el('div', 'news-hour__label');
-		const dot = el('span', 'news-hour__dot');
+		const row = el('section', 'news-moment');
+		const label = el('div', 'news-moment__label');
+		const dot = el('span', 'news-moment__dot');
 		dot.setAttribute('aria-hidden', 'true');
-		const ago = today ? relativeTime(group.items[0].at, now) : '';
-		label.append(dot, el('span', 'news-hour__primary', ago || `${group.hour} 点`));
-		if (ago) label.append(el('span', 'news-hour__secondary', `${group.hour} 点`));
-		const cards = el('div', 'news-hour__cards');
-		cards.append(...group.items.map((item) => card(item, isNew(item))));
+		const time = el('time', 'news-moment__time', group.time);
+		time.dateTime = group.items[0].at;
+		label.append(dot, time);
+		const cards = el('div', 'news-moment__cards');
+		cards.append(...group.items.map(card));
 		row.append(label, cards);
 		nodes.push(row);
 	}
@@ -301,7 +283,7 @@ function setupNews(root: HTMLElement) {
 		const day = days.find((entry) => entry.day === active);
 		title.textContent = dayTitle(active);
 		const items = day?.items ?? [];
-		grid.replaceChildren(...timeline(items, active, lastSeen, new Date()));
+		grid.replaceChildren(...timeline(items, lastSeen, new Date()));
 		status.hidden = items.length > 0;
 		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 

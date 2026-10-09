@@ -208,35 +208,22 @@ export function clockTime(iso: string): string {
 	}).format(new Date(iso));
 }
 
-/** The hour of the day in Beijing, 0–23. */
-export function beijingHour(iso: string): number {
-	return Number(clockTime(iso).slice(0, 2));
-}
-
-export interface HourGroup {
-	hour: number;
+export interface TimeGroup {
+	/** 23:08, Beijing time. */
+	time: string;
 	items: NewsItem[];
 }
 
-/** A day's stories by Beijing hour, keeping their order (newest first). */
-export function hourGroups(items: NewsItem[]): HourGroup[] {
-	const groups: HourGroup[] = [];
+/** A day's stories by push time (to the minute), keeping their order (newest first): one bot batch each. */
+export function timeGroups(items: NewsItem[]): TimeGroup[] {
+	const groups: TimeGroup[] = [];
 	for (const item of items) {
-		const hour = beijingHour(item.at);
+		const time = clockTime(item.at);
 		const last = groups.at(-1);
-		if (last?.hour === hour) last.items.push(item);
-		else groups.push({ hour, items: [item] });
+		if (last?.time === time) last.items.push(item);
+		else groups.push({ time, items: [item] });
 	}
 	return groups;
-}
-
-/** 刚刚, 25 分钟前, 3 小时前; empty for anything a day old or more. */
-export function relativeTime(iso: string, now: Date): string {
-	const minutes = Math.floor((now.getTime() - Date.parse(iso)) / 60000);
-	if (minutes < 10) return '刚刚';
-	if (minutes < 60) return `${minutes} 分钟前`;
-	if (minutes < 24 * 60) return `${Math.floor(minutes / 60)} 小时前`;
-	return '';
 }
 
 /** When the reader last came: 今天 18:30, 昨天 18:30, else 10月7日 18:30. */

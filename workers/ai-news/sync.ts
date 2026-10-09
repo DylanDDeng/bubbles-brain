@@ -14,7 +14,9 @@ import {
 	isFileToken,
 	storyKey,
 	toItem,
+	coverSize,
 	type BaseRecord,
+	type CoverSize,
 	type Feed,
 } from './feed';
 
@@ -27,13 +29,24 @@ export interface FeedStore {
 
 /** The R2 calls this Worker makes (a subset of R2Bucket). */
 export interface CoverBucket {
-	head(key: string): Promise<object | null>;
-	get(key: string): Promise<{ body: ReadableStream; httpMetadata?: { contentType?: string }; httpEtag?: string } | null>;
-	put(key: string, value: ArrayBuffer | ReadableStream, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+	head(key: string): Promise<{ customMetadata?: Record<string, string> } | null>;
+	get(key: string): Promise<{
+		body: ReadableStream;
+		arrayBuffer(): Promise<ArrayBuffer>;
+		httpMetadata?: { contentType?: string };
+		customMetadata?: Record<string, string>;
+		httpEtag?: string;
+	} | null>;
+	put(
+		key: string,
+		value: ArrayBuffer | ReadableStream,
+		options?: { httpMetadata?: { contentType?: string }; customMetadata?: Record<string, string> },
+	): Promise<unknown>;
 }
 
 /** The Images binding call used to shrink covers (a subset of ImagesBinding). */
 export interface ImageResizer {
+	info(stream: ReadableStream): Promise<{ width?: number; height?: number }>;
 	input(stream: ReadableStream): {
 		transform(options: { width: number; fit: 'scale-down' }): {
 			output(options: { format: 'image/webp'; quality: number }): Promise<{ image(): ReadableStream; contentType(): string }>;
@@ -207,8 +220,12 @@ export async function sync(
 	}
 
 	// The bot's own attachment wins over whatever the source page offers.
-	for (const [key, cover] of attached) covers.set(key, cover);
-	const feed = buildFeed(records, covers, now);
+	const sizes = new Map<string, CoverSize>();
+	for (const [key, cover] of attached) {
+		covers.set(key, cover.url);
+		if (cover.size) sizes.set(cover.url, cover.size);
+	}
+	const feed = buildFeed(records, covers, now, sizes);
 	if (previous && JSON.stringify(previous.days) === JSON.stringify(feed.days)) return previous;
 	await env.NEWS.put(FEED_KEY, JSON.stringify(feed));
 	return feed;
@@ -219,9 +236,9 @@ function coverKey(token: string): string {
 }
 
 /**
- * Story key → public cover URL for every story whose newest row carries an attachment that is in
- * R2. Attachments already in the last feed are known to be stored; new ones are checked, and up to
- * `limit` missing ones are copied from Feishu this run (the rest on later runs).
+ * Story key → public cover URL (and pixel size) for every story whose newest row carries an
+ * attachment that is in R2. Attachments already in the last feed with a size are known; others are
+ * checked in R2, and up to `limit` are copied from Feishu or measured this run (the rest later).
  */
 async function attachmentCovers(
 	env: Env,
@@ -230,19 +247,20 @@ async function attachmentCovers(
 	tenant: string,
 	fetcher: typeof fetch,
 	limit: number,
-): Promise<Map<string, string>> {
-	const result = new Map<string, string>();
-	if (!env.COVERS) return result;
+): Promise<Map<string, { url: string; size: CoverSize | null }>> {
+	const result = new Map<string, { url: string; size: CoverSize | null }>();
+	const covers = env.COVERS;
+	if (!covers) return result;
 	const base = env.COVER_BASE_URL || DEFAULT_COVER_BASE;
-	const stored = new Set(
-		(previous?.days ?? [])
-			.flatMap((day) => day.items)
-			.map((item) => item.cover ?? '')
-			.filter((cover) => cover.startsWith(base))
-			.map((cover) => cover.slice(base.length)),
-	);
+	// Covers in the last feed are in R2 already; their size is known when the feed carried one.
+	const known = new Map<string, CoverSize | null>();
+	for (const item of (previous?.days ?? []).flatMap((day) => day.items)) {
+		if (item.cover?.startsWith(base)) {
+			known.set(item.cover.slice(base.length), coverSize(item.coverWidth, item.coverHeight));
+		}
+	}
 	const seen = new Set<string>();
-	let copies = 0;
+	let work = 0;
 	// Records come newest first, so a story's first row is the one the feed keeps.
 	for (const record of records) {
 		const key = recordStoryKey(record);
@@ -250,18 +268,72 @@ async function attachmentCovers(
 		seen.add(key);
 		const file = attachmentToken(record.fields[FIELDS.cover]);
 		if (!file) continue;
-		let present = stored.has(file) || (await env.COVERS.head(coverKey(file))) !== null;
-		if (!present && copies < limit) {
-			copies += 1;
-			present = await copyAttachment(env, file, tenant, fetcher);
+		const url = `${base}${file}`;
+		if (known.has(file)) {
+			const size = known.get(file) ?? null;
+			// Stored before sizes were kept: measure a few per run, without asking R2 about the rest.
+			if (size || work >= limit) {
+				result.set(key, { url, size });
+			} else {
+				work += 1;
+				result.set(key, { url, size: await measureStored(env, file) });
+			}
+			continue;
 		}
-		if (present) result.set(key, `${base}${file}`);
+		const head = await covers.head(coverKey(file));
+		const storedSize = coverSize(head?.customMetadata?.width, head?.customMetadata?.height);
+		if (head && storedSize) {
+			result.set(key, { url, size: storedSize });
+			continue;
+		}
+		if (work >= limit) {
+			if (head) result.set(key, { url, size: null });
+			continue;
+		}
+		work += 1;
+		// Either never copied, or copied before sizes were recorded: (re)measure and store it.
+		const size = head ? await measureStored(env, file) : await copyAttachment(env, file, tenant, fetcher);
+		if (head || size !== false) result.set(key, { url, size: size || null });
 	}
 	return result;
 }
 
-/** Downloads one attachment, shrinks it to a WebP when the Images binding allows, and stores it. */
-async function copyAttachment(env: Env, file: string, tenant: string, fetcher: typeof fetch): Promise<boolean> {
+/** Pixel size of an image, or null when the Images binding is missing or cannot tell. */
+async function measure(env: Env, bytes: ArrayBuffer): Promise<CoverSize | null> {
+	if (!env.IMAGES) return null;
+	try {
+		const info = await env.IMAGES.info(new Response(bytes).body!);
+		return coverSize(info.width, info.height);
+	} catch {
+		return null;
+	}
+}
+
+/** A cover copied before sizes were kept: measure it and write it back with its size. */
+async function measureStored(env: Env, file: string): Promise<CoverSize | null> {
+	const object = await env.COVERS!.get(coverKey(file));
+	if (!object) return null;
+	const bytes = await object.arrayBuffer();
+	const size = await measure(env, bytes);
+	if (size) {
+		await env.COVERS!.put(coverKey(file), bytes, {
+			httpMetadata: { contentType: object.httpMetadata?.contentType },
+			customMetadata: { width: String(size.width), height: String(size.height) },
+		});
+	}
+	return size;
+}
+
+/**
+ * Downloads one attachment, shrinks it to a WebP when the Images binding allows, and stores it with
+ * its pixel size. Returns the size (null when unknown), or false when nothing was stored.
+ */
+async function copyAttachment(
+	env: Env,
+	file: string,
+	tenant: string,
+	fetcher: typeof fetch,
+): Promise<CoverSize | null | false> {
 	try {
 		const response = await fetcher(`${apiOrigin(env)}/open-apis/drive/v1/medias/${file}/download`, {
 			headers: { authorization: `Bearer ${tenant}` },
@@ -284,8 +356,12 @@ async function copyAttachment(env: Env, file: string, tenant: string, fetcher: t
 				// Out of free transformations or an odd file: keep the original rather than nothing.
 			}
 		}
-		await env.COVERS!.put(coverKey(file), body, { httpMetadata: { contentType } });
-		return true;
+		const size = await measure(env, body);
+		await env.COVERS!.put(coverKey(file), body, {
+			httpMetadata: { contentType },
+			...(size ? { customMetadata: { width: String(size.width), height: String(size.height) } } : {}),
+		});
+		return size;
 	} catch {
 		return false;
 	}

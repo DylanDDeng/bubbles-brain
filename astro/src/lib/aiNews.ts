@@ -16,6 +16,19 @@ export interface NewsItem {
 	at: string;
 	day: string;
 	cover?: string;
+	/** Width ÷ height of the cover, when the Worker knows its size. */
+	coverRatio?: number;
+}
+
+/** Covers keep their own shape within these bounds: no taller than 4:5, no flatter than 2:1. */
+export const COVER_RATIO = { min: 4 / 5, max: 2, fallback: 1.91 } as const;
+
+/** The shape to reserve for a cover of this size, clamped so one image cannot swamp a column. */
+export function coverRatio(width: unknown, height: unknown): number | undefined {
+	const w = Number(width);
+	const h = Number(height);
+	if (!Number.isFinite(w) || !Number.isFinite(h) || w <= 0 || h <= 0) return undefined;
+	return Math.min(COVER_RATIO.max, Math.max(COVER_RATIO.min, w / h));
 }
 
 export interface NewsDay {
@@ -66,7 +79,14 @@ export function parseFeed(raw: unknown): NewsFeed | null {
 				url: item.url,
 				at: item.at,
 				day: day.day,
-				...(isHttps(item.cover) ? { cover: item.cover.replace(/^http:/, 'https:') } : {}),
+				...(isHttps(item.cover)
+					? {
+							cover: item.cover.replace(/^http:/, 'https:'),
+							...(coverRatio(item.coverWidth, item.coverHeight)
+								? { coverRatio: coverRatio(item.coverWidth, item.coverHeight) }
+								: {}),
+						}
+					: {}),
 			});
 		}
 		if (items.length) days.push({ day: day.day, items });

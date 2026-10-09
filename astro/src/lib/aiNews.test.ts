@@ -3,6 +3,7 @@ import {
 	AI_NEWS_FEED_URL,
 	beijingToday,
 	clockTime,
+	coverRatio,
 	dayTitle,
 	parseFeed,
 	railLabel,
@@ -88,5 +89,35 @@ describe('searchFeed', () => {
 		expect(searchFeed(feed, 'haiku').map((entry) => entry.id)).toEqual(['a', 'b']);
 		expect(searchFeed(feed, 'haiku 便宜').map((entry) => entry.id)).toEqual(['b']);
 		expect(searchFeed(feed, '   ')).toEqual([]);
+	});
+});
+
+describe('cover shape', () => {
+	it('keeps a cover its own shape within 4:5 and 2:1', () => {
+		expect(coverRatio(800, 600)).toBeCloseTo(4 / 3);
+		expect(coverRatio(800, 2000)).toBe(0.8);
+		expect(coverRatio(1600, 400)).toBe(2);
+		expect(coverRatio(undefined, 600)).toBeUndefined();
+		expect(coverRatio(0, 600)).toBeUndefined();
+	});
+
+	it('carries the ratio through the feed only when the size is real', () => {
+		const feed = parseFeed({
+			updatedAt: '2026-10-09T00:00:00.000Z',
+			days: [
+				{
+					day: '2026-10-09',
+					items: [
+						item('sized', { cover: 'https://img.test/a.webp', coverWidth: 800, coverHeight: 1000 }),
+						item('unsized', { cover: 'https://img.test/b.webp', coverWidth: 'wide' }),
+						item('bare', { coverWidth: 800, coverHeight: 600 }),
+					],
+				},
+			],
+		})!;
+		const [sized, unsized, bare] = feed.days[0].items;
+		expect(sized.coverRatio).toBe(0.8);
+		expect(unsized).not.toHaveProperty('coverRatio');
+		expect(bare).not.toHaveProperty('coverRatio');
 	});
 });

@@ -12,8 +12,23 @@ export interface FeedItem {
 	at: string;
 	/** Calendar day in Beijing time, YYYY-MM-DD. */
 	day: string;
-	/** Absolute https URL of the source's share image, when it has one. */
+	/** Absolute https URL of the story's cover, when it has one. */
 	cover?: string;
+	/** The cover's pixel size, when known (attachment covers), so the page can reserve its shape. */
+	coverWidth?: number;
+	coverHeight?: number;
+}
+
+export interface CoverSize {
+	width: number;
+	height: number;
+}
+
+/** A pixel size worth keeping: two positive whole numbers. */
+export function coverSize(width: unknown, height: unknown): CoverSize | null {
+	const w = Number(width);
+	const h = Number(height);
+	return Number.isInteger(w) && Number.isInteger(h) && w > 0 && h > 0 ? { width: w, height: h } : null;
 }
 
 export interface FeedDay {
@@ -169,6 +184,7 @@ export function buildFeed(
 	records: BaseRecord[],
 	covers: ReadonlyMap<string, string | null>,
 	now: Date,
+	coverSizes: ReadonlyMap<string, CoverSize> = new Map(),
 ): Feed {
 	const newest = new Map<string, FeedItem>();
 	for (const record of records) {
@@ -182,7 +198,10 @@ export function buildFeed(
 	const days: FeedDay[] = [];
 	for (const item of items) {
 		const cover = covers.get(storyKey(item.url));
-		const withCover = cover ? { ...item, cover } : item;
+		const size = cover ? coverSizes.get(cover) : undefined;
+		const withCover = cover
+			? { ...item, cover, ...(size ? { coverWidth: size.width, coverHeight: size.height } : {}) }
+			: item;
 		const last = days.at(-1);
 		if (last?.day === item.day) last.items.push(withCover);
 		else days.push({ day: item.day, items: [withCover] });

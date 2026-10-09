@@ -1,4 +1,5 @@
 ---
+import { AI_NEWS_FEED_URL } from '../lib/aiNews';
 import { homeQuestions } from '../lib/homeQuestions';
 import { siteSections } from '../lib/siteSections';
 import '../styles/home.css';
@@ -12,23 +13,37 @@ const shown = 3;
 
 <div class="home home--ask">
 	<h1 class="home-title">Bubble's Brain</h1>
-	<form class="home-search" action="/search/" method="get" role="search" data-home-ask>
-		<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
-		<label class="sr-only" for="home-query">搜索知识库</label>
-		<span class="home-search__field">
-			<input
-				id="home-query"
-				name="q"
-				type="search"
-				autocomplete="off"
-				placeholder="想弄懂什么？比如：上下文窗口"
-			/>
-			<span class="home-ask" aria-hidden="true" hidden>
-				<span class="home-ask__text" data-home-ask-text></span><span class="home-ask__caret"
-				></span>
-			</span>
-		</span>
-	</form>
+	<!-- The latest AI 动态 open under the box while it has focus and is empty (scripts/homeNews.ts). -->
+	<div class="home-search-box" data-home-news={AI_NEWS_FEED_URL}>
+		<div class="home-search-shell">
+			<form class="home-search" action="/search/" method="get" role="search" data-home-ask>
+				<i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+				<label class="sr-only" for="home-query">搜索知识库</label>
+				<span class="home-search__field">
+					<input
+						id="home-query"
+						name="q"
+						type="search"
+						autocomplete="off"
+						aria-controls="home-news"
+						placeholder="想弄懂什么？比如：上下文窗口"
+					/>
+					<span class="home-ask" aria-hidden="true" hidden>
+						<span class="home-ask__text" data-home-ask-text></span><span class="home-ask__caret"
+						></span>
+					</span>
+				</span>
+			</form>
+			<section class="home-news" id="home-news" aria-labelledby="home-news-title" hidden>
+				<div class="home-news__head">
+					<h2 class="home-news__title" id="home-news-title">AI 动态</h2>
+					<span class="home-news__updated" data-home-news-updated></span>
+				</div>
+				<ol class="home-news__list" data-home-news-list></ol>
+				<a class="home-news__all" href="/ai-news/" data-home-news-all>看全部 AI 动态</a>
+			</section>
+		</div>
+	</div>
 	<p class="home-try">
 		<span class="home-try__label">试试</span>
 		<span class="home-try__list">
@@ -49,4 +64,5 @@ const shown = 3;
 <script>
 	import '../scripts/homeRedirects';
 	import '../scripts/homeAsk';
+	import '../scripts/homeNews';
 </script>

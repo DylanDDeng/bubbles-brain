@@ -244,6 +244,58 @@ export function updatedLabel(iso: string, now: Date): string {
 	return day === beijingToday(now) ? `更新于 ${time}` : `更新于 ${monthDay(day)} ${time}`;
 }
 
+export interface HomeNewsRow {
+	item: NewsItem;
+	/** 20:29 today, 昨天 or 10/7 before; empty when the row above has the same (one bot batch). */
+	time: string;
+	/** The reader had seen up to here: the rows above came after their last visit to /ai-news/. */
+	seenBefore: boolean;
+}
+
+export interface HomeNews {
+	rows: HomeNewsRow[];
+	/** 20:29 更新, or 昨天 20:29 更新 when nothing came today: the newest push. */
+	updated: string;
+	/** How many stories were pushed today, Beijing time. */
+	today: number;
+}
+
+/**
+ * The newest few stories for the home page's search box, with the 「上次看到这里」 line placed as
+ * on /ai-news/. `lastSeen` is when the reader last left /ai-news/, if ever.
+ */
+export function homeNews(feed: NewsFeed, lastSeen: string | null, now: Date, limit = 5): HomeNews {
+	const items = feed.days.flatMap((day) => day.items).slice(0, limit);
+	const today = beijingToday(now);
+	const seen = lastSeen ? Date.parse(lastSeen) : Number.NaN;
+	const fresh = (item: NewsItem) => Number.isNaN(seen) || Date.parse(item.at) > seen;
+	const when = (item: NewsItem) => {
+		if (item.day === today) return clockTime(item.at);
+		if (item.day === shiftDay(today, -1)) return '昨天';
+		const [, month, date] = item.day.split('-').map(Number);
+		return `${month}/${date}`;
+	};
+	const rows = items.map((item, index) => {
+		const above = items[index - 1];
+		return {
+			item,
+			time: above && when(above) === when(item) ? '' : when(item),
+			seenBefore: Boolean(above) && !Number.isNaN(seen) && fresh(above) && !fresh(item),
+		};
+	});
+	const newest = items[0];
+	const updated = !newest
+		? ''
+		: newest.day === today
+			? `${clockTime(newest.at)} 更新`
+			: `${railLabel(newest.day, now)} ${clockTime(newest.at)} 更新`;
+	return {
+		rows,
+		updated,
+		today: feed.days.find((day) => day.day === today)?.items.length ?? 0,
+	};
+}
+
 export const NEWS_SECTION_LABEL = 'AI 动态';
 
 /**

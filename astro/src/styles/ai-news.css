@@ -239,9 +239,72 @@
 	}
 }
 
+/* ------------------------------------------------------------- bottom veil */
+/* A progressive blur along the bottom of the screen: four layers, each blurring more and masked to
+   a lower band, so cards soften gradually instead of behind one hard frosted strip. A faint white
+   wash on top keeps the edge light. It never takes clicks. */
+.news-end {
+	height: 1px;
+}
+.news-veil {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 5;
+	height: 96px;
+	pointer-events: none;
+	background: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / 0.55));
+	transition: opacity 0.25s ease;
+}
+.news-veil.is-hidden {
+	opacity: 0;
+}
+.news-veil i {
+	position: absolute;
+	inset: 0;
+}
+.news-veil i:nth-child(1) {
+	-webkit-backdrop-filter: blur(1px);
+	backdrop-filter: blur(1px);
+	mask-image: linear-gradient(to bottom, transparent 0%, #000 25%, #000 50%, transparent 75%);
+}
+.news-veil i:nth-child(2) {
+	-webkit-backdrop-filter: blur(3px);
+	backdrop-filter: blur(3px);
+	mask-image: linear-gradient(to bottom, transparent 25%, #000 50%, #000 75%, transparent 100%);
+}
+.news-veil i:nth-child(3) {
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	mask-image: linear-gradient(to bottom, transparent 50%, #000 75%, #000 100%);
+}
+.news-veil i:nth-child(4) {
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
+	mask-image: linear-gradient(to bottom, transparent 75%, #000 100%);
+}
+/* Without backdrop blur, the white wash alone fades the edge. */
+@supports not (backdrop-filter: blur(1px)) {
+	.news-veil {
+		background: linear-gradient(to bottom, rgb(255 255 255 / 0), rgb(255 255 255 / 0.9));
+	}
+}
+@media (prefers-reduced-transparency: reduce) {
+	.news-veil {
+		display: none;
+	}
+}
+@media (max-width: 900px) {
+	.news-veil {
+		height: 64px;
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.news-card,
-	.news-month__toggle i {
+	.news-month__toggle i,
+	.news-veil {
 		transition: none;
 	}
 }

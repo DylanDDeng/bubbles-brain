@@ -112,6 +112,17 @@ function setupNews(root: HTMLElement) {
 	resize.observe(grid);
 	document.addEventListener('astro:before-swap', () => resize.disconnect(), { once: true });
 
+	// The frosted bottom edge fades away once the end of the list is on screen.
+	const veil = root.querySelector<HTMLElement>('[data-news-veil]');
+	const end = root.querySelector<HTMLElement>('[data-news-end]');
+	if (veil && end) {
+		const atEnd = new IntersectionObserver(([entry]) =>
+			veil.classList.toggle('is-hidden', entry.isIntersecting),
+		);
+		atEnd.observe(end);
+		document.addEventListener('astro:before-swap', () => atEnd.disconnect(), { once: true });
+	}
+
 	const months = () => (feed ? railMonths(feed, archives) : []);
 	const knownDays = () => months().flatMap((month) => month.days);
 	const wantedDay = () => decodeURIComponent(location.hash.slice(1));

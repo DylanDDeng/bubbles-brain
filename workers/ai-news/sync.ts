@@ -89,7 +89,10 @@ const WINDOW_DAYS = 30;
  */
 export const RUN_LIMITS = {
 	scheduled: { pages: 15, attachments: 40 },
-	requested: { pages: 5, attachments: 4 },
+	// Only the newest stories' own covers: a slow share-image lookup would eat the 30 seconds.
+	requested: { pages: 0, attachments: 2 },
+	/** The catch-up pass: text only, so it always fits. */
+	lean: { pages: 0, attachments: 0 },
 } as const;
 export type RunLimits = { pages: number; attachments: number };
 const DEFAULT_COVER_BASE = 'https://news-api.bubblenews.today/v1/cover/';
@@ -98,8 +101,14 @@ const COVER_WIDTH = 800;
 const ATTACHMENT_MAX_BYTES = 20 * 1024 * 1024;
 /** KV's shortest expiry: at most one bot-triggered sync a minute. */
 const SYNC_LOCK_TTL = 60;
-/** A row the bot just wrote can take a moment to show up in search. */
+/**
+ * A row the bot just wrote can take a while to show up in Feishu's search: sync once after a few
+ * seconds and once more near the end of waitUntil's 30 seconds, so a slow index is still caught.
+ */
 const SYNC_DELAY_MS = 3000;
+/** When the second pass starts, counted from the request; skipped if the first ran too long. */
+const SECOND_PASS_AT_MS = 20000;
+const SECOND_PASS_LATEST_MS = 22000;
 const COVER_FOUND_TTL = 60 * 60 * 24 * 45;
 const COVER_MISSING_TTL = 60 * 60 * 24 * 3;
 const HTML_BYTES = 256 * 1024;
@@ -116,17 +125,36 @@ export async function handleRequest(request: Request, env: Env, ctx: Waiter): Pr
  * POST /v1/sync: the bot says "I just wrote a batch". Answers 202 at once and syncs a few seconds
  * later; further calls within a minute are folded into that one.
  */
-export async function requestSync(request: Request, env: Env, ctx: Waiter, delayMs = SYNC_DELAY_MS): Promise<Response> {
+export async function requestSync(
+	request: Request,
+	env: Env,
+	ctx: Waiter,
+	delayMs = SYNC_DELAY_MS,
+	secondPassAtMs = SECOND_PASS_AT_MS,
+): Promise<Response> {
 	if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
 	if (!env.SYNC_TOKEN) return json({ error: 'sync_disabled' }, 503);
 	const presented = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
-	if (!sameSecret(presented, env.SYNC_TOKEN)) return json({ error: 'unauthorized' }, 401);
-	if (await env.NEWS.get(SYNC_LOCK_KEY)) return json({ status: 'already_queued' }, 202);
+	if (!sameSecret(presented, env.SYNC_TOKEN)) {
+		console.warn(JSON.stringify({ event: 'sync_refused', reason: presented ? 'wrong_token' : 'no_token' }));
+		return json({ error: 'unauthorized' }, 401);
+	}
+	if (await env.NEWS.get(SYNC_LOCK_KEY)) {
+		console.log(JSON.stringify({ event: 'sync_folded' }));
+		return json({ status: 'already_queued' }, 202);
+	}
 	await env.NEWS.put(SYNC_LOCK_KEY, new Date().toISOString(), { expirationTtl: SYNC_LOCK_TTL });
+	const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, Math.max(0, ms)));
+	const start = Date.now();
 	ctx.waitUntil(
-		new Promise((resolve) => setTimeout(resolve, delayMs)).then(() =>
-			sync(env, new Date(), fetch, RUN_LIMITS.requested),
-		),
+		wait(delayMs)
+			.then(() => sync(env, new Date(), fetch, RUN_LIMITS.requested, 'bot'))
+			.then(async () => {
+				const elapsed = Date.now() - start;
+				if (elapsed > Math.max(secondPassAtMs, SECOND_PASS_LATEST_MS)) return;
+				await wait(secondPassAtMs - elapsed);
+				await sync(env, new Date(), fetch, RUN_LIMITS.lean, 'bot-again');
+			}),
 	);
 	return json({ status: 'queued' }, 202);
 }
@@ -199,7 +227,11 @@ export async function sync(
 	now = new Date(),
 	fetcher: typeof fetch = fetch,
 	limits: RunLimits = RUN_LIMITS.scheduled,
+	trigger = 'cron',
 ): Promise<Feed> {
+	const started = Date.now();
+	const phases: Record<string, number> = {};
+	const lap = (name: string, from: number) => (phases[name] = Date.now() - from);
 	const since = now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000;
 	let token = await tenantToken(env, fetcher);
 	let records: BaseRecord[];
@@ -212,10 +244,19 @@ export async function sync(
 		records = await searchRecords(env, token, since, fetcher);
 	}
 
+	lap('feishu', started);
 	const previous = await env.NEWS.get<Feed>(FEED_KEY, 'json');
+	// Thirty days with no rows at all is a hiccup on Feishu's side, not news: keep what the page shows.
+	if (!records.length && previous?.days.length) {
+		logSync(trigger, records, false, started, phases);
+		return previous;
+	}
 	const keys = [...new Set(records.map(recordStoryKey).filter((key): key is string => key !== null))];
 	const covers = new Map<string, string | null>();
+	let mark = Date.now();
 	const attached = await attachmentCovers(env, records, previous, token, fetcher, limits.attachments);
+	lap('attachments', mark);
+	mark = Date.now();
 	await Promise.all(
 		keys.map(async (key) => {
 			const cached = await env.NEWS.get<{ cover: string | null }>(`cover:${key}`, 'json');
@@ -230,6 +271,8 @@ export async function sync(
 		)
 		.filter((entry, index, all) => all.findIndex((other) => other.key === entry.key) === index)
 		.slice(0, limits.pages);
+	lap('coverCache', mark);
+	mark = Date.now();
 	for (let i = 0; i < missing.length; i += 5) {
 		await Promise.all(
 			missing.slice(i, i + 5).map(async ({ key, url }) => {
@@ -242,6 +285,7 @@ export async function sync(
 		);
 	}
 
+	lap('shareImages', mark);
 	// The bot's own attachment wins over whatever the source page offers.
 	const sizes = new Map<string, CoverSize>();
 	for (const [key, cover] of attached) {
@@ -250,16 +294,42 @@ export async function sync(
 	}
 	const feed = buildFeed(records, covers, now, sizes);
 	// Fold today's feed into the monthly archive before anything can age out of the window.
+	mark = Date.now();
 	if (env.ARCHIVE) feed.archiveMonths = await updateArchive(env.ARCHIVE, feed, beijingDay(since), now);
+	lap('archive', mark);
 	if (
 		previous &&
 		JSON.stringify(previous.days) === JSON.stringify(feed.days) &&
 		JSON.stringify(previous.archiveMonths ?? []) === JSON.stringify(feed.archiveMonths ?? [])
 	) {
+		logSync(trigger, records, false, started, phases);
 		return previous;
 	}
 	await env.NEWS.put(FEED_KEY, JSON.stringify(feed));
+	logSync(trigger, records, true, started, phases);
 	return feed;
+}
+
+/** One line per run in Workers Logs: who asked, what Feishu returned, whether the feed moved. */
+function logSync(
+	trigger: string,
+	records: BaseRecord[],
+	changed: boolean,
+	started: number,
+	phases: Record<string, number>,
+) {
+	const newest = records.map((record) => toItem(record)?.at ?? '').sort().at(-1) ?? null;
+	console.log(
+		JSON.stringify({
+			event: 'sync',
+			trigger,
+			records: records.length,
+			newest,
+			changed,
+			ms: Date.now() - started,
+			phases,
+		}),
+	);
 }
 
 function coverKey(token: string): string {
@@ -311,17 +381,16 @@ async function attachmentCovers(
 			}
 			continue;
 		}
+		// Not in the last feed yet. Asking R2 about each one in turn is slow when hundreds are
+		// waiting (a backfill), so only this run's share is checked; the rest wait for later runs.
+		if (work >= limit) continue;
+		work += 1;
 		const head = await covers.head(coverKey(file));
 		const storedSize = coverSize(head?.customMetadata?.width, head?.customMetadata?.height);
 		if (head && storedSize) {
 			result.set(key, { url, size: storedSize });
 			continue;
 		}
-		if (work >= limit) {
-			if (head) result.set(key, { url, size: null });
-			continue;
-		}
-		work += 1;
 		// Either never copied, or copied before sizes were recorded: (re)measure and store it.
 		const size = head ? await measureStored(env, file) : await copyAttachment(env, file, tenant, fetcher);
 		if (head || size !== false) result.set(key, { url, size: size || null });

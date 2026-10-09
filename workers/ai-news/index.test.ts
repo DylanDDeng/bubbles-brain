@@ -197,12 +197,12 @@ describe('POST /v1/sync', () => {
 		const ctx = { waitUntil: (p: Promise<unknown>) => waits.push(p) };
 		const e = withToken();
 
-		const first = await requestSync(post('bot-secret'), e, ctx, 0);
+		const first = await requestSync(post('bot-secret'), e, ctx, 0, 0);
 		expect(first.status).toBe(202);
 		expect(await first.json()).toEqual({ status: 'queued' });
 		expect(e.NEWS.store.has(SYNC_LOCK_KEY)).toBe(true);
 
-		const second = await requestSync(post('bot-secret'), e, ctx, 0);
+		const second = await requestSync(post('bot-secret'), e, ctx, 0, 0);
 		expect(await second.json()).toEqual({ status: 'already_queued' });
 
 		expect(waits).toHaveLength(1);
@@ -387,5 +387,52 @@ describe('attachment covers at scale', () => {
 		const items = feed.days.flatMap((day) => day.items);
 		expect(items.every((item) => item.cover?.startsWith(base))).toBe(true);
 		expect(items.filter((item) => item.coverWidth)).toHaveLength(4);
+	});
+});
+
+describe('an empty search', () => {
+	it('keeps the feed the page already shows', async () => {
+		const e = env();
+		await sync(e, new Date('2026-10-08T03:00:00Z'), fakeFeishu([]));
+		const before = e.NEWS.store.get(FEED_KEY);
+		const empty = (async (input: RequestInfo | URL) =>
+			String(input).includes('/records/search')
+				? Response.json({ code: 0, data: { items: [], has_more: false } })
+				: Response.json({ code: 0, tenant_access_token: 't', expire: 7200 })) as typeof fetch;
+		vi.spyOn(console, 'log').mockImplementation(() => {});
+		await sync(e, new Date('2026-10-08T04:00:00Z'), empty);
+		expect(e.NEWS.store.get(FEED_KEY)).toBe(before);
+	});
+});
+
+describe('a slow Feishu search index', () => {
+	it('is caught by the second pass of a bot-triggered sync', async () => {
+		let searches = 0;
+		const lagging = (async (input: RequestInfo | URL) => {
+			const url = String(input);
+			if (url.endsWith('/tenant_access_token/internal')) return Response.json({ code: 0, tenant_access_token: 't', expire: 7200 });
+			if (url.includes('/records/search')) {
+				searches += 1;
+				// The row the bot just wrote only becomes searchable after the first pass.
+				return Response.json({ code: 0, data: { items: searches === 1 ? [] : rows, has_more: false } });
+			}
+			return new Response('<html><head></head></html>', { headers: { 'content-type': 'text/html' } });
+		}) as typeof fetch;
+		vi.stubGlobal('fetch', lagging);
+		const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+		const waits: Promise<unknown>[] = [];
+		const e = { ...env(), SYNC_TOKEN: 'bot-secret' } as Env & { NEWS: MemoryKV };
+		const request = new Request('https://news-api.test/v1/sync', { method: 'POST', headers: { authorization: 'Bearer bot-secret' } });
+		await requestSync(request, e, { waitUntil: (p) => waits.push(p) }, 0, 0);
+		await Promise.all(waits);
+
+		expect(searches).toBe(2);
+		expect(JSON.parse(e.NEWS.store.get(FEED_KEY)!).days[0].items[0].id).toBe('rec1');
+		const runs = log.mock.calls.map(([line]) => JSON.parse(String(line))).filter((entry) => entry.event === 'sync');
+		expect(runs.map((run) => [run.trigger, run.records])).toEqual([
+			['bot', 0],
+			['bot-again', 2],
+		]);
+		vi.unstubAllGlobals();
 	});
 });

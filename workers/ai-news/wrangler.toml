@@ -24,10 +24,14 @@ r2_buckets = [
 [images]
 binding = "IMAGES"
 
-# The bot asks for a sync (POST /v1/sync) after each batch it writes. The hourly run is only the
-# safety net for a missed call or a hand edit in the Base, and keeps Feishu API use low.
+# The bot asks for a sync (POST /v1/sync) after each batch it writes. The half-hourly run is only
+# the safety net for a missed call or a hand edit in the Base, and keeps Feishu API use low.
 [triggers]
-crons = ["7 * * * *"]
+crons = ["7,37 * * * *"]
+
+# Workers Logs: each sync logs who triggered it, what Feishu returned and whether the feed changed.
+[observability]
+enabled = true
 
 [vars]
 # https://qxs9ymhwwgc.feishu.cn/base/VeAHb1KBJaC376sPK9kcqWtKnIh, table 选题

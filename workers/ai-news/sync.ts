@@ -1,10 +1,22 @@
 /**
  * bubble-ai-news, the work behind index.ts: read the last 30 days of the Feishu Base the Grok bot
- * fills, look up each new story's share image, and keep one JSON feed in KV for GET /v1/feed.
+ * fills, find each story's cover, and keep one JSON feed in KV for GET /v1/feed. A cover is the
+ * image the bot attached in 封面 (copied once into R2, shrunk, and served from /v1/cover/<token>);
+ * failing that, the source page's own share image.
  * The bot calls POST /v1/sync after each batch it writes; an hourly cron catches anything missed.
  * The Base stays the archive; KV only holds what the page shows.
  */
-import { buildFeed, FIELDS, findShareImage, storyKey, toItem, type BaseRecord, type Feed } from './feed';
+import {
+	attachmentToken,
+	buildFeed,
+	FIELDS,
+	findShareImage,
+	isFileToken,
+	storyKey,
+	toItem,
+	type BaseRecord,
+	type Feed,
+} from './feed';
 
 /** The two KV calls this Worker makes (structurally a subset of Cloudflare's KVNamespace). */
 export interface FeedStore {
@@ -13,8 +25,29 @@ export interface FeedStore {
 	put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
 }
 
+/** The R2 calls this Worker makes (a subset of R2Bucket). */
+export interface CoverBucket {
+	head(key: string): Promise<object | null>;
+	get(key: string): Promise<{ body: ReadableStream; httpMetadata?: { contentType?: string }; httpEtag?: string } | null>;
+	put(key: string, value: ArrayBuffer | ReadableStream, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+}
+
+/** The Images binding call used to shrink covers (a subset of ImagesBinding). */
+export interface ImageResizer {
+	input(stream: ReadableStream): {
+		transform(options: { width: number; fit: 'scale-down' }): {
+			output(options: { format: 'image/webp'; quality: number }): Promise<{ image(): ReadableStream; contentType(): string }>;
+		};
+	};
+}
+
 export interface Env {
 	NEWS: FeedStore;
+	/** Attachment covers, copied from Feishu once. */
+	COVERS?: CoverBucket;
+	IMAGES?: ImageResizer;
+	/** Public prefix of GET /v1/cover/<token>. */
+	COVER_BASE_URL?: string;
 	FEISHU_APP_ID: string;
 	FEISHU_APP_SECRET: string;
 	/** The Base's token, from its /base/<token> link. */
@@ -33,8 +66,19 @@ export const FEED_KEY = 'feed:v1';
 export const TOKEN_KEY = 'feishu:tenant-token';
 export const SYNC_LOCK_KEY = 'sync:requested';
 const WINDOW_DAYS = 30;
-/** The cron has minutes; a bot-triggered run must finish inside waitUntil's 30 seconds. */
-export const COVER_LOOKUPS = { scheduled: 15, requested: 5 } as const;
+/**
+ * Per run: share-image lookups and attachment copies. The cron has minutes; a bot-triggered run
+ * must finish inside waitUntil's 30 seconds.
+ */
+export const RUN_LIMITS = {
+	scheduled: { pages: 15, attachments: 40 },
+	requested: { pages: 5, attachments: 4 },
+} as const;
+export type RunLimits = { pages: number; attachments: number };
+const DEFAULT_COVER_BASE = 'https://news-api.bubblenews.today/v1/cover/';
+/** Cards are at most ~380px wide; 800px covers a 2x screen. */
+const COVER_WIDTH = 800;
+const ATTACHMENT_MAX_BYTES = 20 * 1024 * 1024;
 /** KV's shortest expiry: at most one bot-triggered sync a minute. */
 const SYNC_LOCK_TTL = 60;
 /** A row the bot just wrote can take a moment to show up in search. */
@@ -46,6 +90,7 @@ const HTML_BYTES = 256 * 1024;
 export async function handleRequest(request: Request, env: Env, ctx: Waiter): Promise<Response> {
 	const url = new URL(request.url);
 	if (url.pathname === '/v1/sync') return requestSync(request, env, ctx);
+	if (url.pathname.startsWith('/v1/cover/')) return serveCover(request, env);
 	return serveFeed(request, env);
 }
 
@@ -62,7 +107,7 @@ export async function requestSync(request: Request, env: Env, ctx: Waiter, delay
 	await env.NEWS.put(SYNC_LOCK_KEY, new Date().toISOString(), { expirationTtl: SYNC_LOCK_TTL });
 	ctx.waitUntil(
 		new Promise((resolve) => setTimeout(resolve, delayMs)).then(() =>
-			sync(env, new Date(), fetch, COVER_LOOKUPS.requested),
+			sync(env, new Date(), fetch, RUN_LIMITS.requested),
 		),
 	);
 	return json({ status: 'queued' }, 202);
@@ -75,6 +120,24 @@ function sameSecret(a: string, b: string): boolean {
 	let diff = left.length ^ right.length;
 	for (let i = 0; i < right.length; i += 1) diff |= (left[i] ?? 0) ^ right[i];
 	return diff === 0;
+}
+
+/** GET /v1/cover/<file token>: an attachment cover from R2; the token never changes, so cache it for good. */
+export async function serveCover(request: Request, env: Env): Promise<Response> {
+	if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'method_not_allowed' }, 405);
+	const token = new URL(request.url).pathname.slice('/v1/cover/'.length);
+	if (!isFileToken(token) || !env.COVERS) return json({ error: 'not_found' }, 404);
+	const object = await env.COVERS.get(coverKey(token));
+	if (!object) return json({ error: 'not_found' }, 404);
+	return new Response(request.method === 'HEAD' ? null : object.body, {
+		headers: {
+			'content-type': object.httpMetadata?.contentType ?? 'application/octet-stream',
+			'cache-control': 'public, max-age=31536000, immutable',
+			'access-control-allow-origin': '*',
+			'x-content-type-options': 'nosniff',
+			...(object.httpEtag ? { etag: object.httpEtag } : {}),
+		},
+	});
 }
 
 /** GET /v1/feed: the stored feed, readable from any origin, cached for a minute. */
@@ -99,7 +162,7 @@ export async function sync(
 	env: Env,
 	now = new Date(),
 	fetcher: typeof fetch = fetch,
-	coverLookups: number = COVER_LOOKUPS.scheduled,
+	limits: RunLimits = RUN_LIMITS.scheduled,
 ): Promise<Feed> {
 	const since = now.getTime() - WINDOW_DAYS * 24 * 60 * 60 * 1000;
 	let token = await tenantToken(env, fetcher);
@@ -113,8 +176,10 @@ export async function sync(
 		records = await searchRecords(env, token, since, fetcher);
 	}
 
+	const previous = await env.NEWS.get<Feed>(FEED_KEY, 'json');
 	const keys = [...new Set(records.map(recordStoryKey).filter((key): key is string => key !== null))];
 	const covers = new Map<string, string | null>();
+	const attached = await attachmentCovers(env, records, previous, token, fetcher, limits.attachments);
 	await Promise.all(
 		keys.map(async (key) => {
 			const cached = await env.NEWS.get<{ cover: string | null }>(`cover:${key}`, 'json');
@@ -123,9 +188,12 @@ export async function sync(
 	);
 	const missing = records
 		.map((record) => ({ key: recordStoryKey(record), url: cellLink(record) }))
-		.filter((entry): entry is { key: string; url: string } => !!entry.key && !!entry.url && !covers.has(entry.key))
+		.filter(
+			(entry): entry is { key: string; url: string } =>
+				!!entry.key && !!entry.url && !covers.has(entry.key) && !attached.has(entry.key),
+		)
 		.filter((entry, index, all) => all.findIndex((other) => other.key === entry.key) === index)
-		.slice(0, coverLookups);
+		.slice(0, limits.pages);
 	for (let i = 0; i < missing.length; i += 5) {
 		await Promise.all(
 			missing.slice(i, i + 5).map(async ({ key, url }) => {
@@ -138,11 +206,89 @@ export async function sync(
 		);
 	}
 
+	// The bot's own attachment wins over whatever the source page offers.
+	for (const [key, cover] of attached) covers.set(key, cover);
 	const feed = buildFeed(records, covers, now);
-	const previous = await env.NEWS.get<Feed>(FEED_KEY, 'json');
 	if (previous && JSON.stringify(previous.days) === JSON.stringify(feed.days)) return previous;
 	await env.NEWS.put(FEED_KEY, JSON.stringify(feed));
 	return feed;
+}
+
+function coverKey(token: string): string {
+	return `covers/${token}`;
+}
+
+/**
+ * Story key → public cover URL for every story whose newest row carries an attachment that is in
+ * R2. Attachments already in the last feed are known to be stored; new ones are checked, and up to
+ * `limit` missing ones are copied from Feishu this run (the rest on later runs).
+ */
+async function attachmentCovers(
+	env: Env,
+	records: BaseRecord[],
+	previous: Feed | null,
+	tenant: string,
+	fetcher: typeof fetch,
+	limit: number,
+): Promise<Map<string, string>> {
+	const result = new Map<string, string>();
+	if (!env.COVERS) return result;
+	const base = env.COVER_BASE_URL || DEFAULT_COVER_BASE;
+	const stored = new Set(
+		(previous?.days ?? [])
+			.flatMap((day) => day.items)
+			.map((item) => item.cover ?? '')
+			.filter((cover) => cover.startsWith(base))
+			.map((cover) => cover.slice(base.length)),
+	);
+	const seen = new Set<string>();
+	let copies = 0;
+	// Records come newest first, so a story's first row is the one the feed keeps.
+	for (const record of records) {
+		const key = recordStoryKey(record);
+		if (!key || seen.has(key)) continue;
+		seen.add(key);
+		const file = attachmentToken(record.fields[FIELDS.cover]);
+		if (!file) continue;
+		let present = stored.has(file) || (await env.COVERS.head(coverKey(file))) !== null;
+		if (!present && copies < limit) {
+			copies += 1;
+			present = await copyAttachment(env, file, tenant, fetcher);
+		}
+		if (present) result.set(key, `${base}${file}`);
+	}
+	return result;
+}
+
+/** Downloads one attachment, shrinks it to a WebP when the Images binding allows, and stores it. */
+async function copyAttachment(env: Env, file: string, tenant: string, fetcher: typeof fetch): Promise<boolean> {
+	try {
+		const response = await fetcher(`${apiOrigin(env)}/open-apis/drive/v1/medias/${file}/download`, {
+			headers: { authorization: `Bearer ${tenant}` },
+		});
+		const type = response.headers.get('content-type') ?? '';
+		if (!response.ok || !type.startsWith('image/')) return false;
+		const bytes = await response.arrayBuffer();
+		if (!bytes.byteLength || bytes.byteLength > ATTACHMENT_MAX_BYTES) return false;
+		let body: ArrayBuffer = bytes;
+		let contentType = type.split(';')[0];
+		if (env.IMAGES && !/gif/.test(contentType)) {
+			try {
+				const shrunk = await env.IMAGES.input(new Response(bytes).body!)
+					.transform({ width: COVER_WIDTH, fit: 'scale-down' })
+					.output({ format: 'image/webp', quality: 82 });
+				// R2 needs a known length, so read the result out rather than streaming it in.
+				body = await new Response(shrunk.image()).arrayBuffer();
+				contentType = shrunk.contentType();
+			} catch {
+				// Out of free transformations or an odd file: keep the original rather than nothing.
+			}
+		}
+		await env.COVERS!.put(coverKey(file), body, { httpMetadata: { contentType } });
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 function recordStoryKey(record: BaseRecord): string | null {

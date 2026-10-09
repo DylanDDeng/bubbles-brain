@@ -4,13 +4,17 @@
 Feishu Base「Hourly AI X digest」(table 选题) once an hour. A sync runs when the bot asks for one
 right after writing a batch (`POST /v1/sync`), and once an hour on a cron as a safety net. A sync:
 
-1. reads the rows pushed in the last 30 days (标题, 内容, 链接, 推送时间 only; the
+1. reads the rows pushed in the last 30 days (标题, 内容, 链接, 推送时间, 封面 only; the
    internal columns such as 适合原因 and the tweet drafts are never requested);
 2. drops rows without a title, link or time, keeps the newest push of each story, and
    cuts summaries to 160 characters;
-3. looks up the share image (`og:image`) of up to 15 new stories per cron run (5 per bot-triggered
-   run, which must finish within 30 seconds) and remembers
-   each answer in KV (45 days when found, 3 days when not);
+3. finds each story's cover. An image the bot attached in 封面 wins: it is downloaded from
+   Feishu once, shrunk to an 800px WebP by the Images binding (kept as is if that fails), stored
+   in the R2 bucket `bubble-ai-news-covers`, and served from `/v1/cover/<file token>` with a
+   one-year immutable cache (40 copies per cron run, 4 per bot-triggered run). Otherwise the
+   source page's share image (`og:image`) is used: up to 15 lookups per cron run (5 per
+   bot-triggered run, which must finish within 30 seconds), each answer remembered in KV (45
+   days when found, 3 days when not);
 4. stores the result as one JSON value, `feed:v1`, grouped by Beijing day, and only
    rewrites it when the stories changed.
 

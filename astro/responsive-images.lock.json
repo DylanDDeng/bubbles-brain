@@ -1879,6 +1879,16 @@
 				"/_responsive/media/showcase/claude-opus-5.5-develop-launch-1440.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-distilbook-showreel.webp": {
+			"source_sha256": "3f9d7cd30b84b06fb25ab702f539fa05ca7a39550875aaa229db2897175901cc",
+			"width": 848,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-distilbook-showreel-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-distilbook-showreel-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-distilbook-showreel-848.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-distilbook-showreel-848.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-dots-vs-grok-bot.webp": {
 			"source_sha256": "419e05188bd17e4d3d57c251a2e954e6ad06d26d0ae10599163dc036173a7bd6",
 			"width": 1280,

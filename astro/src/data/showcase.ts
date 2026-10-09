@@ -1219,6 +1219,28 @@ Ask me for the inputs, measure the word timings, then show me 8 stills before yo
 			platform: 'X',
 		},
 	},
+	{
+		id: 'claude-opus-5.5-distilbook-showreel',
+		title: 'DistilBook 产品片',
+		category: 'product-motion',
+		medium: 'code-to-video',
+		model: 'Claude Opus 5.5',
+		video: '/media/showcase/claude-opus-5.5-distilbook-showreel.mp4',
+		poster: '/media/showcase/claude-opus-5.5-distilbook-showreel.webp',
+		width: 848,
+		height: 480,
+		duration: 40,
+		added: '2026-10-09',
+		note: 'DistilBook 能把任意文档变成手绘讲解视频。Claude Opus 5.5 先自己调研这个产品，再做出 40 秒介绍：一段讲水循环的课文被高亮、翻页，变成手绘插画讲解，旁白在 19 种语言之间切换，最后落在「已做出 1,839+ 支视频」和产品标志上。只用了一句提示词。',
+		prompt: {
+			en: "Research Distilbook.Make a dynamic 40-second motion graphics video on Distilbook that shows what an incredible motion designer you are. like it's your showreel - Go all out.",
+		},
+		source: {
+			author: '@itisRazak',
+			url: 'https://x.com/itisRazak/status/2103517930424332386',
+			platform: 'X',
+		},
+	},
 ];
 
 export const showcaseHref = (work: Pick<ShowcaseWork, 'id'>) => `/vibe-coding/showcase/${work.id}/`;

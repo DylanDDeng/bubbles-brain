@@ -90,22 +90,98 @@
 	display: none;
 }
 
-/* aiNews.ts deals the cards into as many 240px+ columns as fit, newest first, left to right. */
-.news-grid {
-	display: flex;
-	align-items: flex-start;
-	gap: 16px;
+/* A day as a timeline: one row per hour, its label pinned beside the cards while they scroll, the
+   labels strung on a thin vertical line. */
+.news-timeline {
+	position: relative;
 }
-.news-col {
+.news-timeline::before {
+	position: absolute;
+	top: 8px;
+	bottom: 0;
+	left: 5px;
+	width: 1px;
+	background: var(--rule);
+	content: '';
+}
+.news-hour {
+	position: relative;
+	display: grid;
+	grid-template-columns: 100px minmax(0, 1fr);
+	column-gap: 16px;
+	padding-bottom: 36px;
+}
+.news-hour__label {
+	position: sticky;
+	top: 24px;
 	display: flex;
-	flex: 1 1 0;
 	flex-direction: column;
-	gap: 16px;
+	gap: 2px;
+	align-self: start;
+	padding-left: 24px;
+}
+.news-hour__dot {
+	position: absolute;
+	top: 4px;
+	left: 0;
+	box-sizing: border-box;
+	width: 11px;
+	height: 11px;
+	border: 1.5px solid #b5b5b5;
+	border-radius: 50%;
+	background: var(--paper);
+}
+.news-hour.is-new .news-hour__dot {
+	border-color: var(--ink);
+	background: var(--ink);
+}
+.news-hour__primary {
+	color: var(--ink);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+.news-hour__secondary {
+	color: var(--ink-faint);
+	font-size: 12px;
+	white-space: nowrap;
+}
+/* One long card per story, stacked: a timeline reads down, one thing after another. */
+.news-timeline {
+	max-width: 820px;
+}
+.news-hour__cards {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 	min-width: 0;
 }
 
+/* 上次看到这里: a black rule across the timeline between new and older rows. */
+.news-seen {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 4px 0 32px;
+	padding-left: 24px;
+}
+.news-seen > span:not(.news-seen__label) {
+	flex: 1 1 auto;
+	height: 1px;
+	background: var(--ink);
+}
+.news-seen__label {
+	color: var(--ink);
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+/* Design L2: the headline first, the cover as a small picture on the right. */
 .news-card {
-	display: block;
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
 	overflow: hidden;
 	border: 1px solid var(--rule-strong);
 	border-radius: 14px;
@@ -127,31 +203,37 @@
 	outline-offset: 2px;
 }
 
+/* Every cover is cropped to the same 16:9 thumbnail so the rows line up. */
 .news-card__cover {
-	display: block;
-	border-bottom: 1px solid var(--rule);
+	flex: 0 0 200px;
+	align-self: center;
+	margin: 12px;
+	overflow: hidden;
+	border-radius: 8px;
 	background: var(--paper-muted);
 }
-/* Each cover keeps its own shape (aiNews.ts sets aspect-ratio from the size the Worker recorded,
-   clamped to 4:5–2:1; share images without a size get their usual 1.91:1). Knowing the shape
-   before the image loads keeps the masonry steady. */
 .news-card__cover img {
 	display: block;
 	width: 100%;
 	height: auto;
-	aspect-ratio: 1.91 / 1;
+	aspect-ratio: 16 / 9;
 	object-fit: cover;
 }
 
-/* Card type follows the site's other card grid (实测案例): a 15px semibold title, small grey text
-   under it. 17px is for list rows, which get the whole column width. */
 .news-card__body {
-	display: block;
-	padding: 14px 16px 16px;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-width: 0;
+	padding: 14px 4px 14px 20px;
+}
+/* Without a cover the text has the whole card. */
+.news-card:not(:has(.news-card__cover)) .news-card__body {
+	padding-right: 20px;
 }
 .news-card__title {
 	display: block;
-	font-size: 15px;
+	font-size: 16px;
 	font-weight: 600;
 	line-height: 1.5;
 }
@@ -162,15 +244,19 @@
 	color: var(--ink-soft);
 	font-size: 13px;
 	line-height: 1.7;
-	-webkit-line-clamp: 6;
-	line-clamp: 6;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
 	-webkit-box-orient: vertical;
 }
 .news-card__time {
 	display: block;
-	margin-top: 8px;
+	margin-top: 6px;
 	color: var(--ink-faint);
 	font-size: 12.5px;
+}
+.news-card__time.is-new {
+	color: var(--ink);
+	font-weight: 600;
 }
 
 .news-next {
@@ -295,6 +381,42 @@
 		display: none;
 	}
 }
+@media (max-width: 900px) {
+	.news-timeline::before {
+		display: none;
+	}
+	.news-hour {
+		grid-template-columns: minmax(0, 1fr);
+		row-gap: 12px;
+		padding-bottom: 28px;
+	}
+	.news-hour__label {
+		position: static;
+		flex-direction: row;
+		align-items: baseline;
+		gap: 8px;
+		padding-left: 18px;
+	}
+	.news-hour__dot {
+		top: 5px;
+		width: 9px;
+		height: 9px;
+	}
+	.news-seen {
+		padding-left: 0;
+	}
+	.news-card__cover {
+		flex-basis: 112px;
+		margin: 10px;
+	}
+	.news-card__body {
+		padding: 12px 2px 12px 14px;
+	}
+	.news-card__title {
+		font-size: 15px;
+	}
+}
+
 @media (max-width: 900px) {
 	.news-veil {
 		height: 64px;

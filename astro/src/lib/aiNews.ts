@@ -208,6 +208,48 @@ export function clockTime(iso: string): string {
 	}).format(new Date(iso));
 }
 
+/** The hour of the day in Beijing, 0–23. */
+export function beijingHour(iso: string): number {
+	return Number(clockTime(iso).slice(0, 2));
+}
+
+export interface HourGroup {
+	hour: number;
+	items: NewsItem[];
+}
+
+/** A day's stories by Beijing hour, keeping their order (newest first). */
+export function hourGroups(items: NewsItem[]): HourGroup[] {
+	const groups: HourGroup[] = [];
+	for (const item of items) {
+		const hour = beijingHour(item.at);
+		const last = groups.at(-1);
+		if (last?.hour === hour) last.items.push(item);
+		else groups.push({ hour, items: [item] });
+	}
+	return groups;
+}
+
+/** 刚刚, 25 分钟前, 3 小时前; empty for anything a day old or more. */
+export function relativeTime(iso: string, now: Date): string {
+	const minutes = Math.floor((now.getTime() - Date.parse(iso)) / 60000);
+	if (minutes < 10) return '刚刚';
+	if (minutes < 60) return `${minutes} 分钟前`;
+	if (minutes < 24 * 60) return `${Math.floor(minutes / 60)} 小时前`;
+	return '';
+}
+
+/** When the reader last came: 今天 18:30, 昨天 18:30, else 10月7日 18:30. */
+export function seenLabel(iso: string, now: Date): string {
+	const day = beijingToday(new Date(iso));
+	const today = beijingToday(now);
+	const when = day === today ? '今天' : day === shiftDay(today, -1) ? '昨天' : monthDay(day);
+	return `${when} ${clockTime(iso)}`;
+}
+
+/** Where the page remembers, in this browser only, when the reader last looked. */
+export const LAST_SEEN_KEY = 'ai-news:last-seen';
+
 /** 更新于 22:51 today, 更新于 10月7日 22:51 on another day. */
 export function updatedLabel(iso: string, now: Date): string {
 	const day = beijingToday(new Date(iso));

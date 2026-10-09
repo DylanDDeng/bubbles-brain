@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
+	hourGroups,
+	relativeTime,
+	seenLabel,
 	archiveUrl,
 	monthLabel,
 	parseArchive,
@@ -209,5 +212,38 @@ describe('months in the rail', () => {
 		expect(archiveUrl('https://news-api.bubblenews.today/v1/feed', '2026-09')).toBe(
 			'https://news-api.bubblenews.today/v1/archive/2026-09',
 		);
+	});
+});
+
+describe('the day as a timeline', () => {
+	const now = new Date('2026-10-09T12:40:00Z'); // 20:40 in Beijing
+
+	it('groups a day by Beijing hour, newest first', () => {
+		const stories = ['12:29', '11:23', '11:18', '10:48', '08:49'].map((t, i) =>
+			item(String(i), { at: `2026-10-09T${t}:00.000Z` }),
+		);
+		expect(
+			hourGroups(
+				parseFeed({ updatedAt: 'x', days: [{ day: '2026-10-09', items: stories }] })!.days[0].items,
+			).map((g) => [g.hour, g.items.length]),
+		).toEqual([
+			[20, 1],
+			[19, 2],
+			[18, 1],
+			[16, 1],
+		]);
+	});
+
+	it('says how long ago in words a reader uses', () => {
+		expect(relativeTime('2026-10-09T12:35:00.000Z', now)).toBe('刚刚');
+		expect(relativeTime('2026-10-09T12:15:00.000Z', now)).toBe('25 分钟前');
+		expect(relativeTime('2026-10-09T09:20:00.000Z', now)).toBe('3 小时前');
+		expect(relativeTime('2026-10-08T09:20:00.000Z', now)).toBe('');
+	});
+
+	it('names the last visit by day', () => {
+		expect(seenLabel('2026-10-09T10:30:00.000Z', now)).toBe('今天 18:30');
+		expect(seenLabel('2026-10-08T10:30:00.000Z', now)).toBe('昨天 18:30');
+		expect(seenLabel('2026-10-06T10:30:00.000Z', now)).toBe('10月6日 18:30');
 	});
 });

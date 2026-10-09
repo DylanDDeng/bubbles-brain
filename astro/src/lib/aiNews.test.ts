@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { commandSearchMatches } from '../scripts/commandSearch';
 import {
 	AI_NEWS_FEED_URL,
+	archiveUrl,
+	monthLabel,
+	parseArchive,
+	railMonths,
 	beijingToday,
 	clockTime,
 	coverRatio,
@@ -145,5 +149,65 @@ describe('cover shape', () => {
 		expect(sized.coverRatio).toBe(0.8);
 		expect(unsized).not.toHaveProperty('coverRatio');
 		expect(bare).not.toHaveProperty('coverRatio');
+	});
+});
+
+describe('months in the rail', () => {
+	const feed = parseFeed({
+		updatedAt: '2026-10-20T00:00:00.000Z',
+		archiveMonths: ['2026-09', 'nope', '2026-08'],
+		days: [
+			{ day: '2026-10-19', items: [item('oct19')] },
+			{ day: '2026-09-25', items: [item('sep25-feed')] },
+		],
+	})!;
+
+	it('reads the archived months from the feed and ignores junk', () => {
+		expect(feed.archiveMonths).toEqual(['2026-09', '2026-08']);
+		expect(parseFeed({ updatedAt: 'x', days: [] })!.archiveMonths).toEqual([]);
+	});
+
+	it('groups days by month, newest first, the feed winning over the archive', () => {
+		const archives = new Map([
+			[
+				'2026-09',
+				parseArchive(
+					{
+						month: '2026-09',
+						days: [
+							{ day: '2026-09-25', items: [item('sep25-old')] },
+							{ day: '2026-09-18', items: [item('sep18')] },
+						],
+					},
+					'2026-09',
+				)!,
+			],
+		]);
+		const months = railMonths(feed, archives);
+		expect(months.map((m) => [m.month, m.days.map((d) => d.day), m.archived, m.loaded])).toEqual([
+			['2026-10', ['2026-10-19'], false, false],
+			['2026-09', ['2026-09-25', '2026-09-18'], true, true],
+			['2026-08', [], true, false],
+		]);
+		expect(months[1].days[0].items[0].id).toBe('sep25-feed');
+	});
+
+	it('only accepts the month it asked for', () => {
+		expect(parseArchive({ month: '2026-08', days: [] }, '2026-09')).toBeNull();
+		expect(
+			parseArchive(
+				{ month: '2026-09', days: [{ day: '2026-08-31', items: [item('x')] }] },
+				'2026-09',
+			),
+		).toEqual([]);
+	});
+
+	it('names months and finds their archive next to the feed', () => {
+		const now = new Date('2026-10-20T00:00:00Z');
+		expect(monthLabel('2026-09', now)).toBe('9月');
+		expect(monthLabel('2025-12', now)).toBe('2025年12月');
+		expect(archiveUrl('https://news-api.bubblenews.today/v1/feed', '2026-09')).toBe(
+			'https://news-api.bubblenews.today/v1/archive/2026-09',
+		);
 	});
 });

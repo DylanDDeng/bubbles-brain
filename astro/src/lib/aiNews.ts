@@ -40,7 +40,12 @@ export interface NewsDay {
 export interface NewsFeed {
 	updatedAt: string;
 	days: NewsDay[];
+	/** Months (YYYY-MM) whose older days live in the archive, not in `days`. */
+	archiveMonths: string[];
 }
+
+const isMonth = (value: unknown): value is string =>
+	typeof value === 'string' && /^\d{4}-\d{2}$/.test(value);
 
 const TIME_ZONE = 'Asia/Shanghai';
 const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -63,8 +68,21 @@ export function parseFeed(raw: unknown): NewsFeed | null {
 	if (!raw || typeof raw !== 'object') return null;
 	const feed = raw as Record<string, unknown>;
 	if (typeof feed.updatedAt !== 'string' || !Array.isArray(feed.days)) return null;
+	const archiveMonths = Array.isArray(feed.archiveMonths) ? feed.archiveMonths.filter(isMonth) : [];
+	return { updatedAt: feed.updatedAt, days: parseDays(feed.days), archiveMonths };
+}
+
+/** One archived month (GET /v1/archive/<YYYY-MM>) as days, or null if it is not one. */
+export function parseArchive(raw: unknown, month: string): NewsDay[] | null {
+	if (!raw || typeof raw !== 'object') return null;
+	const file = raw as Record<string, unknown>;
+	if (file.month !== month || !Array.isArray(file.days)) return null;
+	return parseDays(file.days).filter((day) => monthOf(day.day) === month);
+}
+
+function parseDays(entries: unknown[]): NewsDay[] {
 	const days: NewsDay[] = [];
-	for (const entry of feed.days) {
+	for (const entry of entries) {
 		const day = entry as Record<string, unknown> | null;
 		if (!day || !isDay(day.day) || !Array.isArray(day.items)) continue;
 		const items: NewsItem[] = [];
@@ -92,7 +110,56 @@ export function parseFeed(raw: unknown): NewsFeed | null {
 		}
 		if (items.length) days.push({ day: day.day, items });
 	}
-	return { updatedAt: feed.updatedAt, days };
+	return days;
+}
+
+export function monthOf(day: string): string {
+	return day.slice(0, 7);
+}
+
+/** Where the Worker serves an archived month, next to the feed. */
+export function archiveUrl(feedUrl: string, month: string): string {
+	return feedUrl.replace(/\/v1\/feed(?:\?.*)?$/, `/v1/archive/${month}`);
+}
+
+/** 10月, or 2025年12月 for a month of another year. */
+export function monthLabel(month: string, now: Date): string {
+	const [year, number] = month.split('-').map(Number);
+	const thisYear = Number(beijingToday(now).slice(0, 4));
+	return year === thisYear ? `${number}月` : `${year}年${number}月`;
+}
+
+export interface RailMonth {
+	month: string;
+	/** Known days, newest first: the feed's, plus the archive's once it is loaded. */
+	days: NewsDay[];
+	/** Older days of this month are in the archive. */
+	archived: boolean;
+	/** The archive for this month has been read. */
+	loaded: boolean;
+}
+
+/**
+ * The rail's months, newest first. A day the feed has comes from the feed (it is fresher); the
+ * archive adds the days that have aged out of it.
+ */
+export function railMonths(feed: NewsFeed, archives: ReadonlyMap<string, NewsDay[]>): RailMonth[] {
+	const months = new Set([...feed.days.map((day) => monthOf(day.day)), ...feed.archiveMonths]);
+	return [...months]
+		.sort()
+		.reverse()
+		.map((month) => {
+			const days = new Map(
+				feed.days.filter((day) => monthOf(day.day) === month).map((day) => [day.day, day]),
+			);
+			for (const day of archives.get(month) ?? []) if (!days.has(day.day)) days.set(day.day, day);
+			return {
+				month,
+				days: [...days.values()].sort((a, b) => (a.day < b.day ? 1 : -1)),
+				archived: feed.archiveMonths.includes(month),
+				loaded: archives.has(month),
+			};
+		});
 }
 
 /** Today's date in Beijing, YYYY-MM-DD. */

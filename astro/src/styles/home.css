@@ -94,7 +94,9 @@
 	box-shadow:
 		0 0 0 1px var(--rule-strong),
 		0 10px 32px rgb(0 0 0 / 0.06);
-	transition: box-shadow 0.15s ease;
+	transition:
+		box-shadow 0.15s ease,
+		border-radius 0.24s ease;
 }
 .home-search-shell:focus-within {
 	box-shadow:
@@ -119,11 +121,49 @@
    gap = 58px); the times end under the icon's right edge. */
 .home-news {
 	margin: 0 26px;
-	border-top: 1px solid var(--rule);
+	/* A rule drawn as a shadow takes no height, so the closed box stays exactly 64px. */
+	box-shadow: inset 0 1px 0 var(--rule);
 	text-align: left;
 }
 .home-news[hidden] {
 	display: none;
+}
+/* The shell grows to the list's height (a grid row from 0fr to 1fr) while the list fades in a beat
+   later; closing runs it backwards. Hidden lists leave the tab order and the accessibility tree. */
+.home-news-reveal {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.home-news-reveal > .home-news {
+	min-height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+	transform: translateY(-4px);
+	transition:
+		opacity 0.14s ease,
+		transform 0.14s ease,
+		visibility 0s linear 0.26s;
+}
+.is-open > .home-news-reveal {
+	grid-template-rows: 1fr;
+}
+.is-open > .home-news-reveal > .home-news {
+	visibility: visible;
+	opacity: 1;
+	transform: none;
+	transition:
+		opacity 0.2s ease 0.06s,
+		transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) 0.04s,
+		visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+	.home-search-shell,
+	.home-news-reveal,
+	.home-news-reveal > .home-news {
+		transition: none;
+	}
 }
 .home-news__head {
 	display: flex;

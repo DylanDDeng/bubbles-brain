@@ -65,14 +65,12 @@ function init() {
 	const { signal } = controller;
 	let ready = false;
 
-	const isOpen = () => !panel.hidden;
+	const isOpen = () => shell.classList.contains('is-open');
 	const open = () => {
 		if (!ready || input.value.trim() !== '' || !shell.contains(document.activeElement)) return;
-		panel.hidden = false;
 		shell.classList.add('is-open');
 	};
 	const close = () => {
-		panel.hidden = true;
 		shell.classList.remove('is-open');
 	};
 
@@ -88,6 +86,8 @@ function init() {
 			list.replaceChildren(...news.rows.map(row));
 			updated.textContent = news.updated;
 			all.textContent = news.today ? `今天推送了 ${news.today} 条，看全部` : '看全部 AI 动态';
+			// From here the shell's is-open class shows and hides the list, so it can slide.
+			panel.hidden = false;
 			ready = true;
 			open();
 		});

@@ -8,6 +8,7 @@
  */
 import {
 	attachmentToken,
+	beijingDay,
 	buildFeed,
 	FIELDS,
 	findShareImage,
@@ -19,6 +20,7 @@ import {
 	type CoverSize,
 	type Feed,
 } from './feed';
+import { archiveKey, MONTH, updateArchive, type ArchiveBucket } from './archive';
 
 /** The two KV calls this Worker makes (structurally a subset of Cloudflare's KVNamespace). */
 export interface FeedStore {
@@ -58,6 +60,8 @@ export interface Env {
 	NEWS: FeedStore;
 	/** Attachment covers, copied from Feishu once. */
 	COVERS?: CoverBucket;
+	/** One JSON file per Beijing month of every story the feed has shown (archive.ts). */
+	ARCHIVE?: ArchiveBucket;
 	IMAGES?: ImageResizer;
 	/** Public prefix of GET /v1/cover/<token>. */
 	COVER_BASE_URL?: string;
@@ -104,6 +108,7 @@ export async function handleRequest(request: Request, env: Env, ctx: Waiter): Pr
 	const url = new URL(request.url);
 	if (url.pathname === '/v1/sync') return requestSync(request, env, ctx);
 	if (url.pathname.startsWith('/v1/cover/')) return serveCover(request, env);
+	if (url.pathname.startsWith('/v1/archive/')) return serveArchive(request, env);
 	return serveFeed(request, env);
 }
 
@@ -149,6 +154,24 @@ export async function serveCover(request: Request, env: Env): Promise<Response> 
 			'access-control-allow-origin': '*',
 			'x-content-type-options': 'nosniff',
 			...(object.httpEtag ? { etag: object.httpEtag } : {}),
+		},
+	});
+}
+
+/** GET /v1/archive/<YYYY-MM>: one month of past stories, grouped by Beijing day. */
+export async function serveArchive(request: Request, env: Env): Promise<Response> {
+	if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders() });
+	if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'method_not_allowed' }, 405);
+	const month = new URL(request.url).pathname.slice('/v1/archive/'.length);
+	if (!MONTH.test(month) || !env.ARCHIVE) return json({ error: 'not_found' }, 404);
+	const object = await env.ARCHIVE.get(archiveKey(month));
+	if (!object) return json({ error: 'not_found' }, 404);
+	return new Response(request.method === 'HEAD' ? null : await object.text(), {
+		headers: {
+			...corsHeaders(),
+			'content-type': 'application/json; charset=utf-8',
+			'cache-control': 'public, max-age=300, stale-while-revalidate=3600',
+			'x-content-type-options': 'nosniff',
 		},
 	});
 }
@@ -226,7 +249,15 @@ export async function sync(
 		if (cover.size) sizes.set(cover.url, cover.size);
 	}
 	const feed = buildFeed(records, covers, now, sizes);
-	if (previous && JSON.stringify(previous.days) === JSON.stringify(feed.days)) return previous;
+	// Fold today's feed into the monthly archive before anything can age out of the window.
+	if (env.ARCHIVE) feed.archiveMonths = await updateArchive(env.ARCHIVE, feed, beijingDay(since), now);
+	if (
+		previous &&
+		JSON.stringify(previous.days) === JSON.stringify(feed.days) &&
+		JSON.stringify(previous.archiveMonths ?? []) === JSON.stringify(feed.archiveMonths ?? [])
+	) {
+		return previous;
+	}
 	await env.NEWS.put(FEED_KEY, JSON.stringify(feed));
 	return feed;
 }

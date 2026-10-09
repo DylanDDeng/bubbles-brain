@@ -50,7 +50,9 @@ queries the preceding five-minute Cloudflare analytics window, and exits nonzero
 terminal status ten minutes after a canonical slot, a failed batch, identity drift, stale search,
 5xx above 1%, cache degradation with enough samples, a stale outbox row or any unresolved DLQ row.
 Rows explicitly terminalized as `superseded_by_history_bootstrap` remain immutable evidence but are
-not actionable DLQ alerts. A valid
+not actionable DLQ alerts. Neither are dead letters whose release sequence is at or behind the
+current pointer: a newer release already superseded them, so they are reported as
+`superseded_dead_letter_count` instead. A valid
 zero-traffic window does not create a false 5xx/cache alert because the explicit endpoint probes
 still prove reachability.
 

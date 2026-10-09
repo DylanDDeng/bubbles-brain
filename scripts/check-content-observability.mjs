@@ -254,6 +254,11 @@ export function evaluateContentObservability(input, now = Date.now()) {
   }
 
   const deadLetterCount = Number(database.outbox?.dead_letter_count || 0);
+  // Dead letters at or behind the current release were superseded by a newer
+  // one; the database reports them separately so they never alert.
+  const supersededDeadLetterCount = Number(
+    database.outbox?.superseded_dead_letter_count || 0,
+  );
   const staleQueuedCount = Number(database.outbox?.stale_queued_count || 0);
   const releaseHeadStaleCount = Number(
     database.outbox?.release_head_stale_count || 0,
@@ -323,6 +328,7 @@ export function evaluateContentObservability(input, now = Date.now()) {
     healthy: reasons.length === 0,
     outbox: {
       dead_letter_count: deadLetterCount,
+      superseded_dead_letter_count: supersededDeadLetterCount,
       release_head_stale_count: releaseHeadStaleCount,
       stale_queued_count: staleQueuedCount,
     },

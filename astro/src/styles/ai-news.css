@@ -22,9 +22,47 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	gap: 12px;
+	gap: 22px;
+	max-height: calc(100vh - 64px);
+	overflow-y: auto;
+	scrollbar-width: none;
 	font-size: 15px;
 	line-height: 1.5;
+}
+
+/* Days grouped by month under a small grey month name, which opens and closes its days. */
+.news-month,
+.news-month__days {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 12px;
+}
+.news-month__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	min-height: 28px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ink-faint);
+	font: inherit;
+	font-size: 13px;
+	cursor: pointer;
+}
+.news-month__toggle:hover {
+	color: var(--ink);
+}
+.news-month__toggle i {
+	font-size: 11px;
+	transition: transform 0.15s ease;
+}
+.news-month__toggle[aria-expanded='true'] i {
+	transform: rotate(90deg);
+}
+.news-month__loading {
+	color: var(--ink-faint);
 }
 .news-rail a {
 	color: var(--ink-faint);
@@ -183,15 +221,27 @@
 		overflow-x: auto;
 		scrollbar-width: none;
 	}
-	.news-rail a {
+	.news-rail a,
+	.news-month__toggle {
 		display: inline-flex;
 		align-items: center;
 		min-height: 44px;
 	}
+	/* One sideways row: month names sit between their days. */
+	.news-rail {
+		align-items: center;
+		max-height: none;
+		overflow-y: visible;
+	}
+	.news-month,
+	.news-month__days {
+		display: contents;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.news-card {
+	.news-card,
+	.news-month__toggle i {
 		transition: none;
 	}
 }

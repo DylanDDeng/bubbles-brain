@@ -2111,6 +2111,28 @@
 				"/_responsive/media/showcase/claude-opus-5.5-shin-majin-pv-1440.webp"
 			]
 		},
+		"/media/showcase/claude-opus-5.5-system-prompt-for-humans.webp": {
+			"source_sha256": "469377e292f9c318e24b506ff3277731f891138c946a15a86c192a0c58082c5f",
+			"width": 960,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-system-prompt-for-humans-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-system-prompt-for-humans-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-system-prompt-for-humans-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-system-prompt-for-humans-960.webp"
+			]
+		},
+		"/media/showcase/claude-opus-5.5-techhalla-bumper.webp": {
+			"source_sha256": "f6a59eb55479afbb6c2e4f0877d34867e05ce2f4d1bb0bf90eec201c7666f372",
+			"width": 1080,
+			"variants": [
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-640.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-640.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-960.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-960.webp",
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-1080.avif",
+				"/_responsive/media/showcase/claude-opus-5.5-techhalla-bumper-1080.webp"
+			]
+		},
 		"/media/showcase/claude-opus-5.5-twelve-principles-ball.webp": {
 			"source_sha256": "7cb0c3679b426e913a464eb398efe11d233e59a5312f856f20a266a88b98d6ed",
 			"width": 1920,

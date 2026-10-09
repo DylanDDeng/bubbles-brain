@@ -12,7 +12,6 @@ import {
 	archiveUrl,
 	beijingToday,
 	clockTime,
-	COVER_RATIO,
 	dayTitle,
 	hourGroups,
 	LAST_SEEN_KEY,
@@ -46,8 +45,6 @@ function card(item: NewsItem, fresh: boolean): HTMLElement {
 	if (item.cover) {
 		const frame = el('span', 'news-card__cover');
 		const image = el('img');
-		// Reserve the cover's own shape up front so the row does not jump as images load.
-		image.style.aspectRatio = String(item.coverRatio ?? COVER_RATIO.fallback);
 		image.src = item.cover;
 		image.alt = '';
 		image.loading = 'lazy';
@@ -73,10 +70,22 @@ function card(item: NewsItem, fresh: boolean): HTMLElement {
 	return link;
 }
 
+/** This tab's starting point, so a reload keeps the same 新 marks (sessionStorage dies with the tab). */
+const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
+
+/**
+ * The reader's previous visit, fixed for the whole of this one: read once per tab from the time
+ * saved when they last left, then kept in the tab so reloads and day switches do not move it.
+ */
 function readLastSeen(): string | null {
+	const valid = (value: string | null) =>
+		value && !Number.isNaN(Date.parse(value)) ? value : null;
 	try {
-		const value = localStorage.getItem(LAST_SEEN_KEY);
-		return value && !Number.isNaN(Date.parse(value)) ? value : null;
+		const kept = sessionStorage.getItem(VISIT_BASELINE_KEY);
+		if (kept !== null) return valid(kept);
+		const previous = valid(localStorage.getItem(LAST_SEEN_KEY));
+		sessionStorage.setItem(VISIT_BASELINE_KEY, previous ?? '');
+		return previous;
 	} catch {
 		return null;
 	}
@@ -156,8 +165,7 @@ function setupNews(root: HTMLElement) {
 	const failed = new Set<string>();
 	/** Months whose days are listed in the rail. The newest starts open. */
 	const open = new Set<string>();
-	// The last visit as it was when this page opened; this visit is saved on leaving, so a reload
-	// still shows what was new.
+	// The previous visit, fixed for this tab; this visit is saved whenever the page is hidden or left.
 	const lastSeen = readLastSeen();
 	const saveVisit = () => writeLastSeen(new Date().toISOString());
 	const onHide = () => {

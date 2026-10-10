@@ -6,6 +6,7 @@
  * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
  * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
  * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
+ * Once the reader has scrolled down to that line it fades away, and what is above it counts as seen.
  * 「热门」 at the top of the rail (#hot) lists every story the hot bot ticked in the last 48 hours,
  * newest first, each outlet's icon linking to its report; the days themselves stay plain timelines.
  * While the page is open and on screen it looks for new stories every two minutes; when some came,
@@ -105,6 +106,8 @@ function hotListCard(item: NewsItem): HTMLElement {
 
 /** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
 const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
+/** How long the 上次看到这里 line stays fully on screen before it counts as read and fades. */
+const SEEN_AFTER = 2500;
 /** How often an open, visible page looks for new stories. */
 const CHECK_EVERY = 2 * 60_000;
 
@@ -362,6 +365,8 @@ function setupNews(root: HTMLElement) {
 			if (last?.day === story.day) last.items.push(story);
 			else days.push({ day: story.day, items: [story] });
 		}
+		seenWatch?.disconnect();
+		window.clearTimeout(seenTimer);
 		grid.classList.add('news-timeline--days');
 		grid.replaceChildren(
 			...days.flatMap(({ day, items }) => {
@@ -386,6 +391,7 @@ function setupNews(root: HTMLElement) {
 		title.textContent = dayTitle(active);
 		const items = day?.items ?? [];
 		grid.replaceChildren(...timeline(items, lastSeen, new Date()));
+		watchSeenLine();
 		status.hidden = items.length > 0;
 		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 
@@ -469,6 +475,56 @@ function setupNews(root: HTMLElement) {
 		() => {
 			window.clearInterval(ticker);
 			document.removeEventListener('visibilitychange', onShow);
+		},
+		{ once: true },
+	);
+
+	// The 上次看到这里 line is for catching up. Once the reader has scrolled down to it, past all
+	// that is new, it fades away and now counts as seen: here, after a reload, and on the next visit.
+	let seenWatch: IntersectionObserver | null = null;
+	let seenTimer = 0;
+	const retire = (line: HTMLElement) => {
+		seenWatch?.disconnect();
+		const now = new Date().toISOString();
+		lastSeen = now;
+		try {
+			sessionStorage.setItem(VISIT_BASELINE_KEY, now);
+		} catch {
+			// Without storage the line may come back on a reload; nothing else depends on it.
+		}
+		writeLastSeen(now);
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return line.remove();
+		line.style.height = `${line.offsetHeight}px`;
+		requestAnimationFrame(() => {
+			line.classList.add('is-gone');
+			line.style.height = '0px';
+		});
+		window.setTimeout(() => line.remove(), 900);
+	};
+	const watchSeenLine = () => {
+		seenWatch?.disconnect();
+		window.clearTimeout(seenTimer);
+		const line = grid.querySelector<HTMLElement>('.news-seen');
+		if (!line) return;
+		const wait = () => {
+			window.clearTimeout(seenTimer);
+			seenTimer = window.setTimeout(() => {
+				// A hidden page has not been read: try again once it is back on screen.
+				if (document.visibilityState === 'visible') retire(line);
+				else wait();
+			}, SEEN_AFTER);
+		};
+		seenWatch = new IntersectionObserver(
+			([entry]) => (entry.isIntersecting ? wait() : window.clearTimeout(seenTimer)),
+			{ threshold: 1 },
+		);
+		seenWatch.observe(line);
+	};
+	document.addEventListener(
+		'astro:before-swap',
+		() => {
+			seenWatch?.disconnect();
+			window.clearTimeout(seenTimer);
 		},
 		{ once: true },
 	);

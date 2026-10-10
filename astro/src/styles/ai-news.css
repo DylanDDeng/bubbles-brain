@@ -412,3 +412,55 @@
 		transition: none;
 	}
 }
+
+/* 「有 N 条新动态」: its own slot under the date while shown, so it covers nothing at rest, then pinned
+   near the top of the screen over the cards as the reader scrolls. */
+.news-fresh {
+	position: sticky;
+	top: 16px;
+	z-index: 6;
+	display: flex;
+	justify-content: center;
+	height: 0;
+}
+.news-fresh:has(> :not([hidden])) {
+	height: 52px;
+}
+.news-fresh__button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	height: 38px;
+	margin-top: 10px;
+	padding: 0 18px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--ink);
+	color: var(--paper);
+	font: inherit;
+	font-size: 13.5px;
+	cursor: pointer;
+	box-shadow: 0 8px 24px rgb(0 0 0 / 0.14);
+	animation: news-fresh-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.news-fresh__button[hidden] {
+	display: none;
+}
+.news-fresh__button:hover {
+	background: #333333;
+}
+.news-fresh__button:focus-visible {
+	outline: 2px solid var(--ink);
+	outline-offset: 3px;
+}
+@keyframes news-fresh-in {
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.news-fresh__button {
+		animation: none;
+	}
+}

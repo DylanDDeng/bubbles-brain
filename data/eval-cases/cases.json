@@ -92,6 +92,12 @@
       "released": "2026-09"
     },
     {
+      "id": "claude-sonnet-5.5",
+      "name": "Claude Sonnet 5.5",
+      "vendor": "Anthropic",
+      "released": "2026-09"
+    },
+    {
       "id": "claude-fable-5",
       "name": "Claude Fable 5",
       "vendor": "Anthropic",
@@ -2189,6 +2195,19 @@
         "three.js"
       ],
       "bytes": 28449
+    },
+    {
+      "id": "claude-sonnet-5.5-voxel-shanghai",
+      "task": "voxel-shanghai",
+      "model": "claude-sonnet-5.5",
+      "file": "/eval-demos/claude-sonnet-5.5-voxel-shanghai.html",
+      "date": "2026-09-28",
+      "page_title": "上海 · 体素之城 — Shanghai Voxel City",
+      "stack": [
+        "three.js",
+        "canvas"
+      ],
+      "bytes": 105800
     }
   ],
   "excluded_files": [

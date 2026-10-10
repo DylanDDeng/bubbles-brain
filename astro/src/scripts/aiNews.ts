@@ -6,12 +6,17 @@
  * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
  * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
  * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
+ * The newest day opens with 热门: up to three stories the hot bot ticked in the last 24 hours, most
+ * widely reported first.
  * While the page is open and on screen it looks for new stories every two minutes; when some came,
  * a 「有 N 条新动态」 button puts them on top, above a 上次看到这里 line where the page was.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
 	archiveUrl,
+	clockTime,
+	hotNews,
+	sourcesLabel,
 	dayTitle,
 	timeGroups,
 	LAST_SEEN_KEY,
@@ -64,8 +69,38 @@ function card(item: NewsItem): HTMLElement {
 	return link;
 }
 
+/** A 热门 card: the cover on top, the headline, then who reported it and when. */
+function hotCard(item: NewsItem): HTMLElement {
+	const link = el('a', 'news-hot-card');
+	link.href = item.url;
+	link.target = '_blank';
+	link.rel = 'noopener noreferrer';
+	if (item.cover) {
+		const frame = el('span', 'news-hot-card__cover');
+		const image = el('img');
+		image.src = item.cover;
+		image.alt = '';
+		image.loading = 'lazy';
+		image.decoding = 'async';
+		image.referrerPolicy = 'no-referrer';
+		image.addEventListener('error', () => frame.remove(), { once: true });
+		frame.append(image);
+		link.append(frame);
+	}
+	const body = el('span', 'news-hot-card__body');
+	body.append(el('span', 'news-hot-card__title', item.title));
+	const outlets = sourcesLabel(item.hot?.sources ?? []);
+	body.append(
+		el('span', 'news-hot-card__meta', [outlets, clockTime(item.at)].filter(Boolean).join(' · ')),
+	);
+	link.append(body);
+	return link;
+}
+
 /** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
 const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
+/** How many 热门 cards head the newest day. */
+const HOT_SHOWN = 3;
 /** How often an open, visible page looks for new stories. */
 const CHECK_EVERY = 2 * 60_000;
 
@@ -143,6 +178,9 @@ function setupNews(root: HTMLElement) {
 	const status = root.querySelector<HTMLElement>('[data-news-status]')!;
 	const updated = root.querySelector<HTMLElement>('[data-news-updated]')!;
 	const older = root.querySelector<HTMLButtonElement>('[data-news-older]')!;
+	const hot = root.querySelector<HTMLElement>('[data-news-hot]')!;
+	const hotCards = root.querySelector<HTMLElement>('[data-news-hot-cards]')!;
+	const allLabel = root.querySelector<HTMLElement>('[data-news-all]')!;
 	const olderLabel = root.querySelector<HTMLElement>('[data-news-older-label]')!;
 	const body = root.querySelector<HTMLElement>('.news-body');
 	const feedUrl = root.dataset.feedUrl ?? '';
@@ -291,6 +329,10 @@ function setupNews(root: HTMLElement) {
 		title.textContent = dayTitle(active);
 		const items = day?.items ?? [];
 		grid.replaceChildren(...timeline(items, lastSeen, new Date()));
+		// 热门 heads the newest day only: it is about the last 24 hours, not the day on screen.
+		const top = active === feed.days[0]?.day ? hotNews(feed, new Date(), HOT_SHOWN) : [];
+		hotCards.replaceChildren(...top.map(hotCard));
+		hot.hidden = allLabel.hidden = top.length === 0;
 		status.hidden = items.length > 0;
 		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 

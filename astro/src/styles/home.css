@@ -237,6 +237,30 @@
 .home-news__row:focus-visible .home-news__go {
 	visibility: visible;
 }
+/* 热门: the same rows, the headline in bold and the outlet count where ↗ would be. */
+.home-news__row--hot {
+	grid-template-columns: 36px minmax(0, 1fr) auto;
+}
+.home-news__row--hot .home-news__headline {
+	font-weight: 600;
+}
+.home-news__outlets {
+	font-size: 12px;
+	color: var(--ink-faint);
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+.home-news__list[hidden],
+.home-news__sub[hidden] {
+	display: none;
+}
+.home-news__sub {
+	margin: 0;
+	padding: 12px 0 6px 32px;
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--ink-faint);
+}
 .home-news__seen {
 	display: flex;
 	align-items: center;
@@ -443,6 +467,20 @@
 	}
 	.home-news__list > li:nth-child(n + 4) {
 		display: none;
+	}
+	/* With 热门, still three in all: one hot, two newest. */
+	.home-news__list--hot > li:nth-child(n + 2),
+	.home-news.has-hot .home-news__list:not(.home-news__list--hot) > li:nth-child(n + 3) {
+		display: none;
+	}
+	.home-news__row--hot {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+	.home-news__row--hot .home-news__time {
+		display: none;
+	}
+	.home-news__sub {
+		padding: 8px 0 2px 28px;
 	}
 	.home-news__row {
 		grid-template-columns: minmax(0, 1fr) 34px;

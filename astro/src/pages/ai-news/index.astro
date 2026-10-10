@@ -26,6 +26,15 @@ import '../../styles/ai-news.css';
 						<span data-news-fresh-label></span>
 					</button>
 				</div>
+				{/* 热门: what the hot bot found most widely reported in the last day, above today only. */}
+				<section class="news-hot" aria-labelledby="news-hot-title" data-news-hot hidden>
+					<div class="news-hot__head">
+						<h3 class="news-hot__title" id="news-hot-title">热门</h3>
+						<span class="news-hot__window">过去 24 小时</span>
+					</div>
+					<div class="news-hot__cards" data-news-hot-cards></div>
+				</section>
+				<h3 class="news-all" data-news-all hidden>全部</h3>
 				<div class="news-timeline" data-news-grid></div>
 				<p class="rr-empty" data-news-status>正在读取最新动态…</p>
 				<noscript

@@ -20,6 +20,15 @@ export const changelog: ChangelogItem[] = [
 		date: '2026-10-10',
 		tag: 'AI 动态',
 		type: 'feature',
+		title: 'AI 动态加上热门',
+		summary:
+			'过去 24 小时里被最多家媒体报道的新闻，排在 AI 动态当天最上面，卡片上写着是哪些媒体报道的；首页搜索框的下拉里也先列两条热门。',
+		links: [{ label: 'AI 动态', href: '/ai-news/' }],
+	},
+	{
+		date: '2026-10-10',
+		tag: 'AI 动态',
+		type: 'feature',
 		title: 'AI 动态有更新时会提醒你',
 		summary:
 			'上次看过之后有新的 AI 动态，导航里「AI 动态」旁边会显示新增条数，标签页标题前也会带上数字；刚打开网站时右下角提醒一次。开着 AI 动态页时来了新内容，顶部会出现「有 N 条新动态」，点一下放到最上面。',

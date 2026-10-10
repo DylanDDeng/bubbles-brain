@@ -19,6 +19,13 @@ export interface NewsItem {
 	cover?: string;
 	/** Width ÷ height of the cover, when the Worker knows its size. */
 	coverRatio?: number;
+	/** Several outlets reported it (the hot bot's 「热门」), with who they were. */
+	hot?: { sources: NewsSource[] };
+}
+
+export interface NewsSource {
+	name: string;
+	url: string;
 }
 
 /** Covers keep their own shape within these bounds: no taller than 4:5, no flatter than 2:1. */
@@ -80,6 +87,16 @@ export function parseArchive(raw: unknown, month: string): NewsDay[] | null {
 	return parseDays(file.days).filter((day) => monthOf(day.day) === month);
 }
 
+function parseSources(raw: unknown): NewsSource[] {
+	if (!Array.isArray(raw)) return [];
+	return raw.flatMap((entry) => {
+		const source = entry as Record<string, unknown> | null;
+		return source && typeof source.name === 'string' && source.name.trim() && isHttps(source.url)
+			? [{ name: source.name.trim(), url: source.url }]
+			: [];
+	});
+}
+
 function parseDays(entries: unknown[]): NewsDay[] {
 	const days: NewsDay[] = [];
 	for (const entry of entries) {
@@ -106,6 +123,7 @@ function parseDays(entries: unknown[]): NewsDay[] {
 								: {}),
 						}
 					: {}),
+				...(item.hot === true ? { hot: { sources: parseSources(item.sources) } } : {}),
 			});
 		}
 		if (items.length) days.push({ day: day.day, items });
@@ -244,6 +262,15 @@ export function updatedLabel(iso: string, now: Date): string {
 	return day === beijingToday(now) ? `更新于 ${time}` : `更新于 ${monthDay(day)} ${time}`;
 }
 
+/** A story's push in a narrow column: 20:29 today, 昨天, else 10/7. */
+export function shortWhen(item: NewsItem, now: Date): string {
+	const today = beijingToday(now);
+	if (item.day === today) return clockTime(item.at);
+	if (item.day === shiftDay(today, -1)) return '昨天';
+	const [, month, date] = item.day.split('-').map(Number);
+	return `${month}/${date}`;
+}
+
 export interface HomeNewsRow {
 	item: NewsItem;
 	/** 20:29 today, 昨天 or 10/7 before; empty when the row above has the same (one bot batch). */
@@ -253,6 +280,9 @@ export interface HomeNewsRow {
 }
 
 export interface HomeNews {
+	/** Up to `hot` of 热门, most reported first (see hotNews). */
+	hot: NewsItem[];
+	/** The newest stories, without those already in `hot`. */
 	rows: HomeNewsRow[];
 	/** 20:29 更新, or 昨天 20:29 更新 when nothing came today: the newest push. */
 	updated: string;
@@ -264,17 +294,23 @@ export interface HomeNews {
  * The newest few stories for the home page's search box, with the 「上次看到这里」 line placed as
  * on /ai-news/. `lastSeen` is when the reader last left /ai-news/, if ever.
  */
-export function homeNews(feed: NewsFeed, lastSeen: string | null, now: Date, limit = 5): HomeNews {
-	const items = feed.days.flatMap((day) => day.items).slice(0, limit);
+export function homeNews(
+	feed: NewsFeed,
+	lastSeen: string | null,
+	now: Date,
+	limit = 5,
+	hotLimit = 0,
+): HomeNews {
+	const hot = hotNews(feed, now, hotLimit);
+	const taken = new Set(hot.map((item) => item.id));
+	const items = feed.days
+		.flatMap((day) => day.items)
+		.filter((item) => !taken.has(item.id))
+		.slice(0, limit - hot.length);
 	const today = beijingToday(now);
 	const seen = lastSeen ? Date.parse(lastSeen) : Number.NaN;
 	const fresh = (item: NewsItem) => Number.isNaN(seen) || Date.parse(item.at) > seen;
-	const when = (item: NewsItem) => {
-		if (item.day === today) return clockTime(item.at);
-		if (item.day === shiftDay(today, -1)) return '昨天';
-		const [, month, date] = item.day.split('-').map(Number);
-		return `${month}/${date}`;
-	};
+	const when = (item: NewsItem) => shortWhen(item, now);
 	const rows = items.map((item, index) => {
 		const above = items[index - 1];
 		return {
@@ -283,13 +319,15 @@ export function homeNews(feed: NewsFeed, lastSeen: string | null, now: Date, lim
 			seenBefore: Boolean(above) && !Number.isNaN(seen) && fresh(above) && !fresh(item),
 		};
 	});
-	const newest = items[0];
+	// The newest push overall, which may be a hot story listed above the rest.
+	const newest = feed.days[0]?.items[0];
 	const updated = !newest
 		? ''
 		: newest.day === today
 			? `${clockTime(newest.at)} 更新`
 			: `${railLabel(newest.day, now)} ${clockTime(newest.at)} 更新`;
 	return {
+		hot,
 		rows,
 		updated,
 		today: feed.days.find((day) => day.day === today)?.items.length ?? 0,
@@ -318,6 +356,33 @@ export function titleWithCount(title: string, count: number): string {
 export const NEWS_SINCE_KEY = 'ai-news:since';
 /** The newest story the arrival notice has already announced, so one batch is announced once. */
 export const NEWS_TOLD_KEY = 'ai-news:told';
+
+/** How far back 热门 looks. */
+export const HOT_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * 热门: stories the hot bot ticked in the last 24 hours, most outlets first, then newest. The bot
+ * decides what is hot; the page only orders and trims. Empty when the bot has marked nothing lately.
+ */
+export function hotNews(feed: NewsFeed, now: Date, limit: number): NewsItem[] {
+	const from = now.getTime() - HOT_WINDOW_MS;
+	return feed.days
+		.flatMap((day) => day.items)
+		.filter((item) => item.hot && Date.parse(item.at) >= from)
+		.map((item, index) => ({ item, index, outlets: item.hot!.sources.length }))
+		.sort((a, b) => b.outlets - a.outlets || a.index - b.index)
+		.slice(0, limit)
+		.map(({ item }) => item);
+}
+
+/** TechCrunch、Bloomberg 等 8 个来源 — or just the names when there are one or two; short: 8 个来源. */
+export function sourcesLabel(sources: NewsSource[], short = false): string {
+	const count = sources.length;
+	if (!count) return '';
+	if (short) return `${count} 个来源`;
+	const names = sources.slice(0, 2).map((source) => source.name);
+	return count <= 2 ? names.join('、') : `${names.join('、')} 等 ${count} 个来源`;
+}
 
 export const NEWS_SECTION_LABEL = 'AI 动态';
 

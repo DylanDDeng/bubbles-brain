@@ -7,6 +7,7 @@ import {
 	cellTime,
 	cellUrl,
 	findShareImage,
+	parseSources,
 	shortSummary,
 	storyKey,
 	toItem,
@@ -175,5 +176,43 @@ describe('cover sizes', () => {
 			new Map([['https://cdn.test/a.webp', { width: 800, height: 600 }]]),
 		);
 		expect(feed.days[0].items[0]).toMatchObject({ cover: 'https://cdn.test/a.webp', coverWidth: 800, coverHeight: 600 });
+	});
+});
+
+describe('hot stories', () => {
+	const base = { 标题: 'T', 链接: 'https://a.test/p', 推送时间: Date.UTC(2026, 9, 10, 1, 20) };
+
+	it('marks a ticked row hot and keeps its outlets', () => {
+		const item = toItem(
+			record('h1', {
+				...base,
+				热门: true,
+				多源报道: 'TechCrunch: https://techcrunch.test/a\n华尔街日报(中文)：https://cn.wsj.test/b\nno link here',
+			}),
+		);
+		expect(item).toMatchObject({
+			hot: true,
+			sources: [
+				{ name: 'TechCrunch', url: 'https://techcrunch.test/a' },
+				{ name: '华尔街日报(中文)', url: 'https://cn.wsj.test/b' },
+			],
+		});
+	});
+
+	it('leaves unticked rows alone, whatever their outlets', () => {
+		const item = toItem(record('h2', { ...base, 热门: false, 多源报道: 'A: https://a.test/x' }));
+		expect(item).not.toHaveProperty('hot');
+		expect(item).not.toHaveProperty('sources');
+	});
+
+	it('reads outlets from rich text, once per link, at most twelve', () => {
+		const rich = [
+			{ type: 'text', text: 'Bloomberg: ' },
+			{ type: 'url', text: 'bloomberg', link: 'https://bloomberg.test/c' },
+			{ type: 'text', text: '\nBloomberg again: https://bloomberg.test/c\nBad: javascript:alert(1)' },
+		];
+		expect(parseSources(rich)).toEqual([{ name: 'Bloomberg', url: 'https://bloomberg.test/c' }]);
+		const many = Array.from({ length: 20 }, (_, n) => `S${n}: https://s.test/${n}`).join('\n');
+		expect(parseSources(many)).toHaveLength(12);
 	});
 });

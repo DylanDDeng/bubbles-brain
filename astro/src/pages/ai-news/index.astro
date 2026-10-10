@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { AI_NEWS_FEED_URL } from '../../lib/aiNews';
 import '../../styles/ai-news.css';
+import '../../styles/news-outlets.css';
 ---
 
 <BaseLayout
@@ -19,6 +20,7 @@ import '../../styles/ai-news.css';
 
 			<div class="news-main" aria-busy="true" data-news-main>
 				<h2 class="news-day" data-news-title></h2>
+				<p class="news-day-note" data-news-note hidden></p>
 				{/* Shown when stories came while the page was open; a click puts them on top. */}
 				<div class="news-fresh" role="status">
 					<button class="news-fresh__button" type="button" data-news-fresh hidden>
@@ -26,11 +28,13 @@ import '../../styles/ai-news.css';
 						<span data-news-fresh-label></span>
 					</button>
 				</div>
-				{/* 热门: what the hot bot found most widely reported in the last day, above today only. */}
+				{
+					/* 热门: the most widely reported of the last two days, above today only; all of them at #hot. */
+				}
 				<section class="news-hot" aria-labelledby="news-hot-title" data-news-hot hidden>
 					<div class="news-hot__head">
 						<h3 class="news-hot__title" id="news-hot-title">热门</h3>
-						<span class="news-hot__window">过去 24 小时</span>
+						<a class="news-hot__all" href="#hot" data-news-hot-all hidden></a>
 					</div>
 					<div class="news-hot__cards" data-news-hot-cards></div>
 				</section>

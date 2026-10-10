@@ -6,8 +6,9 @@
  * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
  * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
  * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
- * The newest day opens with 热门: up to three stories the hot bot ticked in the last 24 hours, most
- * widely reported first.
+ * The newest day opens with 热门: up to three stories the hot bot ticked in the last 48 hours, most
+ * widely reported first; 「热门 N」 at the top of the rail (#hot) lists all of them, newest first, with
+ * each outlet's icon linking to its report.
  * While the page is open and on screen it looks for new stories every two minutes; when some came,
  * a 「有 N 条新动态」 button puts them on top, above a 上次看到这里 line where the page was.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
@@ -16,7 +17,7 @@ import {
 	archiveUrl,
 	clockTime,
 	hotNews,
-	sourcesLabel,
+	hotStories,
 	dayTitle,
 	timeGroups,
 	LAST_SEEN_KEY,
@@ -36,6 +37,7 @@ import {
 	type NewsItem,
 	type RailMonth,
 } from '../lib/aiNews';
+import { outletIcons } from './newsOutlets';
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string, text?: string) {
 	const node = document.createElement(tag);
@@ -89,12 +91,49 @@ function hotCard(item: NewsItem): HTMLElement {
 	}
 	const body = el('span', 'news-hot-card__body');
 	body.append(el('span', 'news-hot-card__title', item.title));
-	const outlets = sourcesLabel(item.hot?.sources ?? []);
-	body.append(
-		el('span', 'news-hot-card__meta', [outlets, clockTime(item.at)].filter(Boolean).join(' · ')),
+	const meta = el('span', 'news-hot-card__meta');
+	meta.append(
+		outletIcons(item.hot?.sources ?? [], { max: 4 }),
+		el('time', undefined, clockTime(item.at)),
 	);
+	body.append(meta);
 	link.append(body);
 	return link;
+}
+
+/**
+ * A card in the 热门 view: like a timeline card, plus the outlets' icons, each opening that
+ * outlet's own report. The headline is the link to the story and stretches over the card; the
+ * icons sit above it.
+ */
+function hotListCard(item: NewsItem): HTMLElement {
+	const article = el('article', 'news-card news-card--hot');
+	if (item.cover) {
+		const frame = el('span', 'news-card__cover');
+		const image = el('img');
+		image.src = item.cover;
+		image.alt = '';
+		image.loading = 'lazy';
+		image.decoding = 'async';
+		image.referrerPolicy = 'no-referrer';
+		image.addEventListener('error', () => frame.remove(), { once: true });
+		frame.append(image);
+		article.append(frame);
+	}
+	const body = el('div', 'news-card__body');
+	const heading = el('h4', 'news-card__heading');
+	const link = el('a', 'news-card__title', item.title);
+	link.href = item.url;
+	link.target = '_blank';
+	link.rel = 'noopener noreferrer';
+	heading.append(link);
+	body.append(heading);
+	if (item.summary) body.append(el('span', 'news-card__summary', item.summary));
+	const outlets = el('div', 'news-card__outlets');
+	outlets.append(outletIcons(item.hot?.sources ?? [], { links: true, max: 10 }));
+	body.append(outlets);
+	article.append(body);
+	return article;
 }
 
 /** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
@@ -134,7 +173,12 @@ function writeLastSeen(iso: string) {
  * One row per push time: a pinned label with the time (23:08) beside that batch's cards.
  * The 上次看到这里 line goes above the first row older than the last visit, and only if newer rows come before it.
  */
-function timeline(items: NewsItem[], lastSeen: string | null, now: Date): HTMLElement[] {
+function timeline(
+	items: NewsItem[],
+	lastSeen: string | null,
+	now: Date,
+	makeCard: (item: NewsItem) => HTMLElement = card,
+): HTMLElement[] {
 	const isNew = (item: NewsItem) => !!lastSeen && item.at > lastSeen;
 	const nodes: HTMLElement[] = [];
 	let sawNew = false;
@@ -161,7 +205,7 @@ function timeline(items: NewsItem[], lastSeen: string | null, now: Date): HTMLEl
 		time.dateTime = group.items[0].at;
 		label.append(dot, time);
 		const cards = el('div', 'news-moment__cards');
-		cards.append(...group.items.map(card));
+		cards.append(...group.items.map(makeCard));
 		row.append(label, cards);
 		nodes.push(row);
 	}
@@ -181,6 +225,8 @@ function setupNews(root: HTMLElement) {
 	const hot = root.querySelector<HTMLElement>('[data-news-hot]')!;
 	const hotCards = root.querySelector<HTMLElement>('[data-news-hot-cards]')!;
 	const allLabel = root.querySelector<HTMLElement>('[data-news-all]')!;
+	const hotAll = root.querySelector<HTMLAnchorElement>('[data-news-hot-all]')!;
+	const note = root.querySelector<HTMLElement>('[data-news-note]')!;
 	const olderLabel = root.querySelector<HTMLElement>('[data-news-older-label]')!;
 	const body = root.querySelector<HTMLElement>('.news-body');
 	const feedUrl = root.dataset.feedUrl ?? '';
@@ -270,6 +316,19 @@ function setupNews(root: HTMLElement) {
 		if (body && body.getBoundingClientRect().top < 0) body.scrollIntoView();
 	};
 
+	/** Every 热门 of the last 48 hours; #hot shows them all, newest first. */
+	const hotItems = () => (feed ? hotStories(feed, new Date()) : []);
+	const showingHot = () => wantedDay() === 'hot' && hotItems().length > 0;
+	const showHot = () => {
+		history.replaceState(history.state, '', '#hot');
+		render();
+		if (body && body.getBoundingClientRect().top < 0) body.scrollIntoView();
+	};
+	hotAll.addEventListener('click', (event) => {
+		event.preventDefault();
+		showHot();
+	});
+
 	const toggleMonth = (month: RailMonth) => {
 		if (open.has(month.month)) open.delete(month.month);
 		else {
@@ -282,7 +341,21 @@ function setupNews(root: HTMLElement) {
 
 	function drawRail(active: string) {
 		const now = new Date();
+		const hotCount = hotItems().length;
+		const hotEntry: HTMLElement[] = [];
+		if (hotCount) {
+			const entry = el('a', 'news-rail__hot', '热门');
+			entry.href = '#hot';
+			entry.append(el('span', 'news-rail__count', String(hotCount)));
+			if (active === 'hot') entry.setAttribute('aria-current', 'true');
+			entry.addEventListener('click', (event) => {
+				event.preventDefault();
+				showHot();
+			});
+			hotEntry.push(entry);
+		}
 		rail.replaceChildren(
+			...hotEntry,
 			...months().map((month) => {
 				const group = el('div', 'news-month');
 				const expanded = open.has(month.month);
@@ -320,8 +393,38 @@ function setupNews(root: HTMLElement) {
 		}
 	}
 
+	/** #hot: every 热门 of the last 48 hours, newest first, a timeline per day. */
+	function renderHot() {
+		const now = new Date();
+		const stories = hotItems();
+		drawRail('hot');
+		title.textContent = '热门';
+		note.textContent = `过去 48 小时 · ${stories.length} 条`;
+		note.hidden = false;
+		hot.hidden = allLabel.hidden = true;
+		const days: { day: string; items: NewsItem[] }[] = [];
+		for (const story of stories) {
+			const last = days.at(-1);
+			if (last?.day === story.day) last.items.push(story);
+			else days.push({ day: story.day, items: [story] });
+		}
+		grid.classList.add('news-timeline--days');
+		grid.replaceChildren(
+			...days.flatMap(({ day, items }) => {
+				const line = el('div', 'news-timeline');
+				line.append(...timeline(items, null, now, hotListCard));
+				return [el('h3', 'news-hot-day', railLabel(day, now)), line];
+			}),
+		);
+		status.hidden = true;
+		older.hidden = true;
+	}
+
 	function render() {
 		if (!feed) return;
+		if (showingHot()) return renderHot();
+		grid.classList.remove('news-timeline--days');
+		note.hidden = true;
 		const active = currentDay();
 		drawRail(active);
 		const days = knownDays();
@@ -329,10 +432,13 @@ function setupNews(root: HTMLElement) {
 		title.textContent = dayTitle(active);
 		const items = day?.items ?? [];
 		grid.replaceChildren(...timeline(items, lastSeen, new Date()));
-		// 热门 heads the newest day only: it is about the last 24 hours, not the day on screen.
+		// 热门 heads the newest day only: it is about the last 48 hours, not the day on screen.
 		const top = active === feed.days[0]?.day ? hotNews(feed, new Date(), HOT_SHOWN) : [];
 		hotCards.replaceChildren(...top.map(hotCard));
 		hot.hidden = allLabel.hidden = top.length === 0;
+		const hotCount = hotItems().length;
+		hotAll.hidden = hotCount <= top.length;
+		hotAll.textContent = `看全部 ${hotCount} 条`;
 		status.hidden = items.length > 0;
 		status.textContent = loading.has(monthOf(active)) ? '正在读取往期动态…' : '这一天还没有动态。';
 
@@ -401,7 +507,8 @@ function setupNews(root: HTMLElement) {
 		updated.textContent = updatedLabel(feed.updatedAt, new Date());
 		const newest = feed.days[0].day;
 		open.add(monthOf(newest));
-		history.replaceState(history.state, '', `#${newest}`);
+		// Readers in the 热门 view stay there; anyone else goes to the newest day.
+		if (wantedDay() !== 'hot') history.replaceState(history.state, '', `#${newest}`);
 		render();
 		if (body && body.getBoundingClientRect().top < 0) body.scrollIntoView({ behavior: 'smooth' });
 	});

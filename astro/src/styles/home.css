@@ -237,7 +237,7 @@
 .home-news__row:focus-visible .home-news__go {
 	visibility: visible;
 }
-/* 热门: the same rows, the headline in bold and the outlet count where ↗ would be. */
+/* 热门: the same rows, the headline in bold and the outlets' icons where ↗ would be. */
 .home-news__row--hot {
 	grid-template-columns: 36px minmax(0, 1fr) auto;
 }
@@ -245,10 +245,8 @@
 	font-weight: 600;
 }
 .home-news__outlets {
-	font-size: 12px;
-	color: var(--ink-faint);
-	white-space: nowrap;
-	font-variant-numeric: tabular-nums;
+	flex-wrap: nowrap;
+	align-self: center;
 }
 .home-news__list[hidden],
 .home-news__sub[hidden] {

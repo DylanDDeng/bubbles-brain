@@ -26,6 +26,8 @@ export interface NewsItem {
 export interface NewsSource {
 	name: string;
 	url: string;
+	/** The outlet's icon (or the X account's avatar), served by the Worker. */
+	icon?: string;
 }
 
 /** Covers keep their own shape within these bounds: no taller than 4:5, no flatter than 2:1. */
@@ -91,9 +93,13 @@ function parseSources(raw: unknown): NewsSource[] {
 	if (!Array.isArray(raw)) return [];
 	return raw.flatMap((entry) => {
 		const source = entry as Record<string, unknown> | null;
-		return source && typeof source.name === 'string' && source.name.trim() && isHttps(source.url)
-			? [{ name: source.name.trim(), url: source.url }]
-			: [];
+		if (!source || typeof source.name !== 'string' || !source.name.trim() || !isHttps(source.url))
+			return [];
+		const icon =
+			typeof source.icon === 'string' && source.icon.startsWith('/v1/icon/')
+				? new URL(source.icon, AI_NEWS_FEED_URL).href
+				: undefined;
+		return [{ name: source.name.trim(), url: source.url, ...(icon ? { icon } : {}) }];
 	});
 }
 
@@ -357,18 +363,23 @@ export const NEWS_SINCE_KEY = 'ai-news:since';
 /** The newest story the arrival notice has already announced, so one batch is announced once. */
 export const NEWS_TOLD_KEY = 'ai-news:told';
 
-/** How far back 热门 looks. */
-export const HOT_WINDOW_MS = 24 * 60 * 60 * 1000;
+/** How far back 热门 looks: the hot bot marks what several outlets reported in two days. */
+export const HOT_WINDOW_MS = 48 * 60 * 60 * 1000;
 
-/**
- * 热门: stories the hot bot ticked in the last 24 hours, most outlets first, then newest. The bot
- * decides what is hot; the page only orders and trims. Empty when the bot has marked nothing lately.
- */
-export function hotNews(feed: NewsFeed, now: Date, limit: number): NewsItem[] {
+/** Every story the hot bot ticked in the last 48 hours, newest first: the 热门 view. */
+export function hotStories(feed: NewsFeed, now: Date): NewsItem[] {
 	const from = now.getTime() - HOT_WINDOW_MS;
 	return feed.days
 		.flatMap((day) => day.items)
-		.filter((item) => item.hot && Date.parse(item.at) >= from)
+		.filter((item) => item.hot && Date.parse(item.at) >= from);
+}
+
+/**
+ * The few 热门 that head a page (today's cards, the home dropdown): most outlets first, then
+ * newest. The bot decides what is hot; the page only orders and trims.
+ */
+export function hotNews(feed: NewsFeed, now: Date, limit: number): NewsItem[] {
+	return hotStories(feed, now)
 		.map((item, index) => ({ item, index, outlets: item.hot!.sources.length }))
 		.sort((a, b) => b.outlets - a.outlets || a.index - b.index)
 		.slice(0, limit)

@@ -21,6 +21,7 @@ import {
 	type Feed,
 } from './feed';
 import { archiveKey, MONTH, updateArchive, type ArchiveBucket } from './archive';
+import { feedIcons, findIconLinks, parentHost, parseIconPath, type IconKey } from './icons';
 
 /** The two KV calls this Worker makes (structurally a subset of Cloudflare's KVNamespace). */
 export interface FeedStore {
@@ -118,6 +119,7 @@ export async function handleRequest(request: Request, env: Env, ctx: Waiter): Pr
 	if (url.pathname === '/v1/sync') return requestSync(request, env, ctx);
 	if (url.pathname.startsWith('/v1/cover/')) return serveCover(request, env);
 	if (url.pathname.startsWith('/v1/archive/')) return serveArchive(request, env);
+	if (url.pathname.startsWith('/v1/icon/')) return serveIcon(request, env, ctx);
 	return serveFeed(request, env);
 }
 
@@ -184,6 +186,134 @@ export async function serveCover(request: Request, env: Env): Promise<Response> 
 			...(object.httpEtag ? { etag: object.httpEtag } : {}),
 		},
 	});
+}
+
+const ICON_WIDTH = 64;
+const ICON_MAX_BYTES = 512 * 1024;
+/** A site without a usable icon is asked again a day later, not on every page view. */
+const ICON_MISS_TTL = 60 * 60 * 24;
+const ICON_TYPES = /^image\/(png|jpeg|gif|webp|avif|svg\+xml|x-icon|vnd\.microsoft\.icon)$/;
+const PAGE_HEADERS = {
+	'user-agent': 'Mozilla/5.0 (compatible; BubbleBrainNews/1.0; +https://bubblenews.today/ai-news/)',
+};
+
+/**
+ * GET /v1/icon/site/<host> | /v1/icon/x/<handle>: an outlet's icon or an account's avatar (icons.ts).
+ * Kept in R2 once fetched; fetched only when the current feed lists it; a miss answers 404 and is
+ * not retried for a day, and the page then draws the outlet's initial instead.
+ */
+export async function serveIcon(
+	request: Request,
+	env: Env,
+	ctx: Waiter,
+	fetcher: typeof fetch = fetch,
+): Promise<Response> {
+	if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders() });
+	if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'method_not_allowed' }, 405);
+	const path = new URL(request.url).pathname;
+	const key = parseIconPath(path);
+	if (!key || !env.COVERS) return json({ error: 'not_found' }, 404);
+	const stored = `icons/${key.kind}/${key.kind === 'site' ? key.host : key.handle}`;
+	const missed = `icon-miss:${stored}`;
+	const missing = () => {
+		const response = json({ error: 'no_icon' }, 404);
+		response.headers.set('cache-control', 'public, max-age=3600');
+		return response;
+	};
+
+	let icon: { body: ArrayBuffer | ReadableStream; type: string } | null = null;
+	const object = await env.COVERS.get(stored);
+	if (object) icon = { body: object.body, type: object.httpMetadata?.contentType ?? 'image/png' };
+	else {
+		if (await env.NEWS.get(missed)) return missing();
+		const feed = await env.NEWS.get<Feed>(FEED_KEY, 'json');
+		if (!feed || !feedIcons(feed).has(path)) return json({ error: 'not_found' }, 404);
+		const fetched = await fetchIcon(key, env, fetcher);
+		if (!fetched) {
+			await env.NEWS.put(missed, '1', { expirationTtl: ICON_MISS_TTL });
+			return missing();
+		}
+		ctx.waitUntil(env.COVERS.put(stored, fetched.body, { httpMetadata: { contentType: fetched.type } }));
+		icon = { body: fetched.body.slice(0), type: fetched.type };
+	}
+	return new Response(request.method === 'HEAD' ? null : icon.body, {
+		headers: {
+			'content-type': icon.type,
+			// A week: logos rarely change, and a changed one arrives within days.
+			'cache-control': 'public, max-age=604800',
+			'access-control-allow-origin': '*',
+			'x-content-type-options': 'nosniff',
+			'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'",
+		},
+	});
+}
+
+/** The icon itself, shrunk to 64px when it can be; null when nothing usable was found. */
+async function fetchIcon(
+	key: IconKey,
+	env: Env,
+	fetcher: typeof fetch,
+): Promise<{ body: ArrayBuffer; type: string } | null> {
+	const candidates: string[] = [];
+	if (key.kind === 'x') candidates.push(`https://unavatar.io/x/${key.handle}?fallback=false`);
+	else {
+		for (const host of [key.host, parentHost(key.host)]) {
+			if (!host) continue;
+			candidates.push(...(await pageIcons(`https://${host}/`, fetcher)).slice(0, 3));
+		}
+		// Some sites turn away anything that is not a browser. Only this Worker asks DuckDuckGo;
+		// readers are served the copy kept in R2.
+		candidates.push(`https://icons.duckduckgo.com/ip3/${key.host}.ico`);
+	}
+	for (const url of [...new Set(candidates)]) {
+		const image = await fetchImage(url, fetcher);
+		if (image) return shrinkIcon(env, image);
+	}
+	return null;
+}
+
+async function pageIcons(pageUrl: string, fetcher: typeof fetch): Promise<string[]> {
+	try {
+		const response = await fetcher(pageUrl, {
+			headers: { ...PAGE_HEADERS, accept: 'text/html,application/xhtml+xml' },
+			redirect: 'follow',
+			signal: AbortSignal.timeout(5000),
+		});
+		const type = response.headers.get('content-type') ?? '';
+		if (!response.ok || !response.body || !type.includes('html')) return [new URL('/favicon.ico', pageUrl).href];
+		return findIconLinks(await readHead(response.body, HTML_BYTES), response.url || pageUrl);
+	} catch {
+		return [new URL('/favicon.ico', pageUrl).href];
+	}
+}
+
+async function fetchImage(url: string, fetcher: typeof fetch): Promise<{ body: ArrayBuffer; type: string } | null> {
+	try {
+		const response = await fetcher(url, {
+			headers: { ...PAGE_HEADERS, accept: 'image/*' },
+			redirect: 'follow',
+			signal: AbortSignal.timeout(5000),
+		});
+		let type = (response.headers.get('content-type') ?? '').split(';')[0].trim().toLowerCase();
+		if (!type && /\.ico(\?|$)/i.test(url)) type = 'image/x-icon';
+		if (!response.ok || !ICON_TYPES.test(type)) return null;
+		const body = await response.arrayBuffer();
+		return body.byteLength && body.byteLength <= ICON_MAX_BYTES ? { body, type } : null;
+	} catch {
+		return null;
+	}
+}
+
+async function shrinkIcon(env: Env, image: { body: ArrayBuffer; type: string }): Promise<{ body: ArrayBuffer; type: string }> {
+	if (!env.IMAGES || /gif|svg|icon/.test(image.type)) return image;
+	try {
+		const shrunk = await env.IMAGES.input(new Response(image.body).body!)
+			.transform({ width: ICON_WIDTH, fit: 'scale-down' })
+			.output({ format: 'image/webp', quality: 85 });
+		return { body: await new Response(shrunk.image()).arrayBuffer(), type: shrunk.contentType() };
+	} catch {
+		return image;
+	}
 }
 
 /** GET /v1/archive/<YYYY-MM>: one month of past stories, grouped by Beijing day. */

@@ -20,6 +20,15 @@ export const changelog: ChangelogItem[] = [
 		date: '2026-10-10',
 		tag: 'AI 动态',
 		type: 'feature',
+		title: '热门有了自己的入口，报道的媒体用图标展示',
+		summary:
+			'AI 动态左边多了「热门」，点进去能看到过去 48 小时全部热门，按时间排列；每条下面是报道它的媒体图标（X 上的账号显示头像），点哪个图标就读哪家的报道。',
+		links: [{ label: '热门', href: '/ai-news/#hot' }],
+	},
+	{
+		date: '2026-10-10',
+		tag: 'AI 动态',
+		type: 'feature',
 		title: 'AI 动态加上热门',
 		summary:
 			'过去 24 小时里被最多家媒体报道的新闻，排在 AI 动态当天最上面，卡片上写着是哪些媒体报道的；首页搜索框的下拉里也先列两条热门。',

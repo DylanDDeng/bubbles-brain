@@ -3711,6 +3711,114 @@
 				"/_responsive/media/workbuddy-tutorials/workbuddy-hunyuan3-workflow-guide/img_035-1080.webp"
 			]
 		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001.png": {
+			"source_sha256": "78d008d3319fd6c95d7b8cf54e50fc12f3d2a55e93d40f758d3afd66c0458318",
+			"width": 1280,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-1280.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001-1280.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002.png": {
+			"source_sha256": "81028d1c9c1b9016e1dd95ef15bed4aa69d32993a161c7b0fc8f1c39af8586f1",
+			"width": 2660,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_002-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003.png": {
+			"source_sha256": "4ed17037f8c6ae5bd4515013a5e6aec6e69d86943d74438ae4600acbce9c49c6",
+			"width": 1658,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_003-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004.png": {
+			"source_sha256": "2811e974fbbfb7dad4b99a8bfe588550751678af8bb0655bb6234f96a60aa1d1",
+			"width": 1654,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_004-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005.png": {
+			"source_sha256": "ef83716c38d15bd3410db3666daf84bf4efcd5a40c58462e30c8ec2d1e3da77e",
+			"width": 1688,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_005-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006.png": {
+			"source_sha256": "7ece46ca13b697491fb15a59d27fe5eba6913f2a87435028e64aa9a983ef3759",
+			"width": 1708,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_006-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007.png": {
+			"source_sha256": "c5ee44c59486049e817f24bc4b47eb007f3662904a1270912bc5cbdd4b90d108",
+			"width": 1312,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-1312.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_007-1312.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008.png": {
+			"source_sha256": "fd55b21d80ff5b77b188adcfaf01becaef29b73a59cbadc2d9f0efbcb33bdcea",
+			"width": 2172,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-1440.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_008-1440.webp"
+			]
+		},
+		"/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009.png": {
+			"source_sha256": "8ece6cb4c4fcd16459219ac995a4a1ca9a40ba38773400fdd4bc304aab48877b",
+			"width": 1426,
+			"variants": [
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-640.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-640.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-960.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-960.webp",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-1426.avif",
+				"/_responsive/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_009-1426.webp"
+			]
+		},
 		"/media/workbuddy-tutorials/workbuddy-mobile-workflow-guide/img_001.png": {
 			"source_sha256": "1398d264b0bccb8ad8104b481120845ec4488f8d1300891122d2dba59891d419",
 			"width": 1080,

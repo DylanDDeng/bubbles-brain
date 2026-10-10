@@ -2,6 +2,7 @@ import { navigate } from 'astro:transitions/client';
 import { CAT_CURATOR_AVATAR } from '../data/catCurator';
 import { formatBrainPodClock } from '../lib/brainpodClock';
 import type { BrainPodCollection, BrainPodItem, BrainPodLibrary } from '../lib/brainpod';
+import { brainPodSections } from '../lib/brainpodSections';
 import { createBrainPodDiscoveryOrder } from '../lib/brainpodSeed';
 import { createBrainPodScene, type BrainPodScene } from './brainpodScene';
 import { mountBrainPodMotion } from './brainpodMotion';
@@ -9,7 +10,13 @@ import { mountBrainPodPortal } from './brainpodPortal';
 import { mountBrainPodCollection } from './brainpodCollection';
 import { markReadingUpdateSeen, refreshReadingIndicators } from './readingUpdates';
 
-type Row = BrainPodCollection | BrainPodItem;
+/** A top-level site section that holds several collections, e.g. 教程 or Vibe Coding. */
+interface BrainPodSection extends Omit<BrainPodCollection, 'kind'> {
+	kind: 'section';
+	children: BrainPodCollection[];
+}
+type Folder = BrainPodCollection | BrainPodSection;
+type Row = Folder | BrainPodItem;
 interface MenuPage {
 	title: string;
 	rows: Row[];
@@ -23,7 +30,13 @@ interface SavedState {
 	finish?: string;
 	discoveryIndex?: number;
 }
-const isCollection = (row: Row): row is BrainPodCollection => 'kind' in row;
+const isCollection = (row: Row): row is Folder => 'kind' in row;
+const folderRows = (folder: Folder): Row[] =>
+	folder.kind === 'section' ? folder.children : folder.items;
+const SECTION_DESCRIPTIONS: Record<string, string> = {
+	tutorials: '从新手村到 Codex、Pi Agent 与 WorkBuddy，一步步学会和 AI 一起把事情做出来。',
+	'vibe-coding': '术语图解、Skills 与品牌设计灵感，把 AI 编程拆成看得懂、用得上的部分。',
+};
 const escapeHTML = (value: string) =>
 	value.replace(
 		/[&<>"']/g,
@@ -48,12 +61,31 @@ export function mountBrainPod(root: HTMLElement): () => void {
 		index: 0,
 		items: availableUpdates.slice(0, 20).map((update) => update.item),
 	};
-	const menuCollections = recentCollection.items.length
-		? [recentCollection, ...collections]
-		: collections;
+	// Mirror the collection room's top-level sections so the iPod and the site share one hierarchy.
+	const sections: Folder[] = brainPodSections.flatMap((section, index): Folder[] => {
+		const children = section.children.flatMap((id) => collections.filter((c) => c.id === id));
+		if (!children.length) return [];
+		if (children.length === 1) return [{ ...children[0], title: section.title }];
+		return [
+			{
+				kind: 'section',
+				id: section.id,
+				title: section.title,
+				description: SECTION_DESCRIPTIONS[section.id] ?? children[0].description,
+				href: `/#bc-${section.id}`,
+				index,
+				// Inside a section the shared prefix is redundant, as in the collection room.
+				children: children.map((c) => ({ ...c, title: c.title.replace(`${section.title} `, '') })),
+				items: children.flatMap((c) => c.items),
+			},
+		];
+	});
+	const menuCollections: Folder[] = recentCollection.items.length
+		? [recentCollection, ...sections]
+		: sections;
 	const deviceOnly = root.classList.contains('brainpod--device');
 	// The device entrance starts as a browser, independently of the old featured-paper view.
-	const storageKey = deviceOnly ? 'bubble-brainpod-navigation-v5' : STORAGE_KEY;
+	const storageKey = deviceOnly ? 'bubble-brainpod-navigation-v6' : STORAGE_KEY;
 	const discoveryOrder = createBrainPodDiscoveryOrder(items, Number(root.dataset.seed) || 483101);
 	let discoveryIndex = 0;
 	const controller = new AbortController(),
@@ -106,16 +138,24 @@ export function mountBrainPod(root: HTMLElement): () => void {
 				Math.max(0, Math.min(length - 1, Number.isFinite(n) ? Math.floor(n!) : 0));
 			state.pages[0].selected = selected(saved.pages?.[0]?.selected, menuCollections.length);
 			if (Array.isArray(saved.pages))
-				for (const p of saved.pages.slice(1, 2)) {
-					const c = menuCollections.find((c) => c.id === p.key) || playlists[p.key];
-					if (c?.items.length)
-						state.pages.push({
-							title: c.title,
-							rows: c.items,
-							selected: selected(p.selected, c.items.length),
-							key: p.key,
-							index: c.index,
-						});
+				for (const p of saved.pages.slice(1, 3)) {
+					const parent = state.pages[state.pages.length - 1];
+					const folder = parent.rows.find(
+						(row): row is Folder => isCollection(row) && row.id === p.key,
+					);
+					const rows = folder
+						? folderRows(folder)
+						: state.pages.length === 1
+							? playlists[p.key]?.items
+							: undefined;
+					if (!rows?.length) break;
+					state.pages.push({
+						title: folder?.title ?? playlists[p.key].title,
+						rows,
+						selected: selected(p.selected, rows.length),
+						key: p.key,
+						index: folder?.index ?? playlists[p.key].index,
+					});
 				}
 			state.detail = items.find((i) => i.key === saved.detail) || null;
 			state.finish = saved.finish === 'graphite' ? 'graphite' : 'white';
@@ -358,7 +398,7 @@ export function mountBrainPod(root: HTMLElement): () => void {
 		if (isCollection(entry))
 			state.pages.push({
 				title: entry.title,
-				rows: entry.items,
+				rows: folderRows(entry),
 				selected: 0,
 				key: entry.id,
 				index: entry.index,
@@ -732,24 +772,26 @@ export function mountBrainPod(root: HTMLElement): () => void {
 	const portal = mountBrainPodPortal(root, () => scene, signal);
 	mountBrainPodCollection(root, signal, {
 		select(id) {
-			const collection = collections.find((collection) => collection.id === id);
-			if (!collection) return;
+			// Walk home → section → collection, matching the room's own hierarchy.
+			const top = menuCollections.find(
+				(row) => row.id === id || (row.kind === 'section' && row.children.some((c) => c.id === id)),
+			);
+			if (!top) return;
+			const path: Folder[] = [top];
+			if (top.kind === 'section') path.push(top.children.find((c) => c.id === id)!);
 			state.detail = null;
-			state.pages = [
-				{
-					title: '知识资料库',
-					rows: menuCollections,
-					selected: menuCollections.indexOf(collection),
-					key: 'home',
-				},
-				{
-					title: collection.title,
-					rows: collection.items,
+			state.pages = [{ title: '知识资料库', rows: menuCollections, selected: 0, key: 'home' }];
+			for (const folder of path) {
+				const parent = state.pages[state.pages.length - 1];
+				parent.selected = parent.rows.indexOf(folder);
+				state.pages.push({
+					title: folder.title,
+					rows: folderRows(folder),
 					selected: 0,
-					key: collection.id,
-					index: collection.index,
-				},
-			];
+					key: folder.id,
+					index: folder.index,
+				});
+			}
 			paint();
 		},
 		returnToDevice() {

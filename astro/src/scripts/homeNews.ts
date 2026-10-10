@@ -8,7 +8,6 @@
 import {
 	homeNews,
 	shortWhen,
-	sourcesLabel,
 	LAST_SEEN_KEY,
 	loadNewsFeed,
 	NEWS_FRESH_FOR as FRESH_FOR,
@@ -16,6 +15,7 @@ import {
 	type NewsFeed,
 	type NewsItem,
 } from '../lib/aiNews';
+import { outletIcons } from './newsOutlets';
 
 const SHOWN = 5;
 /** Of those, how many may be 热门 (phones show one, styles/home.css). */
@@ -58,7 +58,7 @@ function row({ item, time, seenBefore }: HomeNews['rows'][number]): HTMLLIElemen
 	return li;
 }
 
-/** A 热门 row: the headline in bold, and how many outlets reported it where the arrow would be. */
+/** A 热门 row: the headline in bold, and the first outlets' icons where the arrow would be. */
 function hotRow(item: NewsItem, now: Date): HTMLLIElement {
 	const li = document.createElement('li');
 	const link = document.createElement('a');
@@ -73,9 +73,8 @@ function hotRow(item: NewsItem, now: Date): HTMLLIElement {
 	const headline = document.createElement('span');
 	headline.className = 'home-news__headline';
 	headline.textContent = item.title;
-	const outlets = document.createElement('span');
-	outlets.className = 'home-news__outlets';
-	outlets.textContent = sourcesLabel(item.hot?.sources ?? [], true);
+	const outlets = outletIcons(item.hot?.sources ?? [], { max: 3, size: 'small' });
+	outlets.classList.add('home-news__outlets');
 	link.append(when, headline, outlets);
 	li.append(link);
 	return li;

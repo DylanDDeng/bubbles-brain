@@ -1,0 +1,73 @@
+/* Outlet icons on hot stories (scripts/newsOutlets.ts): sites as small rounded squares, X accounts
+   as circles, the initial underneath in case the picture is missing. */
+.news-outlets {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	vertical-align: middle;
+}
+.news-outlet {
+	position: relative;
+	display: inline-grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	overflow: hidden;
+	border-radius: 5px;
+	background: var(--paper-muted);
+	box-shadow: inset 0 0 0 1px var(--rule-strong);
+	color: var(--ink-soft);
+	font-size: 10.5px;
+	font-weight: 600;
+	line-height: 1;
+	text-decoration: none;
+}
+.news-outlet--person {
+	border-radius: 50%;
+}
+.news-outlet img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	background: var(--paper);
+	opacity: 0;
+}
+.news-outlet img.is-loaded {
+	opacity: 1;
+}
+a.news-outlet {
+	transition: transform 0.15s ease;
+}
+a.news-outlet:hover {
+	transform: translateY(-1px);
+}
+a.news-outlet:focus-visible {
+	outline: 2px solid var(--focus);
+	outline-offset: 2px;
+}
+.news-outlets__more {
+	font-size: 12px;
+	color: var(--ink-faint);
+	font-variant-numeric: tabular-nums;
+}
+.news-outlets--small {
+	gap: 3px;
+}
+.news-outlets--small .news-outlet {
+	width: 16px;
+	height: 16px;
+	border-radius: 4px;
+	font-size: 9px;
+}
+.news-outlets--small .news-outlet--person {
+	border-radius: 50%;
+}
+@media (prefers-reduced-motion: reduce) {
+	a.news-outlet {
+		transition: none;
+	}
+}

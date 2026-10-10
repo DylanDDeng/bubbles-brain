@@ -211,7 +211,9 @@ describe('hot stories', () => {
 			{ type: 'url', text: 'bloomberg', link: 'https://bloomberg.test/c' },
 			{ type: 'text', text: '\nBloomberg again: https://bloomberg.test/c\nBad: javascript:alert(1)' },
 		];
-		expect(parseSources(rich)).toEqual([{ name: 'Bloomberg', url: 'https://bloomberg.test/c' }]);
+		expect(parseSources(rich)).toEqual([
+			{ name: 'Bloomberg', url: 'https://bloomberg.test/c', icon: '/v1/icon/site/bloomberg.test' },
+		]);
 		const many = Array.from({ length: 20 }, (_, n) => `S${n}: https://s.test/${n}`).join('\n');
 		expect(parseSources(many)).toHaveLength(12);
 	});

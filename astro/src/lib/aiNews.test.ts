@@ -22,6 +22,7 @@ import {
 	titleWithCount,
 	unreadBadge,
 	hotNews,
+	hotStories,
 	sourcesLabel,
 } from './aiNews';
 
@@ -378,7 +379,7 @@ describe('热门', () => {
 			},
 			{
 				day: '2026-10-08',
-				items: [item('stale', { at: '2026-10-08T20:00:00.000Z', hot: true, sources: outlets(12) })],
+				items: [item('stale', { at: '2026-10-07T20:00:00.000Z', hot: true, sources: outlets(12) })],
 			},
 		],
 	})!;
@@ -410,14 +411,23 @@ describe('热门', () => {
 		]);
 	});
 
-	it('ranks the last 24 hours by outlets, then by time', () => {
+	it('lists the last 48 hours newest first for the 热门 view', () => {
+		expect(hotStories(feed, now).map((story) => story.id)).toEqual([
+			'three',
+			'eight',
+			'five-new',
+			'five-old',
+		]);
+	});
+
+	it('ranks the last 48 hours by outlets, then by time', () => {
 		expect(hotNews(feed, now, 3).map((story) => story.id)).toEqual([
 			'eight',
 			'five-new',
 			'five-old',
 		]);
 		expect(hotNews(feed, now, 10).map((story) => story.id)).not.toContain('stale');
-		expect(hotNews(feed, new Date('2026-10-12T00:00:00.000Z'), 3)).toEqual([]);
+		expect(hotNews(feed, new Date('2026-10-13T00:00:00.000Z'), 3)).toEqual([]);
 	});
 
 	it('names the outlets, briefly or in full', () => {

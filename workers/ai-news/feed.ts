@@ -2,6 +2,7 @@
  * AI 动态: turns rows of the Feishu Base that the Grok bot fills every hour into the small feed the
  * /ai-news/ page reads. Pure functions only; the Worker in index.ts does the fetching and storing.
  */
+import { iconPath } from './icons';
 
 export interface FeedItem {
 	id: string;
@@ -26,6 +27,8 @@ export interface FeedItem {
 export interface FeedSource {
 	name: string;
 	url: string;
+	/** Where this Worker serves its picture: the site's icon, or the X account's avatar (icons.ts). */
+	icon?: string;
 }
 
 export interface CoverSize {
@@ -191,7 +194,8 @@ export function parseSources(value: unknown): FeedSource[] {
 		const url = match ? safeHttpUrl(match[2]) : null;
 		if (!match || !url || seen.has(url)) continue;
 		seen.add(url);
-		sources.push({ name: Array.from(match[1]).slice(0, 40).join(''), url });
+		const icon = iconPath(url);
+		sources.push({ name: Array.from(match[1]).slice(0, 40).join(''), url, ...(icon ? { icon } : {}) });
 		if (sources.length === SOURCE_LIMIT) break;
 	}
 	return sources;

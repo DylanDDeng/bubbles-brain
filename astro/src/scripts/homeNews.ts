@@ -7,14 +7,19 @@
  */
 import {
 	homeNews,
+	shortWhen,
+	sourcesLabel,
 	LAST_SEEN_KEY,
 	loadNewsFeed,
 	NEWS_FRESH_FOR as FRESH_FOR,
 	type HomeNews,
 	type NewsFeed,
+	type NewsItem,
 } from '../lib/aiNews';
 
 const SHOWN = 5;
+/** Of those, how many may be 热门 (phones show one, styles/home.css). */
+const HOT_SHOWN = 2;
 
 function readLastSeen(): string | null {
 	try {
@@ -53,6 +58,29 @@ function row({ item, time, seenBefore }: HomeNews['rows'][number]): HTMLLIElemen
 	return li;
 }
 
+/** A 热门 row: the headline in bold, and how many outlets reported it where the arrow would be. */
+function hotRow(item: NewsItem, now: Date): HTMLLIElement {
+	const li = document.createElement('li');
+	const link = document.createElement('a');
+	link.className = 'home-news__row home-news__row--hot';
+	link.href = item.url;
+	link.target = '_blank';
+	link.rel = 'noopener noreferrer';
+	const when = document.createElement('time');
+	when.className = 'home-news__time';
+	when.dateTime = item.at;
+	when.textContent = shortWhen(item, now);
+	const headline = document.createElement('span');
+	headline.className = 'home-news__headline';
+	headline.textContent = item.title;
+	const outlets = document.createElement('span');
+	outlets.className = 'home-news__outlets';
+	outlets.textContent = sourcesLabel(item.hot?.sources ?? [], true);
+	link.append(when, headline, outlets);
+	li.append(link);
+	return li;
+}
+
 let stop: AbortController | null = null;
 
 function init() {
@@ -63,10 +91,14 @@ function init() {
 	const input = root?.querySelector<HTMLInputElement>('input[type="search"]');
 	const panel = root?.querySelector<HTMLElement>('.home-news');
 	const list = root?.querySelector<HTMLElement>('[data-home-news-list]');
+	const hotList = root?.querySelector<HTMLElement>('[data-home-news-hot]');
+	const sub = root?.querySelector<HTMLElement>('[data-home-news-sub]');
+	const title = root?.querySelector<HTMLElement>('#home-news-title');
 	const updated = root?.querySelector<HTMLElement>('[data-home-news-updated]');
 	const all = root?.querySelector<HTMLAnchorElement>('[data-home-news-all]');
 	const url = root?.dataset.homeNews;
-	if (!root || !shell || !input || !panel || !list || !updated || !all || !url) return;
+	if (!root || !shell || !input || !panel || !list || !hotList || !sub || !title) return;
+	if (!updated || !all || !url) return;
 
 	const controller = new AbortController();
 	stop = controller;
@@ -88,10 +120,15 @@ function init() {
 		loadNewsFeed(url, FRESH_FOR).then((feed) => {
 			if (signal.aborted || !feed || feed === shown) return;
 			// Never swap rows out from under a reader moving through them with the keyboard.
-			if (list.contains(document.activeElement)) return;
-			const news = homeNews(feed, readLastSeen(), new Date(), SHOWN);
-			if (!news.rows.length) return;
+			if (panel.contains(document.activeElement)) return;
+			const now = new Date();
+			const news = homeNews(feed, readLastSeen(), now, SHOWN, HOT_SHOWN);
+			if (!news.rows.length && !news.hot.length) return;
 			shown = feed;
+			hotList.replaceChildren(...news.hot.map((item) => hotRow(item, now)));
+			hotList.hidden = sub.hidden = news.hot.length === 0;
+			panel.classList.toggle('has-hot', news.hot.length > 0);
+			title.textContent = news.hot.length ? 'AI 动态 · 热门' : 'AI 动态';
 			list.replaceChildren(...news.rows.map(row));
 			updated.textContent = news.updated;
 			all.textContent = news.today ? `今天推送了 ${news.today} 条，看全部` : '看全部 AI 动态';
@@ -139,7 +176,7 @@ function init() {
 			if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
 			const stops = [
 				input,
-				...[...list.querySelectorAll<HTMLElement>('.home-news__row')].filter(
+				...[...panel.querySelectorAll<HTMLElement>('.home-news__row')].filter(
 					(link) => link.offsetParent !== null,
 				),
 			];

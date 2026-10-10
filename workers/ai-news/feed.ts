@@ -17,6 +17,15 @@ export interface FeedItem {
 	/** The cover's pixel size, when known (attachment covers), so the page can reserve its shape. */
 	coverWidth?: number;
 	coverHeight?: number;
+	/** Ticked 「热门」 by the hot bot: reported by several outlets in the last two days. */
+	hot?: true;
+	/** The outlets the hot bot found covering it (「多源报道」), for hot stories only. */
+	sources?: FeedSource[];
+}
+
+export interface FeedSource {
+	name: string;
+	url: string;
 }
 
 export interface CoverSize {
@@ -51,6 +60,10 @@ export const FIELDS = {
 	at: '推送时间',
 	/** An attachment the bot adds when the source has no usable share image. */
 	cover: '封面',
+	/** A checkbox the hot bot ticks for stories several outlets reported. */
+	hot: '热门',
+	/** The hot bot's list of those outlets, one 「名称: 链接」 per line. */
+	sources: '多源报道',
 } as const;
 
 const IMAGE_NAME = /\.(jpe?g|png|webp|gif|avif)$/i;
@@ -157,6 +170,38 @@ export function storyKey(url: string): string {
 	return `${host}${parsed.pathname.replace(/\/+$/, '')}${parsed.search}`.toLowerCase();
 }
 
+/** Text with each link segment written as its URL, so 「名称: 链接」 lines survive rich text. */
+function cellLinkText(value: unknown): string {
+	if (Array.isArray(value)) return value.map(cellLinkText).join('');
+	if (value && typeof value === 'object') {
+		const cell = value as Record<string, unknown>;
+		if (typeof cell.link === 'string') return cell.link;
+	}
+	return cellText(value);
+}
+
+export const SOURCE_LIMIT = 12;
+
+/** 「TechCrunch: https://…」 lines as outlets, each link once; lines without a link are skipped. */
+export function parseSources(value: unknown): FeedSource[] {
+	const sources: FeedSource[] = [];
+	const seen = new Set<string>();
+	for (const line of cellLinkText(value).split(/\r?\n/)) {
+		const match = line.match(/^\s*(.+?)\s*[:：]\s*(https?:\/\/\S+)\s*$/);
+		const url = match ? safeHttpUrl(match[2]) : null;
+		if (!match || !url || seen.has(url)) continue;
+		seen.add(url);
+		sources.push({ name: Array.from(match[1]).slice(0, 40).join(''), url });
+		if (sources.length === SOURCE_LIMIT) break;
+	}
+	return sources;
+}
+
+/** A ticked checkbox, as Feishu returns it (true), or the text a formula might give. */
+function cellChecked(value: unknown): boolean {
+	return value === true || cellText(value).trim().toLowerCase() === 'true';
+}
+
 export interface BaseRecord {
 	record_id: string;
 	fields: Record<string, unknown>;
@@ -175,6 +220,9 @@ export function toItem(record: BaseRecord): FeedItem | null {
 		url,
 		at: new Date(time).toISOString(),
 		day: beijingDay(time),
+		...(cellChecked(record.fields[FIELDS.hot])
+			? { hot: true as const, sources: parseSources(record.fields[FIELDS.sources]) }
+			: {}),
 	};
 }
 

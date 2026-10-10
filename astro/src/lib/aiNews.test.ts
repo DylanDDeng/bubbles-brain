@@ -21,6 +21,8 @@ import {
 	newerThan,
 	titleWithCount,
 	unreadBadge,
+	hotNews,
+	sourcesLabel,
 } from './aiNews';
 
 const item = (id: string, extra: Record<string, unknown> = {}) => ({
@@ -355,5 +357,80 @@ describe('update hints', () => {
 		expect(titleWithCount('教程 · Bubble’s Brain', 3)).toBe('(3) 教程 · Bubble’s Brain');
 		expect(titleWithCount('(3) 教程 · Bubble’s Brain', 5)).toBe('(5) 教程 · Bubble’s Brain');
 		expect(titleWithCount('(3) 教程 · Bubble’s Brain', 0)).toBe('教程 · Bubble’s Brain');
+	});
+});
+
+describe('热门', () => {
+	const outlets = (count: number) =>
+		Array.from({ length: count }, (_, n) => ({ name: `来源${n + 1}`, url: `https://o.test/${n}` }));
+	const feed = parseFeed({
+		updatedAt: '2026-10-10T02:00:00.000Z',
+		days: [
+			{
+				day: '2026-10-10',
+				items: [
+					item('plain', { at: '2026-10-10T01:30:00.000Z' }),
+					item('three', { at: '2026-10-10T01:20:00.000Z', hot: true, sources: outlets(3) }),
+					item('eight', { at: '2026-10-09T23:00:00.000Z', hot: true, sources: outlets(8) }),
+					item('five-new', { at: '2026-10-09T22:00:00.000Z', hot: true, sources: outlets(5) }),
+					item('five-old', { at: '2026-10-09T20:00:00.000Z', hot: true, sources: outlets(5) }),
+				],
+			},
+			{
+				day: '2026-10-08',
+				items: [item('stale', { at: '2026-10-08T20:00:00.000Z', hot: true, sources: outlets(12) })],
+			},
+		],
+	})!;
+	const now = new Date('2026-10-10T02:00:00.000Z');
+
+	it('keeps the outlets of ticked stories only, dropping bad ones', () => {
+		const odd = parseFeed({
+			updatedAt: 'x',
+			days: [
+				{
+					day: '2026-10-10',
+					items: [
+						item('h', {
+							hot: true,
+							sources: [
+								{ name: 'A', url: 'https://a.test' },
+								{ name: '', url: 'https://b.test' },
+								{ name: 'C', url: 'javascript:x' },
+							],
+						}),
+						item('n', { sources: [{ name: 'A', url: 'https://a.test' }] }),
+					],
+				},
+			],
+		})!;
+		expect(odd.days[0].items.map((story) => story.hot)).toEqual([
+			{ sources: [{ name: 'A', url: 'https://a.test' }] },
+			undefined,
+		]);
+	});
+
+	it('ranks the last 24 hours by outlets, then by time', () => {
+		expect(hotNews(feed, now, 3).map((story) => story.id)).toEqual([
+			'eight',
+			'five-new',
+			'five-old',
+		]);
+		expect(hotNews(feed, now, 10).map((story) => story.id)).not.toContain('stale');
+		expect(hotNews(feed, new Date('2026-10-12T00:00:00.000Z'), 3)).toEqual([]);
+	});
+
+	it('names the outlets, briefly or in full', () => {
+		expect(sourcesLabel(outlets(8))).toBe('来源1、来源2 等 8 个来源');
+		expect(sourcesLabel(outlets(2))).toBe('来源1、来源2');
+		expect(sourcesLabel(outlets(8), true)).toBe('8 个来源');
+		expect(sourcesLabel([])).toBe('');
+	});
+
+	it('puts 热门 above the newest on the home page, without listing a story twice', () => {
+		const home = homeNews(feed, null, now, 5, 2);
+		expect(home.hot.map((story) => story.id)).toEqual(['eight', 'five-new']);
+		expect(home.rows.map((row) => row.item.id)).toEqual(['plain', 'three', 'five-old']);
+		expect(home.updated).toBe('09:30 更新');
 	});
 });

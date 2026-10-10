@@ -30,8 +30,7 @@ export const changelog: ChangelogItem[] = [
 		tag: 'AI 动态',
 		type: 'feature',
 		title: 'AI 动态加上热门',
-		summary:
-			'过去 24 小时里被最多家媒体报道的新闻，排在 AI 动态当天最上面，卡片上写着是哪些媒体报道的；首页搜索框的下拉里也先列两条热门。',
+		summary: '热门 bot 标出被多家媒体同时报道的新闻；首页搜索框的下拉里先列两条报道最多的热门。',
 		links: [{ label: 'AI 动态', href: '/ai-news/' }],
 	},
 	{

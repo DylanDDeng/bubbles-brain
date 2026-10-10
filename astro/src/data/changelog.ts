@@ -18,6 +18,20 @@ export interface ChangelogItem {
 export const changelog: ChangelogItem[] = [
 	{
 		date: '2026-10-10',
+		tag: 'WorkBuddy 教程',
+		type: 'content',
+		title: '新增 WorkBuddy 小程序实战',
+		summary:
+			'用 WorkBuddy 的小程序模式做一个语音输入、AI 自动分类的口喷记事本，从开发、预览、查看数据库到发布体验版或试用版，保留全部原图和成品演示视频。',
+		links: [
+			{
+				label: '阅读 WorkBuddy 小程序实战',
+				href: '/workbuddy-tutorials/workbuddy-miniprogram-guide/',
+			},
+		],
+	},
+	{
+		date: '2026-10-10',
 		tag: 'AI 动态',
 		type: 'feature',
 		title: '热门有了自己的入口，报道的媒体用图标展示',

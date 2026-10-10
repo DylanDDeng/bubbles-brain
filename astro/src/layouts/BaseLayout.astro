@@ -3,6 +3,7 @@ import '../styles/migration.css';
 import '../styles/ricoui-theme.css';
 import '../styles/reading-room.css';
 import '../styles/collection-pages.css';
+import '../styles/news-hints.css';
 import { ClientRouter } from 'astro:transitions';
 import SiteActions from '../components/SiteActions.astro';
 import FooterLinks from '../components/FooterLinks.astro';
@@ -169,9 +170,12 @@ const isSearchPage = Astro.url.pathname.replace(/\/$/, '') === '/search';
 			</div>
 		</div>
 		<CommandSearch locale={lang} />
+		{/* Read out when the AI 动态 notice appears (scripts/newsHints.ts). */}
+		<div class="sr-only" role="status" data-news-notice-status></div>
 		<script>
 			import '../scripts/instantNavigation';
 			import '../scripts/readingUpdates';
+			import '../scripts/newsHints';
 		</script>
 		<script is:inline type="module" src="/js/site-shell.js"></script>
 	</body>

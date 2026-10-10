@@ -19,6 +19,13 @@ import '../../styles/ai-news.css';
 
 			<div class="news-main" aria-busy="true" data-news-main>
 				<h2 class="news-day" data-news-title></h2>
+				{/* Shown when stories came while the page was open; a click puts them on top. */}
+				<div class="news-fresh" role="status">
+					<button class="news-fresh__button" type="button" data-news-fresh hidden>
+						<i class="ph ph-arrow-up" aria-hidden="true"></i>
+						<span data-news-fresh-label></span>
+					</button>
+				</div>
 				<div class="news-timeline" data-news-grid></div>
 				<p class="rr-empty" data-news-status>正在读取最新动态…</p>
 				<noscript

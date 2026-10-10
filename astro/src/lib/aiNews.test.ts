@@ -18,6 +18,9 @@ import {
 	updatedLabel,
 	homeNews,
 	loadNewsFeed,
+	newerThan,
+	titleWithCount,
+	unreadBadge,
 } from './aiNews';
 
 const item = (id: string, extra: Record<string, unknown> = {}) => ({
@@ -318,5 +321,39 @@ describe('reading the feed', () => {
 		expect(second).not.toBe(first);
 		expect(calls).toHaveLength(2);
 		expect(calls[1].cache).toBe('no-cache');
+	});
+});
+
+describe('update hints', () => {
+	const feed = parseFeed({
+		updatedAt: '2026-10-10T23:30:00.000Z',
+		days: [
+			{
+				day: '2026-10-11',
+				items: [
+					item('a', { at: '2026-10-10T23:20:00.000Z' }),
+					item('b', { at: '2026-10-10T22:20:00.000Z' }),
+					item('c', { at: '2026-10-10T21:20:00.000Z' }),
+				],
+			},
+			{ day: '2026-10-10', items: [item('d', { at: '2026-10-09T23:00:00.000Z' })] },
+		],
+	})!;
+
+	it('counts what came after a moment, and nothing for a bad one', () => {
+		expect(newerThan(feed, '2026-10-10T21:20:00.000Z').map((story) => story.id)).toEqual([
+			'a',
+			'b',
+		]);
+		expect(newerThan(feed, '2026-10-11T00:00:00.000Z')).toEqual([]);
+		expect(newerThan(feed, '')).toEqual([]);
+	});
+
+	it('writes the count beside the section and in front of the title', () => {
+		expect(unreadBadge(3)).toBe('+3');
+		expect(unreadBadge(240)).toBe('+99');
+		expect(titleWithCount('教程 · Bubble’s Brain', 3)).toBe('(3) 教程 · Bubble’s Brain');
+		expect(titleWithCount('(3) 教程 · Bubble’s Brain', 5)).toBe('(5) 教程 · Bubble’s Brain');
+		expect(titleWithCount('(3) 教程 · Bubble’s Brain', 0)).toBe('教程 · Bubble’s Brain');
 	});
 });

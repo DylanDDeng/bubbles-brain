@@ -1,0 +1,123 @@
+/* AI 动态 update hints across the site (scripts/newsHints.ts): +N beside the section, a dot on the
+   phone menu button, and a notice in the corner on arrival. */
+
+.news-unread {
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.site-menu summary.has-news {
+	position: relative;
+}
+.site-menu summary.has-news::after {
+	content: '';
+	position: absolute;
+	top: 11px;
+	right: 10px;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--ink);
+	box-shadow: 0 0 0 2px var(--paper);
+}
+
+.news-notice {
+	position: fixed;
+	right: 28px;
+	bottom: 28px;
+	z-index: 110;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 340px;
+	box-sizing: border-box;
+	padding: 16px 16px 14px 18px;
+	border: 1px solid var(--rule-strong);
+	border-radius: 14px;
+	background: var(--paper);
+	box-shadow: 0 14px 36px rgb(0 0 0 / 0.08);
+	text-align: left;
+	opacity: 0;
+	transform: translateY(12px);
+	transition:
+		opacity 0.22s ease,
+		transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.news-notice.is-shown {
+	opacity: 1;
+	transform: none;
+}
+.news-notice__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.news-notice__meta {
+	font-size: 12.5px;
+	color: var(--ink-faint);
+	font-variant-numeric: tabular-nums;
+}
+.news-notice__close {
+	display: grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 32px;
+	height: 32px;
+	margin: -8px -8px -8px 0;
+	border: 0;
+	border-radius: 8px;
+	background: none;
+	color: var(--ink-faint);
+	font-size: 15px;
+	cursor: pointer;
+}
+.news-notice__close:hover {
+	background: var(--paper-muted);
+	color: var(--ink);
+}
+.news-notice__title {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.5;
+	color: var(--ink);
+	text-decoration: none;
+}
+.news-notice__all {
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	min-height: 28px;
+	font-size: 13px;
+	color: var(--ink-soft);
+	text-decoration: none;
+}
+.news-notice__title:hover,
+.news-notice__all:hover {
+	text-decoration: underline;
+	text-decoration-color: #b5b5b5;
+	text-underline-offset: 5px;
+}
+
+@media (max-width: 700px) {
+	.news-notice {
+		right: 14px;
+		bottom: calc(16px + env(safe-area-inset-bottom));
+		left: 14px;
+		width: auto;
+		border-radius: 16px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.news-notice {
+		transition: none;
+	}
+}

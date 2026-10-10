@@ -296,6 +296,29 @@ export function homeNews(feed: NewsFeed, lastSeen: string | null, now: Date, lim
 	};
 }
 
+/** Stories pushed after `since`, newest first (the feed's own order). */
+export function newerThan(feed: NewsFeed, since: string): NewsItem[] {
+	const from = Date.parse(since);
+	if (Number.isNaN(from)) return [];
+	return feed.days.flatMap((day) => day.items).filter((item) => Date.parse(item.at) > from);
+}
+
+/** +3, or +99 at most: the count of unread stories beside 「AI 动态」. */
+export function unreadBadge(count: number): string {
+	return `+${Math.min(count, 99)}`;
+}
+
+/** The page title with the unread count in front, (3) 教程 · Bubble's Brain; none at zero. */
+export function titleWithCount(title: string, count: number): string {
+	const plain = title.replace(/^\(\d+\+?\) /, '');
+	return count > 0 ? `(${Math.min(count, 99)}) ${plain}` : plain;
+}
+
+/** When this browser first came to the site: the start for counting updates before any visit to /ai-news/. */
+export const NEWS_SINCE_KEY = 'ai-news:since';
+/** The newest story the arrival notice has already announced, so one batch is announced once. */
+export const NEWS_TOLD_KEY = 'ai-news:told';
+
 export const NEWS_SECTION_LABEL = 'AI 动态';
 
 /**

@@ -6,6 +6,8 @@
  * A day reads as a timeline: one row per bot push, newest first, its time label pinned while
  * its cards scroll: the push time (23:08) in light grey, one per bot batch. Stories that arrived since the
  * reader's last visit (kept in this browser only) sit above a single 上次看到这里 line; nothing else marks them.
+ * While the page is open and on screen it looks for new stories every two minutes; when some came,
+ * a 「有 N 条新动态」 button puts them on top, above a 上次看到这里 line where the page was.
  * News is searched from the site search in the header (commandSearch.ts, /search/).
  */
 import {
@@ -13,7 +15,10 @@ import {
 	dayTitle,
 	timeGroups,
 	LAST_SEEN_KEY,
+	loadNewsFeed,
 	monthLabel,
+	NEWS_FRESH_FOR,
+	newerThan,
 	monthOf,
 	parseArchive,
 	parseFeed,
@@ -61,6 +66,8 @@ function card(item: NewsItem): HTMLElement {
 
 /** This tab's starting point, so a reload keeps the line where it was (sessionStorage dies with the tab). */
 const VISIT_BASELINE_KEY = 'ai-news:visit-baseline';
+/** How often an open, visible page looks for new stories. */
+const CHECK_EVERY = 2 * 60_000;
 
 /**
  * The reader's previous visit, fixed for the whole of this one: read once per tab from the time
@@ -148,7 +155,7 @@ function setupNews(root: HTMLElement) {
 	/** Months whose days are listed in the rail. The newest starts open. */
 	const open = new Set<string>();
 	// The previous visit, fixed for this tab; this visit is saved whenever the page is hidden or left.
-	const lastSeen = readLastSeen();
+	let lastSeen = readLastSeen();
 	const saveVisit = () => writeLastSeen(new Date().toISOString());
 	const onHide = () => {
 		if (document.visibilityState === 'hidden') saveVisit();
@@ -321,6 +328,55 @@ function setupNews(root: HTMLElement) {
 			if (following) showDay(following.day);
 		});
 	});
+	// New stories while the page is open: offered by a button rather than pushed into the list.
+	const fresh = root.querySelector<HTMLButtonElement>('[data-news-fresh]')!;
+	const freshLabel = root.querySelector<HTMLElement>('[data-news-fresh-label]')!;
+	let waiting: NewsFeed | null = null;
+	const newestAt = (shown: NewsFeed) => shown.days[0]?.items[0]?.at ?? '';
+	const look = () => {
+		if (!feed || document.visibilityState !== 'visible') return;
+		void loadNewsFeed(feedUrl, NEWS_FRESH_FOR).then((next) => {
+			if (!next?.days.length || !feed) return;
+			const added = newerThan(next, newestAt(feed));
+			if (!added.length) return;
+			waiting = next;
+			freshLabel.textContent = `有 ${added.length} 条新动态`;
+			fresh.hidden = false;
+		});
+	};
+	fresh.addEventListener('click', () => {
+		if (!waiting || !feed) return;
+		// The line goes where the page was: everything above it came while the reader was here.
+		lastSeen = newestAt(feed);
+		try {
+			sessionStorage.setItem(VISIT_BASELINE_KEY, lastSeen);
+		} catch {
+			// Without storage a reload just puts the line back where the visit began.
+		}
+		feed = waiting;
+		waiting = null;
+		fresh.hidden = true;
+		updated.textContent = updatedLabel(feed.updatedAt, new Date());
+		const newest = feed.days[0].day;
+		open.add(monthOf(newest));
+		history.replaceState(history.state, '', `#${newest}`);
+		render();
+		if (body && body.getBoundingClientRect().top < 0) body.scrollIntoView({ behavior: 'smooth' });
+	});
+	const ticker = window.setInterval(look, CHECK_EVERY);
+	const onShow = () => {
+		if (document.visibilityState === 'visible') look();
+	};
+	document.addEventListener('visibilitychange', onShow);
+	document.addEventListener(
+		'astro:before-swap',
+		() => {
+			window.clearInterval(ticker);
+			document.removeEventListener('visibilitychange', onShow);
+		},
+		{ once: true },
+	);
+
 	const onHash = () => render();
 	window.addEventListener('hashchange', onHash);
 	document.addEventListener(

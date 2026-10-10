@@ -1,14 +1,12 @@
 ---
 title: "用 WorkBuddy 做微信小程序：从开发到发布"
 slug: "workbuddy-miniprogram-guide"
-description: "用 WorkBuddy 的小程序模式，做一个语音输入、AI 自动分类的口喷记事本：自带模型目录接好 AI、云服务面板查看数据库，再用体验版、正式版或试用版发布。"
+description: "用 WorkBuddy 的小程序模式，聊着天做出一个语音记事本小程序。"
 date: 2026-10-10
 weight: 6
 tags: ["WorkBuddy", "微信小程序", "云服务", "语音识别", "Vibe Coding", "Agent"]
 author: "BubbleBrain"
 ---
-
-> 本文由 BubbleBrain 撰写，原题为《终于，腾讯把WorkBuddy 和微信小程序开发的最后一公里打通了。》。
 
 ![WorkBuddy 小程序教程题图](/media/workbuddy-tutorials/workbuddy-miniprogram-guide/img_001.png)
 

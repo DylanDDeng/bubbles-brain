@@ -5,12 +5,6 @@
 .podcasts-head {
 	gap: 12px;
 }
-.podcasts-lede {
-	margin: 0;
-	color: var(--ink-faint);
-	font-size: 14px;
-	text-align: center;
-}
 .podcasts-shows-link,
 .podcast-links a,
 .podcast-foot__source {

@@ -10,7 +10,7 @@ featured: true
 draft: false
 articleIntro:
   sourceName: "Felix Rieseberg"
-  note: "2026 年 10 月 15 日按 10 月 13 日原文逐段译成中文并润色，人称、例子和提示词都留着。文末补了一小段新手解读。配图是戈雅的《飞行的方式》（Modo de volar），这里没有收录。"
+  note: "配图是戈雅的《飞行的方式》（Modo de volar），这里没有收录。"
 ---
 
 我在做 Claude。这经历挺有意思：每天我都会得知又一件用 Claude、或由 Claude 做成的事，是我没想过的，觉得不可能的，或者单纯没那份好奇心、也没时间去试的。这个月，它可能帮着发现了一颗新行星；我看到了自己真正喜欢的第一条 AI 音乐视频；我们也在讨论数学的一个新时代。

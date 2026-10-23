@@ -22,9 +22,7 @@ const shows = showsByRecent();
 						<a class="podcast-wall__show" href={showHref(show)}>
 							<img src={show.cover} alt="" width="160" height="160" loading="lazy" />
 							<span class="podcast-wall__name">{show.name}</span>
-							<span class="podcast-wall__meta">
-								{show.language} · {showEpisodes(show).length} 期
-							</span>
+							<span class="podcast-wall__meta">{showEpisodes(show).length} 期</span>
 						</a>
 					</li>
 				))

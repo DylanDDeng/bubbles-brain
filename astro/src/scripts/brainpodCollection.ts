@@ -29,7 +29,9 @@ export function mountBrainPodCollection(
 	const outerPanel = (panel: HTMLElement) =>
 		panel.closest<HTMLElement>('[data-room-panel], [data-room-group]')!;
 	let lastCollection = root.dataset.brainpodCollection;
-	let view = (brainPodParent(lastCollection || '')?.id as string) || 'tutorials';
+	let view = brainPodSections.some((section) => section.id === lastCollection)
+		? lastCollection!
+		: (brainPodParent(lastCollection || '')?.id as string) || 'tutorials';
 	let hashFrame = 0;
 	let changingView = false;
 	room.classList.add('bc-enhanced');
